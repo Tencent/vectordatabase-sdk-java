@@ -79,13 +79,13 @@ public class ConnectParam {
 
         public ConnectParam build() throws ParamException {
             if (StringUtils.isEmpty(this.url)) {
-                throw new ParamException("url is null", ErrorCode.UNEXPECTED_ERROR.ordinal());
+                throw new ParamException("ConnectParam error: url is null");
             }
             if (StringUtils.isEmpty(this.username)) {
-                throw new ParamException("username is null", ErrorCode.UNEXPECTED_ERROR.ordinal());
+                throw new ParamException("ConnectParam error: username is null");
             }
             if (StringUtils.isEmpty(this.key)) {
-                throw new ParamException("key is null", ErrorCode.UNEXPECTED_ERROR.ordinal());
+                throw new ParamException("ConnectParam error: key is null");
             }
             return new ConnectParam(this);
         }

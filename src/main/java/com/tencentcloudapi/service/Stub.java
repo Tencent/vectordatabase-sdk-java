@@ -1,6 +1,7 @@
 package com.tencentcloudapi.service;
 
 import com.tencentcloudapi.model.Collection;
+import com.tencentcloudapi.model.Database;
 import com.tencentcloudapi.model.Document;
 import com.tencentcloudapi.model.param.collection.CreateCollectionParam;
 import com.tencentcloudapi.model.param.dml.QueryParam;
@@ -19,12 +20,12 @@ public interface Stub {
     /**
      * create database
      */
-    void createDatabase(String databaseName);
+    void createDatabase(Database database);
 
     /**
      * drop database
      */
-    void dropDatabase(String databaseName);
+    void dropDatabase(Database database);
 
     /**
      * list databases
@@ -39,17 +40,17 @@ public interface Stub {
     /**
      * list collections
      */
-    List<Collection> listCollections();
+    List<Collection> listCollections(String databaseName);
 
     /**
      * describe collection
      */
-    Collection describeCollection(String collectionName);
+    Collection describeCollection(String databaseName, String collectionName);
 
     /**
      * drop collection
      */
-    void dropCollection(String collectionName);
+    void dropCollection(String databaseName, String collectionName);
 
     /**
      * upsert document

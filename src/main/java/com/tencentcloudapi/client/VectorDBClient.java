@@ -21,19 +21,19 @@ public class VectorDBClient {
     }
 
     public Database createDatabase(String databaseName) {
-        Database db = new Database(this.stub, databaseName);
+        Database db = database(databaseName);
         db.createDatabase();
         return db;
     }
 
     public Database dropDatabase(String databaseName) {
-        Database db = new Database(this.stub, databaseName);
+        Database db = database(databaseName);
         db.dropDatabase();
         return db;
     }
 
     public List<String> listDatabase(String databaseName) {
-        Database db = new Database(this.stub, databaseName);
+        Database db = database(databaseName);
         return db.listDatabase();
     }
 

@@ -5,8 +5,8 @@ package com.tencentcloudapi.exception;
  * User: wlleiiwang
  * Date: 2023/7/25
  */
-public class NoConnectError extends VectorDBException {
-    public NoConnectError(String message, int code) {
+public class ConnectException extends VectorDBException {
+    public ConnectException(String message, int code) {
         super(message, code);
     }
 }

@@ -1,6 +1,5 @@
 package com.tencentcloudapi.model;
 
-import com.tencentcloudapi.model.param.collection.index.Index;
 import com.tencentcloudapi.service.Stub;
 
 import java.util.List;
@@ -12,25 +11,24 @@ import java.util.List;
  */
 public class Database {
     private Stub stub;
-    private String dbName;
+    private String databaseName;
 
-    public Database(Stub stub, String dbName) {
+    public Database(Stub stub, String databaseName) {
         this.stub = stub;
-        this.dbName = dbName;
+        this.databaseName = databaseName;
     }
 
-    public void createDatabase(String databaseName) {
+    public void createDatabase() {
     }
 
-    public void dropDatabase(String databaseName) {
+    public void dropDatabase() {
     }
 
-    public List<String> listDatabase(String databaseName) {
+    public List<String> listDatabase() {
         return null;
     }
 
-    public Collection createCollection(String name, int shard, int replicas,
-                                       String description, Index index) {
+    public Collection createCollection() {
         return null;
     }
 
@@ -38,14 +36,14 @@ public class Database {
         return null;
     }
 
-    public Collection describeCollection(String name) {
+    public Collection describeCollection(String databaseName) {
         return null;
     }
 
-    public void dropCollection(String name) {
+    public void dropCollection(String databaseName) {
     }
 
-    public Collection collection(String name) {
+    public Collection collection(String databaseName) {
         return null;
     }
 }

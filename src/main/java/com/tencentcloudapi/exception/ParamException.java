@@ -5,8 +5,8 @@ package com.tencentcloudapi.exception;
  * User: wlleiiwang
  * Date: 2023/7/25
  */
-public class ParamError extends VectorDBException {
-    public ParamError(String message, int code) {
+public class ParamException extends VectorDBException {
+    public ParamException(String message, int code) {
         super(message, code);
     }
 }

@@ -1,31 +1,33 @@
 package com.tencentcloudapi.model.param.database;
 
+import com.tencentcloudapi.exception.ErrorCode;
+import com.tencentcloudapi.exception.ParamException;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.logging.Logger;
+
 /**
  * Parameters for client connection.
  * User: wlleiiwang
  * Date: 2023/7/24
  */
 public class ConnectParam {
-    private final String host;
-    private final int port;
+    private final String url;
     private final String username;
     private final String key;
     private final int timeout;
 
-    public ConnectParam(Builder builder) {
-        this.host = builder.host;
-        this.port = builder.port;
+    private static final Logger logger = Logger.getLogger(ConnectParam.class.getName());
+
+    private ConnectParam(Builder builder) {
+        this.url = builder.url;
         this.username = builder.username;
         this.key = builder.key;
         this.timeout = builder.timeout;
     }
 
-    public String getHost() {
-        return host;
-    }
-
-    public int getPort() {
-        return port;
+    public String getUrl() {
+        return url;
     }
 
     public String getUsername() {
@@ -45,22 +47,16 @@ public class ConnectParam {
     }
 
     public static class Builder {
-        private String host;
-        private int port;
+        private String url;
         private String username;
         private String key;
-        private int timeout = 0;
+        private int timeout = 10;
 
         private Builder() {
         }
 
-        public Builder withHost(String host) {
-            this.host = host;
-            return this;
-        }
-
-        public Builder withPort(int port) {
-            this.port = port;
+        public Builder withUrl(String host) {
+            this.url = url;
             return this;
         }
 
@@ -75,15 +71,29 @@ public class ConnectParam {
         }
 
         public Builder withTimeout(int timeout) {
-            this.timeout = timeout;
+            if (timeout != 0) {
+                this.timeout = timeout;
+            }
             return this;
+        }
+
+        public ConnectParam build() throws ParamException {
+            if (StringUtils.isEmpty(this.url)) {
+                throw new ParamException("url is null", ErrorCode.UNEXPECTED_ERROR.ordinal());
+            }
+            if (StringUtils.isEmpty(this.username)) {
+                throw new ParamException("username is null", ErrorCode.UNEXPECTED_ERROR.ordinal());
+            }
+            if (StringUtils.isEmpty(this.key)) {
+                throw new ParamException("key is null", ErrorCode.UNEXPECTED_ERROR.ordinal());
+            }
+            return new ConnectParam(this);
         }
 
         @Override
         public String toString() {
             return "Builder{" +
-                    "host='" + host + '\'' +
-                    ", port=" + port +
+                    "url='" + url + '\'' +
                     '}';
         }
     }

@@ -14,30 +14,30 @@ import java.util.List;
  */
 public class VectorDBClient {
 
-    private Stub stub;
+    private final Stub stub;
 
     public VectorDBClient(ConnectParam connectParam) {
-        stub = new HttpStub();
+        this.stub = new HttpStub(connectParam);
     }
 
     public Database createDatabase(String databaseName) {
-        Database db = new Database(stub, databaseName);
-        db.createDatabase(databaseName);
+        Database db = new Database(this.stub, databaseName);
+        db.createDatabase();
         return db;
     }
 
     public Database dropDatabase(String databaseName) {
-        Database db = new Database(stub, databaseName);
-        db.dropDatabase(databaseName);
+        Database db = new Database(this.stub, databaseName);
+        db.dropDatabase();
         return db;
     }
 
-    public List<String> listDatabase(String databaseName, int timeout) {
-        Database db = new Database(stub, databaseName);
-        return db.listDatabase(databaseName);
+    public List<String> listDatabase(String databaseName) {
+        Database db = new Database(this.stub, databaseName);
+        return db.listDatabase();
     }
 
     public Database database(String databaseName) {
-        return new Database(stub, databaseName);
+        return new Database(this.stub, databaseName);
     }
 }

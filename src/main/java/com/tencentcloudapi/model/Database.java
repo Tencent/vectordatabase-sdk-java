@@ -14,29 +14,35 @@ public class Database {
     private HttpClient httpClient;
     private String dbName;
 
-    public void createDatabase(String databaseName, int timeout) {
+    public Database(HttpClient httpClient, String dbName) {
+        this.httpClient = httpClient;
+        this.dbName = dbName;
     }
 
-    public void dropDatabase(String databaseName, int timeout) {
+    public void createDatabase(String databaseName) {
     }
 
-    public void listDatabase(String databaseName, int timeout) {
+    public void dropDatabase(String databaseName) {
+    }
+
+    public List<String> listDatabase(String databaseName) {
+        return null;
     }
 
     public Collection createCollection(String name, int shard, int replicas,
-                                       String description, Index index, int timeout) {
+                                       String description, Index index) {
         return null;
     }
 
-    public List<Collection> listCollections(int timeout) {
+    public List<Collection> listCollections() {
         return null;
     }
 
-    public Collection describeCollection(String name, int timeout) {
+    public Collection describeCollection(String name) {
         return null;
     }
 
-    public void dropCollection(String name, int timeout) {
+    public void dropCollection(String name) {
     }
 
     public Collection collection(String name) {

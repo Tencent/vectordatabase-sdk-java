@@ -12,23 +12,23 @@ import java.util.List;
  */
 public class Collection {
 
-    public void upsert(List<Document> documents, int timeout) {
+    public void upsert(List<Document> documents) {
     }
 
-    public List<Document> query(List<String> documentIds, boolean retrieveVector, int limit, int timeout) {
+    public List<Document> query(List<String> documentIds, boolean retrieveVector, int limit) {
         return null;
     }
 
     public List<List<Document>> search(List<List<Float>> vectors, Filter filter, HNSWSearchParams params,
-                                       boolean retrieveVector, int limit, int timeout) {
+                                       boolean retrieveVector, int limit) {
         return null;
     }
 
     public List<Document> searchById(List<String> documentIds, Filter filter, HNSWSearchParams params,
-                                     boolean retrieveVector, int limit, int timeout) {
+                                     boolean retrieveVector, int limit) {
         return null;
     }
 
-    public void delete(List<String> documentIds, int timeout) {
+    public void delete(List<String> documentIds) {
     }
 }

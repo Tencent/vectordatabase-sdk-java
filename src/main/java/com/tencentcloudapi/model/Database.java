@@ -1,7 +1,7 @@
 package com.tencentcloudapi.model;
 
-import com.tencentcloudapi.client.HttpClient;
-import com.tencentcloudapi.model.param.Index;
+import com.tencentcloudapi.model.param.collection.index.Index;
+import com.tencentcloudapi.service.Stub;
 
 import java.util.List;
 
@@ -11,11 +11,11 @@ import java.util.List;
  * Date: 2023/7/24
  */
 public class Database {
-    private HttpClient httpClient;
+    private Stub stub;
     private String dbName;
 
-    public Database(HttpClient httpClient, String dbName) {
-        this.httpClient = httpClient;
+    public Database(Stub stub, String dbName) {
+        this.stub = stub;
         this.dbName = dbName;
     }
 

@@ -1,8 +1,4 @@
-package com.tencentcloudapi.model.param.index;
-
-import com.tencentcloudapi.model.param.FieldType;
-import com.tencentcloudapi.model.param.IndexType;
-import com.tencentcloudapi.model.param.MetricType;
+package com.tencentcloudapi.model.param.collection.index;
 
 /**
  * Description:

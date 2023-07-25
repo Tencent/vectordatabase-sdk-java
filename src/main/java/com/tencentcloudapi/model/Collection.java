@@ -1,7 +1,7 @@
 package com.tencentcloudapi.model;
 
-import com.tencentcloudapi.model.param.Filter;
-import com.tencentcloudapi.model.param.HNSWSearchParams;
+import com.tencentcloudapi.model.param.dml.Filter;
+import com.tencentcloudapi.model.param.dml.HNSWSearchParams;
 
 import java.util.List;
 

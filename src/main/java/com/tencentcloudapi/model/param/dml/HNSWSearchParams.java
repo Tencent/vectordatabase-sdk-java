@@ -1,4 +1,4 @@
-package com.tencentcloudapi.model.param;
+package com.tencentcloudapi.model.param.dml;
 
 /**
  * VectorDB HNSWSearchParams

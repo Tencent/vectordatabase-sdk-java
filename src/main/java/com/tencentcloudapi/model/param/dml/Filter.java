@@ -1,6 +1,5 @@
-package com.tencentcloudapi.model.param;
+package com.tencentcloudapi.model.param.dml;
 
-import java.util.Collections;
 import java.util.List;
 
 /**

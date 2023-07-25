@@ -1,7 +1,9 @@
 package com.tencentcloudapi.client;
 
 import com.tencentcloudapi.model.Database;
-import com.tencentcloudapi.model.param.ConnectParam;
+import com.tencentcloudapi.model.param.database.ConnectParam;
+import com.tencentcloudapi.service.HttpStub;
+import com.tencentcloudapi.service.Stub;
 
 import java.util.List;
 
@@ -12,30 +14,30 @@ import java.util.List;
  */
 public class VectorDBClient {
 
-    private HttpClient httpClient;
+    private Stub stub;
 
     public VectorDBClient(ConnectParam connectParam) {
-        httpClient = new HttpClient();
+        stub = new HttpStub();
     }
 
     public Database createDatabase(String databaseName) {
-        Database db = new Database(httpClient, databaseName);
+        Database db = new Database(stub, databaseName);
         db.createDatabase(databaseName);
         return db;
     }
 
     public Database dropDatabase(String databaseName) {
-        Database db = new Database(httpClient, databaseName);
+        Database db = new Database(stub, databaseName);
         db.dropDatabase(databaseName);
         return db;
     }
 
     public List<String> listDatabase(String databaseName, int timeout) {
-        Database db = new Database(httpClient, databaseName);
+        Database db = new Database(stub, databaseName);
         return db.listDatabase(databaseName);
     }
 
     public Database database(String databaseName) {
-        return new Database(httpClient, databaseName);
+        return new Database(stub, databaseName);
     }
 }

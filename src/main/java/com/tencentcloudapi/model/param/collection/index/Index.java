@@ -1,6 +1,4 @@
-package com.tencentcloudapi.model.param.index;
-
-import com.tencentcloudapi.model.param.FieldType;
+package com.tencentcloudapi.model.param.collection.index;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,27 +1,27 @@
-package com.tencentcloudapi.model.param;
+package com.tencentcloudapi.model.param.collection.index;
 
 /**
  * Description:
  * User: wlleiiwang
  * Date: 2023/7/24
  */
-public enum FieldType {
+public enum MetricType {
     /**
      *
      */
-    Uint64("uint64"),
+    L2("L2"),
     /**
      *
      */
-    String("string"),
+    IP("IP"),
     /**
      *
      */
-    Vector("vector");
+    COSINE("COSINE");
 
     private final String value;
 
-    private FieldType(String value) {
+    private MetricType(String value) {
         this.value = value;
     }
 

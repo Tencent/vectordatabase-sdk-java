@@ -1,10 +1,7 @@
 package com.tencentcloudapi.model.param.database;
 
-import com.tencentcloudapi.exception.ErrorCode;
 import com.tencentcloudapi.exception.ParamException;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.logging.Logger;
 
 /**
  * Parameters for client connection.
@@ -16,8 +13,6 @@ public class ConnectParam {
     private final String username;
     private final String key;
     private final int timeout;
-
-    private static final Logger logger = Logger.getLogger(ConnectParam.class.getName());
 
     private ConnectParam(Builder builder) {
         this.url = builder.url;

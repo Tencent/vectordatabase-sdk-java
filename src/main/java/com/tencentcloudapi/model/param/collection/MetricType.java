@@ -1,31 +1,27 @@
-package com.tencentcloudapi.model.param.collection.index;
+package com.tencentcloudapi.model.param.collection;
 
 /**
  * Description:
  * User: wlleiiwang
  * Date: 2023/7/24
  */
-public enum IndexType {
+public enum MetricType {
     /**
      *
      */
-    FLAT("FLAT"),
+    L2("L2"),
     /**
      *
      */
-    HNSW("HNSW"),
+    IP("IP"),
     /**
      *
      */
-    PRIMARY_KEY("primaryKey"),
-    /**
-     *
-     */
-    FILTER("filter");
+    COSINE("COSINE");
 
     private final String value;
 
-    private IndexType(String value) {
+    private MetricType(String value) {
         this.value = value;
     }
 

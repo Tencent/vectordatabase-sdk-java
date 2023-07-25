@@ -1,4 +1,4 @@
-package com.tencentcloudapi.model.param.collection.index;
+package com.tencentcloudapi.model.param.collection;
 
 /**
  * Description:
@@ -6,12 +6,12 @@ package com.tencentcloudapi.model.param.collection.index;
  * Date: 2023/7/25
  */
 public class IndexField {
-    private String name;
+    private String fieldName;
     private FieldType fieldType;
     private IndexType indexType;
 
-    public IndexField(String name, FieldType fieldType, IndexType indexType) {
-        this.name = name;
+    public IndexField(String fieldName, FieldType fieldType, IndexType indexType) {
+        this.fieldName = fieldName;
         this.fieldType = fieldType;
         this.indexType = indexType;
     }
@@ -28,8 +28,8 @@ public class IndexField {
         return IndexType.PRIMARY_KEY.equals(this.indexType);
     }
 
-    public String getName() {
-        return name;
+    public String getFieldName() {
+        return fieldName;
     }
 
     public FieldType getFieldType() {

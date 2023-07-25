@@ -1,9 +1,15 @@
 package com.tencentcloudapi.model;
 
-import com.tencentcloudapi.model.param.collection.index.Index;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tencentcloudapi.exception.ParamException;
+import com.tencentcloudapi.model.param.collection.IndexField;
 import com.tencentcloudapi.model.param.dml.*;
 import com.tencentcloudapi.service.Stub;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,35 +19,29 @@ import java.util.List;
  */
 public class Collection {
 
-    private final Stub stub;
-    private final String databaseName;
-    private final String collectionName;
-    private int shard = 0;
-    private int replicas = 0;
+    @JsonIgnore
+    private Stub stub;
+    private String database;
+    private String collection;
+    private int replicaNum = 0;
+    private int shardNum = 0;
     private String description;
-    private Index index;
+    private List<IndexField> indexes;
     private String createTime;
 
-    public Collection(Stub stub, String databaseName, String collectionName) {
+    public Collection(Stub stub, String database, String collection) {
         this.stub = stub;
-        this.databaseName = databaseName;
-        this.collectionName = collectionName;
+        this.database = database;
+        this.collection = collection;
     }
 
-    public void setShard(int shard) {
-        this.shard = shard;
-    }
-
-    public void setReplicas(int replicas) {
-        this.replicas = replicas;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setIndex(Index index) {
-        this.index = index;
+    private Collection(CreateBuilder builder) {
+        this.database = builder.database;
+        this.collection = builder.collection;
+        this.replicaNum = builder.replicaNum;
+        this.shardNum = builder.shardNum;
+        this.description = builder.description;
+        this.indexes = builder.indexes;
     }
 
     public void setCreateTime(String createTime) {
@@ -66,5 +66,78 @@ public class Collection {
 
     public void delete(List<String> documentIds) {
         this.stub.deleteDocument(documentIds);
+    }
+
+    public static class CreateBuilder {
+        private String database;
+        private String collection;
+        private int replicaNum;
+        private int shardNum;
+        private String description;
+        private List<IndexField> indexes;
+
+        private CreateBuilder() {
+            this.indexes = new ArrayList<>();
+        }
+
+        public Collection.CreateBuilder withDatabase(String database) {
+            this.database = database;
+            return this;
+        }
+
+        public Collection.CreateBuilder withCollection(String collection) {
+            this.collection = collection;
+            return this;
+        }
+
+        public Collection.CreateBuilder withReplicaNum(int replicaNum) {
+            this.replicaNum = replicaNum;
+            return this;
+        }
+
+        public Collection.CreateBuilder withShardNum(int shardNum) {
+            this.shardNum = shardNum;
+            return this;
+        }
+
+        public Collection.CreateBuilder withDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Collection.CreateBuilder addField(IndexField field) {
+            this.indexes.add(field);
+            return this;
+        }
+
+        public Collection build() throws ParamException {
+            if (StringUtils.isEmpty(this.database)) {
+                throw new ParamException("ConnectParam error: database is null");
+            }
+            if (StringUtils.isEmpty(this.collection)) {
+                throw new ParamException("ConnectParam error: collection is null");
+            }
+            if (this.replicaNum == 0) {
+                throw new ParamException("ConnectParam error: replicaNum is 0");
+            }
+            if (this.shardNum == 0) {
+                throw new ParamException("ConnectParam error: shardNum is 0");
+            }
+            if (this.indexes.isEmpty()) {
+                throw new ParamException("ConnectParam error: indexes is empty");
+            }
+            return new Collection(this);
+        }
+    }
+
+    @Override
+    public String toString() {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            throw new ParamException(String.format(
+                    "Create collection param error: %s", e.getMessage()));
+        }
     }
 }

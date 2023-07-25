@@ -1,4 +1,4 @@
-package com.tencentcloudapi.model.param.collection.index;
+package com.tencentcloudapi.model.param.collection;
 
 /**
  * Description:

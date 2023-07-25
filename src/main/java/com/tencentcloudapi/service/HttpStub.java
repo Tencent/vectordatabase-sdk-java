@@ -8,7 +8,6 @@ import com.tencentcloudapi.exception.VectorDBException;
 import com.tencentcloudapi.model.Collection;
 import com.tencentcloudapi.model.Database;
 import com.tencentcloudapi.model.Document;
-import com.tencentcloudapi.model.param.collection.CreateCollectionParam;
 import com.tencentcloudapi.model.param.database.ConnectParam;
 import com.tencentcloudapi.model.param.dml.QueryParam;
 import com.tencentcloudapi.model.param.dml.SearchByIdParam;
@@ -77,27 +76,53 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public Collection createCollection(CreateCollectionParam params) {
+    public void createCollection(Collection collection) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_CREAGE);
-        return null;
+        this.post(url, collection.toString());
     }
 
     @Override
     public List<Collection> listCollections(String databaseName) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_LIST);
-        return null;
+        JsonNode jsonNode = this.post(url, String.format("{\"databases\":\"%s\"}", databaseName));
+        JsonNode dbsJson = jsonNode.get("collections");
+        if (dbsJson == null) {
+            return new ArrayList<>();
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(dbsJson.asText(), new TypeReference<List<Collection>>() {});
+        } catch (JsonProcessingException ex) {
+            throw new VectorDBException(String.format(
+                    "VectorDBServer response error: can't parse collections=%s", dbsJson.asText()));
+        }
     }
 
     @Override
     public Collection describeCollection(String databaseName, String collectionName) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_DESCRIBE);
-        return null;
+        String body = String.format("{\"databases\":\"%s\",\"collection\":\"%s\"}",
+                databaseName, collectionName);
+        JsonNode jsonNode = this.post(url, body);
+        JsonNode dbsJson = jsonNode.get("collection");
+        if (dbsJson == null) {
+            return null;
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(dbsJson.asText(), Collection.class);
+        } catch (JsonProcessingException ex) {
+            throw new VectorDBException(String.format(
+                    "VectorDBServer response error: can't parse collection=%s", dbsJson.asText()));
+        }
     }
 
     @Override
     public void dropCollection(String databaseName, String collectionName) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_DROP);
-
+        String body = String.format("{\"databases\":\"%s\",\"collection\":\"%s\"}",
+                databaseName, collectionName);
+        this.post(url, body);
     }
 
     @Override

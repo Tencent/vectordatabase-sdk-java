@@ -1,4 +1,6 @@
-package com.tencentcloudapi.model.param.collection.index;
+package com.tencentcloudapi.model.param.collection;
+
+import com.tencentcloudapi.model.param.collection.*;
 
 /**
  * Description:
@@ -10,10 +12,10 @@ public class VectorIndex  extends IndexField {
     private MetricType metricType;
     private HNSWParams params;
 
-    public VectorIndex(String name, int dimension,
+    public VectorIndex(String fieldName, int dimension,
                        IndexType indexType, MetricType metricType,
                        HNSWParams params) {
-        super(name, FieldType.Vector, indexType);
+        super(fieldName, FieldType.Vector, indexType);
         this.dimension = dimension;
         this.metricType = metricType;
         this.params = params;

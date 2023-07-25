@@ -1,6 +1,5 @@
 package com.tencentcloudapi.model;
 
-import com.tencentcloudapi.model.param.collection.CreateCollectionParam;
 import com.tencentcloudapi.service.Stub;
 
 import java.util.List;
@@ -31,8 +30,9 @@ public class Database {
         return stub.listDatabases();
     }
 
-    public Collection createCollection(CreateCollectionParam param) {
-        return stub.createCollection(param);
+    public Collection createCollection(Collection collection) {
+        stub.createCollection(collection);
+        return collection;
     }
 
     public List<Collection> listCollections() {

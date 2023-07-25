@@ -3,7 +3,6 @@ package com.tencentcloudapi.service;
 import com.tencentcloudapi.model.Collection;
 import com.tencentcloudapi.model.Database;
 import com.tencentcloudapi.model.Document;
-import com.tencentcloudapi.model.param.collection.CreateCollectionParam;
 import com.tencentcloudapi.model.param.dml.QueryParam;
 import com.tencentcloudapi.model.param.dml.SearchByIdParam;
 import com.tencentcloudapi.model.param.dml.SearchParam;
@@ -35,7 +34,7 @@ public interface Stub {
     /**
      * create collection
      */
-    Collection createCollection(CreateCollectionParam params);
+    void createCollection(Collection params);
 
     /**
      * list collections

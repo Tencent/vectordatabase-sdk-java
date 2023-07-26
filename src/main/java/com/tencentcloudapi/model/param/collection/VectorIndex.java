@@ -1,9 +1,7 @@
 package com.tencentcloudapi.model.param.collection;
 
-import com.tencentcloudapi.model.param.collection.*;
-
 /**
- * Description:
+ * VectorIndex
  * User: wlleiiwang
  * Date: 2023/7/25
  */

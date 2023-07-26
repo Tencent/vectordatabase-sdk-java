@@ -1,7 +1,7 @@
 package com.tencentcloudapi.model.param.collection;
 
 /**
- * Description:
+ * IndexField
  * User: wlleiiwang
  * Date: 2023/7/25
  */

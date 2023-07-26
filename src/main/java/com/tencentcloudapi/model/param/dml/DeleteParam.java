@@ -7,22 +7,19 @@ import com.tencentcloudapi.exception.ParamException;
 import java.util.List;
 
 /**
- * Query Param
+ * Delete Param
  * User: wlleiiwang
  * Date: 2023/7/26
  */
-public class QueryParam {
+public class DeleteParam {
     private List<String> documentIds;
-    private boolean retrieveVector;
 
-    public QueryParam(Builder builder) {
+    public DeleteParam(Builder builder) {
         this.documentIds = builder.documentIds;
-        this.retrieveVector = builder.retrieveVector;
     }
 
     public static class Builder {
         private List<String> documentIds;
-        private boolean retrieveVector = false;
 
         public Builder() {
         }
@@ -32,25 +29,20 @@ public class QueryParam {
             return this;
         }
 
-        public Builder withRetrieveVector(boolean retrieveVector) {
-            this.retrieveVector = retrieveVector;
-            return this;
-        }
-
-        public QueryParam build() {
+        public DeleteParam build() {
             if (documentIds == null || documentIds.isEmpty()) {
-                throw new ParamException("QueryParam error: documentIds is null");
+                throw new ParamException("DeleteParam error: documentIds is null");
             }
-            return new QueryParam(this);
+            return new DeleteParam(this);
         }
     }
 
-    public static class QueryParamInner {
+    public static class DeleteParamInner {
         private String database;
         private String collection;
-        private QueryParam query;
+        private DeleteParam query;
 
-        public QueryParamInner(String database, String collection, QueryParam query) {
+        public DeleteParamInner(String database, String collection, DeleteParam query) {
             this.database = database;
             this.collection = collection;
             this.query = query;
@@ -63,7 +55,7 @@ public class QueryParam {
                 return mapper.writeValueAsString(this);
             } catch (JsonProcessingException e) {
                 throw new ParamException(String.format(
-                        "QueryParam error: %s", e.getMessage()));
+                        "DeleteParam error: %s", e.getMessage()));
             }
         }
     }

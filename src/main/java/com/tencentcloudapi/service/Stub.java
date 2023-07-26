@@ -3,9 +3,7 @@ package com.tencentcloudapi.service;
 import com.tencentcloudapi.model.Collection;
 import com.tencentcloudapi.model.Database;
 import com.tencentcloudapi.model.Document;
-import com.tencentcloudapi.model.param.dml.QueryParam;
-import com.tencentcloudapi.model.param.dml.SearchByIdParam;
-import com.tencentcloudapi.model.param.dml.SearchParam;
+import com.tencentcloudapi.model.param.dml.*;
 
 import java.util.List;
 
@@ -54,25 +52,20 @@ public interface Stub {
     /**
      * upsert document
      */
-    void upsertDocument(List<Document> documents);
+    void upsertDocument(InsertParam.InsertParamInner param);
 
     /**
      * query document
      */
-    List<Document> queryDocument(QueryParam param);
+    List<Document> queryDocument(QueryParam.QueryParamInner param);
 
     /**
      * search document
      */
-    List<List<Document>> searchDocument(SearchParam param);
-
-    /**
-     * search document by id
-     */
-    List<Document> searchDocumentById(SearchByIdParam param);
+    List<List<Document>> searchDocument(SearchParam.SearchParamInner param);
 
     /**
      * delete document
      */
-    void deleteDocument(List<String> documentIds);
+    void deleteDocument(DeleteParam.DeleteParamInner param);
 }

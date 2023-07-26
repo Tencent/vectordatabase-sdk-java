@@ -9,9 +9,7 @@ import com.tencentcloudapi.model.Collection;
 import com.tencentcloudapi.model.Database;
 import com.tencentcloudapi.model.Document;
 import com.tencentcloudapi.model.param.database.ConnectParam;
-import com.tencentcloudapi.model.param.dml.QueryParam;
-import com.tencentcloudapi.model.param.dml.SearchByIdParam;
-import com.tencentcloudapi.model.param.dml.SearchParam;
+import com.tencentcloudapi.model.param.dml.*;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 
@@ -126,31 +124,49 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public void upsertDocument(List<Document> documents) {
+    public void upsertDocument(InsertParam.InsertParamInner param) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_UPSERT);
+        this.post(url, param.toString());
     }
 
     @Override
-    public List<Document> queryDocument(QueryParam param) {
+    public List<Document> queryDocument(QueryParam.QueryParamInner param) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_QUERY);
-        return null;
+        JsonNode jsonNode = this.post(url, param.toString());
+        JsonNode docsNode = jsonNode.get("documents");
+        if (docsNode == null) {
+            return new ArrayList<>();
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(docsNode.asText(), new TypeReference<List<Document>>() {});
+        } catch (JsonProcessingException ex) {
+            throw new VectorDBException(String.format(
+                    "VectorDBServer response from query error: can't parse documents=%s", docsNode.asText()));
+        }
     }
 
     @Override
-    public List<List<Document>> searchDocument(SearchParam param) {
+    public List<List<Document>> searchDocument(SearchParam.SearchParamInner param) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_SEARCH);
-        return null;
+        JsonNode jsonNode = this.post(url, param.toString());
+        JsonNode docsNode = jsonNode.get("documents");
+        if (docsNode == null) {
+            return new ArrayList<>();
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(docsNode.asText(), new TypeReference<List<List<Document>>>() {});
+        } catch (JsonProcessingException ex) {
+            throw new VectorDBException(String.format(
+                    "VectorDBServer response from search error: can't parse documents=%s", docsNode.asText()));
+        }
     }
 
     @Override
-    public List<Document> searchDocumentById(SearchByIdParam param) {
-        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_SEARCH);
-        return null;
-    }
-
-    @Override
-    public void deleteDocument(List<String> documentIds) {
+    public void deleteDocument(DeleteParam.DeleteParamInner param) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_DELETE);
+        this.post(url, param.toString());
     }
 
     private JsonNode get(String url) {

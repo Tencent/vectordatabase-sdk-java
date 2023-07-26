@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencentcloudapi.exception.ParamException;
 import com.tencentcloudapi.model.param.collection.IndexField;
 import com.tencentcloudapi.model.param.dml.*;
+import com.tencentcloudapi.model.param.dml.InsertParam;
 import com.tencentcloudapi.service.Stub;
 import org.apache.commons.lang3.StringUtils;
 
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * VectorDB Document
+ * VectorDB Collection
  * User: wlleiiwang
  * Date: 2023/7/24
  */
@@ -48,24 +49,30 @@ public class Collection {
         this.createTime = createTime;
     }
 
-    public void upsert(List<Document> documents) {
-        this.stub.upsertDocument(documents);
+    public void upsert(InsertParam param) {
+        InsertParam.InsertParamInner insertParam = new InsertParam.InsertParamInner(
+                database, collection, param.getDocuments());
+        this.stub.upsertDocument(insertParam);
     }
 
     public List<Document> query(QueryParam param) {
-        return this.stub.queryDocument(param);
+        return this.stub.queryDocument(
+                new QueryParam.QueryParamInner(database, collection, param));
     }
 
-    public List<List<Document>> search(SearchParam param) {
-        return this.stub.searchDocument(param);
+    public List<List<Document>> search(SearchByVectorParam param) {
+        return this.stub.searchDocument(new SearchParam.SearchParamInner(
+                database, collection, param));
     }
 
-    public List<Document> searchById(SearchByIdParam param) {
-        return this.stub.searchDocumentById(param);
+    public List<List<Document>> searchById(SearchByIdParam param) {
+        return this.stub.searchDocument(new SearchParam.SearchParamInner(
+                database, collection, param));
     }
 
-    public void delete(List<String> documentIds) {
-        this.stub.deleteDocument(documentIds);
+    public void delete(DeleteParam param) {
+        this.stub.deleteDocument(
+                new DeleteParam.DeleteParamInner(database, collection, param));
     }
 
     public static class CreateBuilder {

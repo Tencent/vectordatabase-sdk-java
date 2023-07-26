@@ -50,7 +50,7 @@ public class ConnectParam {
         private Builder() {
         }
 
-        public Builder withUrl(String host) {
+        public Builder withUrl(String url) {
             this.url = url;
             return this;
         }

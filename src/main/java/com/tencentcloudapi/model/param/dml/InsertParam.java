@@ -48,33 +48,4 @@ public class InsertParam {
             return new InsertParam(this);
         }
     }
-
-    public static class InsertParamInner {
-        private String database;
-        private String collection;
-        private List<Document> documents;
-        private boolean buildIndex = true;
-
-        public InsertParamInner(String database, String collection,
-                                List<Document> documents) {
-            this.database = database;
-            this.collection = collection;
-            this.documents = documents;
-        }
-
-        public void setBuildIndex(boolean buildIndex) {
-            this.buildIndex = buildIndex;
-        }
-
-        @Override
-        public String toString() {
-            ObjectMapper mapper = new ObjectMapper();
-            try {
-                return mapper.writeValueAsString(this);
-            } catch (JsonProcessingException e) {
-                throw new ParamException(String.format(
-                        "InsertParam error: %s", e.getMessage()));
-            }
-        }
-    }
 }

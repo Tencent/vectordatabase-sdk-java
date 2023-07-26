@@ -5,7 +5,7 @@ package com.tencentcloudapi;
  * User: wlleiiwang
  * Date: 2023/7/24
  */
-public class Example {
+public class CollectionExample {
     public static void main(String[] args) {
 
     }

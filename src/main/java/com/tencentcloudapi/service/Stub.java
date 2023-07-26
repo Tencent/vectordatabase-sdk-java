@@ -3,7 +3,11 @@ package com.tencentcloudapi.service;
 import com.tencentcloudapi.model.Collection;
 import com.tencentcloudapi.model.Database;
 import com.tencentcloudapi.model.Document;
-import com.tencentcloudapi.model.param.dml.*;
+import com.tencentcloudapi.model.param.collection.CreateCollectionParam;
+import com.tencentcloudapi.service.param.DeleteParamInner;
+import com.tencentcloudapi.service.param.InsertParamInner;
+import com.tencentcloudapi.service.param.QueryParamInner;
+import com.tencentcloudapi.service.param.SearchParamInner;
 
 import java.util.List;
 
@@ -32,7 +36,7 @@ public interface Stub {
     /**
      * create collection
      */
-    void createCollection(Collection params);
+    void createCollection(CreateCollectionParam params);
 
     /**
      * list collections
@@ -52,20 +56,20 @@ public interface Stub {
     /**
      * upsert document
      */
-    void upsertDocument(InsertParam.InsertParamInner param);
+    void upsertDocument(InsertParamInner param);
 
     /**
      * query document
      */
-    List<Document> queryDocument(QueryParam.QueryParamInner param);
+    List<Document> queryDocument(QueryParamInner param);
 
     /**
      * search document
      */
-    List<List<Document>> searchDocument(SearchParam.SearchParamInner param);
+    List<List<Document>> searchDocument(SearchParamInner param);
 
     /**
      * delete document
      */
-    void deleteDocument(DeleteParam.DeleteParamInner param);
+    void deleteDocument(DeleteParamInner param);
 }

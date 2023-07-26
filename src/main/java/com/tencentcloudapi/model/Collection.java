@@ -1,16 +1,16 @@
 package com.tencentcloudapi.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tencentcloudapi.exception.ParamException;
+import com.tencentcloudapi.exception.VectorDBException;
 import com.tencentcloudapi.model.param.collection.IndexField;
 import com.tencentcloudapi.model.param.dml.*;
 import com.tencentcloudapi.model.param.dml.InsertParam;
 import com.tencentcloudapi.service.Stub;
-import org.apache.commons.lang3.StringUtils;
+import com.tencentcloudapi.service.param.DeleteParamInner;
+import com.tencentcloudapi.service.param.InsertParamInner;
+import com.tencentcloudapi.service.param.QueryParamInner;
+import com.tencentcloudapi.service.param.SearchParamInner;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,129 +22,52 @@ public class Collection {
 
     @JsonIgnore
     private Stub stub;
-    private String database;
-    private String collection;
-    private int replicaNum = 0;
-    private int shardNum = 0;
-    private String description;
-    private List<IndexField> indexes;
-    private String createTime;
+    protected String database;
+    protected String collection;
+    protected int replicaNum = 0;
+    protected int shardNum = 0;
+    protected String description;
+    protected List<IndexField> indexes;
+    protected String createTime;
 
-    public Collection(Stub stub, String database, String collection) {
+    protected Collection() {
+    }
+
+    public void setStub(Stub stub) {
         this.stub = stub;
-        this.database = database;
-        this.collection = collection;
     }
 
-    private Collection(CreateBuilder builder) {
-        this.database = builder.database;
-        this.collection = builder.collection;
-        this.replicaNum = builder.replicaNum;
-        this.shardNum = builder.shardNum;
-        this.description = builder.description;
-        this.indexes = builder.indexes;
+    public String getDatabase() {
+        return database;
     }
 
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
+    public String getCollection() {
+        return collection;
     }
 
-    public void upsert(InsertParam param) {
-        InsertParam.InsertParamInner insertParam = new InsertParam.InsertParamInner(
+    public void upsert(InsertParam param) throws VectorDBException {
+        InsertParamInner insertParam = new InsertParamInner(
                 database, collection, param.getDocuments());
         this.stub.upsertDocument(insertParam);
     }
 
-    public List<Document> query(QueryParam param) {
+    public List<Document> query(QueryParam param) throws VectorDBException {
         return this.stub.queryDocument(
-                new QueryParam.QueryParamInner(database, collection, param));
+                new QueryParamInner(database, collection, param));
     }
 
-    public List<List<Document>> search(SearchByVectorParam param) {
-        return this.stub.searchDocument(new SearchParam.SearchParamInner(
+    public List<List<Document>> search(SearchByVectorParam param) throws VectorDBException {
+        return this.stub.searchDocument(new SearchParamInner(
                 database, collection, param));
     }
 
-    public List<List<Document>> searchById(SearchByIdParam param) {
-        return this.stub.searchDocument(new SearchParam.SearchParamInner(
+    public List<List<Document>> searchById(SearchByIdParam param) throws VectorDBException {
+        return this.stub.searchDocument(new SearchParamInner(
                 database, collection, param));
     }
 
-    public void delete(DeleteParam param) {
+    public void delete(DeleteParam param) throws VectorDBException {
         this.stub.deleteDocument(
-                new DeleteParam.DeleteParamInner(database, collection, param));
-    }
-
-    public static class CreateBuilder {
-        private String database;
-        private String collection;
-        private int replicaNum;
-        private int shardNum;
-        private String description;
-        private List<IndexField> indexes;
-
-        private CreateBuilder() {
-            this.indexes = new ArrayList<>();
-        }
-
-        public Collection.CreateBuilder withDatabase(String database) {
-            this.database = database;
-            return this;
-        }
-
-        public Collection.CreateBuilder withCollection(String collection) {
-            this.collection = collection;
-            return this;
-        }
-
-        public Collection.CreateBuilder withReplicaNum(int replicaNum) {
-            this.replicaNum = replicaNum;
-            return this;
-        }
-
-        public Collection.CreateBuilder withShardNum(int shardNum) {
-            this.shardNum = shardNum;
-            return this;
-        }
-
-        public Collection.CreateBuilder withDescription(String description) {
-            this.description = description;
-            return this;
-        }
-
-        public Collection.CreateBuilder addField(IndexField field) {
-            this.indexes.add(field);
-            return this;
-        }
-
-        public Collection build() throws ParamException {
-            if (StringUtils.isEmpty(this.database)) {
-                throw new ParamException("ConnectParam error: database is null");
-            }
-            if (StringUtils.isEmpty(this.collection)) {
-                throw new ParamException("ConnectParam error: collection is null");
-            }
-            if (this.replicaNum == 0) {
-                throw new ParamException("ConnectParam error: replicaNum is 0");
-            }
-            if (this.shardNum == 0) {
-                throw new ParamException("ConnectParam error: shardNum is 0");
-            }
-            if (this.indexes.isEmpty()) {
-                throw new ParamException("ConnectParam error: indexes is empty");
-            }
-            return new Collection(this);
-        }
-    }
-
-    @Override
-    public String toString() {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            throw new ParamException(String.format(
-                    "Create collection param error: %s", e.getMessage()));
-        }
+                new DeleteParamInner(database, collection, param));
     }
 }

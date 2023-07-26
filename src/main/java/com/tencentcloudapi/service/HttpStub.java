@@ -8,10 +8,16 @@ import com.tencentcloudapi.exception.VectorDBException;
 import com.tencentcloudapi.model.Collection;
 import com.tencentcloudapi.model.Database;
 import com.tencentcloudapi.model.Document;
+import com.tencentcloudapi.model.param.collection.CreateCollectionParam;
 import com.tencentcloudapi.model.param.database.ConnectParam;
-import com.tencentcloudapi.model.param.dml.*;
+import com.tencentcloudapi.service.param.DeleteParamInner;
+import com.tencentcloudapi.service.param.InsertParamInner;
+import com.tencentcloudapi.service.param.QueryParamInner;
+import com.tencentcloudapi.service.param.SearchParamInner;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,8 +33,10 @@ public class HttpStub implements Stub {
     private final ConnectParam connectParam;
     private final OkHttpClient client;
     private final Headers headers;
-    public static final MediaType JSON =
+    private static final MediaType JSON =
             MediaType.parse("application/json; charset=utf-8");
+
+    private static final Logger logger = LoggerFactory.getLogger(HttpStub.class.getName());
 
 
     public HttpStub(ConnectParam connectParam) {
@@ -74,9 +82,9 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public void createCollection(Collection collection) {
+    public void createCollection(CreateCollectionParam param) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_CREAGE);
-        this.post(url, collection.toString());
+        this.post(url, param.toString());
     }
 
     @Override
@@ -124,13 +132,13 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public void upsertDocument(InsertParam.InsertParamInner param) {
+    public void upsertDocument(InsertParamInner param) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_UPSERT);
         this.post(url, param.toString());
     }
 
     @Override
-    public List<Document> queryDocument(QueryParam.QueryParamInner param) {
+    public List<Document> queryDocument(QueryParamInner param) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_QUERY);
         JsonNode jsonNode = this.post(url, param.toString());
         JsonNode docsNode = jsonNode.get("documents");
@@ -147,7 +155,7 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public List<List<Document>> searchDocument(SearchParam.SearchParamInner param) {
+    public List<List<Document>> searchDocument(SearchParamInner param) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_SEARCH);
         JsonNode jsonNode = this.post(url, param.toString());
         JsonNode docsNode = jsonNode.get("documents");
@@ -164,7 +172,7 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public void deleteDocument(DeleteParam.DeleteParamInner param) {
+    public void deleteDocument(DeleteParamInner param) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_DELETE);
         this.post(url, param.toString());
     }
@@ -182,6 +190,7 @@ public class HttpStub implements Stub {
     }
 
     private JsonNode post(String url, String json) {
+        logger.debug(String.format("Query %s, body=%s", url, json));
         RequestBody body = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
                 .url(url)
@@ -204,6 +213,8 @@ public class HttpStub implements Stub {
                     response.code(), response.message()));
         }
         String resStr = resBody.string();
+        logger.debug(String.format("Query %s, code=%s, msg=%s, result=%s",
+                response.request().url(), response.code(), response.message(), resStr));
         if (StringUtils.isEmpty(resStr)) {
             throw new VectorDBException(String.format(
                     "VectorDBServer error: ResponseBody empty, http code=%s, message=%s",

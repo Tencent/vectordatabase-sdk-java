@@ -1,5 +1,6 @@
 package com.tencentcloudapi.client;
 
+import com.tencentcloudapi.exception.VectorDBException;
 import com.tencentcloudapi.model.Database;
 import com.tencentcloudapi.model.param.database.ConnectParam;
 import com.tencentcloudapi.service.HttpStub;
@@ -20,21 +21,20 @@ public class VectorDBClient {
         this.stub = new HttpStub(connectParam);
     }
 
-    public Database createDatabase(String databaseName) {
+    public Database createDatabase(String databaseName) throws VectorDBException {
         Database db = database(databaseName);
-        db.createDatabase();
+        stub.createDatabase(db);
         return db;
     }
 
-    public Database dropDatabase(String databaseName) {
+    public Database dropDatabase(String databaseName) throws VectorDBException {
         Database db = database(databaseName);
-        db.dropDatabase();
+        stub.dropDatabase(db);
         return db;
     }
 
-    public List<String> listDatabase(String databaseName) {
-        Database db = database(databaseName);
-        return db.listDatabase();
+    public List<String> listDatabase() throws VectorDBException {
+        return stub.listDatabases();
     }
 
     public Database database(String databaseName) {

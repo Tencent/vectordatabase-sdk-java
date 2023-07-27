@@ -1,7 +1,6 @@
 package com.tencentcloudapi.model.param.dml;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencentcloudapi.exception.ParamException;
 
 import java.util.List;
@@ -11,23 +10,37 @@ import java.util.List;
  * User: wlleiiwang
  * Date: 2023/7/25
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SearchParam {
-    List<List<Float>> vectors;
+    List<List<Double>> vectors;
     List<String> documentIds;
     HNSWSearchParams params;
     String filter;
     boolean retrieveVector;
     int limit;
 
-    @Override
-    public String toString() {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            throw new ParamException(String.format(
-                    "InsertParam error: %s", e.getMessage()));
-        }
+    public List<List<Double>> getVectors() {
+        return vectors;
+    }
+
+    public List<String> getDocumentIds() {
+        return documentIds;
+    }
+
+    public HNSWSearchParams getParams() {
+        return params;
+    }
+
+    public String getFilter() {
+        return filter;
+    }
+
+    public boolean isRetrieveVector() {
+        return retrieveVector;
+    }
+
+    public int getLimit() {
+        return limit;
     }
 
     protected SearchParam() {
@@ -45,15 +58,15 @@ public class SearchParam {
     }
 
     public static class SearchBuilder extends BaseBuilder {
-        private List<List<Float>> vectors;
+        private List<List<Double>> vectors;
         private List<String> documentIds;
 
-        public SearchBuilder withVectors(List<List<Float>> vectors) {
+        public SearchBuilder withVectors(List<List<Double>> vectors) {
             this.vectors = vectors;
             return this;
         }
 
-        public SearchBuilder addVector(List<Float> vector) {
+        public SearchBuilder addVector(List<Double> vector) {
             this.vectors.add(vector);
             return this;
         }
@@ -64,22 +77,22 @@ public class SearchParam {
         }
 
         public SearchBuilder withHNSWSearchParams(HNSWSearchParams params) {
-            super.params = params;
+            this.params = params;
             return this;
         }
 
         public SearchBuilder withFilter(Filter filter) {
-            super.filter = filter;
+            this.filter = filter;
             return this;
         }
 
         public SearchBuilder withRetrieveVector(boolean retrieveVector) {
-            super.retrieveVector = retrieveVector;
+            this.retrieveVector = retrieveVector;
             return this;
         }
 
         public SearchBuilder withLimit(int limit) {
-            super.limit = limit;
+            this.limit = limit;
             return this;
         }
 
@@ -92,7 +105,9 @@ public class SearchParam {
             searchParam.vectors = this.vectors;
             searchParam.documentIds = this.documentIds;
             searchParam.params = this.params;
-            searchParam.filter = this.filter.getCond();
+            if (this.filter != null) {
+                searchParam.filter = this.filter.getCond();
+            }
             searchParam.retrieveVector = this.retrieveVector;
             searchParam.limit = this.limit;
             return searchParam;

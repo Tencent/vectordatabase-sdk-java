@@ -1,8 +1,5 @@
 # Tencent VectorDB Java SDK
 
-Java SDK for Tencent VectorDB
-
-## Getting started
 
 ### Prerequisites
 

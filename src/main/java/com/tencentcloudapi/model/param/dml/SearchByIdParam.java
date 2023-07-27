@@ -1,5 +1,6 @@
 package com.tencentcloudapi.model.param.dml;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencentcloudapi.exception.ParamException;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
  * User: wlleiiwang
  * Date: 2023/7/25
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SearchByIdParam extends SearchParam {
 
     private SearchByIdParam() {
@@ -30,22 +32,22 @@ public class SearchByIdParam extends SearchParam {
         }
 
         public SearchByIdsBuilder withHNSWSearchParams(HNSWSearchParams params) {
-            super.params = params;
+            this.params = params;
             return this;
         }
 
         public SearchByIdsBuilder withFilter(Filter filter) {
-            super.filter = filter;
+            this.filter = filter;
             return this;
         }
 
         public SearchByIdsBuilder withRetrieveVector(boolean retrieveVector) {
-            super.retrieveVector = retrieveVector;
+            this.retrieveVector = retrieveVector;
             return this;
         }
 
         public SearchByIdsBuilder withLimit(int limit) {
-            super.limit = limit;
+            this.limit = limit;
             return this;
         }
 
@@ -56,7 +58,9 @@ public class SearchByIdParam extends SearchParam {
             SearchByIdParam searchParam = new SearchByIdParam();
             searchParam.documentIds = this.documentIds;
             searchParam.params = this.params;
-            searchParam.filter = this.filter.getCond();
+            if (this.filter != null) {
+                searchParam.filter = this.filter.getCond();
+            }
             searchParam.retrieveVector = this.retrieveVector;
             searchParam.limit = this.limit;
             return searchParam;

@@ -1,5 +1,7 @@
 package com.tencentcloudapi.model.param.dml;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.List;
 
 /**
@@ -7,6 +9,7 @@ import java.util.List;
  * User: wlleiiwang
  * Date: 2023/7/24
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Filter {
 
     private StringBuffer condBuffer;

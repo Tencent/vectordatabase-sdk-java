@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencentcloudapi.exception.VectorDBException;
 import com.tencentcloudapi.model.Collection;
 import com.tencentcloudapi.model.Database;
+import com.tencentcloudapi.model.DocField;
 import com.tencentcloudapi.model.Document;
 import com.tencentcloudapi.model.param.collection.CreateCollectionParam;
 import com.tencentcloudapi.model.param.database.ConnectParam;
@@ -21,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -78,7 +80,7 @@ public class HttpStub implements Stub {
             return mapper.readValue(dbsJson.toString(), new TypeReference<List<String>>() {});
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format(
-                    "VectorDBServer response error: can't parse databases=%s", dbsJson.asText()));
+                    "VectorDBServer response error: can't parse databases=%s", dbsJson.toString()));
         }
     }
 
@@ -100,7 +102,7 @@ public class HttpStub implements Stub {
             return mapper.readValue(closJson.toString(), new TypeReference<List<Collection>>() {});
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format(
-                    "VectorDBServer response error: can't parse collections=%s", closJson.asText()));
+                    "VectorDBServer response error: can't parse collections=%s", closJson.toString()));
         }
     }
 
@@ -118,7 +120,7 @@ public class HttpStub implements Stub {
             return mapper.readValue(dbsJson.toString(), Collection.class);
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format(
-                    "VectorDBServer response error: can't parse collection=%s", dbsJson.asText()));
+                    "VectorDBServer response error: can't parse collection=%s", dbsJson.toString()));
         }
     }
 
@@ -141,14 +143,21 @@ public class HttpStub implements Stub {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_QUERY);
         JsonNode jsonNode = this.post(url, param.toString());
         JsonNode docsNode = jsonNode.get("documents");
+        List<Document> dosc = new ArrayList<>();
         if (docsNode == null) {
-            return new ArrayList<>();
+            return dosc;
         }
         try {
-            return mapper.readValue(docsNode.toString(), new TypeReference<List<Document>>() {});
+            Iterator<JsonNode> iterator = docsNode.elements();
+            while (iterator.hasNext()) {
+                JsonNode node = iterator.next();
+                Document doc = node2Doc(node);
+                dosc.add(doc);
+            }
+            return dosc;
         } catch (JsonProcessingException ex) {
-            throw new VectorDBException(String.format(
-                    "VectorDBServer response from query error: can't parse documents=%s", docsNode.asText()));
+            throw new VectorDBException(String.format("VectorDBServer response " +
+                    "from query error: can't parse documents=%s", docsNode.toString()));
         }
     }
 
@@ -156,15 +165,28 @@ public class HttpStub implements Stub {
     public List<List<Document>> searchDocument(SearchParamInner param) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_SEARCH);
         JsonNode jsonNode = this.post(url, param.toString());
-        JsonNode docsNode = jsonNode.get("documents");
-        if (docsNode == null) {
-            return new ArrayList<>();
+        JsonNode multiDocsNode = jsonNode.get("documents");
+        List<List<Document>> multiDosc = new ArrayList<>();
+        if (multiDocsNode == null) {
+            return multiDosc;
         }
         try {
-            return mapper.readValue(docsNode.toString(), new TypeReference<List<List<Document>>>() {});
+            Iterator<JsonNode> multiIter = multiDocsNode.elements();
+            while (multiIter.hasNext()) {
+                JsonNode docNode = multiIter.next();
+                Iterator<JsonNode> iter = docNode.elements();
+                List<Document> docs = new ArrayList<>();
+                while (iter.hasNext()) {
+                    JsonNode node = iter.next();
+                    Document doc = node2Doc(node);
+                    docs.add(doc);
+                }
+                multiDosc.add(docs);
+            }
+            return multiDosc;
         } catch (JsonProcessingException ex) {
-            throw new VectorDBException(String.format(
-                    "VectorDBServer response from search error: can't parse documents=%s", docsNode.asText()));
+            throw new VectorDBException(String.format("VectorDBServer response " +
+                    "from search error: can't parse documents=%s", multiDocsNode.toString()));
         }
     }
 
@@ -230,5 +252,29 @@ public class HttpStub implements Stub {
                     code, jsonNode.get("msg").asText()));
         }
         return jsonNode;
+    }
+
+    private Document node2Doc(JsonNode node) throws JsonProcessingException {
+        Document.Builder builder = Document.newBuilder();
+        Iterator<String> iterator = node.fieldNames();
+        ObjectMapper mapper = new ObjectMapper();
+        while (iterator.hasNext()) {
+            String name = iterator.next();
+            JsonNode ele = node.get(name);
+            if (StringUtils.equals("id", name)) {
+                builder.withId(ele.asText());
+            } else if (StringUtils.equals("vector", name)) {
+                List<Double> vector = mapper.readValue(
+                            ele.toString(), new TypeReference<List<Double>>() {});
+                builder.withVector(vector);
+            } else if (StringUtils.equals("doc", name)) {
+                builder.withDoc(ele.asText());
+            } else if (StringUtils.equals("score", name)) {
+                builder.withScore(ele.asDouble());
+            } else {
+                builder.addScalarField(new DocField(name, ele.asText()));
+            }
+        }
+        return builder.build();
     }
 }

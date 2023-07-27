@@ -15,6 +15,10 @@ public class SearchByVectorParam extends SearchParam {
     private SearchByVectorParam() {
     }
 
+    public static SearchByVectorsBuilder newBuilder() {
+        return new SearchByVectorsBuilder();
+    }
+
     public static class SearchByVectorsBuilder extends BaseBuilder {
         private List<List<Float>> vectors;
 

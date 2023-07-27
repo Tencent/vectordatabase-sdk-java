@@ -1,5 +1,7 @@
 package com.tencentcloudapi.model.param.collection;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * IndexType
  * User: wlleiiwang
@@ -29,6 +31,7 @@ public enum IndexType {
         this.value = value;
     }
 
+    @JsonValue
     public String getValue() {
         return value;
     }

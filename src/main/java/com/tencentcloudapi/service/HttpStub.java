@@ -33,17 +33,19 @@ public class HttpStub implements Stub {
     private final ConnectParam connectParam;
     private final OkHttpClient client;
     private final Headers headers;
+    private ObjectMapper mapper = new ObjectMapper();
     private static final MediaType JSON =
             MediaType.parse("application/json; charset=utf-8");
-
     private static final Logger logger = LoggerFactory.getLogger(HttpStub.class.getName());
 
 
     public HttpStub(ConnectParam connectParam) {
         this.connectParam = connectParam;
+        String authorization = String.format("Bearer account=%s&api_key=%s",
+                connectParam.getUsername(), connectParam.getKey());
         this.headers = new Headers.Builder()
-                .add("Authorization", String.format("Bearer account=%s&api_key=%s",
-                        connectParam.getUsername(), connectParam.getKey())).build();
+                .add("Authorization", authorization).build();
+        logger.debug("header: {}", authorization);
         this.client = new OkHttpClient.Builder()
                 .connectTimeout(2, TimeUnit.SECONDS)
                 .readTimeout(connectParam.getTimeout(), TimeUnit.SECONDS)
@@ -72,9 +74,8 @@ public class HttpStub implements Stub {
         if (dbsJson == null) {
             return new ArrayList<>();
         }
-        ObjectMapper mapper = new ObjectMapper();
         try {
-            return mapper.readValue(dbsJson.asText(), new TypeReference<List<String>>() {});
+            return mapper.readValue(dbsJson.toString(), new TypeReference<List<String>>() {});
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format(
                     "VectorDBServer response error: can't parse databases=%s", dbsJson.asText()));
@@ -90,33 +91,31 @@ public class HttpStub implements Stub {
     @Override
     public List<Collection> listCollections(String databaseName) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_LIST);
-        JsonNode jsonNode = this.post(url, String.format("{\"databases\":\"%s\"}", databaseName));
-        JsonNode dbsJson = jsonNode.get("collections");
-        if (dbsJson == null) {
+        JsonNode jsonNode = this.post(url, String.format("{\"database\":\"%s\"}", databaseName));
+        JsonNode closJson = jsonNode.get("collections");
+        if (closJson == null) {
             return new ArrayList<>();
         }
-        ObjectMapper mapper = new ObjectMapper();
         try {
-            return mapper.readValue(dbsJson.asText(), new TypeReference<List<Collection>>() {});
+            return mapper.readValue(closJson.toString(), new TypeReference<List<Collection>>() {});
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format(
-                    "VectorDBServer response error: can't parse collections=%s", dbsJson.asText()));
+                    "VectorDBServer response error: can't parse collections=%s", closJson.asText()));
         }
     }
 
     @Override
     public Collection describeCollection(String databaseName, String collectionName) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_DESCRIBE);
-        String body = String.format("{\"databases\":\"%s\",\"collection\":\"%s\"}",
+        String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
                 databaseName, collectionName);
         JsonNode jsonNode = this.post(url, body);
         JsonNode dbsJson = jsonNode.get("collection");
         if (dbsJson == null) {
             return null;
         }
-        ObjectMapper mapper = new ObjectMapper();
         try {
-            return mapper.readValue(dbsJson.asText(), Collection.class);
+            return mapper.readValue(dbsJson.toString(), Collection.class);
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format(
                     "VectorDBServer response error: can't parse collection=%s", dbsJson.asText()));
@@ -126,7 +125,7 @@ public class HttpStub implements Stub {
     @Override
     public void dropCollection(String databaseName, String collectionName) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_DROP);
-        String body = String.format("{\"databases\":\"%s\",\"collection\":\"%s\"}",
+        String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
                 databaseName, collectionName);
         this.post(url, body);
     }
@@ -145,9 +144,8 @@ public class HttpStub implements Stub {
         if (docsNode == null) {
             return new ArrayList<>();
         }
-        ObjectMapper mapper = new ObjectMapper();
         try {
-            return mapper.readValue(docsNode.asText(), new TypeReference<List<Document>>() {});
+            return mapper.readValue(docsNode.toString(), new TypeReference<List<Document>>() {});
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format(
                     "VectorDBServer response from query error: can't parse documents=%s", docsNode.asText()));
@@ -162,9 +160,8 @@ public class HttpStub implements Stub {
         if (docsNode == null) {
             return new ArrayList<>();
         }
-        ObjectMapper mapper = new ObjectMapper();
         try {
-            return mapper.readValue(docsNode.asText(), new TypeReference<List<List<Document>>>() {});
+            return mapper.readValue(docsNode.toString(), new TypeReference<List<List<Document>>>() {});
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format(
                     "VectorDBServer response from search error: can't parse documents=%s", docsNode.asText()));
@@ -190,7 +187,7 @@ public class HttpStub implements Stub {
     }
 
     private JsonNode post(String url, String json) {
-        logger.debug(String.format("Query %s, body=%s", url, json));
+        logger.debug("Query {}, body={}", url, json);
         RequestBody body = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
                 .url(url)
@@ -213,8 +210,8 @@ public class HttpStub implements Stub {
                     response.code(), response.message()));
         }
         String resStr = resBody.string();
-        logger.debug(String.format("Query %s, code=%s, msg=%s, result=%s",
-                response.request().url(), response.code(), response.message(), resStr));
+        logger.debug("Query {}, code={}, msg={}, result={}",
+                response.request().url(), response.code(), response.message(), resStr);
         if (StringUtils.isEmpty(resStr)) {
             throw new VectorDBException(String.format(
                     "VectorDBServer error: ResponseBody empty, http code=%s, message=%s",
@@ -222,10 +219,9 @@ public class HttpStub implements Stub {
         }
         if (!response.isSuccessful()) {
             throw new VectorDBException(String.format(
-                    "VectorDBServer error: not Successful, http code=%s, message=%s",
-                    response.code(), response.message()));
+                    "VectorDBServer error: not Successful, http code=%s, message=%s, result=%s",
+                    response.code(), response.message(), resStr));
         }
-        ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonNode = mapper.readTree(resStr);
         int code = jsonNode.get("code").asInt();
         if (code != 0) {

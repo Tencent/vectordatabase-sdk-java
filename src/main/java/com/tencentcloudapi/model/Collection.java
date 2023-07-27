@@ -1,6 +1,10 @@
 package com.tencentcloudapi.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tencentcloudapi.exception.ParamException;
 import com.tencentcloudapi.exception.VectorDBException;
 import com.tencentcloudapi.model.param.collection.IndexField;
 import com.tencentcloudapi.model.param.dml.*;
@@ -18,6 +22,7 @@ import java.util.List;
  * User: wlleiiwang
  * Date: 2023/7/24
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Collection {
 
     @JsonIgnore
@@ -41,8 +46,32 @@ public class Collection {
         return database;
     }
 
+    public void setDatabase(String database) {
+        this.database = database;
+    }
+
     public String getCollection() {
         return collection;
+    }
+
+    public int getReplicaNum() {
+        return replicaNum;
+    }
+
+    public int getShardNum() {
+        return shardNum;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public List<IndexField> getIndexes() {
+        return indexes;
+    }
+
+    public String getCreateTime() {
+        return createTime;
     }
 
     public void upsert(InsertParam param) throws VectorDBException {
@@ -69,5 +98,16 @@ public class Collection {
     public void delete(DeleteParam param) throws VectorDBException {
         this.stub.deleteDocument(
                 new DeleteParamInner(database, collection, param));
+    }
+
+    @Override
+    public String toString() {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            throw new ParamException(String.format(
+                    "Create collection param error: %s", e));
+        }
     }
 }

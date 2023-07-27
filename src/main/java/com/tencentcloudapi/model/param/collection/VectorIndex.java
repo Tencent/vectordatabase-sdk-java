@@ -6,28 +6,16 @@ package com.tencentcloudapi.model.param.collection;
  * Date: 2023/7/25
  */
 public class VectorIndex  extends IndexField {
-    private int dimension;
-    private MetricType metricType;
-    private HNSWParams params;
 
-    public VectorIndex(String fieldName, int dimension,
+
+    public VectorIndex(String fieldName, Integer dimension,
                        IndexType indexType, MetricType metricType,
                        HNSWParams params) {
-        super(fieldName, FieldType.Vector, indexType);
-        this.dimension = dimension;
-        this.metricType = metricType;
-        this.params = params;
-    }
-
-    public int getDimension() {
-        return dimension;
-    }
-
-    public MetricType getMetricType() {
-        return metricType;
-    }
-
-    public HNSWParams getParams() {
-        return params;
+        setFieldName(fieldName);
+        setFieldType(FieldType.Vector);
+        setIndexType(indexType);
+        setDimension(dimension);
+        setMetricType(metricType);
+        setParams(params);
     }
 }

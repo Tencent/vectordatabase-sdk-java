@@ -33,6 +33,10 @@ public class SearchParam {
     protected SearchParam() {
     }
 
+    public static BaseBuilder newBuilder() {
+        return new BaseBuilder();
+    }
+
     protected static class BaseBuilder {
         HNSWSearchParams params;
         Filter filter;

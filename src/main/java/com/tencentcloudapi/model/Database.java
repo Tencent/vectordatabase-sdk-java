@@ -21,6 +21,7 @@ public class Database {
     }
 
     public Collection createCollection(CreateCollectionParam param) throws VectorDBException {
+        param.setDatabase(databaseName);
         stub.createCollection(param);
         param.setStub(this.stub);
         return (Collection)param;
@@ -48,6 +49,6 @@ public class Database {
 
     @Override
     public String toString() {
-        return String.format("{\"databases\":\"%s\"}", this.databaseName);
+        return String.format("{\"database\":\"%s\"}", this.databaseName);
     }
 }

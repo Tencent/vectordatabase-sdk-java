@@ -1,5 +1,7 @@
 package com.tencentcloudapi.model.param.collection;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * FieldType
  * User: wlleiiwang
@@ -25,19 +27,10 @@ public enum FieldType {
         this.value = value;
     }
 
+    @JsonValue
     public String getValue() {
         return value;
     }
 
-    /**
-     * Description:
-     * User: wlleiiwang
-     * Date: 2023/7/25
-     */
-    public static class FilterIndex extends IndexField {
 
-        public FilterIndex(String fieldName, FieldType fieldType, IndexType indexType) {
-            super(fieldName, fieldType, indexType);
-        }
-    }
 }

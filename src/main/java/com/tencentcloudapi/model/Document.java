@@ -49,6 +49,10 @@ public class Document {
         this.otherScalarFields = builder.otherScalarFields;
     }
 
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
     public static class Builder {
         private String id;
         private List<Float> vector;
@@ -68,7 +72,7 @@ public class Document {
             return this;
         }
 
-        public Builder addField(DocField field) {
+        public Builder addScalarField(DocField field) {
             this.otherScalarFields.add(field);
             return this;
         }

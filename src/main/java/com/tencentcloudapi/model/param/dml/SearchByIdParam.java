@@ -14,6 +14,10 @@ public class SearchByIdParam extends SearchParam {
     private SearchByIdParam() {
     }
 
+    public static SearchByIdsBuilder newBuilder() {
+        return new SearchByIdsBuilder();
+    }
+
     public static class SearchByIdsBuilder extends BaseBuilder {
         private List<String> documentIds;
 

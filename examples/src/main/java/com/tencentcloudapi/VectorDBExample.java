@@ -9,6 +9,7 @@ import com.tencentcloudapi.model.Document;
 import com.tencentcloudapi.model.param.collection.*;
 import com.tencentcloudapi.model.param.database.ConnectParam;
 import com.tencentcloudapi.model.param.dml.InsertParam;
+import com.tencentcloudapi.service.param.InsertParamInner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,34 +77,44 @@ public class VectorDBExample {
     }
 
     public static void testDocument(VectorDBClient client) {
-        Database db = client.createDatabase("db001");
-//        Database db = client.database("db001");
+//        Database db = client.createDatabase("db001");
+        Database db = client.database("db001");
         System.out.println("-create collections----------------------");
-        CreateCollectionParam collectionParam = CreateCollectionParam.newBuilder()
-                .withName("col1")
-                .withShardNum(3)
-                .withReplicaNum(2)
-                .withDescription("test collection0")
-                .addField(new ScalarIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
-                .addField(new VectorIndex("vector", 3, IndexType.HNSW,
-                        MetricType.L2, new HNSWParams(64, 8)))
-                .addField(new ScalarIndex("other", FieldType.String, IndexType.FILTER))
-                .build();
-        Collection collection = db.createCollection(collectionParam);
-//        Collection collection = db.collection("col1");
-        // upsert
-//        Document doc1 = Document.newBuilder().withId("0001").addScalarField(new DocField("other", "doc1"))
-//                .withVector(Lists.newArrayList(0.2123, 0.23, 0.213)).build();
-//        Document doc2 = Document.newBuilder().withId("0001").addScalarField(new DocField("other", "doc1"))
-//                .withVector(Lists.asList(0.2123, 0.23, 0.213)).build();
-//        Document doc3 = Document.newBuilder().withId("0001").addScalarField(new DocField("other", "doc1"))
-//                .withVector(Lists.newArrayList(Float.valueOf(0.2123))).build();
-        System.out.println("-upsert----------------------");
-//        InsertParam insertParam = InsertParam.newBuilder()
-//                .addDocument(doc1)
-//                .addDocument(doc2)
-//                .addDocument(doc3)
+//        CreateCollectionParam collectionParam = CreateCollectionParam.newBuilder()
+//                .withName("col1")
+//                .withShardNum(3)
+//                .withReplicaNum(2)
+//                .withDescription("test collection0")
+//                .addField(new ScalarIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
+//                .addField(new VectorIndex("vector", 3, IndexType.HNSW,
+//                        MetricType.L2, new HNSWParams(64, 8)))
+//                .addField(new ScalarIndex("other", FieldType.String, IndexType.FILTER))
 //                .build();
+//        Collection collection = db.createCollection(collectionParam);
+        Collection collection = db.collection("col1");
+        // upsert
+        System.out.println("-upsert----------------------");
+        Document doc1 = Document.newBuilder()
+                .withId("0001")
+                .addScalarField(new DocField("other", "doc1"))
+                .withVector(Lists.newArrayList(0.2123, 0.23, 0.213))
+                .build();
+        Document doc2 = Document.newBuilder()
+                .withId("0002")
+                .addScalarField(new DocField("other", "doc1"))
+                .withVector(Lists.newArrayList(0.2123, 0.23, 0.213))
+                .build();
+        Document doc3 = Document.newBuilder()
+                .withId("0003").addScalarField(new DocField("other", "doc1"))
+                .withVector(Lists.newArrayList(0.2123, 0.23, 0.213))
+                .build();
+        InsertParam insertParam = InsertParam.newBuilder()
+                .addDocument(doc1)
+                .addDocument(doc2)
+                .addDocument(doc3)
+                .build();
+        InsertParamInner inner = new InsertParamInner("db001", "col1", insertParam.getDocuments());
+        System.out.println(inner.toString());
 //        collection.upsert(insertParam);
         // query
         System.out.println("-query----------------------");

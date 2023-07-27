@@ -1,5 +1,6 @@
 package com.tencentcloudapi.service.param;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencentcloudapi.exception.ParamException;
@@ -10,6 +11,7 @@ import com.tencentcloudapi.model.param.dml.DeleteParam;
  * User: wlleiiwang
  * Date: 2023/7/26
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class DeleteParamInner {
     private String database;
     private String collection;
@@ -19,6 +21,18 @@ public class DeleteParamInner {
         this.database = database;
         this.collection = collection;
         this.query = query;
+    }
+
+    public String getDatabase() {
+        return database;
+    }
+
+    public String getCollection() {
+        return collection;
+    }
+
+    public DeleteParam getQuery() {
+        return query;
     }
 
     @Override

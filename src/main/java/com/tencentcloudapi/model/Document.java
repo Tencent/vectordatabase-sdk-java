@@ -1,5 +1,6 @@
 package com.tencentcloudapi.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -15,9 +16,10 @@ import java.util.List;
  * User: wlleiiwang
  * Date: 2023/7/24
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Document {
     private String id;
-    private List<Float> vector;
+    private List<Double> vector;
     private Float score;
     private String doc;
     private List<DocField> otherScalarFields;
@@ -55,7 +57,7 @@ public class Document {
 
     public static class Builder {
         private String id;
-        private List<Float> vector;
+        private List<Double> vector;
         private List<DocField> otherScalarFields;
 
         public Builder() {
@@ -67,7 +69,7 @@ public class Document {
             return this;
         }
 
-        public Builder withVector(List<Float> vector) {
+        public Builder withVector(List<Double> vector) {
             this.vector = vector;
             return this;
         }

@@ -1,5 +1,6 @@
 package com.tencentcloudapi.model.param.dml;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencentcloudapi.exception.ParamException;
 
 import java.util.List;

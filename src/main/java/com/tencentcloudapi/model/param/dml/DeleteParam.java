@@ -1,5 +1,6 @@
 package com.tencentcloudapi.model.param.dml;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencentcloudapi.exception.ParamException;
 
 import java.util.List;
@@ -9,11 +10,16 @@ import java.util.List;
  * User: wlleiiwang
  * Date: 2023/7/26
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class DeleteParam {
     private List<String> documentIds;
 
     public DeleteParam(Builder builder) {
         this.documentIds = builder.documentIds;
+    }
+
+    public List<String> getDocumentIds() {
+        return documentIds;
     }
 
     public static class Builder {

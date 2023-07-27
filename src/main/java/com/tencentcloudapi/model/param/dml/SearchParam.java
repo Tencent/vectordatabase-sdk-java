@@ -1,5 +1,6 @@
 package com.tencentcloudapi.model.param.dml;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencentcloudapi.exception.ParamException;
@@ -19,15 +20,28 @@ public class SearchParam {
     boolean retrieveVector;
     int limit;
 
-    @Override
-    public String toString() {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            throw new ParamException(String.format(
-                    "InsertParam error: %s", e.getMessage()));
-        }
+    public List<List<Float>> getVectors() {
+        return vectors;
+    }
+
+    public List<String> getDocumentIds() {
+        return documentIds;
+    }
+
+    public HNSWSearchParams getParams() {
+        return params;
+    }
+
+    public String getFilter() {
+        return filter;
+    }
+
+    public boolean isRetrieveVector() {
+        return retrieveVector;
+    }
+
+    public int getLimit() {
+        return limit;
     }
 
     protected SearchParam() {

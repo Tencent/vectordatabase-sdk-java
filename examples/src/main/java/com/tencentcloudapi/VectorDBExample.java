@@ -10,11 +10,11 @@ import java.util.List;
  * User: wlleiiwang
  * Date: 2023/7/24
  */
-public class DatabaseManageExample {
+public class VectorDBExample {
 
     public static void main(String[] args) {
         // 创建VectorDB Client
-        ConnectParam  connectParam = ConnectParam.newBuilder()
+        ConnectParam connectParam = ConnectParam.newBuilder()
                 .withUrl("http://11.141.218.193:8100")
                 .withUsername("root")
                 .withKey("12jih3DC8GSQXrr0DBLKkCwPkjMzPwpBO93IE6f5")

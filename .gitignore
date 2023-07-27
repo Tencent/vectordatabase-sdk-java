@@ -1,3 +1,4 @@
 .idea
 *.iml
 target
+examples/dependency-reduced-pom.xml

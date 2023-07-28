@@ -13,6 +13,7 @@ import com.tencentcloudapi.utils.JSONUtil;
 
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * VectorDB Java SDK usage example
@@ -87,7 +88,7 @@ public class VectorDBExample {
 
     public static void testDocument(VectorDBClient client) {
 //        Database db = client.createDatabase("vdb001");
-        Database db = client.database("vdb001");
+        Database db = client.createDatabase("vdb001");
         List<Collection> cols3 = db.listCollections();
         System.out.println("-create collections----------------------");
         CreateCollectionParam collectionParam = CreateCollectionParam.newBuilder()
@@ -210,7 +211,7 @@ public class VectorDBExample {
 
         Database database = client.database(VDB_XLZ_DEV_DATABASE);
         List<Collection> collectionList = database.listCollections();
-        if (!collectionList.contains(VDB_XLZ_DEV_COLLECTION)) {
+        if (!collectionList.stream().anyMatch(coll -> coll.getCollection().equals(VDB_XLZ_DEV_COLLECTION))) {
             CreateCollectionParam collectionParam = initCollectionParam();
             database.createCollection(collectionParam);
         }
@@ -219,24 +220,52 @@ public class VectorDBExample {
         InsertParam insertParam = initInsertParam();
         System.out.println("testDocument - insertParam: " + JSONUtil.toJSONString(insertParam));
         collection.upsert(insertParam);
-        System.out.println("testDocument - inset finish");
+        System.out.println("testDocument - insertParam: " + JSONUtil.toJSONString(insertParam));
+        collection.upsert(insertParam);
+        System.out.println("testDocument - insert finish");
 
+        try {
+            TimeUnit.SECONDS.sleep(10);
+        } catch (InterruptedException ignore) {
+            throw new RuntimeException(ignore);
+        }
         QueryParam queryParam = initQueryParam(insertParam);
         System.out.println("testDocument - queryParam: " + JSONUtil.toJSONString(queryParam));
         List<Document> queryRes = collection.query(queryParam);
-        System.out.println("testDocument - queryRes: " + JSONUtil.toJSONString(queryRes));
+        System.out.println("testDocument - queryRes: " + toJsonString(queryRes));
 
         SearchByVectorParam searchParam = initSearchParam(insertParam);
         System.out.println("testDocument - searchParam: " + JSONUtil.toJSONString(searchParam));
         List<List<Document>> searchRes = collection.search(searchParam);
-        System.out.println("testDocument - searchRes: " + JSONUtil.toJSONString(searchRes));
+        System.out.println("testDocument - searchRes: " + toJsonString(searchRes));
 
         DeleteParam deleteParam = initDeleteParam(insertParam);
         System.out.println("testDocument - deleteParam: " + JSONUtil.toJSONString(deleteParam));
         collection.delete(deleteParam);
 
+        System.out.println("testDocument - drop database");
+        client.dropDatabase(VDB_XLZ_DEV_DATABASE);
 
     }
+
+    static <T> String toJsonString(java.util.List<T> list) {
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < list.size(); i++) {
+            T t = list.get(i);
+            if (t instanceof java.util.Collection) {
+                String subStr = toJsonString((java.util.List) t);
+                sb.append(subStr);
+            } else {
+                sb.append(t.toString());
+            }
+            if (i < list.size() - 1) {
+                sb.append(",");
+            }
+        }
+        return sb.append("]").toString();
+
+    }
+
 
     static DeleteParam initDeleteParam(InsertParam insertParam) {
         DeleteParam.Builder builder = new DeleteParam.Builder();
@@ -289,8 +318,9 @@ public class VectorDBExample {
         InsertParam.Builder builder = InsertParam.newBuilder();
         List<Document> list = new ArrayList<Document>();
         int insertCount;
-        while ((insertCount = randmo.nextInt(10000)) < 100) {
+        while ((insertCount = randmo.nextInt(1000)) < 100) {
             // ensure 100 documents
+            // batch upsert size must between 1 and 1000
         }
 
         for (int i = 0; i < insertCount; i++) {
@@ -324,14 +354,14 @@ public class VectorDBExample {
 
     static CreateCollectionParam initCollectionParam() {
         CreateCollectionParam.Builder builder = CreateCollectionParam.newBuilder();
-        builder.withDescription("xzl-test").withName(VDB_XLZ_DEV_COLLECTION).withReplicaNum(1).withShardNum(1);
+        builder.withDescription("xzl-test").withName(VDB_XLZ_DEV_COLLECTION).withReplicaNum(2).withShardNum(2);
         IndexField field1 = new IndexField();
         field1.setIndexType(IndexType.PRIMARY_KEY);
         field1.setFieldName("id");
         field1.setFieldType(FieldType.String);
         IndexField field2 = new VectorIndex("vector", 10, IndexType.HNSW, MetricType.L2,
-                new HNSWParams(64, 0));
-        IndexField field3 = new ScalarIndex("sc", FieldType.String, IndexType.PRIMARY_KEY);
+                new HNSWParams(64, 64));
+        IndexField field3 = new ScalarIndex("sc", FieldType.String, IndexType.FILTER);
         builder.addField(field1).addField(field2).addField(field3);
         CreateCollectionParam build = builder.build();
         build.setDatabase(VDB_XLZ_DEV_DATABASE);

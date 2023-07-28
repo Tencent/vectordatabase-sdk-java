@@ -192,7 +192,7 @@ public class VectorDBExample {
     public static void main(String[] args) {
         // 创建VectorDB Client
         // notice：插入操作成功到可用会有延迟
-        ConnectParam connectParam = initConnecParam();
+        ConnectParam connectParam = initConnectParam();
         VectorDBClient client = new VectorDBClient(connectParam);
         testDatabases(client);
         testCollection(client);
@@ -203,7 +203,7 @@ public class VectorDBExample {
 
     private static void testDocument() {
 
-        ConnectParam connectParam = initConnecParam();
+        ConnectParam connectParam = initConnectParam();
         VectorDBClient client = new VectorDBClient(connectParam);
         List<String> databaseList = client.listDatabase();
         if (!databaseList.contains(VDB_XLZ_DEV_DATABASE)) {
@@ -370,11 +370,13 @@ public class VectorDBExample {
 
     }
 
-    private static ConnectParam initConnecParam() {
+    private static ConnectParam initConnectParam() {
+        System.out.println(System.getProperties());
+        System.out.println(System.getProperty("vdb_url"));
         ConnectParam connectParam = ConnectParam.newBuilder()
                 .withUrl(System.getProperty("vdb_url"))
                 .withUsername("root")
-                .withKey("TO3pSbeYL1eC5EfTDPi438GXSREeqa0mfqVS1eEp").withTimeout(30)
+                .withKey(System.getProperty("vdb_key")).withTimeout(30)
                 .build();
         return connectParam;
     }

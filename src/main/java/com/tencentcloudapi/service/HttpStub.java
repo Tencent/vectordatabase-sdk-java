@@ -56,13 +56,13 @@ public class HttpStub implements Stub {
 
     @Override
     public void createDatabase(Database database) {
-        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DB_CREATE);
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DB_CREATE);
         this.post(url, database.toString());
     }
 
     @Override
     public void dropDatabase(Database database) {
-        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DB_DROP);
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DB_DROP);
         this.post(url, database.toString());
     }
 

@@ -24,6 +24,14 @@ public class Document {
     private String doc;
     private List<DocField> otherScalarFields;
 
+    public String getId() {
+        return id;
+    }
+
+    public List<Double> getVector() {
+        return vector;
+    }
+
     @Override
     public String toString() {
         ObjectNode node = JsonNodeFactory.instance.objectNode();

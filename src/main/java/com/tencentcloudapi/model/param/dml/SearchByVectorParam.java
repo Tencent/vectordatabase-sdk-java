@@ -21,18 +21,18 @@ public class SearchByVectorParam extends SearchParam {
     }
 
     public static class SearchByVectorsBuilder extends BaseBuilder {
-        private List<List<Float>> vectors;
+        private List<List<Double>> vectors;
 
         private SearchByVectorsBuilder() {
             this.vectors = new ArrayList<>();
         }
 
-        public SearchByVectorsBuilder withVectors(List<List<Float>> vectors) {
+        public SearchByVectorsBuilder withVectors(List<List<Double>> vectors) {
             this.vectors = vectors;
             return this;
         }
 
-        public SearchByVectorsBuilder addVector(List<Float> vector) {
+        public SearchByVectorsBuilder addVector(List<Double> vector) {
             this.vectors.add(vector);
             return this;
         }
@@ -73,15 +73,15 @@ public class SearchByVectorParam extends SearchParam {
     }
 
     public static class SearchBuilder extends BaseBuilder {
-        private List<List<Float>> vectors;
+        private List<List<Double>> vectors;
         private List<String> documentIds;
 
-        public SearchBuilder withVectors(List<List<Float>> vectors) {
+        public SearchBuilder withVectors(List<List<Double>> vectors) {
             this.vectors = vectors;
             return this;
         }
 
-        public SearchBuilder addVector(List<Float> vector) {
+        public SearchBuilder addVector(List<Double> vector) {
             this.vectors.add(vector);
             return this;
         }

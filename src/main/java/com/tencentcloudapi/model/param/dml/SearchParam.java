@@ -13,14 +13,14 @@ import java.util.List;
  * Date: 2023/7/25
  */
 public class SearchParam {
-    List<List<Float>> vectors;
+    List<List<Double>> vectors;
     List<String> documentIds;
     HNSWSearchParams params;
     String filter;
     boolean retrieveVector;
     int limit;
 
-    public List<List<Float>> getVectors() {
+    public List<List<Double>> getVectors() {
         return vectors;
     }
 
@@ -59,15 +59,15 @@ public class SearchParam {
     }
 
     public static class SearchBuilder extends BaseBuilder {
-        private List<List<Float>> vectors;
+        private List<List<Double>> vectors;
         private List<String> documentIds;
 
-        public SearchBuilder withVectors(List<List<Float>> vectors) {
+        public SearchBuilder withVectors(List<List<Double>> vectors) {
             this.vectors = vectors;
             return this;
         }
 
-        public SearchBuilder addVector(List<Float> vector) {
+        public SearchBuilder addVector(List<Double> vector) {
             this.vectors.add(vector);
             return this;
         }

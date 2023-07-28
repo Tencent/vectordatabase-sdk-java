@@ -8,11 +8,12 @@ import com.tencentcloudapi.model.DocField;
 import com.tencentcloudapi.model.Document;
 import com.tencentcloudapi.model.param.collection.*;
 import com.tencentcloudapi.model.param.database.ConnectParam;
-import com.tencentcloudapi.model.param.dml.InsertParam;
+import com.tencentcloudapi.model.param.dml.*;
 import com.tencentcloudapi.service.param.InsertParamInner;
+import com.tencentcloudapi.utils.JSONUtil;
+import org.checkerframework.checker.units.qual.A;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * VectorDB Java SDK usage example
@@ -148,6 +149,7 @@ public class VectorDBExample {
 
     static final String VDB_XLZ_DEV_DATABASE = "vdb_xlz_dev_database";
     static final String VDB_XLZ_DEV_COLLECTION = "vdb_xlz_dev_collection";
+    static final Random randmo = new Random();
 
 
     private static void testDocument() {
@@ -170,10 +172,132 @@ public class VectorDBExample {
             database.createCollection(collectionParam);
         }
 
-        database.collection(VDB_XLZ_DEV_COLLECTION);
+        Collection collection = database.collection(VDB_XLZ_DEV_COLLECTION);
+        InsertParam insertParam = initInsertParam();
+        System.out.println("insertParam: " + JSONUtil.toJSONString(insertParam));
+        collection.upsert(insertParam);
+        System.out.println("inset finish");
+
+        QueryParam queryParam = initQueryParam(insertParam);
+        System.out.println("queryParam: " + JSONUtil.toJSONString(queryParam));
+        List<Document> queryRes = collection.query(queryParam);
+        System.out.println("queryRes: " + JSONUtil.toJSONString(queryRes));
+
+        SearchByVectorParam searchParam = initSearchParam(insertParam);
+        System.out.println("searchParam: " + JSONUtil.toJSONString(searchParam));
+        List<List<Document>> searchRes = collection.search(searchParam);
+        System.out.println("searchRes: " + JSONUtil.toJSONString(searchRes));
+
+        DeleteParam deleteParam = initDeleteParam(insertParam);
+        System.out.println("deleteParam: " + JSONUtil.toJSONString(deleteParam));
+        collection.delete(deleteParam);
+
+
+    }
+
+    static DeleteParam initDeleteParam(InsertParam insertParam) {
+        DeleteParam.Builder builder = new DeleteParam.Builder();
+        List<String> list = new ArrayList<>();
+
+        for (int i = 0; i < insertParam.getDocuments().size() && i < 10; i++) {
+            int index = randmo.nextInt(100);
+            String s = formatId(8, index);
+            if (list.contains(s)) {
+                i--;
+            } else {
+                list.add(s);
+            }
+        }
+        builder.withDocumentIds(list);
+        return builder.build();
+
+    }
+
+    private static SearchByVectorParam initSearchParam(InsertParam insertParam) {
+        List<List<Double>> vectors = new ArrayList<>();
+        Set<String> set = new HashSet<>();
+        for (int i = 0; i < insertParam.getDocuments().size() && i < 10; i++) {
+            int index = randmo.nextInt(100);
+            String s = formatId(8, index);
+            if (set.contains(s)) {
+                i--;
+            } else {
+                set.add(s);
+                Document document = insertParam.getDocuments().stream().filter(dc -> dc.getId().equals(s)).findFirst().orElse(null);
+                if (document != null) {
+                    vectors.add(document.getVector());
+                }
+            }
+        }
+        return SearchByVectorParam.newBuilder().withVectors(vectors).build();
+    }
+
+    private static QueryParam initQueryParam(InsertParam insertParam) {
+        QueryParam.Builder builder = QueryParam.newBuilder();
+        List<String> list = new ArrayList<String>();
+
+        for (int i = 0; i < insertParam.getDocuments().size() && i < 10; i++) {
+            int index = randmo.nextInt(100);
+            String s = formatId(8, index);
+            if (list.contains(s)) {
+                i--;
+            } else {
+                list.add(s);
+            }
+        }
+        return builder.withDocumentIds(list).withRetrieveVector(false).build();
+    }
+
+    static InsertParam initInsertParam() {
+        InsertParam.Builder builder = InsertParam.newBuilder();
+
+
+        List<Document> list = new ArrayList<Document>();
+        int insertCount = randmo.nextInt(100);
+
+        for (int i = 0; i < insertCount; i++) {
+            Document.Builder documentB = Document.newBuilder();
+            documentB.withId(formatId(8, i)).withVector(vectors(10));
+            list.add(documentB.build());
+        }
+        builder.withDocuments(list);
+
+
+        return builder.build();
+    }
+
+    static List<Double> vectors(int len) {
+        List<Double> list = new ArrayList<Double>();
+        for (int i = 0; i < len; i++) {
+            list.add(Math.random());
+        }
+        return list;
+    }
+
+    static String formatId(int len, int value) {
+        StringBuilder sb = new StringBuilder();
+        String valStr = String.valueOf(value);
+        for (int i = (valStr.length() - 1); i < len; i++) {
+            sb.append("0");
+        }
+        return sb.append(valStr).toString();
     }
 
     static CreateCollectionParam collectionParam() {
-        return null;
+        CreateCollectionParam.Builder builder = CreateCollectionParam.newBuilder();
+        builder.withDescription("xzl-test").withName(VDB_XLZ_DEV_COLLECTION).withReplicaNum(1).withShardNum(1);
+        IndexField field1 = new IndexField();
+        field1.setIndexType(IndexType.PRIMARY_KEY);
+        field1.setFieldName("id");
+        field1.setFieldType(FieldType.String);
+        IndexField field2 = new VectorIndex("vector", 10, IndexType.HNSW, MetricType.L2,
+                new HNSWParams(64, 0));
+        IndexField field3 = new ScalarIndex("id", FieldType.String, IndexType.PRIMARY_KEY);
+        builder.addField(field1).addField(field2).addField(field3);
+        CreateCollectionParam build = builder.build();
+        build.setDatabase(VDB_XLZ_DEV_DATABASE);
+        return build;
+
     }
+
 }

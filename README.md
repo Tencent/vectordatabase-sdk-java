@@ -8,6 +8,20 @@
 
 ### Install Java SDK
 
+ - settings.xml add repository
+    ```xml
+    <repository>
+      <id>vectordb</id>
+      <url>https://mirrors.tencent.com/repository/maven/vectordb-sdk-java</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    ```
+
 You can use **Apache Maven** or **Gradle**/**Grails** to download the SDK.
 
    - Apache Maven
@@ -15,17 +29,17 @@ You can use **Apache Maven** or **Gradle**/**Grails** to download the SDK.
        ```xml
         <dependency>
             <groupId>com.tencentcloudapi</groupId>
-            <artifactId>tencentcloud-sdk-java-vdb</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <artifactId>vectordb-sdk-java</artifactId>
+            <version>0.0.1</version>
         </dependency>
        ```
 
    - Gradle/Grails
 
         ```gradle
-        compile 'com.tencentcloudapi:tencentcloud-sdk-java-vdb:1.0-SNAPSHOT'
+        compile 'com.tencentcloudapi:vectordb-sdk-java:0.0.1'
         ```
 
 ### Examples
 
-Please refer to [examples](https://git.woa.com/wlleiiwang/tencentcloud-sdk-java-vdb/tree/master/examples) folder for Java SDK examples.
+Please refer to [examples](https://git.woa.com/cloud_nosql/vectordb/vectordb-sdk-java/tree/master/examples) folder for Java SDK examples.

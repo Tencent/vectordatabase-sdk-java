@@ -21,6 +21,10 @@ import java.util.*;
  */
 public class VectorDBExample {
 
+    static final String VDB_XLZ_DEV_DATABASE = "vdb_xlz_dev_database";
+    static final String VDB_XLZ_DEV_COLLECTION = "vdb_xlz_dev_collection";
+    static final Random randmo = new Random();
+
     public static void testDatabases(VectorDBClient client) {
         // List databases
         System.out.println("-list db----------------------");
@@ -184,37 +188,20 @@ public class VectorDBExample {
     }
 
     public static void main(String[] args) {
-
-        // document test
-        if (args != null && args.length > 0) {
-            testDocument();
-            return;
-        }
         // 创建VectorDB Client
         // notice：插入操作成功到可用会有延迟
-        ConnectParam connectParam = ConnectParam.newBuilder()
-                .withUrl("http://11.141.218.228:8100")
-                .withUsername("root")
-                .withKey("TO3pSbeYL1eC5EfTDPi438GXSREeqa0mfqVS1eEp")
-                .withTimeout(30)
-                .build();
+        ConnectParam connectParam = initConnecParam();
         VectorDBClient client = new VectorDBClient(connectParam);
         testDatabases(client);
         testCollection(client);
         testDocument(client);
+        testDocument();
     }
-
-    static final String VDB_XLZ_DEV_DATABASE = "vdb_xlz_dev_database";
-    static final String VDB_XLZ_DEV_COLLECTION = "vdb_xlz_dev_collection";
-    static final Random randmo = new Random();
 
 
     private static void testDocument() {
-        ConnectParam connectParam = ConnectParam.newBuilder()
-	.withUrl("http://11.141.218.228:8100")
-	.withUsername("root")
-	.withKey("TO3pSbeYL1eC5EfTDPi438GXSREeqa0mfqVS1eEp").withTimeout(30)
-	.build();
+
+        ConnectParam connectParam = initConnecParam();
         VectorDBClient client = new VectorDBClient(connectParam);
         List<String> databaseList = client.listDatabase();
         if (!databaseList.contains(VDB_XLZ_DEV_DATABASE)) {
@@ -224,28 +211,28 @@ public class VectorDBExample {
         Database database = client.database(VDB_XLZ_DEV_DATABASE);
         List<Collection> collectionList = database.listCollections();
         if (!collectionList.contains(VDB_XLZ_DEV_COLLECTION)) {
-            CreateCollectionParam collectionParam = collectionParam();
+            CreateCollectionParam collectionParam = initCollectionParam();
             database.createCollection(collectionParam);
         }
 
         Collection collection = database.collection(VDB_XLZ_DEV_COLLECTION);
         InsertParam insertParam = initInsertParam();
-        System.out.println("insertParam: " + JSONUtil.toJSONString(insertParam));
+        System.out.println("testDocument - insertParam: " + JSONUtil.toJSONString(insertParam));
         collection.upsert(insertParam);
-        System.out.println("inset finish");
+        System.out.println("testDocument - inset finish");
 
         QueryParam queryParam = initQueryParam(insertParam);
-        System.out.println("queryParam: " + JSONUtil.toJSONString(queryParam));
+        System.out.println("testDocument - queryParam: " + JSONUtil.toJSONString(queryParam));
         List<Document> queryRes = collection.query(queryParam);
-        System.out.println("queryRes: " + JSONUtil.toJSONString(queryRes));
+        System.out.println("testDocument - queryRes: " + JSONUtil.toJSONString(queryRes));
 
         SearchByVectorParam searchParam = initSearchParam(insertParam);
-        System.out.println("searchParam: " + JSONUtil.toJSONString(searchParam));
+        System.out.println("testDocument - searchParam: " + JSONUtil.toJSONString(searchParam));
         List<List<Document>> searchRes = collection.search(searchParam);
-        System.out.println("searchRes: " + JSONUtil.toJSONString(searchRes));
+        System.out.println("testDocument - searchRes: " + JSONUtil.toJSONString(searchRes));
 
         DeleteParam deleteParam = initDeleteParam(insertParam);
-        System.out.println("deleteParam: " + JSONUtil.toJSONString(deleteParam));
+        System.out.println("testDocument - deleteParam: " + JSONUtil.toJSONString(deleteParam));
         collection.delete(deleteParam);
 
 
@@ -253,8 +240,14 @@ public class VectorDBExample {
 
     static DeleteParam initDeleteParam(InsertParam insertParam) {
         DeleteParam.Builder builder = new DeleteParam.Builder();
-        List<String> list = new ArrayList<>();
+        List<String> list = randomSelectDC(insertParam);
+        builder.withDocumentIds(list);
+        return builder.build();
 
+    }
+
+    private static List<String> randomSelectDC(InsertParam insertParam) {
+        List<String> list = new ArrayList<>();
         for (int i = 0; i < insertParam.getDocuments().size() && i < 10; i++) {
             int index = randmo.nextInt(100);
             String s = formatId(8, index);
@@ -264,9 +257,7 @@ public class VectorDBExample {
                 list.add(s);
             }
         }
-        builder.withDocumentIds(list);
-        return builder.build();
-
+        return list;
     }
 
     private static SearchByVectorParam initSearchParam(InsertParam insertParam) {
@@ -290,30 +281,22 @@ public class VectorDBExample {
 
     private static QueryParam initQueryParam(InsertParam insertParam) {
         QueryParam.Builder builder = QueryParam.newBuilder();
-        List<String> list = new ArrayList<String>();
-
-        for (int i = 0; i < insertParam.getDocuments().size() && i < 10; i++) {
-            int index = randmo.nextInt(100);
-            String s = formatId(8, index);
-            if (list.contains(s)) {
-                i--;
-            } else {
-                list.add(s);
-            }
-        }
+        List<String> list = randomSelectDC(insertParam);
         return builder.withDocumentIds(list).withRetrieveVector(false).build();
     }
 
     static InsertParam initInsertParam() {
         InsertParam.Builder builder = InsertParam.newBuilder();
-
-
         List<Document> list = new ArrayList<Document>();
-        int insertCount = randmo.nextInt(100);
+        int insertCount;
+        while ((insertCount = randmo.nextInt(10000)) < 100) {
+            // ensure 100 documents
+        }
 
         for (int i = 0; i < insertCount; i++) {
             Document.Builder documentB = Document.newBuilder();
-            documentB.withId(formatId(8, i)).withVector(vectors(10));
+            documentB.withId(formatId(8, i)).withVector(vectors(10))
+                    .addScalarField(new DocField("sc", "sc" + i));
             list.add(documentB.build());
         }
         builder.withDocuments(list);
@@ -323,7 +306,7 @@ public class VectorDBExample {
     }
 
     static List<Double> vectors(int len) {
-        List<Double> list = new ArrayList<Double>();
+        List<Double> list = new ArrayList<>();
         for (int i = 0; i < len; i++) {
             list.add(Math.random());
         }
@@ -339,7 +322,7 @@ public class VectorDBExample {
         return sb.append(valStr).toString();
     }
 
-    static CreateCollectionParam collectionParam() {
+    static CreateCollectionParam initCollectionParam() {
         CreateCollectionParam.Builder builder = CreateCollectionParam.newBuilder();
         builder.withDescription("xzl-test").withName(VDB_XLZ_DEV_COLLECTION).withReplicaNum(1).withShardNum(1);
         IndexField field1 = new IndexField();
@@ -348,12 +331,22 @@ public class VectorDBExample {
         field1.setFieldType(FieldType.String);
         IndexField field2 = new VectorIndex("vector", 10, IndexType.HNSW, MetricType.L2,
                 new HNSWParams(64, 0));
-        IndexField field3 = new ScalarIndex("id", FieldType.String, IndexType.PRIMARY_KEY);
+        IndexField field3 = new ScalarIndex("sc", FieldType.String, IndexType.PRIMARY_KEY);
         builder.addField(field1).addField(field2).addField(field3);
         CreateCollectionParam build = builder.build();
         build.setDatabase(VDB_XLZ_DEV_DATABASE);
         return build;
 
     }
+
+    private static ConnectParam initConnecParam() {
+        ConnectParam connectParam = ConnectParam.newBuilder()
+                .withUrl("http://11.141.218.228:8100")
+                .withUsername("root")
+                .withKey("TO3pSbeYL1eC5EfTDPi438GXSREeqa0mfqVS1eEp").withTimeout(30)
+                .build();
+        return connectParam;
+    }
+
 
 }

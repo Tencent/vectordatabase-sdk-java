@@ -127,6 +127,12 @@ public class VectorDBExample {
     }
 
     public static void main(String[] args) {
+
+        // document test
+        if (args != null && args.length > 0) {
+            testDocument();
+            return;
+        }
         // 创建VectorDB Client
         ConnectParam connectParam = ConnectParam.newBuilder()
                 .withUrl("http://11.141.218.172:8100")
@@ -138,5 +144,36 @@ public class VectorDBExample {
 //        testDatabases(client);
 //        testCollection(client);
         testDocument(client);
+    }
+
+    static final String VDB_XLZ_DEV_DATABASE = "vdb_xlz_dev_database";
+    static final String VDB_XLZ_DEV_COLLECTION = "vdb_xlz_dev_collection";
+
+
+    private static void testDocument() {
+        ConnectParam connectParam = ConnectParam.newBuilder()
+                .withUrl("http://11.141.218.172:8100")
+                .withUsername("root")
+                .withKey("TO3pSbeYL1eC5EfTDPi438GXSREeqa0mfqVS1eEp")
+                .withTimeout(30)
+                .build();
+        VectorDBClient client = new VectorDBClient(connectParam);
+        List<String> databaseList = client.listDatabase();
+        if (!databaseList.contains(VDB_XLZ_DEV_DATABASE)) {
+            client.createDatabase(VDB_XLZ_DEV_DATABASE);
+        }
+
+        Database database = client.database(VDB_XLZ_DEV_DATABASE);
+        List<Collection> collectionList = database.listCollections();
+        if (!collectionList.contains(VDB_XLZ_DEV_COLLECTION)) {
+            CreateCollectionParam collectionParam = collectionParam();
+            database.createCollection(collectionParam);
+        }
+
+        database.collection(VDB_XLZ_DEV_COLLECTION);
+    }
+
+    static CreateCollectionParam collectionParam() {
+        return null;
     }
 }

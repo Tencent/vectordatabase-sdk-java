@@ -1,7 +1,6 @@
 package com.tencentcloudapi.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -19,14 +18,26 @@ import java.util.List;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Document {
-    private final String id;
-    private final List<Double> vector;
+    private String id;
+    private List<Double> vector;
     private Double score;
     private String doc;
     private List<DocField> otherScalarFields;
 
     public String getId() {
         return id;
+    }
+
+    public Double getScore() {
+        return score;
+    }
+
+    public String getDoc() {
+        return doc;
+    }
+
+    public List<DocField> getOtherScalarFields() {
+        return otherScalarFields;
     }
 
     public List<Double> getVector() {

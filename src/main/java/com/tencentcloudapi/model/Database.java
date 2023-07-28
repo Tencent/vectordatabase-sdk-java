@@ -20,6 +20,10 @@ public class Database {
         this.databaseName = databaseName;
     }
 
+    public String getDatabaseName() {
+        return databaseName;
+    }
+
     public Collection createCollection(CreateCollectionParam param) throws VectorDBException {
         param.setDatabase(databaseName);
         stub.createCollection(param);

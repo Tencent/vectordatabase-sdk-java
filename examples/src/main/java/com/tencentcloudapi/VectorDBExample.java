@@ -80,9 +80,9 @@ public class VectorDBExample {
     }
 
     public static void testDocument(VectorDBClient client) {
-//        Database db = client.createDatabase("vdb001");
-        Database db = client.database("vdb001");
-        List<Collection> cols3 = db.listCollections();
+        Database db = client.createDatabase("vdb001");
+//        Database db = client.database("vdb001");
+        db.listCollections();
         System.out.println("-create collections----------------------");
         CreateCollectionParam collectionParam = CreateCollectionParam.newBuilder()
                 .withName("coll")
@@ -167,7 +167,8 @@ public class VectorDBExample {
             for (Document doc : docs) {
                 System.out.println(doc.toString());
             }
-        }// delete
+        }
+        // delete
         System.out.println("-delete----------------------");
         DeleteParam deleteParam = DeleteParam.newBuilder()
                 .withDocumentIds(Lists.newArrayList("0001", "0002", "0003"))
@@ -184,9 +185,9 @@ public class VectorDBExample {
     public static void main(String[] args) {
         // notice：插入操作成功到可用会有延迟
         ConnectParam connectParam = ConnectParam.newBuilder()
-                .withUrl("http://11.141.218.228:8100")
+                .withUrl(System.getProperty("vdb_url"))
                 .withUsername("root")
-                .withKey("TO3pSbeYL1eC5EfTDPi438GXSREeqa0mfqVS1eEp")
+                .withKey(System.getProperty("vdb_key"))
                 .withTimeout(30)
                 .build();
         VectorDBClient client = new VectorDBClient(connectParam);

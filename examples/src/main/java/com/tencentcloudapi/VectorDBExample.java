@@ -154,11 +154,10 @@ public class VectorDBExample {
 
     private static void testDocument() {
         ConnectParam connectParam = ConnectParam.newBuilder()
-                .withUrl("http://11.141.218.172:8100")
-                .withUsername("root")
-                .withKey("TO3pSbeYL1eC5EfTDPi438GXSREeqa0mfqVS1eEp")
-                .withTimeout(30)
-                .build();
+	.withUrl("http://11.141.218.228:8100")
+	.withUsername("root")
+	.withKey("TO3pSbeYL1eC5EfTDPi438GXSREeqa0mfqVS1eEp").withTimeout(30)
+	.build();
         VectorDBClient client = new VectorDBClient(connectParam);
         List<String> databaseList = client.listDatabase();
         if (!databaseList.contains(VDB_XLZ_DEV_DATABASE)) {

@@ -11,6 +11,7 @@ import java.util.List;
  * User: wlleiiwang
  * Date: 2023/7/25
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SearchByVectorParam extends SearchParam {
 
     private SearchByVectorParam() {
@@ -38,22 +39,22 @@ public class SearchByVectorParam extends SearchParam {
         }
 
         public SearchByVectorsBuilder withHNSWSearchParams(HNSWSearchParams params) {
-            super.params = params;
+            this.params = params;
             return this;
         }
 
         public SearchByVectorsBuilder withFilter(Filter filter) {
-            super.filter = filter;
+            this.filter = filter;
             return this;
         }
 
         public SearchByVectorsBuilder withRetrieveVector(boolean retrieveVector) {
-            super.retrieveVector = retrieveVector;
+            this.retrieveVector = retrieveVector;
             return this;
         }
 
         public SearchByVectorsBuilder withLimit(int limit) {
-            super.limit = limit;
+            this.limit = limit;
             return this;
         }
 
@@ -65,61 +66,9 @@ public class SearchByVectorParam extends SearchParam {
             SearchByVectorParam searchParam = new SearchByVectorParam();
             searchParam.vectors = this.vectors;
             searchParam.params = this.params;
-            searchParam.filter = this.filter.getCond();
-            searchParam.retrieveVector = this.retrieveVector;
-            searchParam.limit = this.limit;
-            return searchParam;
-        }
-    }
-
-    public static class SearchBuilder extends BaseBuilder {
-        private List<List<Double>> vectors;
-        private List<String> documentIds;
-
-        public SearchBuilder withVectors(List<List<Double>> vectors) {
-            this.vectors = vectors;
-            return this;
-        }
-
-        public SearchBuilder addVector(List<Double> vector) {
-            this.vectors.add(vector);
-            return this;
-        }
-
-        public SearchBuilder withDocumentIds(List<String> documentIds) {
-            this.documentIds = documentIds;
-            return this;
-        }
-
-        public SearchBuilder withHNSWSearchParams(HNSWSearchParams params) {
-            super.params = params;
-            return this;
-        }
-
-        public SearchBuilder withFilter(Filter filter) {
-            super.filter = filter;
-            return this;
-        }
-
-        public SearchBuilder withRetrieveVector(boolean retrieveVector) {
-            super.retrieveVector = retrieveVector;
-            return this;
-        }
-
-        public SearchBuilder withLimit(int limit) {
-            super.limit = limit;
-            return this;
-        }
-
-        public SearchByVectorParam build() {
-            if ((documentIds == null || documentIds.isEmpty())
-                    && (vectors == null || vectors.isEmpty())) {
-                throw new ParamException("SearchByVectorsBuilder error: documentIds and vectors is empty");
+            if (this.filter != null) {
+                searchParam.filter = this.filter.getCond();
             }
-            SearchByVectorParam searchParam = new SearchByVectorParam();
-            searchParam.vectors = this.vectors;
-            searchParam.params = this.params;
-            searchParam.filter = this.filter.getCond();
             searchParam.retrieveVector = this.retrieveVector;
             searchParam.limit = this.limit;
             return searchParam;

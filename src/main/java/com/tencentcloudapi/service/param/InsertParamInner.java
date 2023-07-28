@@ -1,9 +1,12 @@
 package com.tencentcloudapi.service.param;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.tencentcloudapi.exception.ParamException;
 import com.tencentcloudapi.model.Document;
 
 import java.util.List;
@@ -49,12 +52,20 @@ public class InsertParamInner {
 
     @Override
     public String toString() {
+        ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = JsonNodeFactory.instance.objectNode();
         node.put("database", database);
         node.put("collection", collection);
         node.put("buildIndex", buildIndex);
         ArrayNode docsNode = JsonNodeFactory.instance.arrayNode();
-        documents.forEach(doc -> docsNode.add(doc.toString()));
+        documents.forEach(doc -> {
+            try {
+                docsNode.add(mapper.readTree(doc.toString()));
+            } catch (JsonProcessingException e) {
+                throw new ParamException(String.format(
+                        "Create document param error: %s", e));
+            }
+        });
         node.set("documents", docsNode);
         return node.toString();
     }

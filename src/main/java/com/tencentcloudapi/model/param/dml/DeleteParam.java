@@ -22,6 +22,10 @@ public class DeleteParam {
         return documentIds;
     }
 
+    public static DeleteParam.Builder newBuilder() {
+        return new DeleteParam.Builder();
+    }
+
     public static class Builder {
         private List<String> documentIds;
 

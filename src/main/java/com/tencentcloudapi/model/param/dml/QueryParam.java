@@ -12,6 +12,7 @@ import java.util.List;
  * User: wlleiiwang
  * Date: 2023/7/26
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class QueryParam {
     private List<String> documentIds;
     private boolean retrieveVector;

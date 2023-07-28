@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.tencentcloudapi</groupId>
-  <artifactId>tencentcloud-sdk-java-vdb</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <artifactId>vectordb-sdk-java</artifactId>
+  <version>0.0.1</version>
   <packaging>jar</packaging>
 
-  <name>tencentcloud-sdk-java-vdb</name>
+  <name>vectordb-sdk-java</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -65,4 +65,17 @@
       </plugin>
     </plugins>
   </build>
+
+  <distributionManagement>
+    <repository>
+      <id>vectordb.releases</id>
+      <name>${releases.name}</name>
+      <url>https://mirrors.tencent.com/repository/maven/vectordb-sdk-java</url>
+    </repository>
+    <snapshotRepository>
+      <id>${snapshots.id}</id>
+      <name>${snapshots.name}</name>
+      <url>https://mirrors.tencent.com/repository/maven/vectordb-sdk-java</url>
+    </snapshotRepository>
+  </distributionManagement>
 </project>

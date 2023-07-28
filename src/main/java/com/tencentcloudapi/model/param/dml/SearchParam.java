@@ -1,8 +1,6 @@
 package com.tencentcloudapi.model.param.dml;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencentcloudapi.exception.ParamException;
 
 import java.util.List;
@@ -12,6 +10,7 @@ import java.util.List;
  * User: wlleiiwang
  * Date: 2023/7/25
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SearchParam {
     List<List<Double>> vectors;
     List<String> documentIds;
@@ -78,22 +77,22 @@ public class SearchParam {
         }
 
         public SearchBuilder withHNSWSearchParams(HNSWSearchParams params) {
-            super.params = params;
+            this.params = params;
             return this;
         }
 
         public SearchBuilder withFilter(Filter filter) {
-            super.filter = filter;
+            this.filter = filter;
             return this;
         }
 
         public SearchBuilder withRetrieveVector(boolean retrieveVector) {
-            super.retrieveVector = retrieveVector;
+            this.retrieveVector = retrieveVector;
             return this;
         }
 
         public SearchBuilder withLimit(int limit) {
-            super.limit = limit;
+            this.limit = limit;
             return this;
         }
 
@@ -106,7 +105,9 @@ public class SearchParam {
             searchParam.vectors = this.vectors;
             searchParam.documentIds = this.documentIds;
             searchParam.params = this.params;
-            searchParam.filter = this.filter.getCond();
+            if (this.filter != null) {
+                searchParam.filter = this.filter.getCond();
+            }
             searchParam.retrieveVector = this.retrieveVector;
             searchParam.limit = this.limit;
             return searchParam;

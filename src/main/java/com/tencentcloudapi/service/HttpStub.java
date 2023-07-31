@@ -272,7 +272,7 @@ public class HttpStub implements Stub {
             } else if (StringUtils.equals("score", name)) {
                 builder.withScore(ele.asDouble());
             } else {
-                builder.addScalarField(new DocField(name, ele.asText()));
+                builder.addFilterField(new DocField(name, ele.asText()));
             }
         }
         return builder.build();

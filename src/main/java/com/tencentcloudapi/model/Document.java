@@ -22,7 +22,7 @@ public class Document {
     private List<Double> vector;
     private Double score;
     private String doc;
-    private List<DocField> otherScalarFields;
+    private List<DocField> otherFilterFields;
 
     public String getId() {
         return id;
@@ -36,8 +36,8 @@ public class Document {
         return doc;
     }
 
-    public List<DocField> getOtherScalarFields() {
-        return otherScalarFields;
+    public List<DocField> getOtherFilterFields() {
+        return otherFilterFields;
     }
 
     public List<Double> getVector() {
@@ -59,8 +59,8 @@ public class Document {
         if (StringUtils.isNotEmpty(doc)) {
             node.put("doc", doc);
         }
-        if (otherScalarFields != null && !otherScalarFields.isEmpty()) {
-            for (DocField field : otherScalarFields) {
+        if (otherFilterFields != null && !otherFilterFields.isEmpty()) {
+            for (DocField field : otherFilterFields) {
                 node.put(field.getName(), field.getValue().toString());
             }
         }
@@ -72,7 +72,7 @@ public class Document {
         this.vector = builder.vector;
         this.doc = builder.doc;
         this.score = builder.score;
-        this.otherScalarFields = builder.otherScalarFields;
+        this.otherFilterFields = builder.otherFilterFields;
     }
 
     public static Builder newBuilder() {
@@ -85,10 +85,10 @@ public class Document {
 
         private Double score;
         private String doc;
-        private List<DocField> otherScalarFields;
+        private List<DocField> otherFilterFields;
 
         public Builder() {
-            this.otherScalarFields = new ArrayList<>();
+            this.otherFilterFields = new ArrayList<>();
         }
 
         public Builder withId(String id) {
@@ -111,8 +111,8 @@ public class Document {
             return this;
         }
 
-        public Builder addScalarField(DocField field) {
-            this.otherScalarFields.add(field);
+        public Builder addFilterField(DocField field) {
+            this.otherFilterFields.add(field);
             return this;
         }
 

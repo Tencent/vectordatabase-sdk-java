@@ -57,10 +57,10 @@ public class VectorDBExample {
                 .withShardNum(3)
                 .withReplicaNum(2)
                 .withDescription("test collection0")
-                .addField(new ScalarIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
+                .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", 3, IndexType.HNSW,
                         MetricType.L2, new HNSWParams(64, 8)))
-                .addField(new ScalarIndex("other", FieldType.String, IndexType.FILTER))
+                .addField(new FilterIndex("other", FieldType.String, IndexType.FILTER))
                 .build();
         db.createCollection(collectionParam);
         // list collections
@@ -96,10 +96,10 @@ public class VectorDBExample {
                 .withShardNum(3)
                 .withReplicaNum(2)
                 .withDescription("test collection0")
-                .addField(new ScalarIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
+                .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", 3, IndexType.HNSW,
                         MetricType.L2, new HNSWParams(64, 8)))
-                .addField(new ScalarIndex("other", FieldType.String, IndexType.FILTER))
+                .addField(new FilterIndex("other", FieldType.String, IndexType.FILTER))
                 .build();
         Collection collection = db.createCollection(collectionParam);
 //        Collection collection = db.collection("coll1");
@@ -107,16 +107,16 @@ public class VectorDBExample {
         System.out.println("-upsert----------------------");
         Document doc1 = Document.newBuilder()
                 .withId("0001")
-                .addScalarField(new DocField("other", "doc1"))
+                .addFilterField(new DocField("other", "doc1"))
                 .withVector(Lists.newArrayList(0.2123, 0.23, 0.213))
                 .build();
         Document doc2 = Document.newBuilder()
                 .withId("0002")
-                .addScalarField(new DocField("other", "doc2"))
+                .addFilterField(new DocField("other", "doc2"))
                 .withVector(Lists.newArrayList(0.4123, 0.43, 0.413))
                 .build();
         Document doc3 = Document.newBuilder()
-                .withId("0003").addScalarField(new DocField("other", "doc3"))
+                .withId("0003").addFilterField(new DocField("other", "doc3"))
                 .withVector(Lists.newArrayList(0.8123, 0.83, 0.813))
                 .build();
         InsertParam insertParam = InsertParam.newBuilder()
@@ -327,7 +327,7 @@ public class VectorDBExample {
         for (int i = 0; i < insertCount; i++) {
             Document.Builder documentB = Document.newBuilder();
             documentB.withId(formatId(8, i)).withVector(vectors(10))
-                    .addScalarField(new DocField("sc", "sc" + i));
+                    .addFilterField(new DocField("sc", "sc" + i));
             list.add(documentB.build());
         }
         builder.withDocuments(list);
@@ -362,7 +362,7 @@ public class VectorDBExample {
         field1.setFieldType(FieldType.String);
         IndexField field2 = new VectorIndex("vector", 10, IndexType.HNSW, MetricType.L2,
                 new HNSWParams(64, 64));
-        IndexField field3 = new ScalarIndex("sc", FieldType.String, IndexType.FILTER);
+        IndexField field3 = new FilterIndex("sc", FieldType.String, IndexType.FILTER);
         builder.addField(field1).addField(field2).addField(field3);
         CreateCollectionParam build = builder.build();
         build.setDatabase(VDB_XLZ_DEV_DATABASE);

@@ -8,8 +8,6 @@ import com.tencentcloudapi.model.param.dml.DeleteParam;
 
 /**
  * Inner Delete Param
- * User: wlleiiwang
- * Date: 2023/7/26
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DeleteParamInner {

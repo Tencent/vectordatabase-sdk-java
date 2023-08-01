@@ -28,8 +28,6 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * HTTP Stub for DB service API
- * User: wlleiiwang
- * Date: 2023/7/25
  */
 public class HttpStub implements Stub {
     private final ConnectParam connectParam;

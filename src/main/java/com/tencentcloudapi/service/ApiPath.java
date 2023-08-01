@@ -2,8 +2,6 @@ package com.tencentcloudapi.service;
 
 /**
  * Vector DB server API path
- * User: wlleiiwang
- * Date: 2023/7/25
  */
 public class ApiPath {
     public final static String DB_CREATE = "/database/create";

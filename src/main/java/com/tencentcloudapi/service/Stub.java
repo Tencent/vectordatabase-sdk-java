@@ -13,8 +13,6 @@ import java.util.List;
 
 /**
  * Stub for DB service API
- * User: wlleiiwang
- * Date: 2023/7/25
  */
 public interface Stub {
 

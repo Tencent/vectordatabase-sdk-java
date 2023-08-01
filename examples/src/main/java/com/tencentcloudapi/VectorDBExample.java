@@ -1,6 +1,25 @@
+/*
+ * Copyright (C) 2023 Tencent Cloud.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the vectordb-sdk-java), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package com.tencentcloudapi;
 
-import com.google.common.collect.Lists;
 import com.tencentcloudapi.client.VectorDBClient;
 import com.tencentcloudapi.model.Collection;
 import com.tencentcloudapi.model.Database;
@@ -11,14 +30,13 @@ import com.tencentcloudapi.model.param.database.ConnectParam;
 import com.tencentcloudapi.model.param.dml.*;
 import com.tencentcloudapi.utils.JSONUtil;
 
+import java.lang.reflect.Array;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
  * VectorDB Java SDK usage example
- * User: wlleiiwang
- * Date: 2023/7/24
  */
 public class VectorDBExample {
 
@@ -103,16 +121,16 @@ public class VectorDBExample {
         Document doc1 = Document.newBuilder()
                 .withId("0001")
                 .addFilterField(new DocField("other", "doc1"))
-                .withVector(Lists.newArrayList(0.2123, 0.23, 0.213))
+                .withVector(Arrays.asList(0.2123, 0.23, 0.213))
                 .build();
         Document doc2 = Document.newBuilder()
                 .withId("0002")
                 .addFilterField(new DocField("other", "doc2"))
-                .withVector(Lists.newArrayList(0.4123, 0.43, 0.413))
+                .withVector(Arrays.asList(0.4123, 0.43, 0.413))
                 .build();
         Document doc3 = Document.newBuilder()
                 .withId("0003").addFilterField(new DocField("other", "doc3"))
-                .withVector(Lists.newArrayList(0.8123, 0.83, 0.813))
+                .withVector(Arrays.asList(0.8123, 0.83, 0.813))
                 .build();
         InsertParam insertParam = InsertParam.newBuilder()
                 .addDocument(doc1)
@@ -125,7 +143,7 @@ public class VectorDBExample {
         // query
         System.out.println("-query----------------------");
         QueryParam queryParam = QueryParam.newBuilder()
-                .withDocumentIds(Lists.newArrayList("0001", "0002", "0003"))
+                .withDocumentIds(Arrays.asList("0001", "0002", "0003"))
                 .build();
         List<Document> qdos = collection.query(queryParam);
         for (Document doc : qdos) {
@@ -134,7 +152,7 @@ public class VectorDBExample {
         // search by vector
         System.out.println("-searchByVector----------------------");
         SearchByVectorParam searchByVectorParam = SearchByVectorParam.newBuilder()
-                .addVector(Lists.newArrayList(0.3123, 0.43, 0.213))
+                .addVector(Arrays.asList(0.3123, 0.43, 0.213))
                 .withHNSWSearchParams(new HNSWSearchParams(10))
                 .withLimit(10)
                 .build();
@@ -147,7 +165,7 @@ public class VectorDBExample {
         // search by id
         System.out.println("-searchById----------------------");
         SearchByIdParam searchByIdParam = SearchByIdParam.newBuilder()
-                .withDocumentIds(Lists.newArrayList("0001", "0002"))
+                .withDocumentIds(Arrays.asList("0001", "0002"))
                 .withHNSWSearchParams(new HNSWSearchParams(10))
                 .withLimit(10)
                 .build();
@@ -160,7 +178,7 @@ public class VectorDBExample {
         // search by filter
         System.out.println("-searchByFilter----------------------");
         SearchByVectorParam searchByFilterParam = SearchByVectorParam.newBuilder()
-                .addVector(Lists.newArrayList(0.3123, 0.43, 0.213))
+                .addVector(Arrays.asList(0.3123, 0.43, 0.213))
                 .withFilter(new Filter("other=\"doc1\"").or("other=\"doc2\""))
                 .withHNSWSearchParams(new HNSWSearchParams(10))
                 .withRetrieveVector(true)
@@ -175,7 +193,7 @@ public class VectorDBExample {
         // delete
         System.out.println("-delete----------------------");
         DeleteParam deleteParam = DeleteParam.newBuilder()
-                .withDocumentIds(Lists.newArrayList("0001", "0002", "0003"))
+                .withDocumentIds(Arrays.asList("0001", "0002", "0003"))
                 .build();
         collection.delete(deleteParam);
         // notice：delete操作可用会有延迟

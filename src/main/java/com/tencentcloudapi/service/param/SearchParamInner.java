@@ -8,8 +8,6 @@ import com.tencentcloudapi.model.param.dml.SearchParam;
 
 /**
  * Inner Search Param
- * User: wlleiiwang
- * Date: 2023/7/26
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SearchParamInner {

@@ -41,18 +41,8 @@ public class VectorDBExample {
         System.out.println(client.listDatabase());
     }
 
-    public static void testCollection(VectorDBClient client) {
-        Database db = client.createDatabase("vdb001");
-//        Database db = client.database("vdb001");
-        // list collections
-        System.out.println("-list collections----------------------");
-        List<Collection> cols3 = db.listCollections();
-        for (Collection col : cols3) {
-            System.out.println(col.toString());
-        }
-        // create collection
-        System.out.println("-create collections----------------------");
-        CreateCollectionParam collectionParam = CreateCollectionParam.newBuilder()
+    private static CreateCollectionParam initCreateCollectionParam() {
+        return CreateCollectionParam.newBuilder()
                 .withName("coll")
                 .withShardNum(3)
                 .withReplicaNum(2)
@@ -62,6 +52,20 @@ public class VectorDBExample {
                         MetricType.L2, new HNSWParams(64, 8)))
                 .addField(new FilterIndex("other", FieldType.String, IndexType.FILTER))
                 .build();
+    }
+
+    public static void testCollection(VectorDBClient client) {
+        Database db = client.createDatabase("vdb001");
+        // Database db = client.database("vdb001");
+        // list collections
+        System.out.println("-list collections----------------------");
+        List<Collection> cols3 = db.listCollections();
+        for (Collection col : cols3) {
+            System.out.println(col.toString());
+        }
+        // create collection
+        System.out.println("-create collections----------------------");
+        CreateCollectionParam collectionParam = initCreateCollectionParam();
         db.createCollection(collectionParam);
         // list collections
         System.out.println("-list collections----------------------");
@@ -86,23 +90,14 @@ public class VectorDBExample {
         client.dropDatabase("vdb001");
     }
 
-    public static void testDocument(VectorDBClient client) {
+    public static void testDocument(VectorDBClient client) throws InterruptedException {
         Database db = client.createDatabase("vdb001");
-//        Database db = client.database("vdb001");
+        // Database db = client.database("vdb001");
         db.listCollections();
         System.out.println("-create collections----------------------");
-        CreateCollectionParam collectionParam = CreateCollectionParam.newBuilder()
-                .withName("coll")
-                .withShardNum(3)
-                .withReplicaNum(2)
-                .withDescription("test collection0")
-                .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
-                .addField(new VectorIndex("vector", 3, IndexType.HNSW,
-                        MetricType.L2, new HNSWParams(64, 8)))
-                .addField(new FilterIndex("other", FieldType.String, IndexType.FILTER))
-                .build();
+        CreateCollectionParam collectionParam = initCreateCollectionParam();
         Collection collection = db.createCollection(collectionParam);
-//        Collection collection = db.collection("coll1");
+        // Collection collection = db.collection("coll1");
         // upsert
         System.out.println("-upsert----------------------");
         Document doc1 = Document.newBuilder()
@@ -125,6 +120,8 @@ public class VectorDBExample {
                 .addDocument(doc3)
                 .build();
         collection.upsert(insertParam);
+        // notice：upsert操作可用会有延迟
+        Thread.sleep(1000*5);
         // query
         System.out.println("-query----------------------");
         QueryParam queryParam = QueryParam.newBuilder()
@@ -164,7 +161,7 @@ public class VectorDBExample {
         System.out.println("-searchByFilter----------------------");
         SearchByVectorParam searchByFilterParam = SearchByVectorParam.newBuilder()
                 .addVector(Lists.newArrayList(0.3123, 0.43, 0.213))
-                .withFilter(new Filter("other=\"doc1\""))
+                .withFilter(new Filter("other=\"doc1\"").or("other=\"doc2\""))
                 .withHNSWSearchParams(new HNSWSearchParams(10))
                 .withRetrieveVector(true)
                 .withLimit(10)
@@ -181,6 +178,8 @@ public class VectorDBExample {
                 .withDocumentIds(Lists.newArrayList("0001", "0002", "0003"))
                 .build();
         collection.delete(deleteParam);
+        // notice：delete操作可用会有延迟
+        Thread.sleep(1000*5);
         // query
         List<Document> qdos2 = collection.query(queryParam);
         for (Document doc : qdos2) {
@@ -189,17 +188,19 @@ public class VectorDBExample {
         client.dropDatabase("vdb001");
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         // 创建VectorDB Client
-        // notice：插入操作成功到可用会有延迟
         ConnectParam connectParam = initConnectParam();
         VectorDBClient client = new VectorDBClient(connectParam);
+        // Database相关示例
         testDatabases(client);
+        // Collection相关示例
         testCollection(client);
+        // Document相关示例
         testDocument(client);
+        // Document相关示例2
         testDocument();
     }
-
 
     private static void testDocument() {
 
@@ -300,7 +301,8 @@ public class VectorDBExample {
                 i--;
             } else {
                 set.add(s);
-                Document document = insertParam.getDocuments().stream().filter(dc -> dc.getId().equals(s)).findFirst().orElse(null);
+                Document document = insertParam.getDocuments().stream().filter(
+                        dc -> dc.getId().equals(s)).findFirst().orElse(null);
                 if (document != null) {
                     vectors.add(document.getVector());
                 }
@@ -380,6 +382,5 @@ public class VectorDBExample {
                 .build();
         return connectParam;
     }
-
 
 }

@@ -42,4 +42,4 @@ You can use **Apache Maven** or **Gradle**/**Grails** to download the SDK.
 
 ### Examples
 
-Please refer to [examples](https://git.woa.com/cloud_nosql/vectordb/vectordb-sdk-java/tree/master/examples) folder for Java SDK examples.
+Please refer to [examples](./examples) folder for Java SDK examples.

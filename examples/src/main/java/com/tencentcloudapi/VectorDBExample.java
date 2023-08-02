@@ -30,7 +30,6 @@ import com.tencentcloudapi.model.param.database.ConnectParam;
 import com.tencentcloudapi.model.param.dml.*;
 import com.tencentcloudapi.utils.JSONUtil;
 
-import java.lang.reflect.Array;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.TimeUnit;

@@ -12,7 +12,7 @@
     ```xml
     <repository>
       <id>vectordb</id>
-      <url>https://mirrors.tencent.com/repository/maven/vectordb-sdk-java</url>
+      <url>https://mirrors.cloud.tencent.com/repository/maven/vectordb-sdk-java</url>
       <releases>
         <enabled>true</enabled>
       </releases>

@@ -61,14 +61,14 @@
 
   <distributionManagement>
     <repository>
-      <id>vectordb.releases</id>
+      <id>${releases.id}</id>
       <name>${releases.name}</name>
-      <url>https://mirrors.tencent.com/repository/maven/vectordb-sdk-java</url>
+      <url>${releases.url}</url>
     </repository>
     <snapshotRepository>
       <id>${snapshots.id}</id>
       <name>${snapshots.name}</name>
-      <url>https://mirrors.tencent.com/repository/maven/vectordb-sdk-java</url>
+      <url>${snapshots.url}</url>
     </snapshotRepository>
   </distributionManagement>
 </project>

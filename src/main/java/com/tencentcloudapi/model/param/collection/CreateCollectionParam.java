@@ -46,8 +46,8 @@ public class CreateCollectionParam extends Collection {
 
     public static class Builder {
         private String name;
-        private int replicaNum;
-        private int shardNum;
+        private int replicaNum = 2;
+        private int shardNum = 1;
         private String description;
         private final List<IndexField> indexes;
 
@@ -83,12 +83,6 @@ public class CreateCollectionParam extends Collection {
         public CreateCollectionParam build() throws ParamException {
             if (StringUtils.isEmpty(this.name)) {
                 throw new ParamException("ConnectParam error: name is null");
-            }
-            if (this.replicaNum == 0) {
-                throw new ParamException("ConnectParam error: replicaNum is 0");
-            }
-            if (this.shardNum == 0) {
-                throw new ParamException("ConnectParam error: shardNum is 0");
             }
             if (this.indexes.isEmpty()) {
                 throw new ParamException("ConnectParam error: indexes is empty");

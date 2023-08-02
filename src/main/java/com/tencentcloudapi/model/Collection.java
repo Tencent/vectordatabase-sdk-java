@@ -47,8 +47,8 @@ public class Collection {
     private Stub stub;
     protected String database;
     protected String collection;
-    protected int replicaNum = 0;
-    protected int shardNum = 0;
+    protected int replicaNum = 2;
+    protected int shardNum = 1;
     protected String description;
     protected List<IndexField> indexes;
     protected String createTime;

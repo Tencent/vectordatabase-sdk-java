@@ -21,8 +21,10 @@
 package com.tencentcloudapi.model.param.dml;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.tencentcloudapi.exception.ParamException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * VectorDB Filter
@@ -56,8 +58,17 @@ public class Filter {
         return this;
     }
 
-    public String in(String key, List<String> values) {
-        return String.format("%s in(%s)", key,  String.join(",", values));
+    public static  <T> String in(String key, List<T> values) {
+        if (values == null || values.isEmpty()) {
+            throw new ParamException("Filter in condition values is empty");
+        }
+        if (values.get(0) instanceof String) {
+            List<String> strValues = values.stream().map(x -> "\"" + x + "\"").collect(Collectors.toList());
+            return String.format("%s in (%s)", key, String.join(",", strValues));
+        } else {
+            List<String> strValues = values.stream().map(x -> x + "").collect(Collectors.toList());
+            return String.format("%s in (%s)", key, String.join(",", strValues));
+        }
     }
 
     public String getCond() {

@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.tencentcloudapi.exception.ParamException;
+import com.tencentcloudapi.model.param.collection.FieldType;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -79,7 +80,11 @@ public class Document {
         }
         if (otherFilterFields != null && !otherFilterFields.isEmpty()) {
             for (DocField field : otherFilterFields) {
-                node.put(field.getName(), field.getValue().toString());
+                if (FieldType.Uint64.equals(field.getFieldType())) {
+                    node.put(field.getName(), field.getLongValue());
+                } else {
+                    node.put(field.getName(), field.getStringValue());
+                }
             }
         }
         return node.toString();

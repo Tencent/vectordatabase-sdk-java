@@ -20,12 +20,17 @@
 
 package com.tencentcloudapi.model;
 
+import com.tencentcloudapi.model.param.collection.FieldType;
+
+import java.util.regex.Pattern;
+
 /**
  * Doc Field
  */
 public class DocField {
     private final String name;
     private final Object value;
+    private final Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
 
     public DocField(String name, Object value) {
         this.name = name;
@@ -38,5 +43,21 @@ public class DocField {
 
     public Object getValue() {
         return value;
+    }
+
+    public String getStringValue() {
+        return value.toString();
+    }
+
+    public Long getLongValue() {
+        return Long.valueOf(value.toString());
+    }
+
+    public FieldType getFieldType() {
+        return isNumeric() ? FieldType.Uint64 : FieldType.String;
+    }
+
+    private boolean isNumeric() {
+        return this.pattern.matcher(value.toString()).matches();
     }
 }

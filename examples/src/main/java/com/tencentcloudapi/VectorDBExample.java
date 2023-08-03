@@ -25,9 +25,24 @@ import com.tencentcloudapi.model.Collection;
 import com.tencentcloudapi.model.Database;
 import com.tencentcloudapi.model.DocField;
 import com.tencentcloudapi.model.Document;
-import com.tencentcloudapi.model.param.collection.*;
+import com.tencentcloudapi.model.param.collection.CreateCollectionParam;
+import com.tencentcloudapi.model.param.collection.FieldType;
+import com.tencentcloudapi.model.param.collection.FilterIndex;
+import com.tencentcloudapi.model.param.collection.HNSWParams;
+import com.tencentcloudapi.model.param.collection.IndexField;
+import com.tencentcloudapi.model.param.collection.IndexType;
+import com.tencentcloudapi.model.param.collection.MetricType;
+import com.tencentcloudapi.model.param.collection.VectorIndex;
 import com.tencentcloudapi.model.param.database.ConnectParam;
-import com.tencentcloudapi.model.param.dml.*;
+
+import com.tencentcloudapi.model.param.dml.InsertParam;
+import com.tencentcloudapi.model.param.dml.QueryParam;
+import com.tencentcloudapi.model.param.dml.SearchByVectorParam;
+import com.tencentcloudapi.model.param.dml.SearchByIdParam;
+import com.tencentcloudapi.model.param.dml.HNSWSearchParams;
+import com.tencentcloudapi.model.param.dml.DeleteParam;
+import com.tencentcloudapi.model.param.dml.Filter;
+
 import com.tencentcloudapi.utils.JSONUtil;
 
 import java.util.List;
@@ -67,7 +82,8 @@ public class VectorDBExample {
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", 3, IndexType.HNSW,
                         MetricType.L2, new HNSWParams(64, 8)))
-                .addField(new FilterIndex("other", FieldType.String, IndexType.FILTER))
+                .addField(new FilterIndex("otherStr", FieldType.String, IndexType.FILTER))
+                .addField(new FilterIndex("otherInt", FieldType.Uint64, IndexType.FILTER))
                 .build();
     }
 
@@ -110,7 +126,6 @@ public class VectorDBExample {
     public static void testDocument(VectorDBClient client) throws InterruptedException {
         Database db = client.createDatabase("vdb001");
         // Database db = client.database("vdb001");
-        db.listCollections();
         System.out.println("-create collections----------------------");
         CreateCollectionParam collectionParam = initCreateCollectionParam();
         Collection collection = db.createCollection(collectionParam);
@@ -119,16 +134,20 @@ public class VectorDBExample {
         System.out.println("-upsert----------------------");
         Document doc1 = Document.newBuilder()
                 .withId("0001")
-                .addFilterField(new DocField("other", "doc1"))
+                .addFilterField(new DocField("otherStr", "doc1"))
+                .addFilterField(new DocField("otherInt", 1))
                 .withVector(Arrays.asList(0.2123, 0.23, 0.213))
                 .build();
         Document doc2 = Document.newBuilder()
                 .withId("0002")
-                .addFilterField(new DocField("other", "doc2"))
+                .addFilterField(new DocField("otherStr", "doc2"))
+                .addFilterField(new DocField("otherInt", 2))
                 .withVector(Arrays.asList(0.4123, 0.43, 0.413))
                 .build();
         Document doc3 = Document.newBuilder()
-                .withId("0003").addFilterField(new DocField("other", "doc3"))
+                .withId("0003")
+                .addFilterField(new DocField("otherStr", "doc3"))
+                .addFilterField(new DocField("otherInt", 3))
                 .withVector(Arrays.asList(0.8123, 0.83, 0.813))
                 .build();
         InsertParam insertParam = InsertParam.newBuilder()
@@ -178,7 +197,7 @@ public class VectorDBExample {
         System.out.println("-searchByFilter----------------------");
         SearchByVectorParam searchByFilterParam = SearchByVectorParam.newBuilder()
                 .addVector(Arrays.asList(0.3123, 0.43, 0.213))
-                .withFilter(new Filter("other=\"doc1\"").or("other=\"doc2\""))
+                .withFilter(new Filter("otherStr=\"doc1\"").or("otherInt=3"))
                 .withHNSWSearchParams(new HNSWSearchParams(10))
                 .withRetrieveVector(true)
                 .withLimit(10)
@@ -216,7 +235,20 @@ public class VectorDBExample {
         // Document相关示例
         testDocument(client);
         // Document相关示例2
-        testDocument();
+        // testDocument();
+        // Filter示例
+        testFilter();
+    }
+
+    public static void testFilter() {
+        System.out.println(new Filter("author=\"jerry\"")
+                .and("a=1")
+                .or("r=\"or\"")
+                .orNot("rn=2")
+                .andNot("an=\"andNot\"")
+                .getCond());
+        System.out.println(Filter.in("key", Arrays.asList("v1", "v2", "v3")));
+        System.out.println(Filter.in("key", Arrays.asList(1, 2, 3)));
     }
 
     private static void testDocument() {
@@ -395,7 +427,8 @@ public class VectorDBExample {
         ConnectParam connectParam = ConnectParam.newBuilder()
                 .withUrl(System.getProperty("vdb_url"))
                 .withUsername("root")
-                .withKey(System.getProperty("vdb_key")).withTimeout(30)
+                .withKey(System.getProperty("vdb_key"))
+                .withTimeout(30)
                 .build();
         return connectParam;
     }

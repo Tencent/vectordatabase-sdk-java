@@ -62,13 +62,10 @@ public class Filter {
         if (values == null || values.isEmpty()) {
             throw new ParamException("Filter in condition values is empty");
         }
-        if (values.get(0) instanceof String) {
-            List<String> strValues = values.stream().map(x -> "\"" + x + "\"").collect(Collectors.toList());
-            return String.format("%s in (%s)", key, String.join(",", strValues));
-        } else {
-            List<String> strValues = values.stream().map(x -> x + "").collect(Collectors.toList());
-            return String.format("%s in (%s)", key, String.join(",", strValues));
-        }
+        List<String> strValues = values.get(0) instanceof String ?
+                values.stream().map(x -> "\"" + x + "\"").collect(Collectors.toList()) :
+                values.stream().map(x -> x + "").collect(Collectors.toList());
+        return String.format("%s in (%s)", key, String.join(",", strValues));
     }
 
     public String getCond() {

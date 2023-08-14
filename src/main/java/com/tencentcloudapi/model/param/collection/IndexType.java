@@ -27,19 +27,19 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum IndexType {
     /**
-     *
+     * vector index type: flat
      */
     FLAT("FLAT"),
     /**
-     *
+     * vector index type: hnsw
      */
     HNSW("HNSW"),
     /**
-     *
+     * scalar index type: primaryKey
      */
     PRIMARY_KEY("primaryKey"),
     /**
-     *
+     * scalar index type: filter
      */
     FILTER("filter");
 

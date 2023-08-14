@@ -25,15 +25,15 @@ package com.tencentcloudapi.model.param.collection;
  */
 public enum MetricType {
     /**
-     *
+     * l2
      */
     L2("L2"),
     /**
-     *
+     * ip
      */
     IP("IP"),
     /**
-     *
+     * cosine
      */
     COSINE("COSINE");
 

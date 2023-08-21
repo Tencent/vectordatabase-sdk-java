@@ -12,7 +12,7 @@
     ```xml
     <repository>
       <id>vectordb</id>
-      <url>https://mirrors.cloud.tencent.com/repository/maven/vectordb-sdk-java</url>
+      <url>https://mirrors.cloud.tencent.com/repository/maven/vectordatabase-sdk-java</url>
       <releases>
         <enabled>true</enabled>
       </releases>
@@ -26,7 +26,7 @@ You can use **Apache Maven** or **Gradle**/**Grails** to download the SDK.
        ```xml
         <dependency>
             <groupId>com.tencentcloudapi</groupId>
-            <artifactId>vectordb-sdk-java</artifactId>
+            <artifactId>vectordatabase-sdk-java</artifactId>
             <version>0.0.1</version>
         </dependency>
        ```
@@ -34,7 +34,7 @@ You can use **Apache Maven** or **Gradle**/**Grails** to download the SDK.
    - Gradle/Grails
 
         ```gradle
-        compile 'com.tencentcloudapi:vectordb-sdk-java:0.0.1'
+        compile 'com.tencentcloudapi:vectordatabase-sdk-java:0.0.1'
         ```
 
 ### Examples

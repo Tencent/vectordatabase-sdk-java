@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.tencentcloudapi</groupId>
-  <artifactId>vectordb-sdk-java</artifactId>
+  <artifactId>vectordatabase-sdk-java</artifactId>
   <version>0.0.1</version>
   <packaging>jar</packaging>
 
-  <name>vectordb-sdk-java</name>
+  <name>vectordatabase-sdk-java</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

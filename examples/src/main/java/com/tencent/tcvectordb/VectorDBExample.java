@@ -21,36 +21,33 @@
 package com.tencent.tcvectordb;
 
 import com.tencent.tcvectordb.client.VectorDBClient;
+import com.tencent.tcvectordb.exception.VectorDBException;
+import com.tencent.tcvectordb.model.*;
 import com.tencent.tcvectordb.model.Collection;
-import com.tencent.tcvectordb.model.Database;
-import com.tencent.tcvectordb.model.DocField;
-import com.tencent.tcvectordb.model.Document;
-import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
-import com.tencent.tcvectordb.model.param.collection.FieldType;
-import com.tencent.tcvectordb.model.param.collection.FilterIndex;
-import com.tencent.tcvectordb.model.param.collection.HNSWParams;
-import com.tencent.tcvectordb.model.param.collection.IndexType;
-import com.tencent.tcvectordb.model.param.collection.MetricType;
-import com.tencent.tcvectordb.model.param.collection.VectorIndex;
+import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
+import com.tencent.tcvectordb.model.param.dml.*;
+import com.tencent.tcvectordb.model.param.entity.AffectRes;
+import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
+import com.tencent.tcvectordb.utils.JSONUtil;
 
-import com.tencent.tcvectordb.model.param.dml.InsertParam;
-import com.tencent.tcvectordb.model.param.dml.QueryParam;
-import com.tencent.tcvectordb.model.param.dml.SearchByVectorParam;
-import com.tencent.tcvectordb.model.param.dml.SearchByIdParam;
-import com.tencent.tcvectordb.model.param.dml.HNSWSearchParams;
-import com.tencent.tcvectordb.model.param.dml.DeleteParam;
-import com.tencent.tcvectordb.model.param.dml.Filter;
-
-import java.util.List;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * VectorDB Java SDK usage example
  */
 public class VectorDBExample {
 
+    static final String VDB_XLZ_DEV_DATABASE = "vdb_xlz_dev_database";
+    static final String VDB_XLZ_DEV_COLLECTION = "vdb_xlz_dev_collection";
+    static final Random randmo = new Random();
+
     public static void testDatabases(VectorDBClient client) {
+        System.out.println("- clear before test ----------------------");
+        String dbname = "vdb001";
+
+        anySafe(() -> client.dropDatabase(dbname));
         // List databases
         System.out.println("-list db----------------------");
         List<String> dbs = client.listDatabase();
@@ -65,9 +62,9 @@ public class VectorDBExample {
         System.out.println(client.listDatabase());
     }
 
-    private static CreateCollectionParam initCreateCollectionParam() {
+    private static CreateCollectionParam initCreateCollectionParam(String collName) {
         return CreateCollectionParam.newBuilder()
-                .withName("coll")
+                .withName(collName)
                 .withShardNum(3)
                 .withReplicaNum(2)
                 .withDescription("test collection0")
@@ -79,8 +76,36 @@ public class VectorDBExample {
                 .build();
     }
 
+    private static CreateCollectionParam initCreateEmbeddingCollectionParam(String collName) {
+        return CreateCollectionParam.newBuilder()
+                .withName(collName)
+                .withShardNum(3)
+                .withReplicaNum(2)
+                .withDescription("test collection0")
+                .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
+                .addField(new VectorIndex("vector", 768, IndexType.HNSW,
+                        MetricType.L2, new HNSWParams(64, 8)))
+                .addField(new FilterIndex("otherStr", FieldType.String, IndexType.FILTER))
+                .addField(new FilterIndex("otherInt", FieldType.Uint64, IndexType.FILTER))
+                .withEmbedding(
+                        Embedding
+                                .newBuilder()
+                                .withModel(EmbeddingModelEnum.M3E_BASE)
+                                .withTextField("origin_text")
+                                .withVectorField("vector")
+                                .build()
+                ).build();
+    }
+
     public static void testCollection(VectorDBClient client) {
-        Database db = client.createDatabase("vdb001");
+        System.out.println("- clear before test ----------------------");
+        String dbname = "vdb001";
+        String collName = "coll";
+
+        anySafe(() -> client.dropDatabase(dbname));
+
+
+        Database db = client.createDatabase(dbname);
         // Database db = client.database("vdb001");
         // list collections
         System.out.println("-list collections----------------------");
@@ -89,9 +114,15 @@ public class VectorDBExample {
             System.out.println(col.toString());
         }
         // create collection
-        System.out.println("-create collections----------------------");
-        CreateCollectionParam collectionParam = initCreateCollectionParam();
-        db.createCollection(collectionParam);
+        // System.out.println("-create collections----------------------");
+        // CreateCollectionParam collectionParam = initCreateCollectionParam();
+        // db.createCollection(collectionParam);
+
+        // create embedding collection
+        System.out.println("- create embedding collections----------------------");
+        CreateCollectionParam embeddingCollectionParam = initCreateEmbeddingCollectionParam(collName);
+        db.createCollection(embeddingCollectionParam);
+
         // list collections
         System.out.println("-list collections----------------------");
         List<Collection> cols = db.listCollections();
@@ -100,7 +131,7 @@ public class VectorDBExample {
         }
         // describe collection
         System.out.println("-describe collection----------------------");
-        Collection coll = db.describeCollection("coll");
+        Collection coll = db.describeCollection(collName);
         System.out.println(coll.toString());
         // drop collection
         System.out.println("-drop collection----------------------");
@@ -111,15 +142,26 @@ public class VectorDBExample {
         for (Collection col : cols2) {
             System.out.println(col.toString());
         }
+
+        // flush collection
+        AffectRes affectRes = db.flushCollections(dbname, collName);
+        System.out.println(affectRes);
+
         System.out.println("-drop db----------------------");
         client.dropDatabase("vdb001");
     }
 
     public static void testDocument(VectorDBClient client) throws InterruptedException {
-        Database db = client.createDatabase("vdb001");
+
+        String dbname = "vdb001";
+        String collName = "coll";
+
+        anySafe(() -> client.dropDatabase(dbname));
+
+        Database db = client.createDatabase(dbname);
         // Database db = client.database("vdb001");
         System.out.println("-create collections----------------------");
-        CreateCollectionParam collectionParam = initCreateCollectionParam();
+        CreateCollectionParam collectionParam = initCreateCollectionParam(collName);
         Collection collection = db.createCollection(collectionParam);
         // Collection collection = db.collection("coll1");
         // upsert
@@ -149,7 +191,7 @@ public class VectorDBExample {
                 .build();
         collection.upsert(insertParam);
         // notice：upsert操作可用会有延迟
-        Thread.sleep(1000*10);
+        Thread.sleep(1000 * 5);
         // query
         System.out.println("-query----------------------");
         QueryParam queryParam = QueryParam.newBuilder()
@@ -209,7 +251,7 @@ public class VectorDBExample {
                 .build();
         collection.delete(deleteParam);
         // notice：delete操作可用会有延迟
-        Thread.sleep(1000*5);
+        Thread.sleep(1000 * 5);
         // query
         List<Document> qdos2 = collection.query(queryParam);
         for (Document doc : qdos2) {
@@ -243,12 +285,192 @@ public class VectorDBExample {
         System.out.println(Filter.in("key", Arrays.asList(1, 2, 3)));
     }
 
+    private static void testDocument() {
+
+        ConnectParam connectParam = initConnectParam();
+        VectorDBClient client = new VectorDBClient(connectParam);
+        List<String> databaseList = client.listDatabase();
+        if (!databaseList.contains(VDB_XLZ_DEV_DATABASE)) {
+            client.createDatabase(VDB_XLZ_DEV_DATABASE);
+        }
+
+        Database database = client.database(VDB_XLZ_DEV_DATABASE);
+        List<Collection> collectionList = database.listCollections();
+        if (!collectionList.stream().anyMatch(coll -> coll.getCollection().equals(VDB_XLZ_DEV_COLLECTION))) {
+            CreateCollectionParam collectionParam = initCollectionParam();
+            database.createCollection(collectionParam);
+        }
+
+        Collection collection = database.collection(VDB_XLZ_DEV_COLLECTION);
+        InsertParam insertParam = initInsertParam();
+        System.out.println("testDocument - insertParam: " + JSONUtil.toJSONString(insertParam));
+        collection.upsert(insertParam);
+        System.out.println("testDocument - insertParam: " + JSONUtil.toJSONString(insertParam));
+        collection.upsert(insertParam);
+        System.out.println("testDocument - insert finish");
+
+        try {
+            TimeUnit.SECONDS.sleep(10);
+        } catch (InterruptedException ignore) {
+            throw new RuntimeException(ignore);
+        }
+        QueryParam queryParam = initQueryParam(insertParam);
+        System.out.println("testDocument - queryParam: " + JSONUtil.toJSONString(queryParam));
+        List<Document> queryRes = collection.query(queryParam);
+        System.out.println("testDocument - queryRes: " + toJsonString(queryRes));
+
+        SearchByVectorParam searchParam = initSearchParam(insertParam);
+        System.out.println("testDocument - searchParam: " + JSONUtil.toJSONString(searchParam));
+        List<List<Document>> searchRes = collection.search(searchParam);
+        System.out.println("testDocument - searchRes: " + toJsonString(searchRes));
+
+        DeleteParam deleteParam = initDeleteParam(insertParam);
+        System.out.println("testDocument - deleteParam: " + JSONUtil.toJSONString(deleteParam));
+        collection.delete(deleteParam);
+
+        System.out.println("testDocument - drop database");
+        client.dropDatabase(VDB_XLZ_DEV_DATABASE);
+
+    }
+
+    static <T> String toJsonString(java.util.List<T> list) {
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < list.size(); i++) {
+            T t = list.get(i);
+            if (t instanceof java.util.Collection) {
+                String subStr = toJsonString((java.util.List) t);
+                sb.append(subStr);
+            } else {
+                sb.append(t.toString());
+            }
+            if (i < list.size() - 1) {
+                sb.append(",");
+            }
+        }
+        return sb.append("]").toString();
+
+    }
+
+
+    static DeleteParam initDeleteParam(InsertParam insertParam) {
+        DeleteParam.Builder builder = DeleteParam.newBuilder();
+        List<String> list = randomSelectDC(insertParam);
+        builder.withDocumentIds(list);
+        return builder.build();
+
+    }
+
+    private static List<String> randomSelectDC(InsertParam insertParam) {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < insertParam.getDocuments().size() && i < 10; i++) {
+            int index = randmo.nextInt(100);
+            String s = formatId(8, index);
+            if (list.contains(s)) {
+                i--;
+            } else {
+                list.add(s);
+            }
+        }
+        return list;
+    }
+
+    private static SearchByVectorParam initSearchParam(InsertParam insertParam) {
+        List<List<Double>> vectors = new ArrayList<>();
+        Set<String> set = new HashSet<>();
+        for (int i = 0; i < insertParam.getDocuments().size() && i < 10; i++) {
+            int index = randmo.nextInt(100);
+            String s = formatId(8, index);
+            if (set.contains(s)) {
+                i--;
+            } else {
+                set.add(s);
+                Document document = insertParam.getDocuments().stream().filter(
+                        dc -> dc.getId().equals(s)).findFirst().orElse(null);
+                if (document != null) {
+                    vectors.add(document.getVector());
+                }
+            }
+        }
+        return SearchByVectorParam.newBuilder().withVectors(vectors).build();
+    }
+
+    private static QueryParam initQueryParam(InsertParam insertParam) {
+        QueryParam.Builder builder = QueryParam.newBuilder();
+        List<String> list = randomSelectDC(insertParam);
+        return builder.withDocumentIds(list).withRetrieveVector(false).build();
+    }
+
+    static InsertParam initInsertParam() {
+        InsertParam.Builder builder = InsertParam.newBuilder();
+        List<Document> list = new ArrayList<Document>();
+        int insertCount;
+        while ((insertCount = randmo.nextInt(1000)) < 100) {
+            // ensure 100 documents
+            // batch upsert size must between 1 and 1000
+        }
+
+        for (int i = 0; i < insertCount; i++) {
+            Document.Builder documentB = Document.newBuilder();
+            documentB.withId(formatId(8, i)).withVector(vectors(10))
+                    .addFilterField(new DocField("sc", "sc" + i));
+            list.add(documentB.build());
+        }
+        builder.withDocuments(list);
+
+
+        return builder.build();
+    }
+
+    static List<Double> vectors(int len) {
+        List<Double> list = new ArrayList<>();
+        for (int i = 0; i < len; i++) {
+            list.add(Math.random());
+        }
+        return list;
+    }
+
+    static String formatId(int len, int value) {
+        StringBuilder sb = new StringBuilder();
+        String valStr = String.valueOf(value);
+        for (int i = (valStr.length() - 1); i < len; i++) {
+            sb.append("0");
+        }
+        return sb.append(valStr).toString();
+    }
+
+    static CreateCollectionParam initCollectionParam() {
+        CreateCollectionParam.Builder builder = CreateCollectionParam.newBuilder();
+        builder.withDescription("xzl-test").withName(VDB_XLZ_DEV_COLLECTION).withReplicaNum(2).withShardNum(2);
+        IndexField field1 = new IndexField();
+        field1.setIndexType(IndexType.PRIMARY_KEY);
+        field1.setFieldName("id");
+        field1.setFieldType(FieldType.String);
+        IndexField field2 = new VectorIndex("vector", 10, IndexType.HNSW, MetricType.L2,
+                new HNSWParams(64, 64));
+        IndexField field3 = new FilterIndex("sc", FieldType.String, IndexType.FILTER);
+        builder.addField(field1).addField(field2).addField(field3);
+        CreateCollectionParam build = builder.build();
+        build.setDatabase(VDB_XLZ_DEV_DATABASE);
+        return build;
+
+    }
+
     private static ConnectParam initConnectParam() {
+        System.out.println(System.getProperty("vdb_url"));
         return ConnectParam.newBuilder()
-                .withUrl("http://10.0.X.X")
+                .withUrl(System.getProperty("vdb_url"))
                 .withUsername("root")
                 .withKey("eC4bLRy2va******************************")
                 .withTimeout(30)
                 .build();
     }
+
+    private static void anySafe(Runnable runnable) {
+        try {
+            runnable.run();
+        } catch (VectorDBException e) {
+            System.err.println(e);
+        }
+    }
+
 }

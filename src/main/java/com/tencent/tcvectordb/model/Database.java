@@ -22,6 +22,7 @@ package com.tencent.tcvectordb.model;
 
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
+import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.service.Stub;
 
 import java.util.List;
@@ -46,13 +47,17 @@ public class Database {
         param.setDatabase(databaseName);
         stub.createCollection(param);
         param.setStub(this.stub);
-        return (Collection)param;
+        return param;
     }
 
     public List<Collection> listCollections() throws VectorDBException {
         List<Collection> collections = stub.listCollections(this.databaseName);
         collections.forEach(c -> c.setStub(stub));
         return collections;
+    }
+
+    public AffectRes flushCollections(String databaseName, String collectionName) {
+        return stub.flushCollection(databaseName, collectionName);
     }
 
     public Collection describeCollection(String collectionName) throws VectorDBException {
@@ -63,6 +68,14 @@ public class Database {
 
     public void dropCollection(String collectionName) throws VectorDBException {
         stub.dropCollection(this.databaseName, collectionName);
+    }
+
+    public AffectRes setCollectionAlias(String collectionName, String aliasName) {
+        return stub.setCollectionAlias(this.databaseName, collectionName, aliasName);
+    }
+
+    public AffectRes deleteCollectionAlias(String aliasName) {
+        return stub.deleteCollectionAlias(this.databaseName, aliasName);
     }
 
     public Collection collection(String collectionName) throws VectorDBException {

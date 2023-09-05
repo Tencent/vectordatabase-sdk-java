@@ -23,6 +23,7 @@ package com.tencent.tcvectordb.model.param.dml;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencent.tcvectordb.exception.ParamException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,42 +31,37 @@ import java.util.List;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SearchByIdParam extends SearchParam {
+    private List<String> documentIds;
 
-    private SearchByIdParam() {
+
+    private SearchByIdParam(Builder builder) {
+        super(builder);
+        this.documentIds = builder.documentIds;
     }
 
-    public static SearchByIdsBuilder newBuilder() {
-        return new SearchByIdsBuilder();
+    public List<String> getDocumentIds() {
+        return documentIds;
     }
 
-    public static class SearchByIdsBuilder extends BaseBuilder {
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+    public static class Builder extends SearchParam.Builder<Builder> {
         private List<String> documentIds;
 
-        private SearchByIdsBuilder() {
+        private Builder() {
+            super();
+            this.documentIds = new ArrayList<>();
         }
 
-        public SearchByIdsBuilder withDocumentIds(List<String> documentIds) {
+        public Builder withDocumentIds(List<String> documentIds) {
             this.documentIds = documentIds;
             return this;
         }
 
-        public SearchByIdsBuilder withHNSWSearchParams(HNSWSearchParams params) {
-            this.params = params;
-            return this;
-        }
-
-        public SearchByIdsBuilder withFilter(Filter filter) {
-            this.filter = filter;
-            return this;
-        }
-
-        public SearchByIdsBuilder withRetrieveVector(boolean retrieveVector) {
-            this.retrieveVector = retrieveVector;
-            return this;
-        }
-
-        public SearchByIdsBuilder withLimit(int limit) {
-            this.limit = limit;
+        public Builder addDocumentId(String documentId) {
+            this.documentIds.add(documentId);
             return this;
         }
 
@@ -73,15 +69,12 @@ public class SearchByIdParam extends SearchParam {
             if (documentIds == null || documentIds.isEmpty()) {
                 throw new ParamException("SearchByVectorsBuilder error: documentIds is empty");
             }
-            SearchByIdParam searchParam = new SearchByIdParam();
-            searchParam.documentIds = this.documentIds;
-            searchParam.params = this.params;
-            if (this.filter != null) {
-                searchParam.filter = this.filter.getCond();
-            }
-            searchParam.retrieveVector = this.retrieveVector;
-            searchParam.limit = this.limit;
-            return searchParam;
+            return new SearchByIdParam(this);
+        }
+
+        @Override
+        protected Builder self() {
+            return this;
         }
     }
 }

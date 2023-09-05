@@ -24,7 +24,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.model.param.collection.FieldType;
 import org.apache.commons.lang3.StringUtils;
 
@@ -66,7 +65,9 @@ public class Document {
     @Override
     public String toString() {
         ObjectNode node = JsonNodeFactory.instance.objectNode();
-        node.put("id", id);
+        if (StringUtils.isNotBlank(id)) {
+            node.put("id", id);
+        }
         if (vector != null && !vector.isEmpty()) {
             ArrayNode vectorNode = JsonNodeFactory.instance.arrayNode();
             vector.forEach(vectorNode::add);
@@ -140,9 +141,6 @@ public class Document {
         }
 
         public Document build() {
-            if (StringUtils.isEmpty(this.id)) {
-                throw new ParamException("Document Create error: id is null");
-            }
             return new Document(this);
         }
     }

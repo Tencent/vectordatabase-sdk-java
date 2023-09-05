@@ -30,16 +30,16 @@ import java.util.List;
  * Search By Vector Param
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SearchByVectorParam extends SearchParam {
-    private List<List<Double>> vectors;
+public class SearchByEmbeddingItemsParam extends SearchParam {
+    private List<String> embeddingItems;
 
-    private SearchByVectorParam(Builder builder) {
+    private SearchByEmbeddingItemsParam(Builder builder) {
         super(builder);
-        this.vectors = builder.vectors;
+        this.embeddingItems = builder.embeddingItems;
     }
 
-    public List<List<Double>> getVectors() {
-        return vectors;
+    public List<String> getEmbeddingItems() {
+        return embeddingItems;
     }
 
     public static Builder newBuilder() {
@@ -47,28 +47,28 @@ public class SearchByVectorParam extends SearchParam {
     }
 
     public static class Builder extends SearchParam.Builder<Builder> {
-        private List<List<Double>> vectors;
+        private List<String> embeddingItems;
 
         private Builder() {
             super();
-            this.vectors = new ArrayList<>();
+            this.embeddingItems = new ArrayList<>();
         }
 
-        public Builder withVectors(List<List<Double>> vectors) {
-            this.vectors = vectors;
+        public Builder withEmbeddingItems(List<String> embeddingItems) {
+            this.embeddingItems = embeddingItems;
             return this;
         }
 
-        public Builder addVector(List<Double> vector) {
-            this.vectors.add(vector);
+        public Builder addEmbeddingItem(String embeddingItem) {
+            this.embeddingItems.add(embeddingItem);
             return this;
         }
 
-        public SearchByVectorParam build() {
-            if (vectors == null || vectors.isEmpty()) {
-                throw new ParamException("SearchByVectorsBuilder error: vectors is empty");
+        public SearchByEmbeddingItemsParam build() {
+            if (embeddingItems == null || embeddingItems.isEmpty()) {
+                throw new ParamException("SearchByEmbeddingItemsBuilder error: embeddingItems is empty");
             }
-            return new SearchByVectorParam(this);
+            return new SearchByEmbeddingItemsParam(this);
         }
 
         @Override

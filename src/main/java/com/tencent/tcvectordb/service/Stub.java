@@ -4,10 +4,9 @@ import com.tencent.tcvectordb.model.Collection;
 import com.tencent.tcvectordb.model.Database;
 import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
-import com.tencent.tcvectordb.service.param.DeleteParamInner;
-import com.tencent.tcvectordb.service.param.InsertParamInner;
-import com.tencent.tcvectordb.service.param.QueryParamInner;
-import com.tencent.tcvectordb.service.param.SearchParamInner;
+import com.tencent.tcvectordb.model.param.entity.AffectRes;
+import com.tencent.tcvectordb.model.param.entity.BaseRes;
+import com.tencent.tcvectordb.service.param.*;
 
 import java.util.List;
 
@@ -47,14 +46,29 @@ public interface Stub {
     Collection describeCollection(String databaseName, String collectionName);
 
     /**
+     * describe collection
+     */
+    AffectRes flushCollection(String databaseName, String collectionName);
+
+    /**
      * drop collection
      */
     void dropCollection(String databaseName, String collectionName);
 
     /**
+     * set collection alias
+     */
+    AffectRes setCollectionAlias(String databaseName, String collectionName, String aliasName);
+
+    /**
+     * delete alias
+     */
+    AffectRes deleteCollectionAlias(String databaseName, String aliasName);
+
+    /**
      * upsert document
      */
-    void upsertDocument(InsertParamInner param);
+    AffectRes upsertDocument(InsertParamInner param);
 
     /**
      * query document
@@ -69,5 +83,15 @@ public interface Stub {
     /**
      * delete document
      */
-    void deleteDocument(DeleteParamInner param);
+    AffectRes deleteDocument(DeleteParamInner param);
+
+    /**
+     * delete document
+     */
+    AffectRes updateDocument(UpdateParamInner param);
+
+    /**
+     * rebuild index
+     */
+    BaseRes rebuildIndex(RebuildIndexParamInner param);
 }

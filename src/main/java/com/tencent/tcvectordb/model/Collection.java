@@ -27,15 +27,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.exception.VectorDBException;
+import com.tencent.tcvectordb.model.param.collection.Embedding;
 import com.tencent.tcvectordb.model.param.collection.IndexField;
 import com.tencent.tcvectordb.model.param.dml.*;
-import com.tencent.tcvectordb.model.param.dml.InsertParam;
+import com.tencent.tcvectordb.model.param.entity.AffectRes;
+import com.tencent.tcvectordb.model.param.entity.BaseRes;
 import com.tencent.tcvectordb.service.Stub;
-import com.tencent.tcvectordb.service.param.DeleteParamInner;
-import com.tencent.tcvectordb.service.param.InsertParamInner;
-import com.tencent.tcvectordb.service.param.QueryParamInner;
-import com.tencent.tcvectordb.service.param.SearchParamInner;
+import com.tencent.tcvectordb.service.param.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -54,6 +54,12 @@ public class Collection {
     protected String description;
     protected List<IndexField> indexes;
     protected String createTime;
+    protected Embedding embedding;
+
+
+    private long documentCount;
+    private IndexStatus indexStatus;
+    private List<String> alias;
 
     protected Collection() {
     }
@@ -94,30 +100,60 @@ public class Collection {
         return createTime;
     }
 
-    public void upsert(InsertParam param) throws VectorDBException {
+    public Embedding getEmbedding() {
+        return embedding;
+    }
+
+    public long getDocumentCount() {
+        return documentCount;
+    }
+
+    public IndexStatus getIndexStatus() {
+        return indexStatus;
+    }
+
+    public List<String> getAlias() {
+        return alias;
+    }
+
+    public AffectRes upsert(InsertParam param) throws VectorDBException {
         InsertParamInner insertParam = new InsertParamInner(
                 database, collection, param.getDocuments());
-        this.stub.upsertDocument(insertParam);
+        return this.stub.upsertDocument(insertParam);
     }
 
     public List<Document> query(QueryParam param) throws VectorDBException {
         return this.stub.queryDocument(
-                new QueryParamInner(database, collection, param));
+                new QueryParamInner(database, collection, param, param.getReadConsistency()));
     }
 
     public List<List<Document>> search(SearchByVectorParam param) throws VectorDBException {
         return this.stub.searchDocument(new SearchParamInner(
-                database, collection, param));
+                database, collection, param, param.getReadConsistency()));
     }
 
     public List<List<Document>> searchById(SearchByIdParam param) throws VectorDBException {
         return this.stub.searchDocument(new SearchParamInner(
-                database, collection, param));
+                database, collection, param, param.getReadConsistency()));
     }
 
-    public void delete(DeleteParam param) throws VectorDBException {
-        this.stub.deleteDocument(
+    public List<List<Document>> searchByEmbeddingItems(SearchByEmbeddingItemsParam param) throws VectorDBException {
+        return this.stub.searchDocument(new SearchParamInner(
+                database, collection, param, param.getReadConsistency()));
+    }
+
+    public AffectRes delete(DeleteParam param) throws VectorDBException {
+        return this.stub.deleteDocument(
                 new DeleteParamInner(database, collection, param));
+    }
+
+    public AffectRes update(UpdateParam param, Document document) throws VectorDBException {
+        return this.stub.updateDocument(
+                new UpdateParamInner(database, collection, param, document));
+    }
+
+    public BaseRes rebuildIndex(RebuildIndexParam rebuildIndexParam) {
+        return this.stub.rebuildIndex(new RebuildIndexParamInner(this.database, this.collection, rebuildIndexParam));
     }
 
     @Override
@@ -128,6 +164,29 @@ public class Collection {
         } catch (JsonProcessingException e) {
             throw new ParamException(String.format(
                     "Create collection param error: %s", e));
+        }
+    }
+
+
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    public static class IndexStatus {
+        private String status;
+        private Date startTime;
+
+        public String getStatus() {
+            return status;
+        }
+
+        public Date getStartTime() {
+            return startTime;
+        }
+
+        @Override
+        public String toString() {
+            return "IndexStatus{" +
+                    "status='" + status + '\'' +
+                    ", startTime=" + startTime +
+                    '}';
         }
     }
 }

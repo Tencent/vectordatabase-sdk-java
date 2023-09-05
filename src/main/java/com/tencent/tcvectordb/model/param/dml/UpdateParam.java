@@ -23,52 +23,31 @@ package com.tencent.tcvectordb.model.param.dml;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencent.tcvectordb.exception.ParamException;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Search By Vector Param
+ * Delete Param
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SearchByVectorParam extends SearchParam {
-    private List<List<Double>> vectors;
+public class UpdateParam extends BaseQuery {
 
-    private SearchByVectorParam(Builder builder) {
+    public UpdateParam(Builder builder) {
         super(builder);
-        this.vectors = builder.vectors;
-    }
-
-    public List<List<Double>> getVectors() {
-        return vectors;
     }
 
     public static Builder newBuilder() {
         return new Builder();
     }
 
-    public static class Builder extends SearchParam.Builder<Builder> {
-        private List<List<Double>> vectors;
+    public static class Builder extends BaseQuery.Builder<Builder> {
 
         private Builder() {
             super();
-            this.vectors = new ArrayList<>();
         }
 
-        public Builder withVectors(List<List<Double>> vectors) {
-            this.vectors = vectors;
-            return this;
-        }
-
-        public Builder addVector(List<Double> vector) {
-            this.vectors.add(vector);
-            return this;
-        }
-
-        public SearchByVectorParam build() {
-            if (vectors == null || vectors.isEmpty()) {
-                throw new ParamException("SearchByVectorsBuilder error: vectors is empty");
+        public UpdateParam build() {
+            if (documentIds == null || documentIds.isEmpty()) {
+                throw new ParamException("DeleteParam error: documentIds is null");
             }
-            return new SearchByVectorParam(this);
+            return new UpdateParam(this);
         }
 
         @Override

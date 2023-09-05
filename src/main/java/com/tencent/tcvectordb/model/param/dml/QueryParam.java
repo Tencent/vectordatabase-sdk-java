@@ -20,57 +20,112 @@
 
 package com.tencent.tcvectordb.model.param.dml;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.tencent.tcvectordb.exception.ParamException;
+import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Query Param
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class QueryParam {
-    private List<String> documentIds;
+public class QueryParam extends BaseQuery {
     private boolean retrieveVector;
+    private long limit;
+    private long offset;
+    @JsonIgnore
+    private ReadConsistencyEnum readConsistency;
+    private List<String> outputFields;
 
-    public List<String> getDocumentIds() {
-        return documentIds;
-    }
 
     public boolean isRetrieveVector() {
         return retrieveVector;
     }
 
+    public long getLimit() {
+        return limit;
+    }
+
+    public long getOffset() {
+        return offset;
+    }
+
+
+    public ReadConsistencyEnum getReadConsistency() {
+        return readConsistency;
+    }
+
+    public List<String> getOutputFields() {
+        return outputFields;
+    }
+
     public QueryParam(Builder builder) {
-        this.documentIds = builder.documentIds;
+        super(builder);
         this.retrieveVector = builder.retrieveVector;
+        this.limit = builder.limit;
+        this.offset = builder.offset;
+        this.readConsistency = builder.readConsistency;
+        if (builder.outputFields != null && !builder.outputFields.isEmpty()) {
+            this.outputFields = Collections.unmodifiableList(builder.outputFields);
+        }
     }
 
     public static Builder newBuilder() {
         return new Builder();
     }
 
-    public static class Builder {
-        private List<String> documentIds;
+    public static class Builder extends BaseQuery.Builder<Builder> {
         private boolean retrieveVector = false;
+        /**
+         * default is maximum
+         */
+        private long limit = 16384L;
+        /**
+         * default is 0
+         */
+        private long offset = 0;
+        private ReadConsistencyEnum readConsistency = ReadConsistencyEnum.EVENTUAL_CONSISTENCY;
+        private List<String> outputFields;
 
-        public Builder() {
+        private Builder() {
+            super();
         }
 
-        public Builder withDocumentIds(List<String> documentIds) {
-            this.documentIds = documentIds;
+        @Override
+        protected Builder self() {
             return this;
         }
+
 
         public Builder withRetrieveVector(boolean retrieveVector) {
             this.retrieveVector = retrieveVector;
             return this;
         }
 
+        public Builder withLimit(long limit) {
+            this.limit = limit;
+            return this;
+        }
+
+        public Builder withOffset(long offset) {
+            this.offset = offset;
+            return this;
+        }
+
+        public Builder withReadConsistency(ReadConsistencyEnum readConsistency) {
+            this.readConsistency = readConsistency;
+            return this;
+        }
+
+        public Builder withOutputFields(List<String> outputFields) {
+            this.outputFields = outputFields;
+            return this;
+        }
+
+
         public QueryParam build() {
-            if (documentIds == null || documentIds.isEmpty()) {
-                throw new ParamException("QueryParam error: documentIds is null");
-            }
             return new QueryParam(this);
         }
     }

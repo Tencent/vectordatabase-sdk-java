@@ -26,8 +26,8 @@ public class RebuildIndexParam {
     }
 
     public static final class Builder {
-        private boolean dropBeforeRebuild;
-        private int throttle;
+        private boolean dropBeforeRebuild = false;
+        private int throttle = 0;
 
         private Builder() {
         }

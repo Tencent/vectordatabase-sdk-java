@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -91,6 +92,7 @@ public class QueryParam extends BaseQuery {
 
         private Builder() {
             super();
+            this.outputFields = new ArrayList<>();
         }
 
         @Override
@@ -116,6 +118,16 @@ public class QueryParam extends BaseQuery {
 
         public Builder withReadConsistency(ReadConsistencyEnum readConsistency) {
             this.readConsistency = readConsistency;
+            return this;
+        }
+
+        public Builder addOutputFields(String outputField) {
+            this.outputFields.add(outputField);
+            return this;
+        }
+
+        public Builder addAllOutputFields(List<String> outputFields) {
+            this.outputFields.addAll(outputFields);
             return this;
         }
 

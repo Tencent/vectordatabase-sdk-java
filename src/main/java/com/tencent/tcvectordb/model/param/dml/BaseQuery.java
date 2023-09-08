@@ -42,5 +42,15 @@ public abstract class BaseQuery {
             this.documentIds = documentIds;
             return self();
         }
+
+        public T addDocumentId(String documentId) {
+            this.documentIds.add(documentId);
+            return self();
+        }
+
+        public T addAllDocumentId(List<String> documentIds) {
+            this.documentIds.addAll(documentIds);
+            return self();
+        }
     }
 }

@@ -22,17 +22,22 @@ package com.tencent.tcvectordb;
 
 import com.tencent.tcvectordb.client.VectorDBClient;
 import com.tencent.tcvectordb.exception.VectorDBException;
-import com.tencent.tcvectordb.model.*;
 import com.tencent.tcvectordb.model.Collection;
+import com.tencent.tcvectordb.model.Database;
+import com.tencent.tcvectordb.model.DocField;
+import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
-import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
 import com.tencent.tcvectordb.utils.JSONUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import static com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum.M3E_BASE;
 
 /**
  * VectorDB Java SDK usage example
@@ -51,72 +56,84 @@ public class VectorDBExample {
         // List databases
         System.out.println("-list db----------------------");
         List<String> dbs = client.listDatabase();
-        System.out.println(dbs);
+        System.out.println("\tres: " + dbs);
         // create database
         System.out.println("-create db----------------------");
         client.createDatabase("vdb001");
-        System.out.println(client.listDatabase());
+        System.out.println("\tres: " + client.listDatabase());
         // drop database
         System.out.println("-drop db----------------------");
         client.dropDatabase("vdb001");
-        System.out.println(client.listDatabase());
+        System.out.println("\tres: " + client.listDatabase());
     }
 
-    private static CreateCollectionParam initCreateCollectionParam(String collName) {
-        return CreateCollectionParam.newBuilder()
-                .withName(collName)
-                .withShardNum(3)
-                .withReplicaNum(2)
-                .withDescription("test collection0")
-                .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
-                .addField(new VectorIndex("vector", 3, IndexType.HNSW,
-                        MetricType.L2, new HNSWParams(64, 8)))
-                .addField(new FilterIndex("otherStr", FieldType.String, IndexType.FILTER))
-                .addField(new FilterIndex("otherInt", FieldType.Uint64, IndexType.FILTER))
-                .build();
-    }
-
-    private static CreateCollectionParam initCreateEmbeddingCollectionParam(String collName) {
-        return CreateCollectionParam.newBuilder()
-                .withName(collName)
-                .withShardNum(3)
-                .withReplicaNum(2)
-                .withDescription("test collection0")
-                .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
-                .addField(new VectorIndex("vector", 768, IndexType.HNSW,
-                        MetricType.L2, new HNSWParams(64, 8)))
-                .addField(new FilterIndex("otherStr", FieldType.String, IndexType.FILTER))
-                .addField(new FilterIndex("otherInt", FieldType.Uint64, IndexType.FILTER))
-                .withEmbedding(
-                        Embedding
-                                .newBuilder()
-                                .withModel(EmbeddingModelEnum.M3E_BASE)
-                                .withTextField("origin_text")
-                                .withVectorField("vector")
-                                .build()
-                ).build();
-    }
 
     public static void testCollection(VectorDBClient client) {
-        System.out.println("- clear before test ----------------------");
         String dbname = "vdb001";
         String collName = "coll";
 
+        System.out.println("- clear before test ----------------------");
         anySafe(() -> client.dropDatabase(dbname));
-
-
         Database db = client.createDatabase(dbname);
-        // Database db = client.database("vdb001");
+
         // list collections
         System.out.println("-list collections----------------------");
         List<Collection> cols3 = db.listCollections();
         for (Collection col : cols3) {
-            System.out.println(col.toString());
+            System.out.println("\tres: " + col.toString());
         }
         // create collection
-        // System.out.println("-create collections----------------------");
-        // CreateCollectionParam collectionParam = initCreateCollectionParam();
-        // db.createCollection(collectionParam);
+        System.out.println("-create collections----------------------");
+        CreateCollectionParam collectionParam = initCreateCollectionParam(collName);
+        db.createCollection(collectionParam);
+
+
+        // list collections
+        System.out.println("-list collections----------------------");
+        List<Collection> cols = db.listCollections();
+        for (Collection col : cols) {
+            System.out.println("\tres: " + col.toString());
+        }
+
+        // describe collection
+        System.out.println("-describe collection----------------------");
+        Collection coll = db.describeCollection(collName);
+        System.out.println("\tres: " + coll.toString());
+
+        // flush collection
+        System.out.println("- flush collection----------------------");
+        AffectRes affectRes = db.truncateCollections(collName);
+        System.out.println("\tres: " + affectRes);
+
+        // drop collection
+        System.out.println("-drop collection----------------------");
+        db.dropCollection("coll");
+
+        // list collections
+        System.out.println("-list collections----------------------");
+        List<Collection> cols2 = db.listCollections();
+        for (Collection col : cols2) {
+            System.out.println("\tres: " + col.toString());
+        }
+
+        System.out.println("-drop db----------------------");
+        client.dropDatabase("vdb001");
+    }
+
+    public static void testCollectionEmbedding(VectorDBClient client) {
+        String dbname = "vdb001";
+        String collName = "coll";
+
+        System.out.println("- clear before test ----------------------");
+        anySafe(() -> client.dropDatabase(dbname));
+        Database db = client.createDatabase(dbname);
+
+        // list collections
+        System.out.println("-list collections----------------------");
+        List<Collection> cols3 = db.listCollections();
+        for (Collection col : cols3) {
+            System.out.println("\tres: " + col.toString());
+        }
 
         // create embedding collection
         System.out.println("- create embedding collections----------------------");
@@ -127,12 +144,19 @@ public class VectorDBExample {
         System.out.println("-list collections----------------------");
         List<Collection> cols = db.listCollections();
         for (Collection col : cols) {
-            System.out.println(col.toString());
+            System.out.println("\tres: " + col.toString());
         }
         // describe collection
         System.out.println("-describe collection----------------------");
         Collection coll = db.describeCollection(collName);
-        System.out.println(coll.toString());
+        System.out.println("\tres: " + coll.toString());
+
+        // flush collection
+        System.out.println("- flush collection----------------------");
+        AffectRes affectRes = db.truncateCollections(collName);
+        System.out.println("\tres: " + affectRes);
+
+
         // drop collection
         System.out.println("-drop collection----------------------");
         db.dropCollection("coll");
@@ -140,12 +164,8 @@ public class VectorDBExample {
         System.out.println("-list collections----------------------");
         List<Collection> cols2 = db.listCollections();
         for (Collection col : cols2) {
-            System.out.println(col.toString());
+            System.out.println("\tres: " + col.toString());
         }
-
-        // flush collection
-        AffectRes affectRes = db.flushCollections(dbname, collName);
-        System.out.println(affectRes);
 
         System.out.println("-drop db----------------------");
         client.dropDatabase("vdb001");
@@ -199,7 +219,7 @@ public class VectorDBExample {
                 .build();
         List<Document> qdos = collection.query(queryParam);
         for (Document doc : qdos) {
-            System.out.println(doc.toString());
+            System.out.println("\tres: " + doc.toString());
         }
         // search by vector
         System.out.println("-searchByVector----------------------");
@@ -211,7 +231,7 @@ public class VectorDBExample {
         List<List<Document>> svDocs = collection.search(searchByVectorParam);
         for (List<Document> docs : svDocs) {
             for (Document doc : docs) {
-                System.out.println(doc.toString());
+                System.out.println("\tres: " + doc.toString());
             }
         }
         // search by id
@@ -224,9 +244,9 @@ public class VectorDBExample {
         List<List<Document>> siDocs = collection.searchById(searchByIdParam);
         int i = 0;
         for (List<Document> docs : siDocs) {
-            System.out.println(i++);
+            System.out.println("\tres: " + i++);
             for (Document doc : docs) {
-                System.out.println(doc.toString());
+                System.out.println("\tres: " + doc.toString());
             }
         }
         // search by filter
@@ -241,7 +261,7 @@ public class VectorDBExample {
         List<List<Document>> sfDocs = collection.search(searchByFilterParam);
         for (List<Document> docs : sfDocs) {
             for (Document doc : docs) {
-                System.out.println(doc.toString());
+                System.out.println("\tres: " + doc.toString());
             }
         }
         // delete
@@ -255,8 +275,240 @@ public class VectorDBExample {
         // query
         List<Document> qdos2 = collection.query(queryParam);
         for (Document doc : qdos2) {
-            System.out.println(doc.toString());
+            System.out.println("\tres: " + doc.toString());
         }
+        client.dropDatabase("vdb001");
+    }
+
+    public static void testDocumentEmbedding(VectorDBClient client) throws InterruptedException {
+
+        String dbname = "vdb001";
+        String collName = "coll";
+        String collNameAlias = "coll_alias";
+
+        System.out.println("- clear before test ----------------------");
+        anySafe(() -> client.dropDatabase(dbname));
+        Database db = client.createDatabase(dbname);
+
+        // Database db = client.database("vdb001");
+        System.out.println("-create collections----------------------");
+        CreateCollectionParam collectionParam = initCreateEmbeddingCollectionParam(collName);
+        Collection collection = db.createCollection(collectionParam);
+
+        // describe collection before set alias
+        System.out.println("- describe collection before set alias ----------------------");
+        Collection descCollRes01 = db.describeCollection(collName);
+        System.out.println("\tres: " + descCollRes01.toString());
+        
+        // set alias
+        System.out.println("- set collection alias ----------------------");
+        AffectRes affectRes1 = db.setCollectionAlias(collName, collNameAlias);
+        System.out.println("\tres: " + affectRes1);
+
+        System.out.println("- describe collection after set collection alias ----------------------");
+        Collection descCollRes02 = db.describeCollection(collName);
+        System.out.println("\tres: " + descCollRes02.toString());
+
+        // delete alias
+        System.out.println("- delete collection alias ----------------------");
+        AffectRes affectRes2 = db.deleteCollectionAlias(collNameAlias);
+        System.out.println("\tres: " + affectRes2);
+
+
+        System.out.println("- describe collection after delete collection alias ----------------------");
+        Collection descCollRes03 = db.describeCollection(collName);
+        System.out.println("\tres: " + descCollRes03.toString());
+
+        // Collection collection = db.collection("coll1");
+        // upsert
+        System.out.println("-upsert----------------------");
+        List<Document> documents = initDocuments(true, 10, M3E_BASE.getDimension(), 0);
+        InsertParam insertParam = InsertParam.newBuilder()
+                .addAllDocument(documents)
+                .build();
+        collection.upsert(insertParam);
+
+        // notice：upsert操作可用会有延迟
+        Thread.sleep(1000 * 5);
+        // query
+        System.out.println("-query----------------------");
+        QueryParam queryParam = QueryParam.newBuilder()
+                .withDocumentIds(Arrays.asList("00001", "00002", "00003"))
+                .withRetrieveVector(true)
+                .build();
+        List<Document> qdos = collection.query(queryParam);
+        for (Document doc : qdos) {
+            System.out.println("\tres: " + doc.toString());
+        }
+
+        System.out.println("- describe collection ----------------------");
+        Collection descCollRes04 = db.describeCollection(collName);
+        System.out.println("\tres: " + descCollRes04.toString());
+
+        // search by vector
+        System.out.println("-searchByVector----------------------");
+        SearchByVectorParam searchByVectorParam = SearchByVectorParam.newBuilder()
+                .addVector(qdos
+                        .stream()
+                        .filter(dc -> dc.getId().equals("00001"))
+                        .findFirst()
+                        .orElse(Document.newBuilder().build())
+                        .getVector())
+                .withHNSWSearchParams(new HNSWSearchParams(16))
+                .withLimit(2)
+                .build();
+        List<List<Document>> svDocs = collection.search(searchByVectorParam);
+        for (List<Document> docs : svDocs) {
+            for (Document doc : docs) {
+                System.out.println("\tres: " + doc.toString());
+            }
+        }
+        // search by id
+        System.out.println("-searchById----------------------");
+        SearchByIdParam searchByIdParam = SearchByIdParam.newBuilder()
+                .withDocumentIds(Arrays.asList("00001", "00002", "00009"))
+                .withHNSWSearchParams(new HNSWSearchParams(16))
+                // each row will return "limit" rows that contains their self
+                // example: limit = 3, will return 9 rows(must have enough rows)
+                .withLimit(3)
+                .build();
+        List<List<Document>> siDocs = collection.searchById(searchByIdParam);
+        for (List<Document> docs : siDocs) {
+            for (Document doc : docs) {
+                System.out.println("\tres: " + doc.toString());
+            }
+        }
+
+
+        System.out.println("- searchById before update ----------------------");
+        SearchByIdParam searchByIdParam1 = SearchByIdParam.newBuilder()
+                .withDocumentIds(Arrays.asList("00001"))
+                .withHNSWSearchParams(new HNSWSearchParams(16))
+                .withLimit(3)
+                .build();
+        List<List<Document>> siDocs1 = collection.searchById(searchByIdParam1);
+        for (List<Document> docs : siDocs1) {
+            for (Document doc : docs) {
+                System.out.println("\tres: " + doc.toString());
+            }
+        }
+        // update
+        List<Document> documents1 = siDocs.get(0);
+        documents1.sort(Comparator.comparing(Document::getScore));
+        UpdateParam updateParam = UpdateParam.newBuilder().addDocumentId(documents1.get(1).getId()).build();
+        System.out.println("- update " + updateParam.getDocumentIds() + "  ----------------------");
+        Document build = Document
+                .newBuilder()
+                .addFilterField(new DocField("text", randomText(2)))
+                .addFilterField(new DocField("authorParam", "update-author"))
+                .build();
+        collection.update(updateParam, build);
+        Thread.sleep(5 * 1000);
+
+        System.out.println("- searchById after update ----------------------");
+        SearchByIdParam searchByIdParam2 = SearchByIdParam.newBuilder()
+                .withDocumentIds(Arrays.asList("00001"))
+                .withHNSWSearchParams(new HNSWSearchParams(16))
+                .withLimit(3)
+                .build();
+        List<List<Document>> siDocs2 = collection.searchById(searchByIdParam2);
+        for (List<Document> docs : siDocs2) {
+            for (Document doc : docs) {
+                System.out.println("\tres: " + doc.toString());
+            }
+        }
+
+        // search by embeddingItems
+        System.out.println("- searchByEmbeddingItems ----------------------");
+        SearchByEmbeddingItemsParam searchByEmbeddingItemsParam = SearchByEmbeddingItemsParam.newBuilder()
+                .withEmbeddingItems(
+                        extractToEmbeddingTextList(
+                                documents,
+                                new HashSet<String>() {{
+                                    add("00001");
+                                }},
+                                "text"
+                        )
+                ).withHNSWSearchParams(new HNSWSearchParams(16))
+                .withLimit(5)
+                .build();
+        List<List<Document>> seDocs = collection.searchByEmbeddingItems(searchByEmbeddingItemsParam);
+        for (List<Document> docs : seDocs) {
+            for (Document doc : docs) {
+                System.out.println("\tres: " + doc.toString());
+            }
+        }
+        // search by filter, only return "00009", other rows will be filtered
+        System.out.println("-searchByFilter----------------------");
+        SearchByIdParam searchByFilterParam = SearchByIdParam.newBuilder()
+                .withDocumentIds(Arrays.asList("00001", "00009"))
+                .withFilter(new Filter("otherStr=\"other_filter\""))
+                .withHNSWSearchParams(new HNSWSearchParams(16))
+                .withRetrieveVector(false)
+                .withLimit(10)
+                .build();
+        List<List<Document>> sfDocs = collection.searchById(searchByFilterParam);
+        for (List<Document> docs : sfDocs) {
+            for (Document doc : docs) {
+                System.out.println("\tres: " + doc.toString());
+            }
+        }
+        // delete, only "00009" delete success, "00001" and "00002" will be excluded by filter
+        System.out.println("- delete ----------------------");
+        DeleteParam deleteParam = DeleteParam.newBuilder()
+                .withDocumentIds(Arrays.asList("00001", "00002", "00009"))
+                .withFilter(new Filter("otherStr=\"other_filter\""))
+                .build();
+        collection.delete(deleteParam);
+
+        System.out.println("- describe collection after delete ----------------------");
+        Collection descCollRes05 = db.describeCollection(collName);
+        System.out.println("\tres: " + descCollRes05.toString());
+
+        // notice：delete操作可用会有延迟
+        Thread.sleep(1000 * 5);
+
+
+        // query "00001", "00002", "00009", only return "00001", "00002", because "00009" is deleted
+        // return specified field by outputFields
+        System.out.println("- query after delete ----------------------");
+        QueryParam queryParam01 = QueryParam.newBuilder()
+                .withDocumentIds(Arrays.asList("00001", "00002", "00009"))
+                .withOutputFields(Arrays.asList("id", "text", "authorParam"))
+                .build();
+        List<Document> qdos2 = collection.query(queryParam01);
+        for (Document doc : qdos2) {
+            System.out.println("\tres: " + doc.toString());
+        }
+
+        // rebuild index
+        System.out.println("- rebuild index ----------------------");
+        RebuildIndexParam rebuildIndexParam = RebuildIndexParam
+                .newBuilder()
+                .withDropBeforeRebuild(false)
+                .withThrottle(1)
+                .build();
+        collection.rebuildIndex(rebuildIndexParam);
+        Thread.sleep(5 * 1000);
+
+        System.out.println("- describe collection after rebuild index----------------------");
+        Collection descCollRes06 = db.describeCollection(collName);
+        System.out.println("\tres: " + descCollRes06.toString());
+
+        System.out.println("- truncate collection ----------------------");
+        AffectRes affectRes = db.truncateCollections(collName);
+        System.out.println("\tres: " + affectRes.toString());
+
+        Thread.sleep(5 * 1000);
+
+        System.out.println("- list collection after truncate collection ----------------------");
+        List<Collection> collections = db.listCollections();
+        for (Collection coll : collections) {
+            System.out.println("\tres: " + coll.toString());
+
+        }
+
+        System.out.println("- clear ----------------------");
         client.dropDatabase("vdb001");
     }
 
@@ -265,24 +517,28 @@ public class VectorDBExample {
         ConnectParam connectParam = initConnectParam();
         VectorDBClient client = new VectorDBClient(connectParam);
         // Database相关示例
-        testDatabases(client);
+         testDatabases(client);
         // Collection相关示例
-        testCollection(client);
+         testCollection(client);
+         testCollectionEmbedding(client);
         // Document相关示例
-        testDocument(client);
+         testDocument(client);
+        testDocumentEmbedding(client);
+        // Document相关示例2
+        // testDocument();
         // Filter示例
-        testFilter();
+         testFilter();
     }
 
     public static void testFilter() {
-        System.out.println(new Filter("author=\"jerry\"")
+        System.out.println("\tres: " + new Filter("author=\"jerry\"")
                 .and("a=1")
                 .or("r=\"or\"")
                 .orNot("rn=2")
                 .andNot("an=\"andNot\"")
                 .getCond());
-        System.out.println(Filter.in("key", Arrays.asList("v1", "v2", "v3")));
-        System.out.println(Filter.in("key", Arrays.asList(1, 2, 3)));
+        System.out.println("\tres: " + Filter.in("key", Arrays.asList("v1", "v2", "v3")));
+        System.out.println("\tres: " + Filter.in("key", Arrays.asList(1, 2, 3)));
     }
 
     private static void testDocument() {
@@ -337,7 +593,7 @@ public class VectorDBExample {
         StringBuilder sb = new StringBuilder("[");
         for (int i = 0; i < list.size(); i++) {
             T t = list.get(i);
-            if (t instanceof java.util.Collection) {
+            if (t instanceof java.util.List) {
                 String subStr = toJsonString((java.util.List) t);
                 sb.append(subStr);
             } else {
@@ -456,11 +712,11 @@ public class VectorDBExample {
     }
 
     private static ConnectParam initConnectParam() {
-        System.out.println(System.getProperty("vdb_url"));
+        System.out.println("\tres: " + System.getProperty("vdb_url"));
         return ConnectParam.newBuilder()
                 .withUrl(System.getProperty("vdb_url"))
                 .withUsername("root")
-                .withKey("eC4bLRy2va******************************")
+                .withKey(System.getProperty("vdb_key"))
                 .withTimeout(30)
                 .build();
     }
@@ -471,6 +727,129 @@ public class VectorDBExample {
         } catch (VectorDBException e) {
             System.err.println(e);
         }
+    }
+
+    private static CreateCollectionParam initCreateCollectionParam(String collName) {
+        return CreateCollectionParam.newBuilder()
+                .withName(collName)
+                .withShardNum(3)
+                .withReplicaNum(2)
+                .withDescription("test collection0")
+                .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
+                .addField(new VectorIndex("vector", 3, IndexType.HNSW,
+                        MetricType.L2, new HNSWParams(16, 200)))
+                .addField(new FilterIndex("otherStr", FieldType.String, IndexType.FILTER))
+                .addField(new FilterIndex("otherInt", FieldType.Uint64, IndexType.FILTER))
+                .build();
+    }
+
+    private static CreateCollectionParam initCreateEmbeddingCollectionParam(String collName) {
+        return CreateCollectionParam.newBuilder()
+                .withName(collName)
+                .withShardNum(3)
+                .withReplicaNum(2)
+                .withDescription("test collection0")
+                .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
+                .addField(new VectorIndex("vector", 768, IndexType.HNSW,
+                        MetricType.L2, new HNSWParams(16, 200)))
+                .addField(new FilterIndex("otherStr", FieldType.String, IndexType.FILTER))
+                .addField(new FilterIndex("otherInt", FieldType.Uint64, IndexType.FILTER))
+                .withEmbedding(
+                        Embedding
+                                .newBuilder()
+                                .withModel(M3E_BASE)
+                                .withField("text")
+                                .withVectorField("vector")
+                                .build()
+                ).build();
+    }
+
+    public static String randomText(int length) {
+        StringBuilder res = new StringBuilder();
+        Random random = new Random();
+
+        for (int i = 0; i < length; i++) {
+            StringBuilder subRes = new StringBuilder();
+
+            int wordLen = random.nextInt(14) + 2;
+            for (int j = 0; j < wordLen; j++) {
+                int randomInt = random.nextInt(26);
+                subRes.append((char) (97 + randomInt));
+            }
+
+            res.append(subRes).append(" ");
+        }
+
+        return res.toString();
+    }
+
+    public static List<Document> initDocuments(boolean embeddingMode, int count, int dimension, int idStart) {
+        List<Document> res = new ArrayList<>();
+        Random random = new Random();
+
+        for (int i = 0; i < count; i++) {
+            // id index
+            String idParam = String.format("%05d", i + idStart);
+
+            // vector
+            List<Double> vectorParam = new ArrayList<>();
+
+            if (!embeddingMode) {
+                for (int j = 0; j < dimension; j++) {
+                    vectorParam.add(random.nextDouble());
+                }
+            }
+
+            // other index
+            String otherStr = "other";
+            if ((i % 10) == 9) {
+                otherStr = "other_filter";
+            }
+
+            // embedding
+            String text = "";
+            if (embeddingMode) {
+                text = randomText(random.nextInt(1) + 5);
+            }
+
+            // extend content
+            String extendContext1 = "extend_context1";
+            String authorParam = "author " + randomText(1);
+            String sectionParam = "1.1." + (i + idStart);
+
+            Document.Builder builder = Document.newBuilder()
+                    .withId(idParam)
+                    .addFilterField(new DocField("otherStr", otherStr))
+                    .addFilterField(new DocField("otherInt", i + idStart))
+                    .addFilterField(new DocField("extendContext1", extendContext1))
+                    .addFilterField(new DocField("authorParam", authorParam))
+                    .addFilterField(new DocField("sectionParam", sectionParam));
+
+            if (embeddingMode) {
+                builder.addFilterField(new DocField("text", text));
+            } else {
+                builder.withVector(vectorParam);
+            }
+
+            res.add(builder.build());
+        }
+
+        return res;
+    }
+
+    @NotNull
+    private static List<String> extractToEmbeddingTextList(List<Document> documents,
+                                                           Set<String> saveDoc,
+                                                           String saveDocFieldName) {
+        return documents
+                .stream()
+                .filter(dc -> saveDoc.contains(dc.getId()))
+                .map(dc -> dc.getOtherFilterFields()
+                        .stream()
+                        .filter(off -> off.getName().equals(saveDocFieldName))
+                        .map(docField -> docField.getValue().toString())
+                        .collect(Collectors.toList())).flatMap(List::stream)
+                .collect(Collectors.toList());
     }
 
 }

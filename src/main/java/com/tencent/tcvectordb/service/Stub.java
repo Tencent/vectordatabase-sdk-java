@@ -48,7 +48,7 @@ public interface Stub {
     /**
      * describe collection
      */
-    AffectRes flushCollection(String databaseName, String collectionName);
+    AffectRes truncateCollection(String databaseName, String collectionName);
 
     /**
      * drop collection

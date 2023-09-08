@@ -63,6 +63,11 @@ public class InsertParam {
             return this;
         }
 
+        public Builder addAllDocument(List<Document> documentList) {
+            this.documents.addAll(documentList);
+            return this;
+        }
+
         public InsertParam build() {
             if (this.documents.isEmpty()) {
                 throw new ParamException("InsertParam error: documents is empty");

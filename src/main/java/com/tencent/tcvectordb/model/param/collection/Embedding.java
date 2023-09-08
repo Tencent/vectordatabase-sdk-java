@@ -5,7 +5,7 @@ import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Embedding {
-    private String textField;
+    private String field;
     private String vectorField;
     private EmbeddingModelEnum model;
     private String status;
@@ -14,14 +14,14 @@ public class Embedding {
     }
 
     private Embedding(Builder builder) {
-        this.textField = builder.textField;
+        this.field = builder.field;
         this.vectorField = builder.vectorField;
         this.model = builder.model;
         this.status = builder.status;
     }
 
-    public String getTextField() {
-        return textField;
+    public String getField() {
+        return field;
     }
 
     public String getVectorField() {
@@ -42,7 +42,7 @@ public class Embedding {
     }
 
     public static final class Builder {
-        private String textField;
+        private String field;
         private String vectorField;
         private EmbeddingModelEnum model;
         private String status;
@@ -50,8 +50,8 @@ public class Embedding {
         private Builder() {
         }
 
-        public Builder withTextField(String textField) {
-            this.textField = textField;
+        public Builder withField(String textField) {
+            this.field = textField;
             return this;
         }
 

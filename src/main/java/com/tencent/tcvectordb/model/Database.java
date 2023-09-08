@@ -56,8 +56,8 @@ public class Database {
         return collections;
     }
 
-    public AffectRes flushCollections(String databaseName, String collectionName) {
-        return stub.flushCollection(databaseName, collectionName);
+    public AffectRes truncateCollections(String collectionName) {
+        return stub.truncateCollection(this.databaseName, collectionName);
     }
 
     public Collection describeCollection(String collectionName) throws VectorDBException {

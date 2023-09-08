@@ -9,7 +9,7 @@ public class ApiPath {
     public final static String DB_LIST = "/database/list";
     public final static String COL_CREATE = "/collection/create";
     public final static String COL_DROP = "/collection/drop";
-    public final static String COL_FLUSH = "/collection/flush";
+    public final static String COL_FLUSH = "/collection/truncate";
     public final static String COL_LIST = "/collection/list";
     public final static String SET_COL_ALIAS = "/alias/set";
     public final static String DELETE_COL_ALIAS = "/alias/delete";

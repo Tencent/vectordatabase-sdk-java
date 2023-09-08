@@ -123,7 +123,7 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public AffectRes flushCollection(String databaseName, String collectionName) {
+    public AffectRes truncateCollection(String databaseName, String collectionName) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_FLUSH);
         String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
                 databaseName, collectionName);

@@ -70,7 +70,7 @@ public class VectorDBExample {
 
     public static void testCollection(VectorDBClient client) {
         String dbname = "vdb001";
-        String collName = "coll";
+        String collName = "collection";
 
         System.out.println("- clear before test ----------------------");
         anySafe(() -> client.dropDatabase(dbname));
@@ -122,7 +122,7 @@ public class VectorDBExample {
 
     public static void testCollectionEmbedding(VectorDBClient client) {
         String dbname = "vdb001";
-        String collName = "coll";
+        String collName = "collection";
 
         System.out.println("- clear before test ----------------------");
         anySafe(() -> client.dropDatabase(dbname));
@@ -174,7 +174,7 @@ public class VectorDBExample {
     public static void testDocument(VectorDBClient client) throws InterruptedException {
 
         String dbname = "vdb001";
-        String collName = "coll";
+        String collName = "collection";
 
         anySafe(() -> client.dropDatabase(dbname));
 
@@ -283,8 +283,8 @@ public class VectorDBExample {
     public static void testDocumentEmbedding(VectorDBClient client) throws InterruptedException {
 
         String dbname = "vdb001";
-        String collName = "coll";
-        String collNameAlias = "coll_alias";
+        String collName = "collection";
+        String collNameAlias = "collection_alias";
 
         System.out.println("- clear before test ----------------------");
         anySafe(() -> client.dropDatabase(dbname));
@@ -299,7 +299,7 @@ public class VectorDBExample {
         System.out.println("- describe collection before set alias ----------------------");
         Collection descCollRes01 = db.describeCollection(collName);
         System.out.println("\tres: " + descCollRes01.toString());
-        
+
         // set alias
         System.out.println("- set collection alias ----------------------");
         AffectRes affectRes1 = db.setCollectionAlias(collName, collNameAlias);
@@ -517,17 +517,35 @@ public class VectorDBExample {
         ConnectParam connectParam = initConnectParam();
         VectorDBClient client = new VectorDBClient(connectParam);
         // Database相关示例
-         testDatabases(client);
+        System.out.println("------------------------- testDatabases start -------------------------");
+        testDatabases(client);
+        System.out.println("------------------------- testDatabases end -------------------------");
+
+
         // Collection相关示例
-         testCollection(client);
-         testCollectionEmbedding(client);
+        System.out.println("------------------------- testCollection start -------------------------");
+        testCollection(client);
+        System.out.println("------------------------- testCollection end -------------------------");
+
+        System.out.println("------------------------- testCollectionEmbedding start -------------------------");
+        testCollectionEmbedding(client);
+        System.out.println("------------------------- testCollectionEmbedding end -------------------------");
+
+
         // Document相关示例
+        System.out.println("------------------------- testDocument start -------------------------");
         testDocument(client);
+        System.out.println("------------------------- testDocument end -------------------------");
+
+        System.out.println("------------------------- testDocumentEmbedding start -------------------------");
         testDocumentEmbedding(client);
-        // Document相关示例2
-        // testDocument();
+        System.out.println("------------------------- testDocumentEmbedding end -------------------------");
+
+
         // Filter示例
-         testFilter();
+        System.out.println("------------------------- testFilter start -------------------------");
+        testFilter();
+        System.out.println("------------------------- testFilter end -------------------------");
     }
 
     public static void testFilter() {

@@ -9,7 +9,7 @@ import com.tencent.tcvectordb.model.Collection;
 import com.tencent.tcvectordb.model.Database;
 import com.tencent.tcvectordb.model.DocField;
 import com.tencent.tcvectordb.model.Document;
-import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
+import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.BaseRes;
@@ -96,13 +96,15 @@ public class HttpStub implements Stub {
         if (closJson == null) {
             return new ArrayList<>();
         }
-        try {
-            return mapper.readValue(closJson.toString(), new TypeReference<List<Collection>>() {});
-        } catch (JsonProcessingException ex) {
-            throw new VectorDBException(String.format(
-                    "VectorDBServer response error: can't parse collections=%s", closJson));
+
+        List<Collection> res = new ArrayList<>();
+        for (JsonNode node : closJson) {
+            Collection collection = parseToCollection(node);
+            res.add(collection);
         }
+        return res;
     }
+
 
     @Override
     public Collection describeCollection(String databaseName, String collectionName) {
@@ -114,12 +116,7 @@ public class HttpStub implements Stub {
         if (dbsJson == null) {
             return null;
         }
-        try {
-            return mapper.readValue(dbsJson.toString(), Collection.class);
-        } catch (JsonProcessingException ex) {
-            throw new VectorDBException(String.format(
-                    "VectorDBServer response error: can't parse collection=%s", dbsJson));
-        }
+        return parseToCollection(dbsJson);
     }
 
     @Override
@@ -305,7 +302,8 @@ public class HttpStub implements Stub {
                 builder.withId(ele.asText());
             } else if (StringUtils.equals("vector", name)) {
                 List<Double> vector = mapper.readValue(
-                        ele.toString(), new TypeReference<List<Double>>() {});
+                        ele.toString(), new TypeReference<List<Double>>() {
+                        });
                 builder.withVector(vector);
             } else if (StringUtils.equals("doc", name)) {
                 builder.withDoc(ele.asText());
@@ -316,5 +314,68 @@ public class HttpStub implements Stub {
             }
         }
         return builder.build();
+    }
+
+    /**
+     * parse {@link  JsonNode} to {@link Collection}
+     *
+     * @param jsonNode {@link  JsonNode}
+     * @return {@link Collection}
+     */
+    private Collection parseToCollection(JsonNode jsonNode) {
+        Collection collection = JsonUtils.parseObject(jsonNode.toString(), Collection.class);
+        for (IndexField index : collection.getIndexes()) {
+            if (index.isVectorField()) {
+                ParamsSerializer params = null;
+                switch (index.getIndexType()) {
+                    case HNSW:
+                        params = parseParams(jsonNode, HNSWParams.class);
+                        break;
+                    case IVF_FLAT:
+                        params = parseParams(jsonNode, IVFFLATParams.class);
+                        break;
+                    case IVF_PQ:
+                        params = parseParams(jsonNode, IVFPQParams.class);
+                        break;
+                    case IVF_SQ8:
+                        params = parseParams(jsonNode, IVFSQ8Params.class);
+                        break;
+                    default:
+                        throw new VectorDBException(String.format(
+                                "VectorDBServer response error: can't parse collection=%s", jsonNode));
+                }
+                if (params != null) {
+                    index.setParams(params);
+                }
+            }
+        }
+        return collection;
+    }
+
+    /**
+     * parse  {@link  JsonNode} to {@link  ParamsSerializer}
+     *
+     * @param jsonNode {@link  JsonNode}
+     * @param clz      {@link Class}
+     * @return {@link ParamsSerializer}
+     */
+    private ParamsSerializer parseParams(JsonNode jsonNode, Class<? extends ParamsSerializer> clz) {
+        JsonNode indexesNode = jsonNode.get("indexes");
+        if (indexesNode == null) {
+            throw new VectorDBException(String.format(
+                    "VectorDBServer response error: can't parse collection=%s", jsonNode));
+        } else {
+            for (JsonNode indexNode : indexesNode) {
+                if (indexNode.get("fieldType") != null && indexNode.get("fieldType").asText().equals("vector")) {
+                    JsonNode paramsNode = indexesNode.get("params");
+                    if (paramsNode != null) {
+                        return JsonUtils.parseObject(paramsNode.toString(), clz);
+                    }
+                }
+            }
+        }
+
+        throw new VectorDBException(String.format(
+                "VectorDBServer response error: can't parse collection=%s", jsonNode));
     }
 }

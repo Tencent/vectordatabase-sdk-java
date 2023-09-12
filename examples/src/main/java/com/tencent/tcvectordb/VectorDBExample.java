@@ -522,7 +522,7 @@ public class VectorDBExample {
          testCollection(client);
          testCollectionEmbedding(client);
         // Document相关示例
-         testDocument(client);
+        testDocument(client);
         testDocumentEmbedding(client);
         // Document相关示例2
         // testDocument();

@@ -3,7 +3,7 @@ package com.tencent.tcvectordb.model.param.enums;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum EmbeddingModelEnum {
-    BGE_LARGE_ZH("bge-large-zh", 1024),
+    BGE_LARGE_ZH("bge-base-zh", 768),
     M3E_BASE("m3e-base", 768),
     TEXT2VEC_LARGE_CHINESE("text2vec-large-chinese", 1024),
     E5_LARGE_V2("e5-large-v2", 1024),

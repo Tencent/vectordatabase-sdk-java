@@ -107,7 +107,7 @@ public class VectorDBExample {
 
         // drop collection
         System.out.println("-drop collection----------------------");
-        db.dropCollection("coll");
+        db.dropCollection(collName);
 
         // list collections
         System.out.println("-list collections----------------------");
@@ -151,7 +151,7 @@ public class VectorDBExample {
         Collection coll = db.describeCollection(collName);
         System.out.println("\tres: " + coll.toString());
 
-        // flush collection
+        // truncate collection
         System.out.println("- flush collection----------------------");
         AffectRes affectRes = db.truncateCollections(collName);
         System.out.println("\tres: " + affectRes);
@@ -159,7 +159,7 @@ public class VectorDBExample {
 
         // drop collection
         System.out.println("-drop collection----------------------");
-        db.dropCollection("coll");
+        db.dropCollection(collName);
         // list collections
         System.out.println("-list collections----------------------");
         List<Collection> cols2 = db.listCollections();

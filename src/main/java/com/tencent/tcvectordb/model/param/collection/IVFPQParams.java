@@ -3,18 +3,21 @@ package com.tencent.tcvectordb.model.param.collection;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class IVFPQParams implements ParamsSerializer {
-    private int nlist;
+    @JsonProperty(value = "nlist")
+    private int NList;
     @JsonProperty(value = "M")
     private int M;
 
+    public IVFPQParams() {
+    }
 
-    public IVFPQParams(int nlist, int m) {
-        this.nlist = nlist;
+    public IVFPQParams(int NList, int m) {
+        this.NList = NList;
         M = m;
     }
 
-    public int getNlist() {
-        return nlist;
+    public int getNList() {
+        return NList;
     }
 
     public int getM() {
@@ -24,7 +27,7 @@ public class IVFPQParams implements ParamsSerializer {
     @Override
     public String toString() {
         return "IVFPQParams{" +
-                "nlist=" + nlist +
+                "NList=" + NList +
                 ", M=" + M +
                 '}';
     }

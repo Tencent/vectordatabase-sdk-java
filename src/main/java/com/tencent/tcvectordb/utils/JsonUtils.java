@@ -1,10 +1,14 @@
 package com.tencent.tcvectordb.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.tencent.tcvectordb.exception.VectorDBException;
+import com.tencent.tcvectordb.model.param.collection.ParamsSerializer;
+import com.tencent.tcvectordb.serializer.ParamsDeserialize;
 
 public class JsonUtils {
     private JsonUtils() {
@@ -12,11 +16,17 @@ public class JsonUtils {
 
 
     private static final ObjectMapper DESERIALIZE_IGNORE_KEY_MAPPER = new ObjectMapper();
+    private static final ObjectMapper PARAMS_DESERIALIZE_MAPPER = new ObjectMapper();
     private static final ObjectMapper SERIALIZE_MAPPER = new ObjectMapper();
 
 
     static {
         DESERIALIZE_IGNORE_KEY_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(ParamsSerializer.class, new ParamsDeserialize());
+        PARAMS_DESERIALIZE_MAPPER.registerModule(module);
     }
 
     /**
@@ -69,6 +79,21 @@ public class JsonUtils {
     public static JsonNode parseToJsonNode(String jsonStr) {
         try {
             return SERIALIZE_MAPPER.readTree(jsonStr);
+        } catch (JsonProcessingException e) {
+            throw new VectorDBException(String.format(
+                    "VectorDBServer response error: can't parse collection=%s", jsonStr));
+        }
+    }
+
+    /**
+     * @param jsonStr json {@link String}
+     * @param clz     {@link TypeReference}
+     * @param <T>     result type
+     * @return {@link T}
+     */
+    public static <T> T collectionDeserializer(String jsonStr, TypeReference<T> clz) {
+        try {
+            return PARAMS_DESERIALIZE_MAPPER.readValue(jsonStr, clz);
         } catch (JsonProcessingException e) {
             throw new VectorDBException(String.format(
                     "VectorDBServer response error: can't parse collection=%s", jsonStr));

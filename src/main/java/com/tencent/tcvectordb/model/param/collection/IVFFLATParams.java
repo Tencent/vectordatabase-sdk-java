@@ -1,20 +1,27 @@
 package com.tencent.tcvectordb.model.param.collection;
 
-public class IVFFLATParams implements ParamsSerializer {
-    private int nlist;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    public IVFFLATParams(int nlist) {
-        this.nlist = nlist;
+public class IVFFLATParams implements ParamsSerializer {
+    @JsonProperty(value = "nlist")
+    private int NList;
+
+    public IVFFLATParams() {
     }
 
-    public int getNlist() {
-        return nlist;
+    public IVFFLATParams(int NList) {
+        this.NList = NList;
+    }
+
+    public int getNList() {
+        return NList;
     }
 
     @Override
     public String toString() {
         return "IVFFLATParams{" +
-                "nlist=" + nlist +
+                "NList=" + NList +
                 '}';
     }
+
 }

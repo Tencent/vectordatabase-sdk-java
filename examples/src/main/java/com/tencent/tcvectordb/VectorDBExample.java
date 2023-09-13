@@ -225,7 +225,7 @@ public class VectorDBExample {
         System.out.println("-searchByVector----------------------");
         SearchByVectorParam searchByVectorParam = SearchByVectorParam.newBuilder()
                 .addVector(Arrays.asList(0.3123, 0.43, 0.213))
-                .withHNSWSearchParams(new HNSWSearchParams(10))
+                .withParams(new HNSWSearchParams(10))
                 .withLimit(10)
                 .build();
         List<List<Document>> svDocs = collection.search(searchByVectorParam);
@@ -238,7 +238,7 @@ public class VectorDBExample {
         System.out.println("-searchById----------------------");
         SearchByIdParam searchByIdParam = SearchByIdParam.newBuilder()
                 .withDocumentIds(Arrays.asList("0001", "0002"))
-                .withHNSWSearchParams(new HNSWSearchParams(10))
+                .withParams(new HNSWSearchParams(10))
                 .withLimit(10)
                 .build();
         List<List<Document>> siDocs = collection.searchById(searchByIdParam);
@@ -254,7 +254,7 @@ public class VectorDBExample {
         SearchByVectorParam searchByFilterParam = SearchByVectorParam.newBuilder()
                 .addVector(Arrays.asList(0.3123, 0.43, 0.213))
                 .withFilter(new Filter("otherStr=\"doc1\"").or("otherInt=3"))
-                .withHNSWSearchParams(new HNSWSearchParams(10))
+                .withParams(new HNSWSearchParams(10))
                 .withRetrieveVector(true)
                 .withLimit(10)
                 .build();
@@ -354,7 +354,7 @@ public class VectorDBExample {
                         .findFirst()
                         .orElse(Document.newBuilder().build())
                         .getVector())
-                .withHNSWSearchParams(new HNSWSearchParams(16))
+                .withParams(new HNSWSearchParams(16))
                 .withLimit(2)
                 .build();
         List<List<Document>> svDocs = collection.search(searchByVectorParam);
@@ -367,7 +367,7 @@ public class VectorDBExample {
         System.out.println("-searchById----------------------");
         SearchByIdParam searchByIdParam = SearchByIdParam.newBuilder()
                 .withDocumentIds(Arrays.asList("00001", "00002", "00009"))
-                .withHNSWSearchParams(new HNSWSearchParams(16))
+                .withParams(new HNSWSearchParams(16))
                 // each row will return "limit" rows that contains their self
                 // example: limit = 3, will return 9 rows(must have enough rows)
                 .withLimit(3)
@@ -383,7 +383,7 @@ public class VectorDBExample {
         System.out.println("- searchById before update ----------------------");
         SearchByIdParam searchByIdParam1 = SearchByIdParam.newBuilder()
                 .withDocumentIds(Arrays.asList("00001"))
-                .withHNSWSearchParams(new HNSWSearchParams(16))
+                .withParams(new HNSWSearchParams(16))
                 .withLimit(3)
                 .build();
         List<List<Document>> siDocs1 = collection.searchById(searchByIdParam1);
@@ -408,7 +408,7 @@ public class VectorDBExample {
         System.out.println("- searchById after update ----------------------");
         SearchByIdParam searchByIdParam2 = SearchByIdParam.newBuilder()
                 .withDocumentIds(Arrays.asList("00001"))
-                .withHNSWSearchParams(new HNSWSearchParams(16))
+                .withParams(new HNSWSearchParams(16))
                 .withLimit(3)
                 .build();
         List<List<Document>> siDocs2 = collection.searchById(searchByIdParam2);
@@ -429,7 +429,7 @@ public class VectorDBExample {
                                 }},
                                 "text"
                         )
-                ).withHNSWSearchParams(new HNSWSearchParams(16))
+                ).withParams(new HNSWSearchParams(16))
                 .withLimit(5)
                 .build();
         List<List<Document>> seDocs = collection.searchByEmbeddingItems(searchByEmbeddingItemsParam);
@@ -443,7 +443,7 @@ public class VectorDBExample {
         SearchByIdParam searchByFilterParam = SearchByIdParam.newBuilder()
                 .withDocumentIds(Arrays.asList("00001", "00009"))
                 .withFilter(new Filter("otherStr=\"other_filter\""))
-                .withHNSWSearchParams(new HNSWSearchParams(16))
+                .withParams(new HNSWSearchParams(16))
                 .withRetrieveVector(false)
                 .withLimit(10)
                 .build();

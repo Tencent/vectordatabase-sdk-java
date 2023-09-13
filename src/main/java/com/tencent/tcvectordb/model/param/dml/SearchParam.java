@@ -32,7 +32,7 @@ import java.util.List;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class SearchParam {
-    protected HNSWSearchParams params;
+    protected Params params;
     @JsonIgnore
     protected ReadConsistencyEnum readConsistency;
     protected String filter;
@@ -55,7 +55,7 @@ public abstract class SearchParam {
     }
 
 
-    public HNSWSearchParams getParams() {
+    public Params getParams() {
         return params;
     }
 
@@ -81,7 +81,7 @@ public abstract class SearchParam {
 
 
     protected static abstract class Builder<T extends Builder<T>> {
-        protected HNSWSearchParams params;
+        protected Params params;
         protected ReadConsistencyEnum readConsistency = ReadConsistencyEnum.EVENTUAL_CONSISTENCY;
         protected Filter filter;
         protected List<String> outputFields;
@@ -94,7 +94,7 @@ public abstract class SearchParam {
 
         protected abstract T self();
 
-        public T withHNSWSearchParams(HNSWSearchParams params) {
+        public T withParams(Params params) {
             this.params = params;
             return self();
         }

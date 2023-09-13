@@ -23,7 +23,7 @@ package com.tencent.tcvectordb.model.param.dml;
 /**
  * VectorDB HNSWSearchParams
  */
-public class HNSWSearchParams {
+public class HNSWSearchParams implements Params {
     private int ef;
 
     public HNSWSearchParams(int ef) {

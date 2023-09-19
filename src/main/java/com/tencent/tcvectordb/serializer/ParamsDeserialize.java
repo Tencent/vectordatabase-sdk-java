@@ -13,7 +13,8 @@ import java.io.IOException;
 public class ParamsDeserialize extends JsonDeserializer<ParamsSerializer> {
 
     @Override
-    public ParamsSerializer deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JacksonException {
+    public ParamsSerializer deserialize(JsonParser p, DeserializationContext ctxt)
+            throws IOException, JacksonException {
         String paramsStr = p.getCodec().readTree(p).toString();
         Object o = p.currentValue();
         if (o instanceof IndexField) {

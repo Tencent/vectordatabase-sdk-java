@@ -44,8 +44,9 @@ public class DeleteParam extends BaseQuery {
         }
 
         public DeleteParam build() {
-            if (documentIds == null || documentIds.isEmpty()) {
-                throw new ParamException("DeleteParam error: documentIds is null");
+            if ((documentIds == null || documentIds.isEmpty()) &&
+                    filter == null) {
+                throw new ParamException("DeleteParam error: both documentIds and filter are null");
             }
             return new DeleteParam(this);
         }

@@ -119,7 +119,7 @@ public class VectorDBExample {
         System.out.println("- clear before test ----------------------");
         String dbname = "book";
 
-        anySafe(() -> client.dropDatabase(dbname));
+        anySafe(() -> clear(client));
         // List databases
         System.out.println("-list db----------------------");
         List<String> dbs = client.listDatabase();
@@ -134,6 +134,13 @@ public class VectorDBExample {
         System.out.println("\tres: " + client.listDatabase());
     }
 
+    private static void clear(VectorDBClient client) {
+        List<String> databases = client.listDatabase();
+        for (String database : databases) {
+            client.dropDatabase(database);
+        }
+    }
+
     /**
      * Collection 相关 api
      *
@@ -144,7 +151,7 @@ public class VectorDBExample {
         String collName = "book_segments";
 
         System.out.println("- clear before test ----------------------");
-        anySafe(() -> client.dropDatabase(dbname));
+        anySafe(() -> clear(client));
         Database db = client.createDatabase(dbname);
 
         // create collection
@@ -182,7 +189,7 @@ public class VectorDBExample {
         }
 
         System.out.println("-drop db----------------------");
-        client.dropDatabase("vdb001");
+        client.dropDatabase(dbname);
     }
 
     /**
@@ -222,11 +229,12 @@ public class VectorDBExample {
      * @param client
      */
     public static void testCollectionEmbedding(VectorDBClient client) {
-        String dbname = "vdb001";
+        String dbname = "book";
         String collName = "collection";
 
         System.out.println("- clear before test ----------------------");
-        anySafe(() -> client.dropDatabase(dbname));
+        anySafe(() -> clear(client));
+        ;
         Database db = client.createDatabase(dbname);
 
         // list collections
@@ -269,7 +277,7 @@ public class VectorDBExample {
         }
 
         System.out.println("-drop db----------------------");
-        client.dropDatabase("vdb001");
+        client.dropDatabase(dbname);
     }
 
 
@@ -297,7 +305,7 @@ public class VectorDBExample {
                 .withReplicaNum(2)
                 .withDescription("test embedding collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
-                .addField(new VectorIndex("vector", 3, IndexType.HNSW,
+                .addField(new VectorIndex("vector", BGE_BASE_ZH.getDimension(), IndexType.HNSW,
                         MetricType.COSINE, new HNSWParams(16, 200)))
                 .addField(new FilterIndex("bookName", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("author", FieldType.String, IndexType.FILTER))
@@ -321,7 +329,7 @@ public class VectorDBExample {
 
         String dbname = "vdb001";
         String collName = "collection";
-        anySafe(() -> client.dropDatabase(dbname));
+        anySafe(() -> clear(client));
         Database db = client.createDatabase(dbname);
 
         System.out.println("-create collections----------------------");
@@ -501,7 +509,7 @@ public class VectorDBExample {
         String collNameAlias = "collection_alias";
 
         System.out.println("- clear before test ----------------------");
-        anySafe(() -> client.dropDatabase(dbname));
+        anySafe(() -> clear(client));
         Database db = client.createDatabase(dbname);
 
         // Database db = client.database("vdb001");
@@ -539,7 +547,6 @@ public class VectorDBExample {
         List<Document> documentList = new ArrayList<>(Arrays.asList(
                 Document.newBuilder()
                         .withId("0001")
-                        .withVector(Arrays.asList(0.2123, 0.21, 0.213))
                         .addDocField(new DocField("bookName", "西游记"))
                         .addDocField(new DocField("author", "吴承恩"))
                         .addDocField(new DocField("page", 21))
@@ -548,7 +555,6 @@ public class VectorDBExample {
                         .build(),
                 Document.newBuilder()
                         .withId("0002")
-                        .withVector(Arrays.asList(0.2123, 0.22, 0.213))
                         .addDocField(new DocField("bookName", "西游记"))
                         .addDocField(new DocField("author", "吴承恩"))
                         .addDocField(new DocField("page", 22))
@@ -559,7 +565,6 @@ public class VectorDBExample {
                         .build(),
                 Document.newBuilder()
                         .withId("0003")
-                        .withVector(Arrays.asList(0.2123, 0.23, 0.213))
                         .addDocField(new DocField("bookName", "三国演义"))
                         .addDocField(new DocField("author", "罗贯中"))
                         .addDocField(new DocField("page", 23))
@@ -568,7 +573,6 @@ public class VectorDBExample {
                         .build(),
                 Document.newBuilder()
                         .withId("0004")
-                        .withVector(Arrays.asList(0.2123, 0.24, 0.213))
                         .addDocField(new DocField("bookName", "三国演义"))
                         .addDocField(new DocField("author", "罗贯中"))
                         .addDocField(new DocField("page", 24))
@@ -577,7 +581,6 @@ public class VectorDBExample {
                         .build(),
                 Document.newBuilder()
                         .withId("0005")
-                        .withVector(Arrays.asList(0.2123, 0.25, 0.213))
                         .addDocField(new DocField("bookName", "三国演义"))
                         .addDocField(new DocField("author", "罗贯中"))
                         .addDocField(new DocField("page", 25))
@@ -689,7 +692,7 @@ public class VectorDBExample {
                         extractToEmbeddingTextList(
                                 documentList,
                                 new HashSet<String>() {{
-                                    add("00001");
+                                    add("0001");
                                 }},
                                 "text"
                         )
@@ -697,6 +700,7 @@ public class VectorDBExample {
                 .withLimit(5)
                 .build();
         SearchRes searchRes = collection.searchByEmbeddingItems(searchByEmbeddingItemsParam);
+        System.out.println(searchRes);
         for (List<Document> docs : searchRes.getDocuments()) {
             for (Document doc : docs) {
                 System.out.println("\tres: " + doc.toString());

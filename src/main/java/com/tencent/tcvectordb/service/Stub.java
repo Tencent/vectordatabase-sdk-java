@@ -6,6 +6,7 @@ import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.BaseRes;
+import com.tencent.tcvectordb.model.param.entity.SearchRes;
 import com.tencent.tcvectordb.service.param.*;
 
 import java.util.List;
@@ -58,12 +59,12 @@ public interface Stub {
     /**
      * set collection alias
      */
-    AffectRes setCollectionAlias(String databaseName, String collectionName, String aliasName);
+    AffectRes setAlias(String databaseName, String collectionName, String aliasName);
 
     /**
      * delete alias
      */
-    AffectRes deleteCollectionAlias(String databaseName, String aliasName);
+    AffectRes deleteAlias(String databaseName, String aliasName);
 
     /**
      * upsert document
@@ -78,7 +79,7 @@ public interface Stub {
     /**
      * search document
      */
-    List<List<Document>> searchDocument(SearchParamInner param);
+    SearchRes searchDocument(SearchParamInner param);
 
     /**
      * delete document

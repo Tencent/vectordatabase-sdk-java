@@ -70,12 +70,12 @@ public class Database {
         stub.dropCollection(this.databaseName, collectionName);
     }
 
-    public AffectRes setCollectionAlias(String collectionName, String aliasName) {
-        return stub.setCollectionAlias(this.databaseName, collectionName, aliasName);
+    public AffectRes setAlias(String collectionName, String aliasName) {
+        return stub.setAlias(this.databaseName, collectionName, aliasName);
     }
 
-    public AffectRes deleteCollectionAlias(String aliasName) {
-        return stub.deleteCollectionAlias(this.databaseName, aliasName);
+    public AffectRes deleteAlias(String aliasName) {
+        return stub.deleteAlias(this.databaseName, aliasName);
     }
 
     public Collection collection(String collectionName) throws VectorDBException {

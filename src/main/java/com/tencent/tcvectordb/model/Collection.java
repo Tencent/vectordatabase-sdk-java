@@ -32,6 +32,7 @@ import com.tencent.tcvectordb.model.param.collection.IndexField;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.BaseRes;
+import com.tencent.tcvectordb.model.param.entity.SearchRes;
 import com.tencent.tcvectordb.service.Stub;
 import com.tencent.tcvectordb.service.param.*;
 
@@ -129,15 +130,15 @@ public class Collection {
 
     public List<List<Document>> search(SearchByVectorParam param) throws VectorDBException {
         return this.stub.searchDocument(new SearchParamInner(
-                database, collection, param, param.getReadConsistency()));
+                database, collection, param, param.getReadConsistency())).getDocuments();
     }
 
     public List<List<Document>> searchById(SearchByIdParam param) throws VectorDBException {
         return this.stub.searchDocument(new SearchParamInner(
-                database, collection, param, param.getReadConsistency()));
+                database, collection, param, param.getReadConsistency())).getDocuments();
     }
 
-    public List<List<Document>> searchByEmbeddingItems(SearchByEmbeddingItemsParam param) throws VectorDBException {
+    public SearchRes searchByEmbeddingItems(SearchByEmbeddingItemsParam param) throws VectorDBException {
         return this.stub.searchDocument(new SearchParamInner(
                 database, collection, param, param.getReadConsistency()));
     }

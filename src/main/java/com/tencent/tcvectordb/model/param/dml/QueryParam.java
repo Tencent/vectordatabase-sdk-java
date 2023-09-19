@@ -80,9 +80,10 @@ public class QueryParam extends BaseQuery {
     public static class Builder extends BaseQuery.Builder<Builder> {
         private boolean retrieveVector = false;
         /**
-         * default is maximum
+         * limit between 1 and 16384L
+         * default is 10
          */
-        private long limit = 16384L;
+        private long limit = 10;
         /**
          * default is 0
          */

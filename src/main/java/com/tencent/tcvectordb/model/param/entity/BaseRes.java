@@ -9,6 +9,12 @@ public class BaseRes {
     public BaseRes() {
     }
 
+    public BaseRes(int code, String msg, String warning) {
+        this.code = code;
+        this.msg = msg;
+        this.warning = warning;
+    }
+
     public int getCode() {
         return code;
     }

@@ -13,6 +13,7 @@ import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.BaseRes;
+import com.tencent.tcvectordb.model.param.entity.SearchRes;
 import com.tencent.tcvectordb.service.param.*;
 import com.tencent.tcvectordb.utils.JsonUtils;
 import okhttp3.*;
@@ -22,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -131,7 +133,7 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public AffectRes setCollectionAlias(String databaseName, String collectionName, String aliasName) {
+    public AffectRes setAlias(String databaseName, String collectionName, String aliasName) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.SET_COL_ALIAS);
         String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\",\"alias\":\"%s\"}",
                 databaseName, collectionName, aliasName);
@@ -140,7 +142,7 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public AffectRes deleteCollectionAlias(String databaseName, String aliasName) {
+    public AffectRes deleteAlias(String databaseName, String aliasName) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DELETE_COL_ALIAS);
         String body = String.format("{\"database\":\"%s\",\"alias\":\"%s\"}",
                 databaseName, aliasName);
@@ -179,15 +181,27 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public List<List<Document>> searchDocument(SearchParamInner param) {
+    public SearchRes searchDocument(SearchParamInner param) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_SEARCH);
         JsonNode jsonNode = this.post(url, param.toString());
         JsonNode multiDocsNode = jsonNode.get("documents");
-        List<List<Document>> multiDosc = new ArrayList<>();
+        int code = 0;
+        if (jsonNode.get("code") != null) {
+            code = jsonNode.get("code").asInt();
+        }
+        String msg = "";
+        if (jsonNode.get("msg") != null) {
+            msg = jsonNode.get("msg").asText();
+        }
+        String warning = "";
+        if (jsonNode.get("warning") != null) {
+            warning = jsonNode.get("warning").asText();
+        }
         if (multiDocsNode == null) {
-            return multiDosc;
+            return new SearchRes(code, msg, warning, Collections.emptyList());
         }
         try {
+            List<List<Document>> multiDosc = new ArrayList<>();
             Iterator<JsonNode> multiIter = multiDocsNode.elements();
             while (multiIter.hasNext()) {
                 JsonNode docNode = multiIter.next();
@@ -200,7 +214,7 @@ public class HttpStub implements Stub {
                 }
                 multiDosc.add(docs);
             }
-            return multiDosc;
+            return new SearchRes(code, msg, warning, multiDosc);
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format("VectorDBServer response " +
                     "from search error: can't parse documents=%s", multiDocsNode));

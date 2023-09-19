@@ -23,6 +23,7 @@ package com.tencent.tcvectordb.client;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.Database;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
+import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.HttpStub;
 import com.tencent.tcvectordb.service.Stub;
 
@@ -34,9 +35,11 @@ import java.util.List;
 public class VectorDBClient {
 
     private final Stub stub;
+    private final ReadConsistencyEnum readConsistency;
 
-    public VectorDBClient(ConnectParam connectParam) {
+    public VectorDBClient(ConnectParam connectParam, ReadConsistencyEnum readConsistency) {
         this.stub = new HttpStub(connectParam);
+        this.readConsistency = readConsistency;
     }
 
     public Database createDatabase(String databaseName) throws VectorDBException {

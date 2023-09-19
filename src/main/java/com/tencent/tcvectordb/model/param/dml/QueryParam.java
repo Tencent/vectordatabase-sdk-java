@@ -20,9 +20,7 @@
 
 package com.tencent.tcvectordb.model.param.dml;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,8 +34,6 @@ public class QueryParam extends BaseQuery {
     private boolean retrieveVector;
     private long limit;
     private long offset;
-    @JsonIgnore
-    private ReadConsistencyEnum readConsistency;
     private List<String> outputFields;
 
 
@@ -54,10 +50,6 @@ public class QueryParam extends BaseQuery {
     }
 
 
-    public ReadConsistencyEnum getReadConsistency() {
-        return readConsistency;
-    }
-
     public List<String> getOutputFields() {
         return outputFields;
     }
@@ -67,7 +59,6 @@ public class QueryParam extends BaseQuery {
         this.retrieveVector = builder.retrieveVector;
         this.limit = builder.limit;
         this.offset = builder.offset;
-        this.readConsistency = builder.readConsistency;
         if (builder.outputFields != null && !builder.outputFields.isEmpty()) {
             this.outputFields = Collections.unmodifiableList(builder.outputFields);
         }
@@ -88,7 +79,7 @@ public class QueryParam extends BaseQuery {
          * default is 0
          */
         private long offset = 0;
-        private ReadConsistencyEnum readConsistency = ReadConsistencyEnum.EVENTUAL_CONSISTENCY;
+
         private List<String> outputFields;
 
         private Builder() {
@@ -114,11 +105,6 @@ public class QueryParam extends BaseQuery {
 
         public Builder withOffset(long offset) {
             this.offset = offset;
-            return this;
-        }
-
-        public Builder withReadConsistency(ReadConsistencyEnum readConsistency) {
-            this.readConsistency = readConsistency;
             return this;
         }
 

@@ -20,9 +20,7 @@
 
 package com.tencent.tcvectordb.model.param.dml;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,8 +31,6 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class SearchParam {
     protected Params params;
-    @JsonIgnore
-    protected ReadConsistencyEnum readConsistency;
     protected String filter;
     protected List<String> outputFields;
     protected boolean retrieveVector;
@@ -43,7 +39,6 @@ public abstract class SearchParam {
 
     protected SearchParam(Builder<?> builder) {
         this.params = builder.params;
-        this.readConsistency = builder.readConsistency;
         if (builder.filter != null) {
             this.filter = builder.filter.getCond();
         }
@@ -59,9 +54,6 @@ public abstract class SearchParam {
         return params;
     }
 
-    public ReadConsistencyEnum getReadConsistency() {
-        return readConsistency;
-    }
 
     public String getFilter() {
         return filter;
@@ -82,7 +74,6 @@ public abstract class SearchParam {
 
     protected static abstract class Builder<T extends Builder<T>> {
         protected Params params;
-        protected ReadConsistencyEnum readConsistency = ReadConsistencyEnum.EVENTUAL_CONSISTENCY;
         protected Filter filter;
         protected List<String> outputFields;
         protected boolean retrieveVector = false;
@@ -99,10 +90,6 @@ public abstract class SearchParam {
             return self();
         }
 
-        public T withReadConsistency(ReadConsistencyEnum readConsistency) {
-            this.readConsistency = readConsistency;
-            return self();
-        }
 
         public T withOutputFields(List<String> outputFields) {
             this.outputFields = outputFields;

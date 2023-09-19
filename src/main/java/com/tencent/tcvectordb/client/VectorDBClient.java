@@ -43,13 +43,13 @@ public class VectorDBClient {
     }
 
     public Database createDatabase(String databaseName) throws VectorDBException {
-        Database db = database(databaseName);
+        Database db = database(databaseName, readConsistency);
         stub.createDatabase(db);
         return db;
     }
 
     public Database dropDatabase(String databaseName) throws VectorDBException {
-        Database db = database(databaseName);
+        Database db = database(databaseName, readConsistency);
         stub.dropDatabase(db);
         return db;
     }
@@ -58,7 +58,7 @@ public class VectorDBClient {
         return stub.listDatabases();
     }
 
-    public Database database(String databaseName) {
-        return new Database(this.stub, databaseName);
+    public Database database(String databaseName, ReadConsistencyEnum readConsistency) {
+        return new Database(this.stub, databaseName, readConsistency);
     }
 }

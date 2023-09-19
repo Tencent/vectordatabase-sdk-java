@@ -700,7 +700,6 @@ public class VectorDBExample {
                 .withLimit(5)
                 .build();
         SearchRes searchRes = collection.searchByEmbeddingItems(searchByEmbeddingItemsParam);
-        System.out.println(searchRes);
         for (List<Document> docs : searchRes.getDocuments()) {
             for (Document doc : docs) {
                 System.out.println("\tres: " + doc.toString());

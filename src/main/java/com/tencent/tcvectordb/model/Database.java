@@ -20,9 +20,11 @@
 
 package com.tencent.tcvectordb.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
+import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.Stub;
 
 import java.util.List;
@@ -33,18 +35,26 @@ import java.util.List;
 public class Database {
     private final Stub stub;
     private final String databaseName;
+    @JsonIgnore
+    private final ReadConsistencyEnum readConsistency;
 
-    public Database(Stub stub, String databaseName) {
+    public Database(Stub stub, String databaseName, ReadConsistencyEnum readConsistency) {
         this.stub = stub;
         this.databaseName = databaseName;
+        this.readConsistency = readConsistency;
     }
 
     public String getDatabaseName() {
         return databaseName;
     }
 
+    public ReadConsistencyEnum getReadConsistency() {
+        return readConsistency;
+    }
+
     public Collection createCollection(CreateCollectionParam param) throws VectorDBException {
         param.setDatabase(databaseName);
+        param.setReadConsistency(readConsistency);
         stub.createCollection(param);
         param.setStub(this.stub);
         return param;
@@ -52,7 +62,10 @@ public class Database {
 
     public List<Collection> listCollections() throws VectorDBException {
         List<Collection> collections = stub.listCollections(this.databaseName);
-        collections.forEach(c -> c.setStub(stub));
+        collections.forEach(c -> {
+            c.setStub(stub);
+            c.setReadConsistency(readConsistency);
+        });
         return collections;
     }
 
@@ -63,6 +76,7 @@ public class Database {
     public Collection describeCollection(String collectionName) throws VectorDBException {
         Collection collection = stub.describeCollection(this.databaseName, collectionName);
         collection.setStub(stub);
+        collection.setReadConsistency(readConsistency);
         return collection;
     }
 

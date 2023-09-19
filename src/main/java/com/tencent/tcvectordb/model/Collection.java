@@ -33,6 +33,7 @@ import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.BaseRes;
 import com.tencent.tcvectordb.model.param.entity.SearchRes;
+import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.Stub;
 import com.tencent.tcvectordb.service.param.*;
 
@@ -56,8 +57,9 @@ public class Collection {
     protected List<IndexField> indexes;
     protected String createTime;
     protected Embedding embedding;
-
-
+    @JsonIgnore
+    protected ReadConsistencyEnum readConsistency;
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     private long documentCount;
     private IndexStatus indexStatus;
     private List<String> alias;
@@ -117,6 +119,14 @@ public class Collection {
         return alias;
     }
 
+    public ReadConsistencyEnum getReadConsistency() {
+        return readConsistency;
+    }
+
+    public void setReadConsistency(ReadConsistencyEnum readConsistency) {
+        this.readConsistency = readConsistency;
+    }
+
     public AffectRes upsert(InsertParam param) throws VectorDBException {
         InsertParamInner insertParam = new InsertParamInner(
                 database, collection, param.getDocuments());
@@ -125,22 +135,22 @@ public class Collection {
 
     public List<Document> query(QueryParam param) throws VectorDBException {
         return this.stub.queryDocument(
-                new QueryParamInner(database, collection, param, param.getReadConsistency()));
+                new QueryParamInner(database, collection, param, this.readConsistency));
     }
 
     public List<List<Document>> search(SearchByVectorParam param) throws VectorDBException {
         return this.stub.searchDocument(new SearchParamInner(
-                database, collection, param, param.getReadConsistency())).getDocuments();
+                database, collection, param, this.readConsistency)).getDocuments();
     }
 
     public List<List<Document>> searchById(SearchByIdParam param) throws VectorDBException {
         return this.stub.searchDocument(new SearchParamInner(
-                database, collection, param, param.getReadConsistency())).getDocuments();
+                database, collection, param, this.readConsistency)).getDocuments();
     }
 
     public SearchRes searchByEmbeddingItems(SearchByEmbeddingItemsParam param) throws VectorDBException {
         return this.stub.searchDocument(new SearchParamInner(
-                database, collection, param, param.getReadConsistency()));
+                database, collection, param, this.readConsistency));
     }
 
     public AffectRes delete(DeleteParam param) throws VectorDBException {

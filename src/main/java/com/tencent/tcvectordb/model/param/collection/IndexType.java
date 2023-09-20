@@ -35,6 +35,26 @@ public enum IndexType {
      */
     HNSW("HNSW"),
     /**
+     *
+     */
+    IVF_FLAT("IVF_FLAT"),
+    /**
+     *
+     */
+    IVF_PQ("IVF_PQ"),
+    /**
+     *
+     */
+    IVF_SQ4("IVF_SQ4"),
+    /**
+     *
+     */
+    IVF_SQ8("IVF_SQ8"),
+    /**
+     *
+     */
+    IVF_SQ16("IVF_SQ16"),
+    /**
      * scalar index type: primaryKey
      */
     PRIMARY_KEY("primaryKey"),

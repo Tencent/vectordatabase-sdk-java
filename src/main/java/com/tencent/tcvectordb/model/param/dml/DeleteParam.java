@@ -23,43 +23,37 @@ package com.tencent.tcvectordb.model.param.dml;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencent.tcvectordb.exception.ParamException;
 
-import java.util.List;
-
 /**
  * Delete Param
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class DeleteParam {
-    private List<String> documentIds;
+public class DeleteParam extends BaseQuery {
 
     public DeleteParam(Builder builder) {
-        this.documentIds = builder.documentIds;
+        super(builder);
     }
 
-    public List<String> getDocumentIds() {
-        return documentIds;
+    public static Builder newBuilder() {
+        return new Builder();
     }
 
-    public static DeleteParam.Builder newBuilder() {
-        return new DeleteParam.Builder();
-    }
+    public static class Builder extends BaseQuery.Builder<Builder> {
 
-    public static class Builder {
-        private List<String> documentIds;
-
-        public Builder() {
-        }
-
-        public Builder withDocumentIds(List<String> documentIds) {
-            this.documentIds = documentIds;
-            return this;
+        private Builder() {
+            super();
         }
 
         public DeleteParam build() {
-            if (documentIds == null || documentIds.isEmpty()) {
-                throw new ParamException("DeleteParam error: documentIds is null");
+            if ((documentIds == null || documentIds.isEmpty()) &&
+                    filter == null) {
+                throw new ParamException("DeleteParam error: both documentIds and filter are null");
             }
             return new DeleteParam(this);
+        }
+
+        @Override
+        protected Builder self() {
+            return this;
         }
     }
 }

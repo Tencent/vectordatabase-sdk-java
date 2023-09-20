@@ -22,57 +22,58 @@ package com.tencent.tcvectordb.model.param.dml;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencent.tcvectordb.exception.ParamException;
-import com.tencent.tcvectordb.model.Document;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Insert Param
+ * Search By Vector Param
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class InsertParam {
-    private List<Document> documents;
+public class SearchByEmbeddingItemsParam extends SearchParam {
+    private List<String> embeddingItems;
 
-    private InsertParam(Builder builder) {
-        this.documents = builder.documents;
+    private SearchByEmbeddingItemsParam(Builder builder) {
+        super(builder);
+        this.embeddingItems = builder.embeddingItems;
     }
 
-    public List<Document> getDocuments() {
-        return documents;
+    public List<String> getEmbeddingItems() {
+        return embeddingItems;
     }
 
     public static Builder newBuilder() {
         return new Builder();
     }
 
-    public static class Builder {
-        private List<Document> documents;
+    public static class Builder extends SearchParam.Builder<Builder> {
+        private List<String> embeddingItems;
 
-        public Builder() {
-            this.documents = new ArrayList<>();
+        private Builder() {
+            super();
+            this.embeddingItems = new ArrayList<>();
         }
 
-        public Builder withDocuments(List<Document> documents) {
-            this.documents = documents;
+        public Builder withEmbeddingItems(List<String> embeddingItems) {
+            this.embeddingItems = embeddingItems;
             return this;
         }
 
-        public Builder addDocument(Document document) {
-            this.documents.add(document);
+        public Builder addEmbeddingItem(String embeddingItem) {
+            this.embeddingItems.add(embeddingItem);
             return this;
         }
 
-        public Builder addAllDocument(List<Document> documentList) {
-            this.documents.addAll(documentList);
-            return this;
-        }
-
-        public InsertParam build() {
-            if (this.documents.isEmpty()) {
-                throw new ParamException("InsertParam error: documents is empty");
+        public SearchByEmbeddingItemsParam build() {
+            if (embeddingItems == null || embeddingItems.isEmpty()) {
+                throw new ParamException("SearchByEmbeddingItemsBuilder error: embeddingItems is empty");
             }
-            return new InsertParam(this);
+            return new SearchByEmbeddingItemsParam(this);
+        }
+
+        @Override
+        protected Builder self() {
+            return this;
         }
     }
 }

@@ -21,36 +21,46 @@
 package com.tencent.tcvectordb.model.param.dml;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.tencent.tcvectordb.exception.ParamException;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Search Param
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SearchParam {
-    List<List<Double>> vectors;
-    List<String> documentIds;
-    HNSWSearchParams params;
-    String filter;
-    boolean retrieveVector;
-    int limit;
+public abstract class SearchParam {
+    protected Params params;
+    protected String filter;
+    protected List<String> outputFields;
+    protected boolean retrieveVector;
+    protected int limit;
 
-    public List<List<Double>> getVectors() {
-        return vectors;
+
+    protected SearchParam(Builder<?> builder) {
+        this.params = builder.params;
+        if (builder.filter != null) {
+            this.filter = builder.filter.getCond();
+        }
+        if (builder.outputFields != null && !builder.outputFields.isEmpty()) {
+            this.outputFields = Collections.unmodifiableList(builder.outputFields);
+        }
+        this.retrieveVector = builder.retrieveVector;
+        this.limit = builder.limit;
     }
 
-    public List<String> getDocumentIds() {
-        return documentIds;
-    }
 
-    public HNSWSearchParams getParams() {
+    public Params getParams() {
         return params;
     }
 
+
     public String getFilter() {
         return filter;
+    }
+
+    public List<String> getOutputFields() {
+        return outputFields;
     }
 
     public boolean isRetrieveVector() {
@@ -61,74 +71,44 @@ public class SearchParam {
         return limit;
     }
 
-    protected SearchParam() {
-    }
 
-    public static BaseBuilder newBuilder() {
-        return new BaseBuilder();
-    }
+    protected static abstract class Builder<T extends Builder<T>> {
+        protected Params params;
+        protected Filter filter;
+        protected List<String> outputFields;
+        protected boolean retrieveVector = false;
+        protected int limit = 10;
 
-    protected static class BaseBuilder {
-        HNSWSearchParams params;
-        Filter filter;
-        boolean retrieveVector = false;
-        int limit = 10;
-    }
 
-    public static class SearchBuilder extends BaseBuilder {
-        private List<List<Double>> vectors;
-        private List<String> documentIds;
-
-        public SearchBuilder withVectors(List<List<Double>> vectors) {
-            this.vectors = vectors;
-            return this;
+        protected Builder() {
         }
 
-        public SearchBuilder addVector(List<Double> vector) {
-            this.vectors.add(vector);
-            return this;
-        }
+        protected abstract T self();
 
-        public SearchBuilder withDocumentIds(List<String> documentIds) {
-            this.documentIds = documentIds;
-            return this;
-        }
-
-        public SearchBuilder withHNSWSearchParams(HNSWSearchParams params) {
+        public T withParams(Params params) {
             this.params = params;
-            return this;
+            return self();
         }
 
-        public SearchBuilder withFilter(Filter filter) {
+
+        public T withOutputFields(List<String> outputFields) {
+            this.outputFields = outputFields;
+            return self();
+        }
+
+        public T withFilter(Filter filter) {
             this.filter = filter;
-            return this;
+            return self();
         }
 
-        public SearchBuilder withRetrieveVector(boolean retrieveVector) {
+        public T withRetrieveVector(boolean retrieveVector) {
             this.retrieveVector = retrieveVector;
-            return this;
+            return self();
         }
 
-        public SearchBuilder withLimit(int limit) {
+        public T withLimit(int limit) {
             this.limit = limit;
-            return this;
-        }
-
-        public SearchParam build() {
-            if ((documentIds == null || documentIds.isEmpty())
-                    && (vectors == null || vectors.isEmpty())) {
-                throw new ParamException("SearchByVectorsBuilder error: documentIds and vectors is empty");
-            }
-            SearchParam searchParam = new SearchParam();
-            searchParam.vectors = this.vectors;
-            searchParam.documentIds = this.documentIds;
-            searchParam.params = this.params;
-            if (this.filter != null) {
-                searchParam.filter = this.filter.getCond();
-            }
-            searchParam.retrieveVector = this.retrieveVector;
-            searchParam.limit = this.limit;
-            return searchParam;
+            return self();
         }
     }
 }

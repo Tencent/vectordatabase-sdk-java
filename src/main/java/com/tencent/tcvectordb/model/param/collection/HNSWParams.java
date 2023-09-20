@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * HNSWParams
  */
-public class HNSWParams {
+public class HNSWParams implements ParamsSerializer {
 
     @JsonProperty(value = "M")
     private int M;
@@ -47,5 +47,13 @@ public class HNSWParams {
 
     public int getEfConstruction() {
         return efConstruction;
+    }
+
+    @Override
+    public String toString() {
+        return "HNSWParams{" +
+                "M=" + M +
+                ", efConstruction=" + efConstruction +
+                '}';
     }
 }

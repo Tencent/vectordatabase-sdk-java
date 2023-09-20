@@ -58,7 +58,7 @@ public class Filter {
         return this;
     }
 
-    public static  <T> String in(String key, List<T> values) {
+    public static <T> String in(String key, List<T> values) {
         if (values == null || values.isEmpty()) {
             throw new ParamException("Filter in condition values is empty");
         }

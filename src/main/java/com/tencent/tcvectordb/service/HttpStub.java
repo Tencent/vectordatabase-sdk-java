@@ -9,12 +9,13 @@ import com.tencent.tcvectordb.model.Collection;
 import com.tencent.tcvectordb.model.Database;
 import com.tencent.tcvectordb.model.DocField;
 import com.tencent.tcvectordb.model.Document;
-import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
+import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
-import com.tencent.tcvectordb.service.param.DeleteParamInner;
-import com.tencent.tcvectordb.service.param.InsertParamInner;
-import com.tencent.tcvectordb.service.param.QueryParamInner;
-import com.tencent.tcvectordb.service.param.SearchParamInner;
+import com.tencent.tcvectordb.model.param.entity.AffectRes;
+import com.tencent.tcvectordb.model.param.entity.BaseRes;
+import com.tencent.tcvectordb.model.param.entity.SearchRes;
+import com.tencent.tcvectordb.service.param.*;
+import com.tencent.tcvectordb.utils.JsonUtils;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -33,7 +35,7 @@ public class HttpStub implements Stub {
     private final ConnectParam connectParam;
     private final OkHttpClient client;
     private final Headers headers;
-    private ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
     private static final MediaType JSON =
             MediaType.parse("application/json; charset=utf-8");
     private static final Logger logger = LoggerFactory.getLogger(HttpStub.class.getName());
@@ -78,13 +80,13 @@ public class HttpStub implements Stub {
             return mapper.readValue(dbsJson.toString(), new TypeReference<List<String>>() {});
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format(
-                    "VectorDBServer response error: can't parse databases=%s", dbsJson.toString()));
+                    "VectorDBServer response error: can't parse databases=%s", dbsJson));
         }
     }
 
     @Override
     public void createCollection(CreateCollectionParam param) {
-        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_CREAGE);
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_CREATE);
         this.post(url, param.toString());
     }
 
@@ -96,13 +98,9 @@ public class HttpStub implements Stub {
         if (closJson == null) {
             return new ArrayList<>();
         }
-        try {
-            return mapper.readValue(closJson.toString(), new TypeReference<List<Collection>>() {});
-        } catch (JsonProcessingException ex) {
-            throw new VectorDBException(String.format(
-                    "VectorDBServer response error: can't parse collections=%s", closJson.toString()));
-        }
+        return JsonUtils.collectionDeserializer(closJson.toString(), new TypeReference<List<Collection>>() {});
     }
+
 
     @Override
     public Collection describeCollection(String databaseName, String collectionName) {
@@ -114,12 +112,16 @@ public class HttpStub implements Stub {
         if (dbsJson == null) {
             return null;
         }
-        try {
-            return mapper.readValue(dbsJson.toString(), Collection.class);
-        } catch (JsonProcessingException ex) {
-            throw new VectorDBException(String.format(
-                    "VectorDBServer response error: can't parse collection=%s", dbsJson.toString()));
-        }
+        return JsonUtils.collectionDeserializer(dbsJson.toString(), new TypeReference<Collection>() {});
+    }
+
+    @Override
+    public AffectRes truncateCollection(String databaseName, String collectionName) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_FLUSH);
+        String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
+                databaseName, collectionName);
+        JsonNode jsonNode = this.post(url, body);
+        return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
     @Override
@@ -131,9 +133,28 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public void upsertDocument(InsertParamInner param) {
+    public AffectRes setAlias(String databaseName, String collectionName, String aliasName) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.SET_COL_ALIAS);
+        String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\",\"alias\":\"%s\"}",
+                databaseName, collectionName, aliasName);
+        JsonNode jsonNode = this.post(url, body);
+        return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
+    }
+
+    @Override
+    public AffectRes deleteAlias(String databaseName, String aliasName) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DELETE_COL_ALIAS);
+        String body = String.format("{\"database\":\"%s\",\"alias\":\"%s\"}",
+                databaseName, aliasName);
+        JsonNode jsonNode = this.post(url, body);
+        return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
+    }
+
+    @Override
+    public AffectRes upsertDocument(InsertParamInner param) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_UPSERT);
-        this.post(url, param.toString());
+        JsonNode jsonNode = this.post(url, param.toString());
+        return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
     @Override
@@ -155,20 +176,32 @@ public class HttpStub implements Stub {
             return dosc;
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format("VectorDBServer response " +
-                    "from query error: can't parse documents=%s", docsNode.toString()));
+                    "from query error: can't parse documents=%s", docsNode));
         }
     }
 
     @Override
-    public List<List<Document>> searchDocument(SearchParamInner param) {
+    public SearchRes searchDocument(SearchParamInner param) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_SEARCH);
         JsonNode jsonNode = this.post(url, param.toString());
         JsonNode multiDocsNode = jsonNode.get("documents");
-        List<List<Document>> multiDosc = new ArrayList<>();
+        int code = 0;
+        if (jsonNode.get("code") != null) {
+            code = jsonNode.get("code").asInt();
+        }
+        String msg = "";
+        if (jsonNode.get("msg") != null) {
+            msg = jsonNode.get("msg").asText();
+        }
+        String warning = "";
+        if (jsonNode.get("warning") != null) {
+            warning = jsonNode.get("warning").asText();
+        }
         if (multiDocsNode == null) {
-            return multiDosc;
+            return new SearchRes(code, msg, warning, Collections.emptyList());
         }
         try {
+            List<List<Document>> multiDosc = new ArrayList<>();
             Iterator<JsonNode> multiIter = multiDocsNode.elements();
             while (multiIter.hasNext()) {
                 JsonNode docNode = multiIter.next();
@@ -181,17 +214,31 @@ public class HttpStub implements Stub {
                 }
                 multiDosc.add(docs);
             }
-            return multiDosc;
+            return new SearchRes(code, msg, warning, multiDosc);
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format("VectorDBServer response " +
-                    "from search error: can't parse documents=%s", multiDocsNode.toString()));
+                    "from search error: can't parse documents=%s", multiDocsNode));
         }
     }
 
     @Override
-    public void deleteDocument(DeleteParamInner param) {
+    public AffectRes deleteDocument(DeleteParamInner param) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_DELETE);
-        this.post(url, param.toString());
+        JsonNode jsonNode = this.post(url, param.toString());
+        return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
+    }
+
+    public AffectRes updateDocument(UpdateParamInner param) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_UPDATE);
+        JsonNode jsonNode = this.post(url, param.toString());
+        return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
+    }
+
+    @Override
+    public BaseRes rebuildIndex(RebuildIndexParamInner param) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.REBUILD_INDEX);
+        JsonNode jsonNode = this.post(url, param.toString());
+        return JsonUtils.parseObject(jsonNode.toString(), BaseRes.class);
     }
 
     private JsonNode get(String url) {
@@ -263,7 +310,8 @@ public class HttpStub implements Stub {
                 builder.withId(ele.asText());
             } else if (StringUtils.equals("vector", name)) {
                 List<Double> vector = mapper.readValue(
-                            ele.toString(), new TypeReference<List<Double>>() {});
+                        ele.toString(), new TypeReference<List<Double>>() {
+                        });
                 builder.withVector(vector);
             } else if (StringUtils.equals("doc", name)) {
                 builder.withDoc(ele.asText());

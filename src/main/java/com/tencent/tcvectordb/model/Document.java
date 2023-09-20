@@ -24,7 +24,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.model.param.collection.FieldType;
 import org.apache.commons.lang3.StringUtils;
 
@@ -41,7 +40,7 @@ public class Document {
     private List<Double> vector;
     private Double score;
     private String doc;
-    private List<DocField> otherFilterFields;
+    private List<DocField> docFields;
 
     public String getId() {
         return id;
@@ -55,8 +54,8 @@ public class Document {
         return doc;
     }
 
-    public List<DocField> getOtherFilterFields() {
-        return otherFilterFields;
+    public List<DocField> getDocFields() {
+        return docFields;
     }
 
     public List<Double> getVector() {
@@ -66,7 +65,9 @@ public class Document {
     @Override
     public String toString() {
         ObjectNode node = JsonNodeFactory.instance.objectNode();
-        node.put("id", id);
+        if (StringUtils.isNotBlank(id)) {
+            node.put("id", id);
+        }
         if (vector != null && !vector.isEmpty()) {
             ArrayNode vectorNode = JsonNodeFactory.instance.arrayNode();
             vector.forEach(vectorNode::add);
@@ -78,12 +79,14 @@ public class Document {
         if (StringUtils.isNotEmpty(doc)) {
             node.put("doc", doc);
         }
-        if (otherFilterFields != null && !otherFilterFields.isEmpty()) {
-            for (DocField field : otherFilterFields) {
-                if (FieldType.Uint64.equals(field.getFieldType())) {
-                    node.put(field.getName(), field.getLongValue());
-                } else {
-                    node.put(field.getName(), field.getStringValue());
+        if (docFields != null && !docFields.isEmpty()) {
+            for (DocField field : docFields) {
+                switch (field.getFieldType()) {
+                    case Uint64:
+                        node.put(field.getName(), field.getLongValue());
+                        break;
+                    default:
+                        node.put(field.getName(), field.getStringValue());
                 }
             }
         }
@@ -95,7 +98,7 @@ public class Document {
         this.vector = builder.vector;
         this.doc = builder.doc;
         this.score = builder.score;
-        this.otherFilterFields = builder.otherFilterFields;
+        this.docFields = builder.docFields;
     }
 
     public static Builder newBuilder() {
@@ -108,10 +111,10 @@ public class Document {
 
         private Double score;
         private String doc;
-        private List<DocField> otherFilterFields;
+        private List<DocField> docFields;
 
         public Builder() {
-            this.otherFilterFields = new ArrayList<>();
+            this.docFields = new ArrayList<>();
         }
 
         public Builder withId(String id) {
@@ -134,15 +137,31 @@ public class Document {
             return this;
         }
 
+        /**
+         * This is a deprecated method.
+         *
+         * @param field
+         * @return
+         * @deprecated This method is deprecated and should not be used anymore. Please use the
+         * addDocField(DocField field) or addDocFields(List<DocField> docFields) instead.
+         */
+        @Deprecated
         public Builder addFilterField(DocField field) {
-            this.otherFilterFields.add(field);
+            this.docFields.add(field);
+            return this;
+        }
+
+        public Builder addDocField(DocField docField) {
+            this.docFields.add(docField);
+            return this;
+        }
+
+        public Builder addDocFields(List<DocField> docFields) {
+            this.docFields.addAll(docFields);
             return this;
         }
 
         public Document build() {
-            if (StringUtils.isEmpty(this.id)) {
-                throw new ParamException("Document Create error: id is null");
-            }
             return new Document(this);
         }
     }

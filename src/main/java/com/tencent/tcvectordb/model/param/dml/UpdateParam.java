@@ -20,17 +20,39 @@
 
 package com.tencent.tcvectordb.model.param.dml;
 
-/**
- * VectorDB HNSWSearchParams
- */
-public class HNSWSearchParams implements Params {
-    private int ef;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.tencent.tcvectordb.exception.ParamException;
 
-    public HNSWSearchParams(int ef) {
-        this.ef = ef;
+/**
+ * Delete Param
+ */
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class UpdateParam extends BaseQuery {
+
+    public UpdateParam(Builder builder) {
+        super(builder);
     }
 
-    public int getEf() {
-        return ef;
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+    public static class Builder extends BaseQuery.Builder<Builder> {
+
+        private Builder() {
+            super();
+        }
+
+        public UpdateParam build() {
+            if (documentIds == null || documentIds.isEmpty()) {
+                throw new ParamException("DeleteParam error: documentIds is null");
+            }
+            return new UpdateParam(this);
+        }
+
+        @Override
+        protected Builder self() {
+            return this;
+        }
     }
 }

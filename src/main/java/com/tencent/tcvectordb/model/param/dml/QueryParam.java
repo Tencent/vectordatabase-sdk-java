@@ -21,56 +21,110 @@
 package com.tencent.tcvectordb.model.param.dml;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.tencent.tcvectordb.exception.ParamException;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Query Param
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class QueryParam {
-    private List<String> documentIds;
+public class QueryParam extends BaseQuery {
     private boolean retrieveVector;
+    private long limit;
+    private long offset;
+    private List<String> outputFields;
 
-    public List<String> getDocumentIds() {
-        return documentIds;
-    }
 
     public boolean isRetrieveVector() {
         return retrieveVector;
     }
 
+    public long getLimit() {
+        return limit;
+    }
+
+    public long getOffset() {
+        return offset;
+    }
+
+
+    public List<String> getOutputFields() {
+        return outputFields;
+    }
+
     public QueryParam(Builder builder) {
-        this.documentIds = builder.documentIds;
+        super(builder);
         this.retrieveVector = builder.retrieveVector;
+        this.limit = builder.limit;
+        this.offset = builder.offset;
+        if (builder.outputFields != null && !builder.outputFields.isEmpty()) {
+            this.outputFields = Collections.unmodifiableList(builder.outputFields);
+        }
     }
 
     public static Builder newBuilder() {
         return new Builder();
     }
 
-    public static class Builder {
-        private List<String> documentIds;
+    public static class Builder extends BaseQuery.Builder<Builder> {
         private boolean retrieveVector = false;
+        /**
+         * limit between 1 and 16384L
+         * default is 10
+         */
+        private long limit = 10;
+        /**
+         * default is 0
+         */
+        private long offset = 0;
 
-        public Builder() {
+        private List<String> outputFields;
+
+        private Builder() {
+            super();
+            this.outputFields = new ArrayList<>();
         }
 
-        public Builder withDocumentIds(List<String> documentIds) {
-            this.documentIds = documentIds;
+        @Override
+        protected Builder self() {
             return this;
         }
+
 
         public Builder withRetrieveVector(boolean retrieveVector) {
             this.retrieveVector = retrieveVector;
             return this;
         }
 
+        public Builder withLimit(long limit) {
+            this.limit = limit;
+            return this;
+        }
+
+        public Builder withOffset(long offset) {
+            this.offset = offset;
+            return this;
+        }
+
+        public Builder addOutputFields(String outputField) {
+            this.outputFields.add(outputField);
+            return this;
+        }
+
+        public Builder addAllOutputFields(List<String> outputFields) {
+            this.outputFields.addAll(outputFields);
+            return this;
+        }
+
+        public Builder withOutputFields(List<String> outputFields) {
+            this.outputFields = outputFields;
+            return this;
+        }
+
+
         public QueryParam build() {
-            if (documentIds == null || documentIds.isEmpty()) {
-                throw new ParamException("QueryParam error: documentIds is null");
-            }
             return new QueryParam(this);
         }
     }

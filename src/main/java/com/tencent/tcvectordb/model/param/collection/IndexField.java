@@ -32,7 +32,7 @@ public class IndexField {
     private FieldType fieldType;
     private IndexType indexType;
     private MetricType metricType;
-    private HNSWParams params;
+    private ParamsSerializer params;
 
     private Integer dimension;
     private Integer indexedCount;
@@ -80,7 +80,7 @@ public class IndexField {
         return metricType;
     }
 
-    public HNSWParams getParams() {
+    public ParamsSerializer getParams() {
         return params;
     }
 
@@ -100,7 +100,7 @@ public class IndexField {
         this.metricType = metricType;
     }
 
-    public void setParams(HNSWParams params) {
+    public void setParams(ParamsSerializer params) {
         this.params = params;
     }
 

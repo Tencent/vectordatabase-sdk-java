@@ -28,7 +28,7 @@ public class VectorIndex  extends IndexField {
 
     public VectorIndex(String fieldName, Integer dimension,
                        IndexType indexType, MetricType metricType,
-                       HNSWParams params) {
+                       ParamsSerializer params) {
         setFieldName(fieldName);
         setFieldType(FieldType.Vector);
         setIndexType(indexType);

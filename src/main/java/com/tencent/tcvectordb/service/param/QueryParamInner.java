@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.model.param.dml.QueryParam;
+import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 
 /**
  * Inner Query Param
@@ -13,11 +14,13 @@ import com.tencent.tcvectordb.model.param.dml.QueryParam;
 public class QueryParamInner {
     private String database;
     private String collection;
+    private ReadConsistencyEnum readConsistency;
     private QueryParam query;
 
-    public QueryParamInner(String database, String collection, QueryParam query) {
+    public QueryParamInner(String database, String collection, QueryParam query, ReadConsistencyEnum readConsistency) {
         this.database = database;
         this.collection = collection;
+        this.readConsistency = readConsistency;
         this.query = query;
     }
 
@@ -27,6 +30,10 @@ public class QueryParamInner {
 
     public String getCollection() {
         return collection;
+    }
+
+    public ReadConsistencyEnum getReadConsistency() {
+        return readConsistency;
     }
 
     public QueryParam getQuery() {

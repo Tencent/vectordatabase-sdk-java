@@ -31,65 +31,49 @@ import java.util.List;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SearchByVectorParam extends SearchParam {
+    private List<List<Double>> vectors;
 
-    private SearchByVectorParam() {
+    private SearchByVectorParam(Builder builder) {
+        super(builder);
+        this.vectors = builder.vectors;
     }
 
-    public static SearchByVectorsBuilder newBuilder() {
-        return new SearchByVectorsBuilder();
+    public List<List<Double>> getVectors() {
+        return vectors;
     }
 
-    public static class SearchByVectorsBuilder extends BaseBuilder {
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+    public static class Builder extends SearchParam.Builder<Builder> {
         private List<List<Double>> vectors;
 
-        private SearchByVectorsBuilder() {
+        private Builder() {
+            super();
             this.vectors = new ArrayList<>();
         }
 
-        public SearchByVectorsBuilder withVectors(List<List<Double>> vectors) {
+        public Builder withVectors(List<List<Double>> vectors) {
             this.vectors = vectors;
             return this;
         }
 
-        public SearchByVectorsBuilder addVector(List<Double> vector) {
+        public Builder addVector(List<Double> vector) {
             this.vectors.add(vector);
             return this;
         }
 
-        public SearchByVectorsBuilder withHNSWSearchParams(HNSWSearchParams params) {
-            this.params = params;
-            return this;
-        }
-
-        public SearchByVectorsBuilder withFilter(Filter filter) {
-            this.filter = filter;
-            return this;
-        }
-
-        public SearchByVectorsBuilder withRetrieveVector(boolean retrieveVector) {
-            this.retrieveVector = retrieveVector;
-            return this;
-        }
-
-        public SearchByVectorsBuilder withLimit(int limit) {
-            this.limit = limit;
-            return this;
-        }
-
         public SearchByVectorParam build() {
-
             if (vectors == null || vectors.isEmpty()) {
                 throw new ParamException("SearchByVectorsBuilder error: vectors is empty");
             }
-            SearchByVectorParam searchParam = new SearchByVectorParam();
-            searchParam.vectors = this.vectors;
-            searchParam.params = this.params;
-            if (this.filter != null) {
-                searchParam.filter = this.filter.getCond();
-            }
-            searchParam.retrieveVector = this.retrieveVector;
-            searchParam.limit = this.limit;
-            return searchParam;
+            return new SearchByVectorParam(this);
+        }
+
+        @Override
+        protected Builder self() {
+            return this;
         }
     }
 }

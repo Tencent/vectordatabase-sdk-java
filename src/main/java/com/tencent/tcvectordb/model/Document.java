@@ -81,10 +81,12 @@ public class Document {
         }
         if (docFields != null && !docFields.isEmpty()) {
             for (DocField field : docFields) {
-                if (FieldType.Uint64.equals(field.getFieldType())) {
-                    node.put(field.getName(), field.getLongValue());
-                } else {
-                    node.put(field.getName(), field.getStringValue());
+                switch (field.getFieldType()) {
+                    case Uint64:
+                        node.put(field.getName(), field.getLongValue());
+                        break;
+                    default:
+                        node.put(field.getName(), field.getStringValue());
                 }
             }
         }

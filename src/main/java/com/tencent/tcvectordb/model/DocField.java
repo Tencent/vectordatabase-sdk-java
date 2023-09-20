@@ -20,9 +20,8 @@
 
 package com.tencent.tcvectordb.model;
 
+import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.param.collection.FieldType;
-
-import java.util.regex.Pattern;
 
 /**
  * Doc Field
@@ -30,7 +29,6 @@ import java.util.regex.Pattern;
 public class DocField {
     private final String name;
     private final Object value;
-    private final Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
 
     public DocField(String name, Object value) {
         this.name = name;
@@ -54,10 +52,15 @@ public class DocField {
     }
 
     public FieldType getFieldType() {
-        return isNumeric() ? FieldType.Uint64 : FieldType.String;
+        if (this.value == null) {
+            throw new VectorDBException("DocField value is null, " + "filed name is " + this.name);
+        }
+        String valueClassName = this.value.getClass().getName();
+        if (valueClassName.equals("java.lang.Integer") || valueClassName.equals("java.lang.Long")) {
+            return FieldType.Uint64;
+        }
+        return FieldType.String;
     }
 
-    private boolean isNumeric() {
-        return this.pattern.matcher(value.toString()).matches();
-    }
+
 }

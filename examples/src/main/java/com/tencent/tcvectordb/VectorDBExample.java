@@ -475,7 +475,10 @@ public class VectorDBExample {
                 .addAllDocumentId(documentIds)
                 .withFilter(filterParam)
                 .build();
-        Document updateDoc = Document.newBuilder().addDocField(new DocField("page", 100)).build();
+        Document updateDoc = Document
+                .newBuilder()
+                .addDocField(new DocField("page", 100))
+                .build();
         collection.update(updateParam, updateDoc);
 
         // delete
@@ -688,15 +691,8 @@ public class VectorDBExample {
         // 查询结果可以通过 SearchRes#getDocuments
         System.out.println("- searchByEmbeddingItems ----------------------");
         SearchByEmbeddingItemsParam searchByEmbeddingItemsParam = SearchByEmbeddingItemsParam.newBuilder()
-                .withEmbeddingItems(
-                        extractToEmbeddingTextList(
-                                documentList,
-                                new HashSet<String>() {{
-                                    add("0001");
-                                }},
-                                "text"
-                        )
-                ).withParams(new HNSWSearchParams(100))
+                .withEmbeddingItems(Arrays.asList("闻刘玄德新领徐州", "细作探知这个消息"))
+                .withParams(new HNSWSearchParams(100))
                 .withLimit(5)
                 .build();
         SearchRes searchRes = collection.searchByEmbeddingItems(searchByEmbeddingItemsParam);
@@ -717,7 +713,10 @@ public class VectorDBExample {
                 .addAllDocumentId(documentIds)
                 .withFilter(filterParam)
                 .build();
-        Document updateDoc = Document.newBuilder().addDocField(new DocField("page", 100)).build();
+        Document updateDoc = Document
+                .newBuilder()
+                .addDocField(new DocField("page", 100))
+                .build();
         collection.update(updateParam, updateDoc);
 
         // delete

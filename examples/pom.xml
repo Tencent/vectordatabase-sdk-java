@@ -49,7 +49,7 @@
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
-                                        <Main-Class>com.tencent.tcvectordb.VectorDBExample</Main-Class>
+                                        <Main-Class>com.tencent.tcvectordb.Main</Main-Class>
                                     </manifestEntries>
                                 </transformer>
                             </transformers>

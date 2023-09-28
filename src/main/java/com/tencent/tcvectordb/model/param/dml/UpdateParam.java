@@ -21,7 +21,6 @@
 package com.tencent.tcvectordb.model.param.dml;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.tencent.tcvectordb.exception.ParamException;
 
 /**
  * Delete Param
@@ -44,9 +43,6 @@ public class UpdateParam extends BaseQuery {
         }
 
         public UpdateParam build() {
-            if (documentIds == null || documentIds.isEmpty()) {
-                throw new ParamException("DeleteParam error: documentIds is null");
-            }
             return new UpdateParam(this);
         }
 

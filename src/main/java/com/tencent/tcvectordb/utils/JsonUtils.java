@@ -6,8 +6,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.tencent.tcvectordb.exception.VectorDBException;
+import com.tencent.tcvectordb.exception.ParamException;
+import com.tencent.tcvectordb.model.param.collection.Embedding;
 import com.tencent.tcvectordb.model.param.collection.ParamsSerializer;
+import com.tencent.tcvectordb.serializer.EmbeddingDeserialize;
 import com.tencent.tcvectordb.serializer.ParamsDeserialize;
 
 public class JsonUtils {
@@ -26,6 +28,7 @@ public class JsonUtils {
 
         SimpleModule module = new SimpleModule();
         module.addDeserializer(ParamsSerializer.class, new ParamsDeserialize());
+        module.addDeserializer(Embedding.class, new EmbeddingDeserialize());
         PARAMS_DESERIALIZE_MAPPER.registerModule(module);
     }
 
@@ -41,8 +44,8 @@ public class JsonUtils {
         try {
             return DESERIALIZE_IGNORE_KEY_MAPPER.readValue(jsonStr, clz);
         } catch (JsonProcessingException e) {
-            throw new VectorDBException(String.format(
-                    "VectorDBServer response error: can't parse collection=%s", jsonStr));
+            throw new ParamException(String.format(
+                    "can't parse content=%s", jsonStr));
         }
     }
 
@@ -55,8 +58,8 @@ public class JsonUtils {
         try {
             return SERIALIZE_MAPPER.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
-            throw new VectorDBException(String.format(
-                    "VectorDBServer response error: can't parse collection=%s", obj));
+            throw new ParamException(String.format(
+                    "can't serialize value=%s, type=%s", obj, obj.getClass().getName()));
         }
     }
 
@@ -80,8 +83,8 @@ public class JsonUtils {
         try {
             return SERIALIZE_MAPPER.readTree(jsonStr);
         } catch (JsonProcessingException e) {
-            throw new VectorDBException(String.format(
-                    "VectorDBServer response error: can't parse collection=%s", jsonStr));
+            throw new ParamException(String.format(
+                    "can't parse content=%s", jsonStr));
         }
     }
 
@@ -95,8 +98,8 @@ public class JsonUtils {
         try {
             return PARAMS_DESERIALIZE_MAPPER.readValue(jsonStr, clz);
         } catch (JsonProcessingException e) {
-            throw new VectorDBException(String.format(
-                    "VectorDBServer response error: can't parse collection=%s", jsonStr));
+            throw new ParamException(String.format(
+                    "can't parse content=%s", jsonStr));
         }
     }
 }

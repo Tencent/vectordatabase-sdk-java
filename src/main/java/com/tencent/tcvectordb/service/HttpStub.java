@@ -318,7 +318,13 @@ public class HttpStub implements Stub {
             } else if (StringUtils.equals("score", name)) {
                 builder.withScore(ele.asDouble());
             } else {
-                builder.addFilterField(new DocField(name, ele.asText()));
+                if (ele.isInt()) {
+                    builder.addFilterField(new DocField(name, ele.asInt()));
+                } else if (ele.isLong()) {
+                    builder.addFilterField(new DocField(name, ele.isLong()));
+                } else {
+                    builder.addFilterField(new DocField(name, ele.asText()));
+                }
             }
         }
         return builder.build();

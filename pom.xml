@@ -4,7 +4,7 @@
 
     <groupId>com.tencent.tcvectordb</groupId>
     <artifactId>vectordatabase-sdk-java</artifactId>
-    <version>1.1.0-1.0.1</version>
+    <version>1.0.2</version>
     <packaging>jar</packaging>
 
     <name>vectordatabase-sdk-java</name>
@@ -17,6 +17,8 @@
         <jackson.version>2.14.0</jackson.version>
         <slf4j.version>1.7.30</slf4j.version>
         <log4j.slf4j.version>2.17.1</log4j.slf4j.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -48,6 +50,15 @@
     </dependencies>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>

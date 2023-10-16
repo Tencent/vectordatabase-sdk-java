@@ -26,6 +26,17 @@ public enum EmbeddingModelEnum {
         return dimension;
     }
 
+    public static EmbeddingModelEnum find(String modelName) {
+        EmbeddingModelEnum[] values = values();
+        for (EmbeddingModelEnum value : values) {
+            if (value.modelName.equals(modelName)) {
+                return value;
+            }
+        }
+        return null;
+    }
+
+
 }
 
 

@@ -58,7 +58,19 @@ public class VectorDBClient {
         return stub.listDatabases();
     }
 
+    /**
+     * this method is deprecated, recommend use {@link VectorDBClient#database(String)}
+     *
+     * @param databaseName
+     * @param readConsistency
+     * @return
+     */
+    @Deprecated
     public Database database(String databaseName, ReadConsistencyEnum readConsistency) {
         return new Database(this.stub, databaseName, readConsistency);
+    }
+
+    public Database database(String databaseName) {
+        return new Database(this.stub, databaseName, this.readConsistency);
     }
 }

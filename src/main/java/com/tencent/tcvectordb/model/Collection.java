@@ -59,7 +59,6 @@ public class Collection {
     protected Embedding embedding;
     @JsonIgnore
     protected ReadConsistencyEnum readConsistency;
-    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     private long documentCount;
     private IndexStatus indexStatus;
     private List<String> alias;

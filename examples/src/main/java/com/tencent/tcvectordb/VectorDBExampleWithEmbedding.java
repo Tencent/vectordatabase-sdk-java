@@ -30,23 +30,25 @@ import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
+import com.tencent.tcvectordb.model.param.entity.SearchRes;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum.BGE_BASE_ZH;
 
 /**
  * VectorDB Java SDK usage example
  */
-public class VectorDBExample {
+public class VectorDBExampleWithEmbedding {
 
     private static final String DBNAME = "book";
     private static final String COLL_NAME = "book_segments";
     private static final String COLL_NAME_ALIAS = "collection_alias";
 
     public static void example() throws InterruptedException {
-        // 创建 VectorDB Client
+        // 创建VectorDB Client
         ConnectParam connectParam = initConnectParam();
         VectorDBClient client = new VectorDBClient(connectParam, ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
 
@@ -98,7 +100,7 @@ public class VectorDBExample {
         Database db = client.createDatabase(DBNAME);
 
         // 2. 列出所有数据库
-        System.out.println("---------------------- listCollections ----------------------");
+        System.out.println("---------------------- listDatabase ----------------------");
         List<String> database = client.listDatabase();
         for (String s : database) {
             System.out.println("\tres: " + s);
@@ -106,7 +108,7 @@ public class VectorDBExample {
 
         // 3. 创建 collection
         System.out.println("---------------------- createCollection ----------------------");
-        CreateCollectionParam collectionParam = initCreateCollectionParam(COLL_NAME);
+        CreateCollectionParam collectionParam = initCreateEmbeddingCollectionParam(COLL_NAME);
         db.createCollection(collectionParam);
 
         // 4. 列出所有 collection
@@ -146,57 +148,67 @@ public class VectorDBExample {
         List<Document> documentList = new ArrayList<>(Arrays.asList(
                 Document.newBuilder()
                         .withId("0001")
-                        .withVector(Arrays.asList(0.2123, 0.21, 0.213))
                         .addDocField(new DocField("bookName", "西游记"))
                         .addDocField(new DocField("author", "吴承恩"))
                         .addDocField(new DocField("page", 21))
                         .addDocField(new DocField("segment", "富贵功名，前缘分定，为人切莫欺心。"))
+                        .addDocField(new DocField("text", "富贵功名，前缘分定，为人切莫欺心。"))
                         .build(),
                 Document.newBuilder()
                         .withId("0002")
-                        .withVector(Arrays.asList(0.2123, 0.22, 0.213))
                         .addDocField(new DocField("bookName", "西游记"))
                         .addDocField(new DocField("author", "吴承恩"))
                         .addDocField(new DocField("page", 22))
                         .addDocField(new DocField("segment",
                                 "正大光明，忠良善果弥深。些些狂妄天加谴，眼前不遇待时临。"))
+                        .addDocField(new DocField("text",
+                                "正大光明，忠良善果弥深。些些狂妄天加谴，眼前不遇待时临。"))
                         .build(),
                 Document.newBuilder()
                         .withId("0003")
-                        .withVector(Arrays.asList(0.2123, 0.23, 0.213))
                         .addDocField(new DocField("bookName", "三国演义"))
                         .addDocField(new DocField("author", "罗贯中"))
                         .addDocField(new DocField("page", 23))
                         .addDocField(new DocField("segment", "细作探知这个消息，飞报吕布。"))
+                        .addDocField(new DocField("text", "细作探知这个消息，飞报吕布。"))
                         .build(),
                 Document.newBuilder()
                         .withId("0004")
-                        .withVector(Arrays.asList(0.2123, 0.24, 0.213))
                         .addDocField(new DocField("bookName", "三国演义"))
                         .addDocField(new DocField("author", "罗贯中"))
                         .addDocField(new DocField("page", 24))
                         .addDocField(new DocField("segment", "富贵功名，前缘分定，为人切莫欺心。"))
+                        .addDocField(new DocField("text", "富贵功名，前缘分定，为人切莫欺心。"))
                         .build(),
                 Document.newBuilder()
                         .withId("0005")
-                        .withVector(Arrays.asList(0.2123, 0.25, 0.213))
                         .addDocField(new DocField("bookName", "三国演义"))
                         .addDocField(new DocField("author", "罗贯中"))
                         .addDocField(new DocField("page", 25))
                         .addDocField(new DocField("segment",
                                 "布大惊，与陈宫商议。宫曰：“闻刘玄德新领徐州，可往投之。"))
+                        .addDocField(new DocField("text",
+                                "布大惊，与陈宫商议。宫曰：“闻刘玄德新领徐州，可往投之。"))
                         .build()));
         System.out.println("---------------------- upsert ----------------------");
-        InsertParam insertParam = InsertParam.newBuilder().addAllDocument(documentList).build();
+        InsertParam insertParam = InsertParam.newBuilder()
+                .addAllDocument(documentList)
+                .build();
         collection.upsert(insertParam);
 
-        // notice：upsert 操作可用会有延迟
+        // notice：upsert操作可用会有延迟
         Thread.sleep(1000 * 5);
     }
 
     private static void queryData(VectorDBClient client) {
         Database database = client.database(DBNAME);
         Collection collection = database.describeCollection(COLL_NAME);
+
+        // query  查询
+        // 1. query 用于查询数据
+        // 2. 可以通过传入主键 id 列表或 filter 实现过滤数据的目的
+        // 3. 如果没有主键 id 列表和 filter 则必须传入 limit 和 offset，类似 scan 的数据扫描功能
+        // 4. 如果仅需要部分 field 的数据，可以指定 output_fields 用于指定返回数据包含哪些 field，不指定默认全部返回
 
         System.out.println("---------------------- query ----------------------");
         List<String> documentIds = Arrays.asList("0001", "0002", "0003", "0004", "0005");
@@ -207,9 +219,9 @@ public class VectorDBExample {
                 // 使用 filter 过滤数据
                 .withFilter(filterParam)
                 // limit 限制返回行数，1 到 16384 之间
-                 .withLimit(2)
+                .withLimit(2)
                 // 偏移
-                 .withOffset(1)
+                .withOffset(1)
                 // 指定返回的 fields
                 .withOutputFields(outputFields)
                 // 是否返回 vector 数据
@@ -219,7 +231,6 @@ public class VectorDBExample {
         for (Document doc : qdos) {
             System.out.println("\tres: " + doc.toString());
         }
-
 
         // searchById
         // 1. searchById 提供按 id 搜索的能力
@@ -246,14 +257,25 @@ public class VectorDBExample {
             }
         }
 
-
         // search
         // 1. search 提供按照 vector 搜索的能力
         // 其他选项类似 search 接口
 
         System.out.println("---------------------- search ----------------------");
+        queryParam = QueryParam.newBuilder()
+                .withDocumentIds(documentIds)
+                // limit 限制返回行数，0 到 16384 之间
+                .withLimit(2)
+                // 偏移
+                .withOffset(1)
+                // 指定返回的 fields
+                .withOutputFields(outputFields)
+                // 是否返回 vector 数据
+                .withRetrieveVector(true)
+                .build();
+        List<Document> allRes = collection.query(queryParam);
         SearchByVectorParam searchByVectorParam = SearchByVectorParam.newBuilder()
-                .addVector(Arrays.asList(0.2123, 0.23, 0.213))
+                .withVectors(allRes.stream().map(Document::getVector).collect(Collectors.toList()))
                 // 若使用 HNSW 索引，则需要指定参数ef，ef越大，召回率越高，但也会影响检索速度
                 .withParams(new HNSWSearchParams(100))
                 // 指定 Top K 的 K 值
@@ -265,8 +287,25 @@ public class VectorDBExample {
         List<List<Document>> svDocs = collection.search(searchByVectorParam);
         i = 0;
         for (List<Document> docs : svDocs) {
-            System.out.println("\tres: " + i);
-            i++;
+            System.out.println("\tres: " + i++);
+            for (Document doc : docs) {
+                System.out.println("\tres: " + doc.toString());
+            }
+        }
+
+        // searchByEmbeddingItems 返回类型为 SearchRes，接口查询过程中 embedding 可能会出现截断
+        // 如发生截断将会返回响应 warn 信息，如需确认是否截断可以使用 SearchRes#getWarning" 获取警告信息，
+        // 查询结果可以通过 SearchRes#getDocuments
+        System.out.println("---------------------- searchByEmbeddingItems ----------------------");
+        SearchByEmbeddingItemsParam searchByEmbeddingItemsParam = SearchByEmbeddingItemsParam.newBuilder()
+                .withEmbeddingItems(Arrays.asList("闻刘玄德新领徐州", "细作探知这个消息"))
+                .withParams(new HNSWSearchParams(100))
+                .withLimit(5)
+                .build();
+        SearchRes searchRes = collection.searchByEmbeddingItems(searchByEmbeddingItemsParam);
+        i = 0;
+        for (List<Document> docs : searchRes.getDocuments()) {
+            System.out.println("\tres: " + i++);
             for (Document doc : docs) {
                 System.out.println("\tres: " + doc.toString());
             }
@@ -277,11 +316,12 @@ public class VectorDBExample {
         Database database = client.database(DBNAME);
         Collection collection = database.describeCollection(COLL_NAME);
 
-        System.out.println("---------------------- update ----------------------");
+
         // update
         // 1. update 提供基于 [主键查询] 和 [Filter 过滤] 的部分字段更新或者非索引字段新增
 
         // filter 限制仅会更新 id = "0003"
+        System.out.println("---------------------- update ----------------------");
         Filter filterParam = new Filter("bookName=\"三国演义\"");
         List<String> documentIds = Arrays.asList("0001", "0003");
         UpdateParam updateParam = UpdateParam
@@ -297,12 +337,12 @@ public class VectorDBExample {
                 .build();
         collection.update(updateParam, updateDoc);
 
-        System.out.println("---------------------- delete ----------------------");
         // delete
         // 1. delete 提供基于[ 主键查询]和[Filter 过滤]的数据删除能力
         // 2. 删除功能会受限于 collection 的索引类型，部分索引类型不支持删除操作
 
         // filter 限制只会删除 id = "00001" 成功
+        System.out.println("---------------------- delete ----------------------");
         filterParam = new Filter("bookName=\"西游记\"");
         DeleteParam build = DeleteParam
                 .newBuilder()
@@ -311,34 +351,18 @@ public class VectorDBExample {
                 .build();
         collection.delete(build);
 
+        // notice：delete操作可用会有延迟
+        Thread.sleep(1000 * 5);
 
         // rebuild index
-        System.out.println("---------------------- rebuildIndex ----------------------");
-
+        System.out.println("---------------------- rebuild index ----------------------");
         RebuildIndexParam rebuildIndexParam = RebuildIndexParam
                 .newBuilder()
                 .withDropBeforeRebuild(false)
                 .withThrottle(1)
                 .build();
         collection.rebuildIndex(rebuildIndexParam);
-
-        Thread.sleep(1000 * 5);
-
-        // query
-        System.out.println("----------------------  query ----------------------");
-        documentIds = Arrays.asList("0001", "0002", "0003", "0004", "0005");
-        List<String> outputFields = Arrays.asList("id", "bookName", "page", "extend");
-        QueryParam queryParam = QueryParam.newBuilder()
-                .withDocumentIds(documentIds)
-                // 使用 filter 过滤数据
-                .withOutputFields(outputFields)
-                // 是否返回 vector 数据
-                .withRetrieveVector(false)
-                .build();
-        List<Document> qdos = collection.query(queryParam);
-        for (Document doc : qdos) {
-            System.out.println("\tres: " + doc.toString());
-        }
+        Thread.sleep(5 * 1000);
 
 
         // truncate 会清除整个 Collection 的数据，包括索引
@@ -346,19 +370,18 @@ public class VectorDBExample {
         AffectRes affectRes = database.truncateCollections(COLL_NAME);
         System.out.println("\tres: " + affectRes.toString());
 
-        // notice：delete操作可用会有延迟
-        Thread.sleep(1000 * 5);
+        Thread.sleep(5 * 1000);
     }
 
     private static void deleteAndDrop(VectorDBClient client) {
         Database database = client.database(DBNAME);
 
         // 删除 collection
-        System.out.println("---------------------- truncate collection ----------------------");
+        System.out.println("---------------------- dropCollection ----------------------");
         database.dropCollection(COLL_NAME);
 
         // 删除 database
-        System.out.println("---------------------- truncate collection ----------------------");
+        System.out.println("---------------------- dropDatabase ----------------------");
         client.dropDatabase(DBNAME);
     }
 
@@ -380,25 +403,62 @@ public class VectorDBExample {
      *     <li>【其他索引】：检索时需作为条件查询的字段，比如要按书籍的作者进行过滤，这个时候author字段就需要建立索引，
      *     否则无法在查询的时候对 author 字段进行过滤，不需要过滤的字段无需加索引，会浪费内存；</li>
      *     <li>向量数据库支持动态 Schema，写入数据时可以写入任何字段，无需提前定义，类似MongoDB.</li>
-     *     <li><例子中创建一个书籍片段的索引，例如书籍片段的信息包括 {id, vector, segment, bookName, author, page},
+     *     <li>例子中创建一个书籍片段的索引，例如书籍片段的信息包括 {id, vector, segment, bookName, author, page},
      *     id 为主键需要全局唯一，segment 为文本片段, vector 字段需要建立向量索引，假如我们在查询的时候要查询指定书籍
      *     名称的内容，这个时候需要对 bookName 建立索引，其他字段没有条件查询的需要，无需建立索引。/li>
+     *     <li>创建带 Embedding 的 collection 需要保证设置的 vector 索引的维度和 Embedding 所用模型生成向量维度一致，模型及维度关系
+     *     见下方表格
+     *     </li>
      * </ol>
+     * <table border>
+     * <caption>模型列表</caption>
+     *     <tr>
+     *         <th>model</th>
+     *         <th>dimension</th>
+     *     </tr>
+     *     <tr>
+     *         <td>bge-base-zh</td>
+     *         <td>768</td>
+     *     </tr>
+     *     <tr>
+     *         <td>m3e-base</td>
+     *         <td>768</td>
+     *     </tr>
+     *     <tr>
+     *         <td>text2vec-large-chinese</td>
+     *         <td>1024</td>
+     *     </tr>
+     *     <tr>
+     *         <td>e5-large-v2</td>
+     *         <td>1024</td>
+     *     </tr>
+     *     <tr>
+     *         <td>multilingual-e5-base</td>
+     *         <td>768</td>
+     *     </tr>
+     * </table>
      *
      * @param collName
      * @return
      */
-    private static CreateCollectionParam initCreateCollectionParam(String collName) {
+    private static CreateCollectionParam initCreateEmbeddingCollectionParam(String collName) {
         return CreateCollectionParam.newBuilder()
                 .withName(collName)
                 .withShardNum(3)
                 .withReplicaNum(2)
-                .withDescription("test collection0")
+                .withDescription("test embedding collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
-                .addField(new VectorIndex("vector", 3, IndexType.HNSW,
+                .addField(new VectorIndex("vector", BGE_BASE_ZH.getDimension(), IndexType.HNSW,
                         MetricType.COSINE, new HNSWParams(16, 200)))
                 .addField(new FilterIndex("bookName", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("author", FieldType.String, IndexType.FILTER))
+                .withEmbedding(
+                        Embedding
+                                .newBuilder()
+                                .withModel(BGE_BASE_ZH)
+                                .withField("text")
+                                .withVectorField("vector")
+                                .build())
                 .build();
     }
 
@@ -406,7 +466,6 @@ public class VectorDBExample {
      * 测试 Filter
      */
     public static void testFilter() {
-        System.out.println("---------------------- testFilter ----------------------");
         System.out.println("\tres: " + new Filter("author=\"jerry\"")
                 .and("a=1")
                 .or("r=\"or\"")

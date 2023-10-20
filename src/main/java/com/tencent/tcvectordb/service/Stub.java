@@ -1,5 +1,6 @@
 package com.tencent.tcvectordb.service;
 
+import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.collection.AICollection;
 import com.tencent.tcvectordb.model.collection.Collection;
 import com.tencent.tcvectordb.model.Database;
@@ -10,6 +11,7 @@ import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.service.param.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Stub for DB service API
@@ -135,5 +137,5 @@ public interface Stub {
 
     AffectRes updateAIDocument(UpdateParamInner updateParamInner);
 
-    BaseRes Upload(String databaseName, String collectionName, String filePath);
+    void upload(String databaseName, String collectionName, String filePath, Map<String, String> metadataMap) throws VectorDBException;
 }

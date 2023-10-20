@@ -4,6 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.qcloud.cos.COSClient;
+import com.qcloud.cos.ClientConfig;
+import com.qcloud.cos.auth.BasicSessionCredentials;
+import com.qcloud.cos.model.ObjectMetadata;
+import com.qcloud.cos.model.PutObjectRequest;
+import com.qcloud.cos.model.PutObjectResult;
+import com.qcloud.cos.region.Region;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.collection.AICollection;
 import com.tencent.tcvectordb.model.collection.Collection;
@@ -24,10 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -412,32 +416,42 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public BaseRes Upload(String databaseName, String collectionName, String filePath) {
+    public void upload(String databaseName, String collectionName, String filePath, Map<String, String> metadataMap) throws VectorDBException{
         File file = new File(filePath);
         if (!file.exists() || !file.isFile()){
-            return new BaseRes(400, "本地文件不存在", "");
+            throw new VectorDBException("本地文件不存在");
         }
 
         FileTypeEnum fileType = FileUtils.getFileType(file);
         if(fileType == FileTypeEnum.UNSUPPORT){
-            return new BaseRes(400, "only markdown file can upload", "");
+            throw new VectorDBException("only markdown file can upload");
         }
         UploadUrlRes uploadUrlRes = getUploadUrl(databaseName, collectionName, filePath, fileType.getDataFileType());
-        if(uploadUrlRes.getCredential()==null || uploadUrlRes.getCredential().getTmpSecretId().equals("")
-                || uploadUrlRes.getUpCondition()==null || uploadUrlRes.getUpCondition().getMaxSupportContentLength()){
-            return new BaseRes(400, "get file upload url failed", "");
+        if(uploadUrlRes.getCredential()==null || uploadUrlRes.getCredential().getTmpSecretId().equals("") || uploadUrlRes.getUpCondition()==null
+                || uploadUrlRes.getUpCondition().getMaxSupportContentLength()==0){
+            throw new VectorDBException("get file upload url failed");
         }
 
-
-        String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
-                databaseName, collectionName);
-
-        JsonNode jsonNode = this.post(url, body);
-        JsonNode dbsJson = jsonNode.get("collection");
-        if (dbsJson == null) {
-            return null;
+        if (file.length()> uploadUrlRes.getUpCondition().getMaxSupportContentLength()){
+            throw new VectorDBException(String.format("%s fileSize is invalid, support max content length is %d bytes",
+                    filePath, uploadUrlRes.getUpCondition().getMaxSupportContentLength()));
         }
-        return JsonUtils.collectionDeserializer(dbsJson.toString(), new TypeReference<BaseRes>() {});
+        String uploadPath = uploadUrlRes.getUploadPath();
+        String cosEndpoint = uploadUrlRes.getCosEndPoint();
+        String bucket = cosEndpoint.split("\\.")[0].replace("https://", "").replace("htt[://", "");
+        String region = cosEndpoint.split("\\.")[2];
+        BasicSessionCredentials cred = new BasicSessionCredentials(uploadUrlRes.getCredential().getTmpSecretId(),
+                uploadUrlRes.getCredential().getTmpSecretKey(), uploadUrlRes.getCredential().getToken());
+        ClientConfig cosClientConfig = new ClientConfig(new Region(region));
+        COSClient cosClient = new COSClient(cred, cosClientConfig);
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, uploadPath, file);
+        ObjectMetadata metadata = new ObjectMetadata();
+        if (!metadataMap.isEmpty()){
+            metadataMap.forEach(((key, value)-> metadata.addUserMetadata(key, value)));
+        }
+        putObjectRequest.withMetadata(metadata);
+        PutObjectResult putObjectResult = cosClient.putObject(putObjectRequest);
+        logger.debug("upload file, response:%s", JsonUtils.toJsonString(putObjectResult));
     }
 
 

@@ -8,13 +8,13 @@ public class UploadUrlRes extends BaseRes{
 
     private Credential credential;
 
-    private UpCondition upCondition;
+    private UploadCondtion upCondition;
 
-    public UpCondition getUpCondition() {
+    public UploadCondtion getUpCondition() {
         return upCondition;
     }
 
-    public void setUpCondition(UpCondition upCondition) {
+    public void setUpCondition(UploadCondtion upCondition) {
         this.upCondition = upCondition;
     }
 
@@ -61,15 +61,5 @@ public class UploadUrlRes extends BaseRes{
     }
 }
 
-class UpCondition{
-    private int maxSupportContentLength;
 
-    public int getMaxSupportContentLength() {
-        return maxSupportContentLength;
-    }
-
-    public void setMaxSupportContentLength(int maxSupportContentLength) {
-        this.maxSupportContentLength = maxSupportContentLength;
-    }
-}
 

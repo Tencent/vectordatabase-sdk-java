@@ -1,6 +1,6 @@
 package com.tencent.tcvectordb.model.param.entity;
 
-class Credential {
+public class Credential {
     private String tmpSecretId;
     private String tmpSecretKey;
 

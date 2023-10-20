@@ -27,6 +27,7 @@ import com.tencent.tcvectordb.model.collection.Collection;
 import com.tencent.tcvectordb.model.param.collection.CreateAICollectionParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
+import com.tencent.tcvectordb.model.param.entity.DataBaseTypeRes;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.Stub;
@@ -43,13 +44,14 @@ public class Database {
     private final ReadConsistencyEnum readConsistency;
 
     @JsonIgnore
-    private final DataBaseTypeEnum dbType;
+    private DataBaseTypeEnum dbType;
 
     public Database(Stub stub, String databaseName, ReadConsistencyEnum readConsistency) {
         this.stub = stub;
         this.databaseName = databaseName;
         this.readConsistency = readConsistency;
         this.dbType = DataBaseTypeEnum.BASE;
+        initDataBaseType();
     }
 
     public Database(Stub stub, String databaseName, ReadConsistencyEnum readConsistency, DataBaseTypeEnum dbType) {
@@ -57,6 +59,14 @@ public class Database {
         this.databaseName = databaseName;
         this.readConsistency = readConsistency;
         this.dbType = dbType;
+    }
+
+    private void initDataBaseType() throws VectorDBException{
+        DataBaseTypeRes dataBaseTypeRes = stub.describeDatabase(this);
+        if (dataBaseTypeRes.getCode() != 200){
+            throw new VectorDBException("init database type error");
+        }
+        this.dbType = DataBaseTypeEnum.valueOf(dataBaseTypeRes.getDatabaseType().getDbType());
     }
 
     public String getDatabaseName() {
@@ -119,6 +129,10 @@ public class Database {
     }
 
     public List<Collection> listAICollections() throws VectorDBException {
+        // 只有ai database可以查看ai表
+        if (!this.dbType.equals(DataBaseTypeEnum.AI)){
+            throw new VectorDBException("database can not support create ai collection");
+        }
         List<Collection> collections = stub.listAICollections(this.databaseName);
         collections.forEach(c -> {
             c.setStub(stub);
@@ -164,19 +178,6 @@ public class Database {
         return stub.deleteAIAlias(this.databaseName, aliasName);
     }
 
-    public AffectRes listAIAlias(String collectionName, String aliasName) {
-        if (!this.dbType.equals(DataBaseTypeEnum.AI)){
-            return new AffectRes();
-        }
-        return stub.listAIAlias(this.databaseName, collectionName, aliasName);
-    }
-
-    public AffectRes getAIAlias(String aliasName) {
-        if (!this.dbType.equals(DataBaseTypeEnum.AI)){
-            return new AffectRes();
-        }
-        return stub.getAIAlias(this.databaseName, aliasName);
-    }
 
     @Override
     public String toString() {

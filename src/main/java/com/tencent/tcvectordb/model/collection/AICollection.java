@@ -40,6 +40,7 @@ import com.tencent.tcvectordb.service.param.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * VectorDB Collection
@@ -75,6 +76,10 @@ public class AICollection extends BaseCollection{
     public AffectRes update(UpdateParam param, Document document) throws VectorDBException {
         return this.stub.updateAIDocument(
                 new UpdateParamInner(database, collection, param, document));
+    }
+
+    public void upload(String databaseName, String collectionName, String filePath, Map<String, String> metadataMap) throws VectorDBException {
+        this.stub.upload(databaseName, collectionName, filePath, metadataMap);
     }
 
     public BaseRes rebuildIndex(RebuildIndexParam rebuildIndexParam) throws VectorDBException{

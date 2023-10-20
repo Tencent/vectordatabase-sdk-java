@@ -22,7 +22,7 @@ package com.tencent.tcvectordb;
 
 import com.tencent.tcvectordb.client.VectorDBClient;
 import com.tencent.tcvectordb.exception.VectorDBException;
-import com.tencent.tcvectordb.model.Collection;
+import com.tencent.tcvectordb.model.collection.Collection;
 import com.tencent.tcvectordb.model.Database;
 import com.tencent.tcvectordb.model.DocField;
 import com.tencent.tcvectordb.model.Document;

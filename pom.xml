@@ -47,6 +47,11 @@
             <artifactId>log4j-slf4j-impl</artifactId>
             <version>${log4j.slf4j.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.qcloud</groupId>
+            <artifactId>cos_api</artifactId>
+            <version>5.6.175</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

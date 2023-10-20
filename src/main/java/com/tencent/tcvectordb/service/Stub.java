@@ -1,12 +1,12 @@
 package com.tencent.tcvectordb.service;
 
-import com.tencent.tcvectordb.model.Collection;
+import com.tencent.tcvectordb.model.collection.AICollection;
+import com.tencent.tcvectordb.model.collection.Collection;
 import com.tencent.tcvectordb.model.Database;
 import com.tencent.tcvectordb.model.Document;
+import com.tencent.tcvectordb.model.param.collection.CreateAICollectionParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
-import com.tencent.tcvectordb.model.param.entity.AffectRes;
-import com.tencent.tcvectordb.model.param.entity.BaseRes;
-import com.tencent.tcvectordb.model.param.entity.SearchRes;
+import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.service.param.*;
 
 import java.util.List;
@@ -27,6 +27,22 @@ public interface Stub {
     void dropDatabase(Database database);
 
     /**
+     * create ai_database
+     */
+    void createAIDatabase(Database database);
+
+    /**
+     * decribe database
+     * @param database
+     */
+    DataBaseTypeRes describeDatabase(Database database);
+
+    /**
+     * drop ai_database
+     */
+    void dropAIDatabase(Database database);
+
+    /**
      * list databases
      */
     List<String> listDatabases();
@@ -35,6 +51,11 @@ public interface Stub {
      * create collection
      */
     void createCollection(CreateCollectionParam params);
+
+    /**
+     * create AI collection
+     */
+    void createAICollection(CreateAICollectionParam params);
 
     /**
      * list collections
@@ -95,4 +116,24 @@ public interface Stub {
      * rebuild index
      */
     BaseRes rebuildIndex(RebuildIndexParamInner param);
+
+    AffectRes setAIAlias(String databaseName, String collectionName, String aliasName);
+
+    AffectRes deleteAIAlias(String databaseName, String aliasName);
+
+    List<Collection> listAICollections(String databaseName);
+
+    AICollection describeAICollection(String databaseName, String collectionName);
+
+    void dropAICollection(String databaseName, String collectionName);
+
+    List<Document> queryAIDocument(QueryParamInner queryParamInner);
+
+    AffectRes deleteAIDocument(DeleteParamInner deleteParamInner);
+
+    SearchRes searchAIDocument(SearchParamInner searchParamInner);
+
+    AffectRes updateAIDocument(UpdateParamInner updateParamInner);
+
+    BaseRes Upload(String databaseName, String collectionName, String filePath);
 }

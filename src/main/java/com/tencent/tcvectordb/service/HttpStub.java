@@ -5,22 +5,24 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencent.tcvectordb.exception.VectorDBException;
-import com.tencent.tcvectordb.model.Collection;
+import com.tencent.tcvectordb.model.collection.AICollection;
+import com.tencent.tcvectordb.model.collection.Collection;
 import com.tencent.tcvectordb.model.Database;
 import com.tencent.tcvectordb.model.DocField;
 import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
-import com.tencent.tcvectordb.model.param.entity.AffectRes;
-import com.tencent.tcvectordb.model.param.entity.BaseRes;
-import com.tencent.tcvectordb.model.param.entity.SearchRes;
+import com.tencent.tcvectordb.model.param.entity.*;
+import com.tencent.tcvectordb.model.param.enums.FileTypeEnum;
 import com.tencent.tcvectordb.service.param.*;
+import com.tencent.tcvectordb.utils.FileUtils;
 import com.tencent.tcvectordb.utils.JsonUtils;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,6 +71,27 @@ public class HttpStub implements Stub {
     }
 
     @Override
+    public void createAIDatabase(Database database) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DB_CREATE);
+        this.post(url, database.toString());
+    }
+
+    @Override
+    public DataBaseTypeRes describeDatabase(Database database) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DB_DESCRIBE);
+        String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
+                database.getDatabaseName());
+        JsonNode jsonNode = this.post(url, body);
+        return JsonUtils.parseObject(jsonNode.toString(), DataBaseTypeRes.class);
+    }
+
+    @Override
+    public void dropAIDatabase(Database database) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DB_DROP);
+        this.post(url, database.toString());
+    }
+
+    @Override
     public List<String> listDatabases() {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DB_LIST);
         JsonNode jsonNode = this.get(url);
@@ -88,6 +111,12 @@ public class HttpStub implements Stub {
     public void createCollection(CreateCollectionParam param) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_CREATE);
         this.post(url, param.toString());
+    }
+
+    @Override
+    public void createAICollection(CreateAICollectionParam params) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_COL_CREATE);
+        this.post(url, params.toString());
     }
 
     @Override
@@ -240,6 +269,177 @@ public class HttpStub implements Stub {
         JsonNode jsonNode = this.post(url, param.toString());
         return JsonUtils.parseObject(jsonNode.toString(), BaseRes.class);
     }
+
+    @Override
+    public AffectRes setAIAlias(String databaseName, String collectionName, String aliasName) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_ALIAS_SET);
+        String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\",\"alias\":\"%s\"}",
+                databaseName, collectionName, aliasName);
+        JsonNode jsonNode = this.post(url, body);
+        return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
+    }
+
+    @Override
+    public AffectRes deleteAIAlias(String databaseName, String aliasName) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_ALIAS_DELETE);
+        String body = String.format("{\"database\":\"%s\",\"alias\":\"%s\"}",
+                databaseName, aliasName);
+        JsonNode jsonNode = this.post(url, body);
+        return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
+    }
+
+    @Override
+    public List<Collection> listAICollections(String databaseName) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_COL_LIST);
+        JsonNode jsonNode = this.post(url, String.format("{\"database\":\"%s\"}", databaseName));
+        JsonNode closJson = jsonNode.get("collections");
+        if (closJson == null) {
+            return new ArrayList<>();
+        }
+        return JsonUtils.collectionDeserializer(closJson.toString(), new TypeReference<List<Collection>>() {});
+    }
+
+    @Override
+    public AICollection describeAICollection(String databaseName, String collectionName) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_COL_DESCRIBE);
+        String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
+                databaseName, collectionName);
+        JsonNode jsonNode = this.post(url, body);
+        JsonNode dbsJson = jsonNode.get("collection");
+        if (dbsJson == null) {
+            return null;
+        }
+        return JsonUtils.collectionDeserializer(dbsJson.toString(), new TypeReference<AICollection>() {});
+    }
+
+    @Override
+    public void dropAICollection(String databaseName, String collectionName) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_COL_DROP);
+        String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
+                databaseName, collectionName);
+        this.post(url, body);
+    }
+
+    @Override
+    public List<Document> queryAIDocument(QueryParamInner queryParamInner) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_QUERY);
+        JsonNode jsonNode = this.post(url, queryParamInner.toString());
+        JsonNode docsNode = jsonNode.get("documents");
+        List<Document> dosc = new ArrayList<>();
+        if (docsNode == null) {
+            return dosc;
+        }
+        try {
+            Iterator<JsonNode> iterator = docsNode.elements();
+            while (iterator.hasNext()) {
+                JsonNode node = iterator.next();
+                Document doc = node2Doc(node);
+                dosc.add(doc);
+            }
+            return dosc;
+        } catch (JsonProcessingException ex) {
+            throw new VectorDBException(String.format("VectorDBServer response " +
+                    "from query error: can't parse documents=%s", docsNode));
+        }
+    }
+
+    @Override
+    public AffectRes deleteAIDocument(DeleteParamInner deleteParamInner) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_DELETE);
+        JsonNode jsonNode = this.post(url, deleteParamInner.toString());
+        return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
+    }
+
+    @Override
+    public SearchRes searchAIDocument(SearchParamInner searchParamInner) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_SEARCH);
+        JsonNode jsonNode = this.post(url, searchParamInner.toString());
+        JsonNode multiDocsNode = jsonNode.get("documents");
+        int code = 0;
+        if (jsonNode.get("code") != null) {
+            code = jsonNode.get("code").asInt();
+        }
+        String msg = "";
+        if (jsonNode.get("msg") != null) {
+            msg = jsonNode.get("msg").asText();
+        }
+        String warning = "";
+        if (jsonNode.get("warning") != null) {
+            warning = jsonNode.get("warning").asText();
+        }
+        if (multiDocsNode == null) {
+            return new SearchRes(code, msg, warning, Collections.emptyList());
+        }
+        try {
+            List<List<Document>> multiDosc = new ArrayList<>();
+            Iterator<JsonNode> multiIter = multiDocsNode.elements();
+            while (multiIter.hasNext()) {
+                JsonNode docNode = multiIter.next();
+                Iterator<JsonNode> iter = docNode.elements();
+                List<Document> docs = new ArrayList<>();
+                while (iter.hasNext()) {
+                    JsonNode node = iter.next();
+                    Document doc = node2Doc(node);
+                    docs.add(doc);
+                }
+                multiDosc.add(docs);
+            }
+            return new SearchRes(code, msg, warning, multiDosc);
+        } catch (JsonProcessingException ex) {
+            throw new VectorDBException(String.format("VectorDBServer response " +
+                    "from search error: can't parse documents=%s", multiDocsNode));
+        }
+    }
+
+    @Override
+    public AffectRes updateAIDocument(UpdateParamInner updateParamInner) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_UPDATE);
+        JsonNode jsonNode = this.post(url, updateParamInner.toString());
+        return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
+    }
+
+    public UploadUrlRes getUploadUrl(String databaseName, String collectionName, String fileName, String fileType) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_UPLOADER_URL);
+        String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\",\"file_name\":\"%s\"," +
+                        "\"file_type\":\"%s\"}",
+                databaseName, collectionName, fileName, fileType);
+        JsonNode jsonNode = this.post(url, body);
+        JsonNode dbsJson = jsonNode.get("collection");
+        if (dbsJson == null) {
+            return null;
+        }
+        return JsonUtils.collectionDeserializer(dbsJson.toString(), new TypeReference<UploadUrlRes>() {});
+    }
+
+    @Override
+    public BaseRes Upload(String databaseName, String collectionName, String filePath) {
+        File file = new File(filePath);
+        if (!file.exists() || !file.isFile()){
+            return new BaseRes(400, "本地文件不存在", "");
+        }
+
+        FileTypeEnum fileType = FileUtils.getFileType(file);
+        if(fileType == FileTypeEnum.UNSUPPORT){
+            return new BaseRes(400, "only markdown file can upload", "");
+        }
+        UploadUrlRes uploadUrlRes = getUploadUrl(databaseName, collectionName, filePath, fileType.getDataFileType());
+        if(uploadUrlRes.getCredential()==null || uploadUrlRes.getCredential().getTmpSecretId().equals("")
+                || uploadUrlRes.getUpCondition()==null || uploadUrlRes.getUpCondition().getMaxSupportContentLength()){
+            return new BaseRes(400, "get file upload url failed", "");
+        }
+
+
+        String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
+                databaseName, collectionName);
+
+        JsonNode jsonNode = this.post(url, body);
+        JsonNode dbsJson = jsonNode.get("collection");
+        if (dbsJson == null) {
+            return null;
+        }
+        return JsonUtils.collectionDeserializer(dbsJson.toString(), new TypeReference<BaseRes>() {});
+    }
+
 
     private JsonNode get(String url) {
         Request request = new Request.Builder()

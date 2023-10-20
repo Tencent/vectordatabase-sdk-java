@@ -23,6 +23,7 @@ package com.tencent.tcvectordb.client;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.Database;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
+import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.HttpStub;
 import com.tencent.tcvectordb.service.Stub;
@@ -43,14 +44,27 @@ public class VectorDBClient {
     }
 
     public Database createDatabase(String databaseName) throws VectorDBException {
-        Database db = database(databaseName, readConsistency);
+        Database db = database(databaseName, readConsistency, DataBaseTypeEnum.BASE);
         stub.createDatabase(db);
         return db;
     }
 
     public Database dropDatabase(String databaseName) throws VectorDBException {
-        Database db = database(databaseName, readConsistency);
+        Database db = database(databaseName, readConsistency, DataBaseTypeEnum.BASE);
         stub.dropDatabase(db);
+        return db;
+    }
+
+    public Database createAIDatabase(String databaseName) throws VectorDBException {
+        Database db = database(databaseName, readConsistency, DataBaseTypeEnum.AI);
+        stub.createAIDatabase(db);
+
+        return db;
+    }
+
+    public Database dropAIDatabase(String databaseName) throws VectorDBException {
+        Database db = database(databaseName, readConsistency, DataBaseTypeEnum.AI);
+        stub.dropAIDatabase(db);
         return db;
     }
 
@@ -66,8 +80,8 @@ public class VectorDBClient {
      * @return
      */
     @Deprecated
-    public Database database(String databaseName, ReadConsistencyEnum readConsistency) {
-        return new Database(this.stub, databaseName, readConsistency);
+    public Database database(String databaseName, ReadConsistencyEnum readConsistency, DataBaseTypeEnum dataBaseTypeEnum) {
+        return new Database(this.stub, databaseName, readConsistency, dataBaseTypeEnum);
     }
 
     public Database database(String databaseName) {

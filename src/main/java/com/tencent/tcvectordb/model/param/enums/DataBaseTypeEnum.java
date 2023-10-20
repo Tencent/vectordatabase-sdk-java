@@ -1,0 +1,25 @@
+package com.tencent.tcvectordb.model.param.enums;
+
+import com.fasterxml.jackson.annotation.JsonValue;
+
+public enum DataBaseTypeEnum {
+    BASE("BASE"),
+    AI("AI");
+
+    private final String dataBaseType;
+
+    DataBaseTypeEnum(String dataBaseType) {
+        this.dataBaseType = dataBaseType;
+    }
+
+    @JsonValue
+    public String getDataBaseType() {
+        return dataBaseType;
+    }
+}
+
+
+
+
+
+

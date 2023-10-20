@@ -30,15 +30,50 @@ import java.util.List;
 /**
  * Create Collection Param
  */
-public class CreateCollectionParam extends Collection {
+public class CreateAICollectionParam extends Collection {
 
-    private CreateCollectionParam(Builder builder) {
+    // 最大文件数
+    private int maxFiles;
+    // 文件的平均大小
+    private int averageFileSize;
+
+    private String language;
+
+    private DocumentPreprocessParams documentPreprocess;
+
+    private DocumentIndexParams documentIndex;
+
+    private CreateAICollectionParam(Builder builder) {
         this.collection = builder.name;
         this.replicaNum = builder.replicaNum;
         this.shardNum = builder.shardNum;
         this.description = builder.description;
         this.indexes = builder.indexes;
-        this.embedding = builder.embedding;
+        this.maxFiles = builder.maxFiles;
+        this.averageFileSize = builder.averageFileSize;
+        this.documentPreprocess = builder.documentPreprocess;
+        this.documentIndex = builder.documentIndex;
+        this.language = builder.language;
+    }
+
+    public int getMaxFiles() {
+        return maxFiles;
+    }
+
+    public int getAverageFileSize() {
+        return averageFileSize;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public DocumentPreprocessParams getDocumentPreprocess() {
+        return documentPreprocess;
+    }
+
+    public DocumentIndexParams getDocumentIndex() {
+        return documentIndex;
     }
 
     public static Builder newBuilder() {
@@ -50,9 +85,15 @@ public class CreateCollectionParam extends Collection {
         private int replicaNum = 2;
         private int shardNum = 1;
         private String description;
-
-        private Embedding embedding;
         private final List<IndexField> indexes;
+        private int maxFiles;
+        private int averageFileSize;
+
+        private String language;
+
+        private DocumentPreprocessParams documentPreprocess;
+
+        private DocumentIndexParams documentIndex;
 
         private Builder() {
             this.indexes = new ArrayList<>();
@@ -83,19 +124,39 @@ public class CreateCollectionParam extends Collection {
             return this;
         }
 
-        public Builder withEmbedding(Embedding embedding) {
-            this.embedding = embedding;
+        public Builder withMaxFiles(int maxFiles) {
+            this.maxFiles = maxFiles;
             return this;
         }
 
-        public CreateCollectionParam build() throws ParamException {
+        public Builder withAverageFileSize(int averageFileSize) {
+            this.averageFileSize = averageFileSize;
+            return this;
+        }
+
+        public Builder withLanguage(LanuageType languageType) {
+            this.language = languageType.getValue();
+            return this;
+        }
+
+        public Builder withDocumentPreprocess(DocumentPreprocessParams documentPreprocess) {
+            this.documentPreprocess = documentPreprocess;
+            return this;
+        }
+
+        public Builder withDocumentIndex(DocumentIndexParams documentIndex) {
+            this.documentIndex = documentIndex;
+            return this;
+        }
+
+        public CreateAICollectionParam build() throws ParamException {
             if (StringUtils.isEmpty(this.name)) {
                 throw new ParamException("ConnectParam error: name is null");
             }
             if (this.indexes.isEmpty()) {
                 throw new ParamException("ConnectParam error: indexes is empty");
             }
-            return new CreateCollectionParam(this);
+            return new CreateAICollectionParam(this);
         }
     }
 

@@ -21,6 +21,8 @@
 package com.tencent.tcvectordb.model.param.collection;
 
 import com.tencent.tcvectordb.exception.ParamException;
+import com.tencent.tcvectordb.model.collection.AICollection;
+import com.tencent.tcvectordb.model.collection.BaseCollection;
 import com.tencent.tcvectordb.model.collection.Collection;
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,7 +32,7 @@ import java.util.List;
 /**
  * Create Collection Param
  */
-public class CreateAICollectionParam extends Collection {
+public class CreateAICollectionParam extends AICollection {
 
     // 最大文件数
     private int maxFiles;

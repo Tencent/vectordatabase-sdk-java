@@ -123,7 +123,7 @@ public interface Stub {
 
     AffectRes deleteAIAlias(String databaseName, String aliasName);
 
-    List<Collection> listAICollections(String databaseName);
+    List<AICollection> listAICollections(String databaseName);
 
     AICollection describeAICollection(String databaseName, String collectionName);
 

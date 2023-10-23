@@ -128,12 +128,12 @@ public class Database {
         return describeCollection(collectionName);
     }
 
-    public List<Collection> listAICollections() throws VectorDBException {
+    public List<AICollection> listAICollections() throws VectorDBException {
         // 只有ai database可以查看ai表
         if (!this.dbType.equals(DataBaseTypeEnum.AI)){
             throw new VectorDBException("database can not support create ai collection");
         }
-        List<Collection> collections = stub.listAICollections(this.databaseName);
+        List<AICollection> collections = stub.listAICollections(this.databaseName);
         collections.forEach(c -> {
             c.setStub(stub);
             c.setReadConsistency(readConsistency);
@@ -141,7 +141,7 @@ public class Database {
         return collections;
     }
 
-    public Collection createAICollection(CreateAICollectionParam param) throws VectorDBException {
+    public AICollection createAICollection(CreateAICollectionParam param) throws VectorDBException {
         // 只有ai database可以创建ai表
         if (!this.dbType.equals(DataBaseTypeEnum.AI)){
             throw new VectorDBException("database can not support create ai collection");

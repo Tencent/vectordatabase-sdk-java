@@ -293,14 +293,14 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public List<Collection> listAICollections(String databaseName) {
+    public List<AICollection> listAICollections(String databaseName) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_COL_LIST);
         JsonNode jsonNode = this.post(url, String.format("{\"database\":\"%s\"}", databaseName));
         JsonNode closJson = jsonNode.get("collections");
         if (closJson == null) {
             return new ArrayList<>();
         }
-        return JsonUtils.collectionDeserializer(closJson.toString(), new TypeReference<List<Collection>>() {});
+        return JsonUtils.collectionDeserializer(closJson.toString(), new TypeReference<List<AICollection>>() {});
     }
 
     @Override

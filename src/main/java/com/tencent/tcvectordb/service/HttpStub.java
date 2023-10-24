@@ -398,15 +398,15 @@ public class HttpStub implements Stub {
 
     public UploadUrlRes getUploadUrl(String databaseName, String collectionName, String fileName, String fileType) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_UPLOADER_URL);
-        String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\",\"file_name\":\"%s\"," +
-                        "\"file_type\":\"%s\"}",
+        String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\",\"fileName\":\"%s\"," +
+                        "\"fileType\":\"%s\"}",
                 databaseName, collectionName, fileName, fileType);
         JsonNode jsonNode = this.post(url, body);
         return JsonUtils.collectionDeserializer(jsonNode.toString(), new TypeReference<UploadUrlRes>() {});
     }
 
     @Override
-    public void upload(String databaseName, String collectionName, String filePath, Map<String, String> metadataMap) throws VectorDBException{
+    public void upload(String databaseName, String collectionName, String filePath) throws VectorDBException{
         File file = new File(filePath);
         if (!file.exists() || !file.isFile()){
             throw new VectorDBException("file is not existed");
@@ -417,28 +417,25 @@ public class HttpStub implements Stub {
             throw new VectorDBException("only markdown file can upload");
         }
         UploadUrlRes uploadUrlRes = getUploadUrl(databaseName, collectionName, file.getName(), fileType.getDataFileType());
-        if(uploadUrlRes.getCredential()==null || uploadUrlRes.getCredential().getTmpSecretId().equals("") || uploadUrlRes.getUpCondition()==null
-                || uploadUrlRes.getUpCondition().getMaxSupportContentLength()==0){
+        if(uploadUrlRes.getCredentials()==null || uploadUrlRes.getCredentials().getTmpSecretId().equals("") || uploadUrlRes.getUploadCondition()==null
+                || uploadUrlRes.getUploadCondition().getMaxSupportContentLength()==0){
             throw new VectorDBException("get file upload url failed");
         }
 
-        if (file.length()> uploadUrlRes.getUpCondition().getMaxSupportContentLength()){
+        if (file.length()> uploadUrlRes.getUploadCondition().getMaxSupportContentLength()){
             throw new VectorDBException(String.format("%s fileSize is invalid, support max content length is %d bytes",
-                    filePath, uploadUrlRes.getUpCondition().getMaxSupportContentLength()));
+                    filePath, uploadUrlRes.getUploadCondition().getMaxSupportContentLength()));
         }
         String uploadPath = uploadUrlRes.getUploadPath();
-        String cosEndpoint = uploadUrlRes.getCosEndPoint();
+        String cosEndpoint = uploadUrlRes.getCosEndpoint();
         String bucket = cosEndpoint.split("\\.")[0].replace("https://", "").replace("htt[://", "");
         String region = cosEndpoint.split("\\.")[2];
-        BasicSessionCredentials cred = new BasicSessionCredentials(uploadUrlRes.getCredential().getTmpSecretId(),
-                uploadUrlRes.getCredential().getTmpSecretKey(), uploadUrlRes.getCredential().getToken());
+        BasicSessionCredentials cred = new BasicSessionCredentials(uploadUrlRes.getCredentials().getTmpSecretId(),
+                uploadUrlRes.getCredentials().getTmpSecretKey(), uploadUrlRes.getCredentials().getToken());
         ClientConfig cosClientConfig = new ClientConfig(new Region(region));
         COSClient cosClient = new COSClient(cred, cosClientConfig);
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, uploadPath, file);
         ObjectMetadata metadata = new ObjectMetadata();
-        if (!metadataMap.isEmpty()){
-            metadataMap.forEach(((key, value)-> metadata.addUserMetadata(key, value)));
-        }
         metadata.addUserMetadata("x-cos-meta-fileType", fileType.getDataFileType());
         metadata.addUserMetadata("x-cos-meta-id", uploadUrlRes.getFileId());
         putObjectRequest.withMetadata(metadata);
@@ -543,7 +540,7 @@ public class HttpStub implements Stub {
                 if (ele.isInt()) {
                     builder.addFilterField(new DocField(name, ele.asInt()));
                 } else if (ele.isLong()) {
-                    builder.addFilterField(new DocField(name, ele.isLong()));
+                    builder.addFilterField(new DocField(name, ele.asLong()));
                 } else {
                     builder.addFilterField(new DocField(name, ele.asText()));
                 }

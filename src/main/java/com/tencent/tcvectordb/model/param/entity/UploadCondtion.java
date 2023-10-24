@@ -1,9 +1,6 @@
 package com.tencent.tcvectordb.model.param.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class UploadCondtion {
-    @JsonProperty(value = "max_support_content_length")
     private int maxSupportContentLength;
 
     public int getMaxSupportContentLength() {

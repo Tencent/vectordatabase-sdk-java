@@ -31,14 +31,11 @@ import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
-import com.tencent.tcvectordb.model.param.entity.SearchRes;
 import com.tencent.tcvectordb.model.param.enums.AppendKeywordsToChunkEnum;
 import com.tencent.tcvectordb.model.param.enums.AppendTitleToChunkEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -59,8 +56,8 @@ public class VectorDBExampleWithAI_doc {
         System.out.println("---------------------- clear before test ----------------------");
         anySafe(() -> clear(client));
         createDatabaseAndCollection(client);
-        uploadFile(client);
-        // 解析加载文件需要等待时间
+        uploadFile(client, "/data/home/yihaoan/projects/test/test4.md");
+//        // 解析加载文件需要等待时间
         Thread.sleep(1000 * 10);
         queryData(client);
         updateAndDelete(client);
@@ -100,9 +97,9 @@ public class VectorDBExampleWithAI_doc {
         }
     }
 
-    private static void createDatabaseAndCollection(VectorDBClient client) {
+    private static void createDatabaseAndCollection(VectorDBClient client) throws InterruptedException {
         // 1. 创建数据库
-//        System.out.println("---------------------- create AI Database ----------------------");
+        System.out.println("---------------------- create AI Database ----------------------");
         Database db = client.createAIDatabase(DBNAME);
 
         // 2. 列出所有数据库
@@ -111,6 +108,8 @@ public class VectorDBExampleWithAI_doc {
         for (String s : database) {
             System.out.println("\tres: " + s);
         }
+
+//        Database db = client.database(DBNAME);
 
         // 3. 创建 collection
         System.out.println("---------------------- createCollection ----------------------");
@@ -126,15 +125,15 @@ public class VectorDBExampleWithAI_doc {
 
         // 5. 设置 collection 别名
         System.out.println("---------------------- setAlias ----------------------");
-//        Database db = client.database(DBNAME);
         AffectRes affectRes = db.setAIAlias(COLL_NAME, COLL_NAME_ALIAS);
         System.out.println("\tres: " + affectRes.toString());
-
+        Thread.sleep(5*1000);
 
         // 6. describe collection
         System.out.println("---------------------- describeCollection ----------------------");
         AICollection descCollRes = db.describeAICollection(COLL_NAME);
         System.out.println("\tres: " + descCollRes.toString());
+
 
         // 7. delete alias
         System.out.println("---------------------- deleteAlias ----------------------");
@@ -148,10 +147,10 @@ public class VectorDBExampleWithAI_doc {
 
     }
 
-    private static void uploadFile(VectorDBClient client) {
+    private static void uploadFile(VectorDBClient client, String filePath) {
         Database database = client.database(DBNAME);
         AICollection collection = database.describeAICollection(COLL_NAME);
-        collection.upload(DBNAME, COLL_NAME, "/data/home/yihaoan/projects/test/test2.md", new HashMap<>());
+        collection.upload(DBNAME, COLL_NAME, filePath);
     }
 
     private static void queryData(VectorDBClient client) {
@@ -165,9 +164,9 @@ public class VectorDBExampleWithAI_doc {
         // 4. 如果仅需要部分 field 的数据，可以指定 output_fields 用于指定返回数据包含哪些 field，不指定默认全部返回
         System.out.println("---------------------- query ----------------------");
         Filter filterParam = new Filter("_indexed_status=2");
-        List<String> documentIds = Arrays.asList("1165953225640378368", "1165953228927545344");
+//        List<String> documentIds = Arrays.asList("1165953225640378368", "1165953228927545344");
         QueryParam queryParam = QueryParam.newBuilder()
-                .withDocumentIds(documentIds)
+//                .withDocumentIds(documentIds)
                 // 使用 filter 过滤数据
                 .withFilter(filterParam)
                 // limit 限制返回行数，1 到 16384 之间
@@ -205,8 +204,8 @@ public class VectorDBExampleWithAI_doc {
 
         // filter 限制仅会更新 id = "0003"
         System.out.println("---------------------- update ----------------------");
-        Filter filterParam = new Filter("_indexed_status=2");
-        List<String> documentIds = Arrays.asList("1165953225640378368", "1165953228927545344");
+        Filter filterParam = new Filter("_indexed_status=0");
+        List<String> documentIds = Arrays.asList("1166304506301120512", "1166305232221896704");
         UpdateParam updateParam = UpdateParam
                 .newBuilder()
                 .addAllDocumentId(documentIds)
@@ -226,11 +225,11 @@ public class VectorDBExampleWithAI_doc {
 
         //     filter 限制只会删除 _indexed_status=0 成功
         System.out.println("---------------------- delete ----------------------");
-        filterParam = new Filter("_indexed_status=0");
+        Filter filterParam1 = new Filter("_indexed_status=0");
         DeleteParam build = DeleteParam
                 .newBuilder()
                 .addAllDocumentId(documentIds)
-                .withFilter(filterParam)
+                .withFilter(filterParam1)
                 .build();
         AffectRes affectRes = collection.delete(build);
         System.out.println("\tres: " + affectRes.toString());
@@ -250,10 +249,6 @@ public class VectorDBExampleWithAI_doc {
 
 
     private static void clear(VectorDBClient client) {
-//        List<String> databases = client.listDatabase();
-//        for (String database : databases) {
-//            client.dropDatabase(database);
-//        }
         client.dropAIDatabase(DBNAME);
     }
 

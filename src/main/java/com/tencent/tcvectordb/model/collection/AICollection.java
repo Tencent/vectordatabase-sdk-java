@@ -85,8 +85,8 @@ public class AICollection extends BaseCollection{
                 new UpdateParamInner(database, collection, param, document));
     }
 
-    public void upload(String databaseName, String collectionName, String filePath, Map<String, String> metadataMap) throws VectorDBException {
-        this.stub.upload(databaseName, collectionName, filePath, metadataMap);
+    public void upload(String databaseName, String collectionName, String filePath) throws VectorDBException {
+        this.stub.upload(databaseName, collectionName, filePath);
     }
 
     public BaseRes rebuildIndex(RebuildIndexParam rebuildIndexParam) throws VectorDBException{

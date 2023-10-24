@@ -137,5 +137,5 @@ public interface Stub {
 
     AffectRes updateAIDocument(UpdateParamInner updateParamInner);
 
-    void upload(String databaseName, String collectionName, String filePath, Map<String, String> metadataMap) throws VectorDBException;
+    void upload(String databaseName, String collectionName, String filePath) throws VectorDBException;
 }

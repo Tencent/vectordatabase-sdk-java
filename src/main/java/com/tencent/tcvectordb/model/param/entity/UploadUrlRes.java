@@ -1,37 +1,26 @@
 package com.tencent.tcvectordb.model.param.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class UploadUrlRes extends BaseRes{
-    @JsonProperty(value = "cos_endpoint")
-    private String cosEndPoint;
-
-    @JsonProperty(value = "upload_path")
+    private String cosEndpoint;
     private String uploadPath;
-
-    @JsonProperty(value = "file_id")
     private String fileId;
+    private Credential credentials;
+    private UploadCondtion uploadCondition;
 
-    @JsonProperty(value = "credentials")
-    private Credential credential;
-
-    @JsonProperty(value = "upload_condition")
-    private UploadCondtion upCondition;
-
-    public UploadCondtion getUpCondition() {
-        return upCondition;
+    public UploadCondtion getUploadCondition() {
+        return uploadCondition;
     }
 
-    public void setUpCondition(UploadCondtion upCondition) {
-        this.upCondition = upCondition;
+    public void setUploadCondition(UploadCondtion uploadCondition) {
+        this.uploadCondition = uploadCondition;
     }
 
-    public String getCosEndPoint() {
-        return cosEndPoint;
+    public String getCosEndpoint() {
+        return cosEndpoint;
     }
 
-    public void setCosEndPoint(String cosEndPoint) {
-        this.cosEndPoint = cosEndPoint;
+    public void setCosEndpoint(String cosEndpoint) {
+        this.cosEndpoint = cosEndpoint;
     }
 
     public String getUploadPath() {
@@ -50,18 +39,18 @@ public class UploadUrlRes extends BaseRes{
         this.fileId = fileId;
     }
 
-    public Credential getCredential() {
-        return credential;
+    public Credential getCredentials() {
+        return credentials;
     }
 
     public void setCredentials(Credential credential) {
-        this.credential = credential;
+        this.credentials = credential;
     }
 
     @Override
     public String toString() {
         return "UploadUrlRes{" +
-                "cos_endpoint=" + cosEndPoint +
+                "cos_endpoint=" + cosEndpoint +
                 "upload_path=" + uploadPath +
                 ", code=" + code +
                 ", msg='" + msg + '\'' +

@@ -7,7 +7,7 @@ import java.io.File;
 public class FileUtils {
     public static FileTypeEnum getFileType(File file) {
         String fileName = file.getName();
-        String fileType = fileName.substring(fileName.lastIndexOf("."));
+        String fileType = fileName.substring(fileName.lastIndexOf(".")+1);
         if (fileType.equals("") || fileType.equals("md") || fileType.equals("markdown")){
             return FileTypeEnum.MARKDOWN;
         }

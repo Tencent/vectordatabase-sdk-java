@@ -20,34 +20,42 @@
 
 package com.tencent.tcvectordb.model.collection;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.Document;
-import com.tencent.tcvectordb.model.param.collection.Embedding;
-import com.tencent.tcvectordb.model.param.collection.IndexField;
 import com.tencent.tcvectordb.model.param.dml.*;
-import com.tencent.tcvectordb.model.param.entity.AffectRes;
-import com.tencent.tcvectordb.model.param.entity.BaseRes;
-import com.tencent.tcvectordb.model.param.entity.SearchRes;
-import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
-import com.tencent.tcvectordb.service.Stub;
+import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.service.param.*;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * VectorDB Collection
  */
 public class AICollection extends BaseCollection{
+    private AIConfig aiConfig;
+    private AIStatus aiStatus;
+
+    public AIStatus getAiStatus() {
+        return aiStatus;
+    }
+
+    public void setAiStatus(AIStatus aiStatus) {
+        this.aiStatus = aiStatus;
+    }
 
     public AICollection() {
+    }
+
+    public AIConfig getAiConfig() {
+        return aiConfig;
+    }
+
+    public void setAiConfig(AIConfig aiConfig) {
+        this.aiConfig = aiConfig;
     }
 
     public List<Document> query(QueryParam param) throws VectorDBException {
@@ -55,7 +63,7 @@ public class AICollection extends BaseCollection{
                 new QueryParamInner(database, collection, param, this.readConsistency));
     }
 
-    public List<List<Document>> search(SearchParam param) throws VectorDBException {
+    public List<Document> search(SearchParam param) throws VectorDBException {
         if(param.isRetrieveVector()){
            throw new VectorDBException("can not retrieve vector");
         }
@@ -64,8 +72,7 @@ public class AICollection extends BaseCollection{
     }
 
     public List<List<Document>> searchById(SearchByIdParam param) throws VectorDBException {
-        return this.stub.searchAIDocument(new SearchParamInner(
-                database, collection, param, this.readConsistency)).getDocuments();
+        throw new VectorDBException("can not support search by id");
     }
 
     public AffectRes delete(DeleteParam param) throws VectorDBException {
@@ -83,7 +90,7 @@ public class AICollection extends BaseCollection{
     }
 
     public BaseRes rebuildIndex(RebuildIndexParam rebuildIndexParam) throws VectorDBException{
-        throw new VectorDBException("can not supprot rebuild");
+        throw new VectorDBException("can not support rebuild");
     }
 
     @Override

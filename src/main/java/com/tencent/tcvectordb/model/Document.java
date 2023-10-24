@@ -62,6 +62,26 @@ public class Document {
         return Collections.unmodifiableList(vector);
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setVector(List<Double> vector) {
+        this.vector = vector;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
+    }
+
+    public void setDoc(String doc) {
+        this.doc = doc;
+    }
+
+    public void setDocFields(List<DocField> docFields) {
+        this.docFields = docFields;
+    }
+
     @Override
     public String toString() {
         ObjectNode node = JsonNodeFactory.instance.objectNode();

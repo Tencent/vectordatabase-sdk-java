@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum DataBaseTypeEnum {
     BASE("BASE"),
-    AI("AI_DOC");
+    AI_DOC("AI_DOC");
 
     private final String dataBaseType;
 

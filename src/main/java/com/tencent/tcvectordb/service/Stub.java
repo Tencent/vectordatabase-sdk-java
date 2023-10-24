@@ -133,7 +133,7 @@ public interface Stub {
 
     AffectRes deleteAIDocument(DeleteParamInner deleteParamInner);
 
-    SearchRes searchAIDocument(SearchParamInner searchParamInner);
+    SearchContentRes searchAIDocument(SearchParamInner searchParamInner);
 
     AffectRes updateAIDocument(UpdateParamInner updateParamInner);
 

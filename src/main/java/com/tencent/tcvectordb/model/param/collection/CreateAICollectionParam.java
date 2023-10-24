@@ -20,6 +20,7 @@
 
 package com.tencent.tcvectordb.model.param.collection;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.model.collection.AICollection;
 import com.tencent.tcvectordb.model.collection.BaseCollection;
@@ -32,6 +33,7 @@ import java.util.List;
 /**
  * Create Collection Param
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class CreateAICollectionParam extends AICollection {
 
     // 最大文件数

@@ -44,8 +44,8 @@ import static com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum.BGE_BA
 public class VectorDBExampleWithEmbedding {
 
     private static final String DBNAME = "book";
-    private static final String COLL_NAME = "book_segments";
-    private static final String COLL_NAME_ALIAS = "collection_alias";
+    private static final String COLL_NAME = "book_segments_2";
+    private static final String COLL_NAME_ALIAS = "collection_alias_2";
 
     public static void example() throws InterruptedException {
         // 创建VectorDB Client
@@ -70,12 +70,14 @@ public class VectorDBExampleWithEmbedding {
      * @return {@link ConnectParam}
      */
     private static ConnectParam initConnectParam() {
-        System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
-        System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
+        String vdb_url="http://21.0.83.204:8100";
+        String vdb_key = "RPo223wN2yXyUq16dmHcGyzXHaYfWCZWNMGwBC01";
+        System.out.println("\tvdb_url: " + vdb_url);
+        System.out.println("\tvdb_key: " + vdb_key);
         return ConnectParam.newBuilder()
-                .withUrl(System.getProperty("vdb_url"))
+                .withUrl(vdb_url)
                 .withUsername("root")
-                .withKey(System.getProperty("vdb_key"))
+                .withKey(vdb_key)
                 .withTimeout(30)
                 .build();
     }
@@ -387,10 +389,11 @@ public class VectorDBExampleWithEmbedding {
 
 
     private static void clear(VectorDBClient client) {
-        List<String> databases = client.listDatabase();
-        for (String database : databases) {
-            client.dropDatabase(database);
-        }
+//        List<String> databases = client.listDatabase();
+//        for (String database : databases) {
+//            client.dropDatabase(database);
+//        }
+        client.dropDatabase(DBNAME);
     }
 
 
@@ -444,8 +447,8 @@ public class VectorDBExampleWithEmbedding {
     private static CreateCollectionParam initCreateEmbeddingCollectionParam(String collName) {
         return CreateCollectionParam.newBuilder()
                 .withName(collName)
-                .withShardNum(3)
-                .withReplicaNum(2)
+                .withShardNum(2)
+                .withReplicaNum(1)
                 .withDescription("test embedding collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", BGE_BASE_ZH.getDimension(), IndexType.HNSW,

@@ -46,6 +46,15 @@ import java.util.List;
  * VectorDB Collection
  */
 public class Collection extends BaseCollection {
+    protected Embedding embedding;
+
+    public Embedding getEmbedding() {
+        return embedding;
+    }
+
+    public void setEmbedding(Embedding embedding) {
+        this.embedding = embedding;
+    }
     public AffectRes upsert(InsertParam param) throws VectorDBException {
         InsertParamInner insertParam = new InsertParamInner(
                 database, collection, param.getDocuments());

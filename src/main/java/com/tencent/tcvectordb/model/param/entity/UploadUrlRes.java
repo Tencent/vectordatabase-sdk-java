@@ -1,13 +1,21 @@
 package com.tencent.tcvectordb.model.param.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class UploadUrlRes extends BaseRes{
+    @JsonProperty(value = "cos_endpoint")
     private String cosEndPoint;
+
+    @JsonProperty(value = "upload_path")
     private String uploadPath;
 
+    @JsonProperty(value = "file_id")
     private String fileId;
 
+    @JsonProperty(value = "credentials")
     private Credential credential;
 
+    @JsonProperty(value = "upload_condition")
     private UploadCondtion upCondition;
 
     public UploadCondtion getUpCondition() {
@@ -31,7 +39,7 @@ public class UploadUrlRes extends BaseRes{
     }
 
     public void setUploadPath(String uploadPath) {
-        uploadPath = uploadPath;
+        this.uploadPath = uploadPath;
     }
 
     public String getFileId() {

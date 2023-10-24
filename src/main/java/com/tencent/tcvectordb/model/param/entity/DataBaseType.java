@@ -2,7 +2,7 @@ package com.tencent.tcvectordb.model.param.entity;
 
 public class DataBaseType {
     private String dbType;
-    private int createTime;
+    private String createTime;
 
     public String getDbType() {
         return dbType;
@@ -12,11 +12,11 @@ public class DataBaseType {
         this.dbType = dbType;
     }
 
-    public int getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(int createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 

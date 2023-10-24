@@ -1,6 +1,9 @@
 package com.tencent.tcvectordb.model.param.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class DataBaseTypeRes extends BaseRes{
+    @JsonProperty(value = "database")
     private DataBaseType databaseType;
 
     public DataBaseTypeRes() {

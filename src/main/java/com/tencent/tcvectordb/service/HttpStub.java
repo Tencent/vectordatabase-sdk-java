@@ -83,7 +83,7 @@ public class HttpStub implements Stub {
     @Override
     public DataBaseTypeRes describeDatabase(Database database) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DB_DESCRIBE);
-        String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
+        String body = String.format("{\"database\":\"%s\"}",
                 database.getDatabaseName());
         JsonNode jsonNode = this.post(url, body);
         return JsonUtils.parseObject(jsonNode.toString(), DataBaseTypeRes.class);
@@ -355,7 +355,7 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public SearchRes searchAIDocument(SearchParamInner searchParamInner) {
+    public SearchContentRes searchAIDocument(SearchParamInner searchParamInner) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_SEARCH);
         JsonNode jsonNode = this.post(url, searchParamInner.toString());
         JsonNode multiDocsNode = jsonNode.get("documents");
@@ -372,23 +372,17 @@ public class HttpStub implements Stub {
             warning = jsonNode.get("warning").asText();
         }
         if (multiDocsNode == null) {
-            return new SearchRes(code, msg, warning, Collections.emptyList());
+            return new SearchContentRes(code, msg, warning, Collections.emptyList());
         }
         try {
-            List<List<Document>> multiDosc = new ArrayList<>();
+            List<Document> multiDosc = new ArrayList<>();
             Iterator<JsonNode> multiIter = multiDocsNode.elements();
             while (multiIter.hasNext()) {
                 JsonNode docNode = multiIter.next();
-                Iterator<JsonNode> iter = docNode.elements();
-                List<Document> docs = new ArrayList<>();
-                while (iter.hasNext()) {
-                    JsonNode node = iter.next();
-                    Document doc = node2Doc(node);
-                    docs.add(doc);
-                }
-                multiDosc.add(docs);
+                Document doc = node2Doc(docNode);
+                multiDosc.add(doc);
             }
-            return new SearchRes(code, msg, warning, multiDosc);
+            return new SearchContentRes(code, msg, warning, multiDosc);
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format("VectorDBServer response " +
                     "from search error: can't parse documents=%s", multiDocsNode));
@@ -397,7 +391,7 @@ public class HttpStub implements Stub {
 
     @Override
     public AffectRes updateAIDocument(UpdateParamInner updateParamInner) {
-        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_UPDATE);
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_UPDATE);
         JsonNode jsonNode = this.post(url, updateParamInner.toString());
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
@@ -408,25 +402,21 @@ public class HttpStub implements Stub {
                         "\"file_type\":\"%s\"}",
                 databaseName, collectionName, fileName, fileType);
         JsonNode jsonNode = this.post(url, body);
-        JsonNode dbsJson = jsonNode.get("collection");
-        if (dbsJson == null) {
-            return null;
-        }
-        return JsonUtils.collectionDeserializer(dbsJson.toString(), new TypeReference<UploadUrlRes>() {});
+        return JsonUtils.collectionDeserializer(jsonNode.toString(), new TypeReference<UploadUrlRes>() {});
     }
 
     @Override
     public void upload(String databaseName, String collectionName, String filePath, Map<String, String> metadataMap) throws VectorDBException{
         File file = new File(filePath);
         if (!file.exists() || !file.isFile()){
-            throw new VectorDBException("本地文件不存在");
+            throw new VectorDBException("file is not existed");
         }
 
         FileTypeEnum fileType = FileUtils.getFileType(file);
         if(fileType == FileTypeEnum.UNSUPPORT){
             throw new VectorDBException("only markdown file can upload");
         }
-        UploadUrlRes uploadUrlRes = getUploadUrl(databaseName, collectionName, filePath, fileType.getDataFileType());
+        UploadUrlRes uploadUrlRes = getUploadUrl(databaseName, collectionName, file.getName(), fileType.getDataFileType());
         if(uploadUrlRes.getCredential()==null || uploadUrlRes.getCredential().getTmpSecretId().equals("") || uploadUrlRes.getUpCondition()==null
                 || uploadUrlRes.getUpCondition().getMaxSupportContentLength()==0){
             throw new VectorDBException("get file upload url failed");
@@ -449,9 +439,15 @@ public class HttpStub implements Stub {
         if (!metadataMap.isEmpty()){
             metadataMap.forEach(((key, value)-> metadata.addUserMetadata(key, value)));
         }
+        metadata.addUserMetadata("x-cos-meta-fileType", fileType.getDataFileType());
+        metadata.addUserMetadata("x-cos-meta-id", uploadUrlRes.getFileId());
         putObjectRequest.withMetadata(metadata);
+        putObjectRequest.withKey(uploadPath);
+
         PutObjectResult putObjectResult = cosClient.putObject(putObjectRequest);
+
         logger.debug("upload file, response:%s", JsonUtils.toJsonString(putObjectResult));
+        cosClient.shutdown();
     }
 
 
@@ -531,6 +527,18 @@ public class HttpStub implements Stub {
                 builder.withDoc(ele.asText());
             } else if (StringUtils.equals("score", name)) {
                 builder.withScore(ele.asDouble());
+            } else if (StringUtils.equals("chunkInfo", name)) {
+                builder.addFilterField(new DocField(name, mapper.readValue(
+                        ele.toString(), new TypeReference<ChunkInfo>() {
+                        })));
+            } else if (StringUtils.equals("context", name)) {
+                builder.addFilterField(new DocField(name, mapper.readValue(
+                        ele.toString(), new TypeReference<SearchResContext>() {
+                        })));
+            } else if (StringUtils.equals("documentInfo", name)) {
+                builder.addFilterField(new DocField(name, mapper.readValue(
+                        ele.toString(), new TypeReference<SearchResDocumentInfo>() {
+                        })));
             } else {
                 if (ele.isInt()) {
                     builder.addFilterField(new DocField(name, ele.asInt()));

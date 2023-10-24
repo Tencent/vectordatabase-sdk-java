@@ -8,11 +8,19 @@ public class DocumentIndexParams implements ParamsSerializer{
      * 	false: 只做Chunk的Similarity
      * 	true: 做Chunk、Word级别的双路Similarity（default）
      */
-    @JsonProperty(value = "enableWordsSimilarity")
+    @JsonProperty(value = "enable_words_similarity")
     private boolean enableWordsSimilarity;
 
     @JsonProperty(value = "enableFulltextSearch")
     private boolean enableFulltextSearch;
+
+    public DocumentIndexParams() {
+    }
+
+    public DocumentIndexParams(boolean enableWordsSimilarity, boolean enableFulltextSearch) {
+        this.enableWordsSimilarity = enableWordsSimilarity;
+        this.enableFulltextSearch = enableFulltextSearch;
+    }
 
     public boolean isEnableWordsSimilarity() {
         return enableWordsSimilarity;

@@ -56,14 +56,14 @@ public class VectorDBClient {
     }
 
     public Database createAIDatabase(String databaseName) throws VectorDBException {
-        Database db = database(databaseName, readConsistency, DataBaseTypeEnum.AI);
+        Database db = database(databaseName, readConsistency, DataBaseTypeEnum.AI_DOC);
         stub.createAIDatabase(db);
 
         return db;
     }
 
     public Database dropAIDatabase(String databaseName) throws VectorDBException {
-        Database db = database(databaseName, readConsistency, DataBaseTypeEnum.AI);
+        Database db = database(databaseName, readConsistency, DataBaseTypeEnum.AI_DOC);
         stub.dropAIDatabase(db);
         return db;
     }

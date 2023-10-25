@@ -71,14 +71,12 @@ public class VectorDBExampleWithAI_doc {
      * @return {@link ConnectParam}
      */
     private static ConnectParam initConnectParam() {
-        String vdb_url="http://21.0.83.204:8100";
-        String vdb_key = "RPo223wN2yXyUq16dmHcGyzXHaYfWCZWNMGwBC01";
-        System.out.println("\tvdb_url: " + vdb_url);
-        System.out.println("\tvdb_key: " + vdb_key);
+        System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
+        System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
         return ConnectParam.newBuilder()
-                .withUrl(vdb_url)
+                .withUrl(System.getProperty("vdb_url"))
                 .withUsername("root")
-                .withKey(vdb_key)
+                .withKey(System.getProperty("vdb_key"))
                 .withTimeout(30)
                 .build();
     }

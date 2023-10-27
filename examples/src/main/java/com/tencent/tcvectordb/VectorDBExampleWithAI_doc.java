@@ -36,16 +36,18 @@ import com.tencent.tcvectordb.model.param.enums.AppendTitleToChunkEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * VectorDB Java SDK usage example
  */
 public class VectorDBExampleWithAI_doc {
 
-    private static final String DBNAME = "ai_db_book_ayh_test";
-    private static final String COLL_NAME = "book_collection_1";
-    private static final String COLL_NAME_ALIAS = "book_collection_alias_2";
+    private static final String DBNAME = "ai_db_doc_ayh_test";
+    private static final String COLL_NAME = "doc_collection_1";
+    private static final String COLL_NAME_ALIAS = "doc_collection_alias_2";
 
     public static void example() throws InterruptedException {
         // 创建VectorDB Client
@@ -56,10 +58,15 @@ public class VectorDBExampleWithAI_doc {
         System.out.println("---------------------- clear before test ----------------------");
         anySafe(() -> clear(client));
         createDatabaseAndCollection(client);
-        uploadFile(client, "/data/home/yihaoan/projects/test/test4.md");
-//        // 解析加载文件需要等待时间
+        Map<String, Object> metaDataMap = new HashMap<>();
+        metaDataMap.put("bookName", "向量数据库库");
+        metaDataMap.put("bookId", "test10");
+        uploadFile(client, "/data/home/yihaoan/projects/test/test12.md", metaDataMap);
+        // 解析加载文件需要等待时间
         Thread.sleep(1000 * 10);
+
         queryData(client);
+        GetFile(client, "test12.md");
         updateAndDelete(client);
         deleteAndDrop(client);
     }
@@ -145,11 +152,19 @@ public class VectorDBExampleWithAI_doc {
 
     }
 
-    private static void uploadFile(VectorDBClient client, String filePath) {
+    private static void uploadFile(VectorDBClient client, String filePath, Map<String, Object> metaDataMap) {
         Database database = client.database(DBNAME);
         AICollection collection = database.describeAICollection(COLL_NAME);
-        collection.upload(DBNAME, COLL_NAME, filePath);
+        collection.upload(DBNAME, COLL_NAME, filePath, metaDataMap);
     }
+
+    private static void GetFile(VectorDBClient client, String fileName) {
+        Database database = client.database(DBNAME);
+        AICollection collection = database.describeAICollection(COLL_NAME);
+        System.out.println(collection.getFile(DBNAME, COLL_NAME, fileName, ""));
+    }
+
+
 
     private static void queryData(VectorDBClient client) {
         Database database = client.database(DBNAME);
@@ -238,11 +253,11 @@ public class VectorDBExampleWithAI_doc {
 
         // 删除 collection
         System.out.println("---------------------- dropCollection ----------------------");
-        database.dropCollection(COLL_NAME);
+        database.dropAICollection(COLL_NAME);
 
         // 删除 database
         System.out.println("---------------------- dropDatabase ----------------------");
-        client.dropDatabase(DBNAME);
+        client.dropAIDatabase(DBNAME);
     }
 
 
@@ -256,7 +271,7 @@ public class VectorDBExampleWithAI_doc {
                 .withName(collName)
                 .withShardNum(2)
                 .withReplicaNum(1)
-                .withDescription("test create ai collection0")
+                .withDescription("test create ai collection")
                 .withMaxFiles(1000000)
                 .withLanguage(LanuageType.ZH)
                 .withAverageFileSize(1024000)

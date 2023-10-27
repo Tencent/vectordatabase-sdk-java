@@ -1,16 +1,17 @@
 package com.tencent.tcvectordb;
 
+import src.main.java.com.tencent.tcvectordb.VectorDBExampleWithAI_doc;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
         System.out.println("----------------------------------------------------------");
         System.out.println("------------------------- example ------------------------");
         System.out.println("----------------------------------------------------------");
-        VectorDBExample.example();
+        com.tencent.tcvectordb.VectorDBExample.example();
         System.out.println("----------------------------------------------------------");
         System.out.println("----------------- example with embedding -----------------");
         System.out.println("----------------------------------------------------------");
-        VectorDBExampleWithEmbedding.example();
+        com.tencent.tcvectordb.VectorDBExampleWithEmbedding.example();
         System.out.println("----------------------------------------------------------");
         System.out.println("----------------- example with ai doc -----------------");
         System.out.println("----------------------------------------------------------");

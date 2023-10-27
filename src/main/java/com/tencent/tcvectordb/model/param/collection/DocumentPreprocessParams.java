@@ -1,43 +1,38 @@
 package com.tencent.tcvectordb.model.param.collection;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.tencent.tcvectordb.model.param.enums.AppendKeywordsToChunkEnum;
 import com.tencent.tcvectordb.model.param.enums.AppendTitleToChunkEnum;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class DocumentPreprocessParams implements ParamsSerializer{
-    @JsonProperty(value = "append_title_to_chunk")
-    private AppendTitleToChunkEnum appendTitleToChunkEnum;
-
-    @JsonProperty(value = "append_keywords_to_chunk")
-    private AppendKeywordsToChunkEnum appendKeywordsToChunkEnum;
+    private AppendTitleToChunkEnum appendTitleToChunk;
+    private AppendKeywordsToChunkEnum appendKeywordsToChunk;
 
     public DocumentPreprocessParams() {
-        this.appendTitleToChunkEnum = AppendTitleToChunkEnum.DEFAULT;
-        this.appendKeywordsToChunkEnum = AppendKeywordsToChunkEnum.DEFAULT;
+        this.appendTitleToChunk = AppendTitleToChunkEnum.DEFAULT;
+        this.appendKeywordsToChunk = AppendKeywordsToChunkEnum.DEFAULT;
     }
 
     public DocumentPreprocessParams(AppendTitleToChunkEnum appendTitleToChunkEnum, AppendKeywordsToChunkEnum appendKeywordsToChunkEnum) {
-        this.appendTitleToChunkEnum = appendTitleToChunkEnum;
-        this.appendKeywordsToChunkEnum = appendKeywordsToChunkEnum;
+        this.appendTitleToChunk = appendTitleToChunkEnum;
+        this.appendKeywordsToChunk = appendKeywordsToChunkEnum;
     }
 
-    public AppendTitleToChunkEnum getAppendTitleToChunkEnum() {
-        return appendTitleToChunkEnum;
+    public AppendTitleToChunkEnum getAppendTitleToChunk() {
+        return appendTitleToChunk;
     }
 
-    public void setAppendTitleToChunkEnum(AppendTitleToChunkEnum appendTitleToChunkEnum) {
-        this.appendTitleToChunkEnum = appendTitleToChunkEnum;
+    public void setAppendTitleToChunk(AppendTitleToChunkEnum appendTitleToChunk) {
+        this.appendTitleToChunk = appendTitleToChunk;
     }
 
-    public AppendKeywordsToChunkEnum getAppendKeywordsToChunkEnum() {
-        return appendKeywordsToChunkEnum;
+    public AppendKeywordsToChunkEnum getAppendKeywordsToChunk() {
+        return appendKeywordsToChunk;
     }
 
-    public void setAppendKeywordsToChunkEnum(AppendKeywordsToChunkEnum appendKeywordsToChunkEnum) {
-        this.appendKeywordsToChunkEnum = appendKeywordsToChunkEnum;
+    public void setAppendKeywordsToChunk(AppendKeywordsToChunkEnum appendKeywordsToChunk) {
+        this.appendKeywordsToChunk = appendKeywordsToChunk;
     }
 }
 

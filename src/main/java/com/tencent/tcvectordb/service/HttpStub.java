@@ -31,6 +31,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -406,7 +408,7 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public void upload(String databaseName, String collectionName, String filePath) throws VectorDBException{
+    public void upload(String databaseName, String collectionName, String filePath, Map<String, Object> metaDataMap) throws VectorDBException{
         File file = new File(filePath);
         if (!file.exists() || !file.isFile()){
             throw new VectorDBException("file is not existed");
@@ -435,9 +437,28 @@ public class HttpStub implements Stub {
         ClientConfig cosClientConfig = new ClientConfig(new Region(region));
         COSClient cosClient = new COSClient(cred, cosClientConfig);
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, uploadPath, file);
+
         ObjectMetadata metadata = new ObjectMetadata();
-        metadata.addUserMetadata("x-cos-meta-fileType", fileType.getDataFileType());
-        metadata.addUserMetadata("x-cos-meta-id", uploadUrlRes.getFileId());
+        metadata.addUserMetadata("string--fileType", fileType.getDataFileType());
+        metadata.addUserMetadata("string--id", uploadUrlRes.getFileId());
+        for (Map.Entry<String, Object> entry : metaDataMap.entrySet()) {
+            String key = entry.getKey();
+            if (key.contains("_")){
+                throw new VectorDBException("user metadata key can not contain _");
+            }
+            Object value = entry.getValue();
+            String enKey = URLEncoder.encode(key, StandardCharsets.UTF_8);
+            if (value instanceof String){
+                enKey = "string-" + enKey;
+            } else if (value instanceof Long || value instanceof Integer ) {
+                enKey = "uint64-" + enKey;
+            }else {
+                throw new VectorDBException("user metadata value must be string、long or int");
+            }
+            String enValue = URLEncoder.encode(value.toString(), StandardCharsets.UTF_8);
+            metadata.addUserMetadata(enKey, enValue);
+        }
+
         putObjectRequest.withMetadata(metadata);
         putObjectRequest.withKey(uploadPath);
 
@@ -445,6 +466,16 @@ public class HttpStub implements Stub {
 
         logger.debug("upload file, response:%s", JsonUtils.toJsonString(putObjectResult));
         cosClient.shutdown();
+    }
+
+    @Override
+    public GetFileRes getFile(String databaseName, String collectionName, String fileName, String fileId) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_GET_FILE);
+        String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\",\"fileName\":\"%s\"," +
+                        "\"fileId\":\"%s\"}",
+                databaseName, collectionName, fileName, fileId);
+        JsonNode jsonNode = this.post(url, body);
+        return JsonUtils.collectionDeserializer(jsonNode.toString(), new TypeReference<GetFileRes>() {});
     }
 
 

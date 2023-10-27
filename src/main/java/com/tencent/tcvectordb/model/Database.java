@@ -119,6 +119,9 @@ public class Database {
     }
 
     public void dropCollection(String collectionName) throws VectorDBException {
+        if (!this.dbType.equals(DataBaseTypeEnum.AI_DOC)){
+            throw new VectorDBException("database can not support drop ai collection");
+        }
         stub.dropCollection(this.databaseName, collectionName);
     }
 

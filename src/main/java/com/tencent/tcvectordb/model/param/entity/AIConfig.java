@@ -5,19 +5,11 @@ import com.tencent.tcvectordb.model.param.collection.DocumentIndexParams;
 import com.tencent.tcvectordb.model.param.collection.DocumentPreprocessParams;
 
 public class AIConfig {
-    @JsonProperty(value = "max_files")
     private int maxFiles;
     // 文件的平均大小
-    @JsonProperty(value = "average_file_size")
     private int averageFileSize;
-
-    @JsonProperty(value = "language")
     private String language;
-
-    @JsonProperty(value = "document_preprocess")
     private DocumentPreprocessParams documentPreprocess;
-
-    @JsonProperty(value = "document_index")
     private DocumentIndexParams documentIndex;
 
     public int getMaxFiles() {

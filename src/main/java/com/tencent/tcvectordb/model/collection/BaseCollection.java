@@ -11,6 +11,7 @@ import com.tencent.tcvectordb.model.param.collection.IndexField;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.BaseRes;
+import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.Stub;
 import com.tencent.tcvectordb.service.param.*;

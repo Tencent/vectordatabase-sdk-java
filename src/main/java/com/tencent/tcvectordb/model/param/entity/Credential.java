@@ -3,12 +3,9 @@ package com.tencent.tcvectordb.model.param.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Credential {
-    @JsonProperty(value = "TmpSecretId")
     private String tmpSecretId;
-    @JsonProperty(value = "TmpSecretKey")
     private String tmpSecretKey;
-    @JsonProperty(value = "Token")
-    private String token;
+    private String Token;
 
     public Credential() {
     }
@@ -30,10 +27,10 @@ public class Credential {
     }
 
     public String getToken() {
-        return token;
+        return Token;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setToken(String Token) {
+        this.Token = Token;
     }
 }

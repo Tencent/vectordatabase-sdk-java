@@ -35,6 +35,7 @@ import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.BaseRes;
 import com.tencent.tcvectordb.model.param.entity.SearchRes;
+import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.Stub;
 import com.tencent.tcvectordb.service.param.*;
@@ -68,17 +69,17 @@ public class Collection extends BaseCollection {
 
     public List<List<Document>> search(SearchByVectorParam param) throws VectorDBException {
         return this.stub.searchDocument(new SearchParamInner(
-                database, collection, param, this.readConsistency)).getDocuments();
+                database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE).getDocuments();
     }
 
     public List<List<Document>> searchById(SearchByIdParam param) throws VectorDBException {
         return this.stub.searchDocument(new SearchParamInner(
-                database, collection, param, this.readConsistency)).getDocuments();
+                database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE).getDocuments();
     }
 
     public SearchRes searchByEmbeddingItems(SearchByEmbeddingItemsParam param) throws VectorDBException {
         return this.stub.searchDocument(new SearchParamInner(
-                database, collection, param, this.readConsistency));
+                database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE);
     }
 
     public AffectRes delete(DeleteParam param) throws VectorDBException {

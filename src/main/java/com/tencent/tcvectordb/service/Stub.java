@@ -8,6 +8,7 @@ import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.collection.CreateAICollectionParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.entity.*;
+import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.service.param.*;
 
 import java.util.List;
@@ -50,6 +51,12 @@ public interface Stub {
     List<String> listDatabases();
 
     /**
+     *
+     * @return
+     */
+    Map<String, DataBaseType> listDatabaseInfos();
+
+    /**
      * create collection
      */
     void createCollection(CreateCollectionParam params);
@@ -72,7 +79,7 @@ public interface Stub {
     /**
      * describe collection
      */
-    AffectRes truncateCollection(String databaseName, String collectionName);
+    AffectRes truncateCollection(String databaseName, String collectionName, DataBaseTypeEnum dbType);
 
     /**
      * drop collection
@@ -102,7 +109,7 @@ public interface Stub {
     /**
      * search document
      */
-    SearchRes searchDocument(SearchParamInner param);
+    SearchRes searchDocument(SearchParamInner param, DataBaseTypeEnum dbType);
 
     /**
      * delete document
@@ -140,4 +147,6 @@ public interface Stub {
     void upload(String databaseName, String collectionName, String filePath, Map<String, Object> metaDataMap) throws VectorDBException;
 
     GetFileRes getFile(String databaseName, String collectionName, String fileName, String fileId);
+
+    BaseRes rebuildAIIndex(RebuildIndexParamInner param);
 }

@@ -3,7 +3,7 @@ package com.tencent.tcvectordb;
 import src.main.java.com.tencent.tcvectordb.VectorDBExampleWithAI_doc;
 
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws Exception {
         System.out.println("----------------------------------------------------------");
         System.out.println("------------------------- example ------------------------");
         System.out.println("----------------------------------------------------------");

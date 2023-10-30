@@ -5,12 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public class ChunkInfo {
-    private String chunk;
-    @JsonProperty(value = "endPos")
+    private String text;
     private int endPos;
-    @JsonProperty(value = "startPos")
     private int startPos;
-    private List<String> chunkIds;
+    private List<String> nextChunks;
+    private List<String> preChunks;
 
     public int getEndPos() {
         return endPos;
@@ -28,29 +27,39 @@ public class ChunkInfo {
         this.startPos = startPos;
     }
 
-    public List<String> getChunkIds() {
-        return chunkIds;
-    }
-
-    public void setChunkIds(List<String> chunkIds) {
-        this.chunkIds = chunkIds;
-    }
-
     @Override
     public String toString() {
         return "ChunkInfo{" +
-                "chunk='" + chunk + '\'' +
-                ", chunkIds=" + chunkIds +
+                "text='" + text + '\'' +
                 ", endPos=" + endPos +
                 ", startPos=" + startPos +
+                ", nextChunks=" + nextChunks +
+                ", preChunks=" + preChunks +
                 '}';
     }
 
-    public String getChunk() {
-        return chunk;
+    public String getText() {
+        return text;
     }
 
-    public void setChunk(String chunk) {
-        this.chunk = chunk;
+    public void setText(String text) {
+        this.text = text;
     }
+
+    public List<String> getNextChunks() {
+        return nextChunks;
+    }
+
+    public void setNextChunks(List<String> nextChunks) {
+        this.nextChunks = nextChunks;
+    }
+
+    public List<String> getPreChunks() {
+        return preChunks;
+    }
+
+    public void setPreChunks(List<String> preChunks) {
+        this.preChunks = preChunks;
+    }
+
 }

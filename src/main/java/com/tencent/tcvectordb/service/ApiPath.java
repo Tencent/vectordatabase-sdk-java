@@ -27,6 +27,7 @@ public class ApiPath {
     public final static String AI_COL_DROP = "/ai/collection/drop";
     public final static String AI_COL_LIST = "/ai/collection/list";
     public final static String AI_COL_DESCRIBE = "/ai/collection/describe";
+    public final static String AI_COL_FLUSH = "/ai/collection/truncate";
     public final static String AI_DOCUMENT_QUERY = "/ai/document/query";
     public final static String AI_DOCUMENT_SEARCH = "/ai/document/search";
     public final static String AI_DOCUMENT_DELETE = "/ai/document/delete";
@@ -34,7 +35,6 @@ public class ApiPath {
     public final static String AI_DOCUMENT_UPLOADER_URL = "/ai/document/uploadurl";
     public final static String AI_GET_FILE = "/ai/document/getfile";
     public final static String AI_ALIAS_SET = "/ai/alias/set";
-    public final static String AI_ALIAS_LIST = "ai/alias/list";
-    public final static String AI_ALIAS_GET = "ai/alias/get";
     public final static String AI_ALIAS_DELETE = "/ai/alias/delete";
+    public final static String AI_REBUILD_INDEX = "/ai/index/rebuild";
 }

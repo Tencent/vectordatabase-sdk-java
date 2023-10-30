@@ -1,7 +1,5 @@
 package com.tencent.tcvectordb.model.param.entity;
 
-import java.math.BigDecimal;
-
 public class AIStatus {
     private long indexedDocuments;
     private long totalDocuments;

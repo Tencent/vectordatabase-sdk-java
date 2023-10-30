@@ -27,6 +27,7 @@ import com.tencent.tcvectordb.model.collection.Collection;
 import com.tencent.tcvectordb.model.param.collection.CreateAICollectionParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
+import com.tencent.tcvectordb.model.param.entity.DataBaseType;
 import com.tencent.tcvectordb.model.param.entity.DataBaseTypeRes;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
@@ -35,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * VectorDB Database
@@ -65,11 +67,11 @@ public class Database {
     }
 
     private void initDataBaseType() throws VectorDBException{
-        DataBaseTypeRes dataBaseTypeRes = stub.describeDatabase(this);
-        if (dataBaseTypeRes.getCode() != 0){
-            throw new VectorDBException("init database type error");
+        Map<String, DataBaseType> dataBaseTypeMap = stub.listDatabaseInfos();
+        if (!dataBaseTypeMap.containsKey(this.databaseName)){
+            throw new VectorDBException("database not existed");
         }
-        this.dbType = DataBaseTypeEnum.valueOf(dataBaseTypeRes.getDatabaseType().getDbType());
+        this.dbType = DataBaseTypeEnum.valueOf(dataBaseTypeMap.get(this.databaseName).getDbType());
     }
 
     public String getDatabaseName() {
@@ -85,9 +87,6 @@ public class Database {
     }
 
     public Collection createCollection(CreateCollectionParam param) throws VectorDBException {
-        if (this.dbType.equals(DataBaseTypeEnum.AI_DOC)){
-            throw new VectorDBException("database only support create ai collection");
-        }
         param.setDatabase(databaseName);
         param.setReadConsistency(readConsistency);
         stub.createCollection(param);
@@ -105,10 +104,7 @@ public class Database {
     }
 
     public AffectRes truncateCollections(String collectionName) {
-        if (this.dbType.equals(DataBaseTypeEnum.AI_DOC)){
-            throw new VectorDBException("database can not support truncate ai collection");
-        }
-        return stub.truncateCollection(this.databaseName, collectionName);
+        return stub.truncateCollection(this.databaseName, collectionName, this.dbType);
     }
 
     public Collection describeCollection(String collectionName) throws VectorDBException {
@@ -119,9 +115,6 @@ public class Database {
     }
 
     public void dropCollection(String collectionName) throws VectorDBException {
-        if (!this.dbType.equals(DataBaseTypeEnum.AI_DOC)){
-            throw new VectorDBException("database can not support drop ai collection");
-        }
         stub.dropCollection(this.databaseName, collectionName);
     }
 
@@ -151,10 +144,6 @@ public class Database {
     }
 
     public AICollection createAICollection(CreateAICollectionParam param) throws VectorDBException {
-        // 只有ai database可以创建ai表
-        if (!this.dbType.equals(DataBaseTypeEnum.AI_DOC)){
-            throw new VectorDBException("database can not support create ai collection");
-        }
         param.setDatabase(databaseName);
         param.setReadConsistency(readConsistency);
         stub.createAICollection(param);

@@ -80,6 +80,11 @@ public class VectorDBClient {
      * @return
      */
     @Deprecated
+    public Database database(String databaseName, ReadConsistencyEnum readConsistency) {
+        return new Database(this.stub, databaseName, readConsistency);
+    }
+
+    @Deprecated
     public Database database(String databaseName, ReadConsistencyEnum readConsistency, DataBaseTypeEnum dataBaseTypeEnum) {
         return new Database(this.stub, databaseName, readConsistency, dataBaseTypeEnum);
     }

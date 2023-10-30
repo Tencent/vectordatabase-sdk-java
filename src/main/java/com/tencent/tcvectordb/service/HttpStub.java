@@ -20,6 +20,7 @@ import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.entity.*;
+import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.FileTypeEnum;
 import com.tencent.tcvectordb.service.param.*;
 import com.tencent.tcvectordb.utils.FileUtils;
@@ -114,6 +115,22 @@ public class HttpStub implements Stub {
     }
 
     @Override
+    public Map<String, DataBaseType> listDatabaseInfos() {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DB_LIST);
+        JsonNode jsonNode = this.get(url);
+        JsonNode dbsJson = jsonNode.get("info");
+        if (dbsJson == null) {
+            return new HashMap<>();
+        }
+        try {
+            return mapper.readValue(dbsJson.toString(), new TypeReference<Map<String, DataBaseType>>() {});
+        } catch (JsonProcessingException ex) {
+            throw new VectorDBException(String.format(
+                    "VectorDBServer response error: can't parse databases=%s", dbsJson));
+        }
+    }
+
+    @Override
     public void createCollection(CreateCollectionParam param) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_CREATE);
         this.post(url, param.toString());
@@ -151,8 +168,11 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public AffectRes truncateCollection(String databaseName, String collectionName) {
+    public AffectRes truncateCollection(String databaseName, String collectionName, DataBaseTypeEnum dbType) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_FLUSH);
+        if (dbType.equals(DataBaseTypeEnum.AI_DOC)){
+            url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_COL_FLUSH);
+        }
         String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
                 databaseName, collectionName);
         JsonNode jsonNode = this.post(url, body);
@@ -216,8 +236,11 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public SearchRes searchDocument(SearchParamInner param) {
+    public SearchRes searchDocument(SearchParamInner param, DataBaseTypeEnum dbType) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_SEARCH);
+        if (dbType.equals(DataBaseTypeEnum.AI_DOC)){
+            url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_SEARCH);
+        }
         JsonNode jsonNode = this.post(url, param.toString());
         JsonNode multiDocsNode = jsonNode.get("documents");
         int code = 0;
@@ -272,6 +295,13 @@ public class HttpStub implements Stub {
     @Override
     public BaseRes rebuildIndex(RebuildIndexParamInner param) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.REBUILD_INDEX);
+        JsonNode jsonNode = this.post(url, param.toString());
+        return JsonUtils.parseObject(jsonNode.toString(), BaseRes.class);
+    }
+
+    @Override
+    public BaseRes rebuildAIIndex(RebuildIndexParamInner param) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_REBUILD_INDEX);
         JsonNode jsonNode = this.post(url, param.toString());
         return JsonUtils.parseObject(jsonNode.toString(), BaseRes.class);
     }
@@ -555,18 +585,12 @@ public class HttpStub implements Stub {
                 builder.withDoc(ele.asText());
             } else if (StringUtils.equals("score", name)) {
                 builder.withScore(ele.asDouble());
-            } else if (StringUtils.equals("chunkInfo", name)) {
+            } else if (StringUtils.equals("chunk", name)) {
                 builder.addFilterField(new DocField(name, mapper.readValue(
                         ele.toString(), new TypeReference<ChunkInfo>() {
                         })));
-            } else if (StringUtils.equals("context", name)) {
-                builder.addFilterField(new DocField(name, mapper.readValue(
-                        ele.toString(), new TypeReference<SearchResContext>() {
-                        })));
-            } else if (StringUtils.equals("documentInfo", name)) {
-                builder.addFilterField(new DocField(name, mapper.readValue(
-                        ele.toString(), new TypeReference<SearchResDocumentInfo>() {
-                        })));
+            } else if (StringUtils.equals("sourceFile", name)) {
+                builder.addFilterField(new DocField(name, node2Doc(ele)));
             } else {
                 if (ele.isInt()) {
                     builder.addFilterField(new DocField(name, ele.asInt()));

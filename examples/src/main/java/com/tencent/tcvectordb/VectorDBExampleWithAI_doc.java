@@ -60,7 +60,7 @@ public class VectorDBExampleWithAI_doc {
         createDatabaseAndCollection(client);
         Map<String, Object> metaDataMap = new HashMap<>();
         metaDataMap.put("bookName", "向量数据库库");
-        metaDataMap.put("bookId", "test10");
+        metaDataMap.put("bookId", "123456");
         uploadFile(client, "/data/home/yihaoan/projects/test/test12.md", metaDataMap);
         // 解析加载文件需要等待时间
         Thread.sleep(1000 * 10);

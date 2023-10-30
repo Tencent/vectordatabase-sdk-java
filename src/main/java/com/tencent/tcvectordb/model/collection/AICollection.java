@@ -26,8 +26,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.Document;
+import com.tencent.tcvectordb.model.param.collection.DocumentIndexParams;
+import com.tencent.tcvectordb.model.param.collection.DocumentPreprocessParams;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.*;
+import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.service.param.*;
 
 import java.util.*;
@@ -36,8 +39,53 @@ import java.util.*;
  * VectorDB Collection
  */
 public class AICollection extends BaseCollection{
-    private AIConfig aiConfig;
     private AIStatus aiStatus;
+    private int maxFiles;
+    // 文件的平均大小
+    private int averageFileSize;
+    private String language;
+    private DocumentPreprocessParams documentPreprocess;
+    private DocumentIndexParams documentIndex;
+
+    public int getMaxFiles() {
+        return maxFiles;
+    }
+
+    public void setMaxFiles(int maxFiles) {
+        this.maxFiles = maxFiles;
+    }
+
+    public int getAverageFileSize() {
+        return averageFileSize;
+    }
+
+    public void setAverageFileSize(int averageFileSize) {
+        this.averageFileSize = averageFileSize;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public DocumentPreprocessParams getDocumentPreprocess() {
+        return documentPreprocess;
+    }
+
+    public void setDocumentPreprocess(DocumentPreprocessParams documentPreprocess) {
+        this.documentPreprocess = documentPreprocess;
+    }
+
+    public DocumentIndexParams getDocumentIndex() {
+        return documentIndex;
+    }
+
+    public void setDocumentIndex(DocumentIndexParams documentIndex) {
+        this.documentIndex = documentIndex;
+    }
 
     public AIStatus getAiStatus() {
         return aiStatus;
@@ -50,29 +98,19 @@ public class AICollection extends BaseCollection{
     public AICollection() {
     }
 
-    public AIConfig getAiConfig() {
-        return aiConfig;
-    }
-
-    public void setAiConfig(AIConfig aiConfig) {
-        this.aiConfig = aiConfig;
-    }
-
     public List<Document> query(QueryParam param) throws VectorDBException {
         return this.stub.queryAIDocument(
                 new QueryParamInner(database, collection, param, this.readConsistency));
     }
 
     public List<Document> search(SearchParam param) throws VectorDBException {
-        if(param.isRetrieveVector()){
-           throw new VectorDBException("can not retrieve vector");
-        }
         return this.stub.searchAIDocument(new SearchParamInner(
                 database, collection, param, this.readConsistency)).getDocuments();
     }
 
     public List<List<Document>> searchById(SearchByIdParam param) throws VectorDBException {
-        throw new VectorDBException("can not support search by id");
+        return this.stub.searchDocument(new SearchParamInner(
+                database, collection, param, this.readConsistency), DataBaseTypeEnum.AI_DOC).getDocuments();
     }
 
     public AffectRes delete(DeleteParam param) throws VectorDBException {
@@ -94,7 +132,7 @@ public class AICollection extends BaseCollection{
     }
 
     public BaseRes rebuildIndex(RebuildIndexParam rebuildIndexParam) throws VectorDBException{
-        throw new VectorDBException("can not support rebuild");
+        return this.stub.rebuildIndex(new RebuildIndexParamInner(this.database, this.collection, rebuildIndexParam));
     }
 
     @Override

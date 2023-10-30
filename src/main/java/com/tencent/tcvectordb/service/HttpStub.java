@@ -438,7 +438,7 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public void upload(String databaseName, String collectionName, String filePath, Map<String, Object> metaDataMap) throws VectorDBException{
+    public void upload(String databaseName, String collectionName, String filePath, Map<String, Object> metaDataMap) throws Exception{
         File file = new File(filePath);
         if (!file.exists() || !file.isFile()){
             throw new VectorDBException("file is not existed");
@@ -477,7 +477,7 @@ public class HttpStub implements Stub {
                 throw new VectorDBException("user metadata key can not contain _");
             }
             Object value = entry.getValue();
-            String enKey = URLEncoder.encode(key, StandardCharsets.UTF_8);
+            String enKey = URLEncoder.encode(key, String.valueOf(StandardCharsets.UTF_8));
             if (value instanceof String){
                 enKey = "string-" + enKey;
             } else if (value instanceof Long || value instanceof Integer ) {
@@ -485,7 +485,7 @@ public class HttpStub implements Stub {
             }else {
                 throw new VectorDBException("user metadata value must be string、long or int");
             }
-            String enValue = URLEncoder.encode(value.toString(), StandardCharsets.UTF_8);
+            String enValue = URLEncoder.encode(value.toString(), String.valueOf(StandardCharsets.UTF_8));
             metadata.addUserMetadata(enKey, enValue);
         }
 
@@ -532,6 +532,7 @@ public class HttpStub implements Stub {
         try (Response response = client.newCall(request).execute()) {
             return parseResponse(response);
         } catch (IOException ex) {
+            logger.error("VectorDBServer IOException", ex);
             throw new VectorDBException(String.format(
                     "VectorDBServer IOException: %s", ex.getMessage()));
         }

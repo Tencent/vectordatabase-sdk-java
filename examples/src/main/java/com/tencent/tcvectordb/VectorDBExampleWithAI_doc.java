@@ -49,7 +49,7 @@ public class VectorDBExampleWithAI_doc {
     private static final String COLL_NAME = "doc_collection_1";
     private static final String COLL_NAME_ALIAS = "doc_collection_alias_2";
 
-    public static void example() throws InterruptedException {
+    public static void example() throws Exception {
         // 创建VectorDB Client
         ConnectParam connectParam = initConnectParam();
         VectorDBClient client = new VectorDBClient(connectParam, ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
@@ -152,7 +152,7 @@ public class VectorDBExampleWithAI_doc {
 
     }
 
-    private static void uploadFile(VectorDBClient client, String filePath, Map<String, Object> metaDataMap) {
+    private static void uploadFile(VectorDBClient client, String filePath, Map<String, Object> metaDataMap) throws Exception {
         Database database = client.database(DBNAME);
         AICollection collection = database.describeAICollection(COLL_NAME);
         collection.upload(DBNAME, COLL_NAME, filePath, metaDataMap);

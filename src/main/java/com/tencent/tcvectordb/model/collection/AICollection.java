@@ -123,7 +123,7 @@ public class AICollection extends BaseCollection{
                 new UpdateParamInner(database, collection, param, document));
     }
 
-    public void upload(String databaseName, String collectionName, String filePath, Map<String, Object> metaDataMap) throws VectorDBException {
+    public void upload(String databaseName, String collectionName, String filePath, Map<String, Object> metaDataMap) throws Exception {
         this.stub.upload(databaseName, collectionName, filePath, metaDataMap);
     }
 

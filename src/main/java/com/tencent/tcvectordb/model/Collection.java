@@ -127,8 +127,7 @@ public class Collection {
     }
 
     public AffectRes upsert(InsertParam param) throws VectorDBException {
-        InsertParamInner insertParam = new InsertParamInner(
-                database, collection, param.getDocuments());
+        InsertParamInner insertParam = new InsertParamInner(database, collection, param);
         return this.stub.upsertDocument(insertParam);
     }
 

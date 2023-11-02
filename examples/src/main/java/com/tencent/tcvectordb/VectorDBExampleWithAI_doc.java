@@ -198,9 +198,7 @@ public class VectorDBExampleWithAI_doc {
 
         // search
         System.out.println("---------------------- search ----------------------");
-        SearchContenOption option = SearchContenOption.newBuilder().withChunkExpand(Arrays.asList(1,1))
-                .withWeights(new Weights(0.4, 0.6, 0.2))
-                .withMergeChunk(true).build();
+        SearchContenOption option = SearchContenOption.newBuilder().withChunkExpand(Arrays.asList(1,1)).build();
         SearchByContentsParam searchByContentsParam = SearchByContentsParam.newBuilder()
                 .withSearchContenOption(option)
                 .withContent("什么是 AI 中的向量表示")
@@ -279,7 +277,6 @@ public class VectorDBExampleWithAI_doc {
                 .withMaxFiles(1000000)
                 .withLanguage(LanuageType.ZH)
                 .withAverageFileSize(1024000)
-                .withDocumentIndex(new DocumentIndexParams(true, true))
                 .withDocumentPreprocess(new DocumentPreprocessParams(AppendTitleToChunkEnum.AppendTitleToChunkEmbedding, AppendKeywordsToChunkEnum.AppendKeywordsToChunkEmbedding))
                 .addField(new FilterIndex("bookName", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("author", FieldType.String, IndexType.FILTER))

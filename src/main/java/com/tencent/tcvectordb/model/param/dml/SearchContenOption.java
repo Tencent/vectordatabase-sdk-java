@@ -7,8 +7,6 @@ import java.util.List;
 public class SearchContenOption {
     private String resultType;
     private List<Integer> chunkExpand;
-    private boolean mergeChunk;
-    private Weights weights;
 
     public String getResultType() {
         return resultType;
@@ -26,27 +24,9 @@ public class SearchContenOption {
         this.chunkExpand = chunkExpand;
     }
 
-    public boolean isMergeChunk() {
-        return mergeChunk;
-    }
-
-    public void setMergeChunk(boolean mergeChunk) {
-        this.mergeChunk = mergeChunk;
-    }
-
-    public Weights getWeights() {
-        return weights;
-    }
-
-    public void setWeights(Weights weights) {
-        this.weights = weights;
-    }
-
     public SearchContenOption(Builder builder) {
         this.resultType = "chunks";
-        this.weights = builder.weights;
         this.chunkExpand = builder.chunkExpand;
-        this.mergeChunk = builder.mergeChunk;
     }
 
     public static Builder newBuilder() {
@@ -56,24 +36,12 @@ public class SearchContenOption {
     public static final class Builder {
         private String resultType;
         private List<Integer> chunkExpand;
-        private boolean mergeChunk;
-        private Weights weights;
 
         private Builder() {
         }
 
         public Builder withChunkExpand(List<Integer> chunkExpand) {
             this.chunkExpand = chunkExpand;
-            return this;
-        }
-
-        public Builder withMergeChunk(boolean mergeChunk) {
-            this.mergeChunk = mergeChunk;
-            return this;
-        }
-
-        public Builder withWeights(Weights weights) {
-            this.weights = weights;
             return this;
         }
 

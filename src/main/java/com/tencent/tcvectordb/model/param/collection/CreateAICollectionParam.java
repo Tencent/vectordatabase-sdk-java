@@ -45,8 +45,6 @@ public class CreateAICollectionParam extends AICollection {
 
     private DocumentPreprocessParams documentPreprocess;
 
-    private DocumentIndexParams documentIndex;
-
     private CreateAICollectionParam(Builder builder) {
         this.collection = builder.name;
         this.replicaNum = builder.replicaNum;
@@ -56,7 +54,6 @@ public class CreateAICollectionParam extends AICollection {
         this.maxFiles = builder.maxFiles;
         this.averageFileSize = builder.averageFileSize;
         this.documentPreprocess = builder.documentPreprocess;
-        this.documentIndex = builder.documentIndex;
         this.language = builder.language;
     }
 
@@ -76,10 +73,6 @@ public class CreateAICollectionParam extends AICollection {
         return documentPreprocess;
     }
 
-    public DocumentIndexParams getDocumentIndex() {
-        return documentIndex;
-    }
-
     public static Builder newBuilder() {
         return new Builder();
     }
@@ -96,8 +89,6 @@ public class CreateAICollectionParam extends AICollection {
         private String language;
 
         private DocumentPreprocessParams documentPreprocess;
-
-        private DocumentIndexParams documentIndex;
 
         private Builder() {
             this.indexes = new ArrayList<>();
@@ -145,11 +136,6 @@ public class CreateAICollectionParam extends AICollection {
 
         public Builder withDocumentPreprocess(DocumentPreprocessParams documentPreprocess) {
             this.documentPreprocess = documentPreprocess;
-            return this;
-        }
-
-        public Builder withDocumentIndex(DocumentIndexParams documentIndex) {
-            this.documentIndex = documentIndex;
             return this;
         }
 

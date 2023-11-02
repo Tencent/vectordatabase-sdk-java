@@ -26,7 +26,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.Document;
-import com.tencent.tcvectordb.model.param.collection.DocumentIndexParams;
 import com.tencent.tcvectordb.model.param.collection.DocumentPreprocessParams;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.*;
@@ -45,7 +44,6 @@ public class AICollection extends BaseCollection{
     private int averageFileSize;
     private String language;
     private DocumentPreprocessParams documentPreprocess;
-    private DocumentIndexParams documentIndex;
 
     public int getMaxFiles() {
         return maxFiles;
@@ -77,14 +75,6 @@ public class AICollection extends BaseCollection{
 
     public void setDocumentPreprocess(DocumentPreprocessParams documentPreprocess) {
         this.documentPreprocess = documentPreprocess;
-    }
-
-    public DocumentIndexParams getDocumentIndex() {
-        return documentIndex;
-    }
-
-    public void setDocumentIndex(DocumentIndexParams documentIndex) {
-        this.documentIndex = documentIndex;
     }
 
     public AIStatus getAiStatus() {

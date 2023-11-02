@@ -56,8 +56,8 @@ public class VectorDBExampleWithAI_doc {
 
         // 测试前清理环境
         System.out.println("---------------------- clear before test ----------------------");
-//        anySafe(() -> clear(client));
-//        createDatabaseAndCollection(client);
+        anySafe(() -> clear(client));
+        createDatabaseAndCollection(client);
         Map<String, Object> metaDataMap = new HashMap<>();
         metaDataMap.put("bookName", "向量数据库库12");
         metaDataMap.put("bookId", "123456");

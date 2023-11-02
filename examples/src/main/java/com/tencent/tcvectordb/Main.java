@@ -8,13 +8,13 @@ public class Main {
         System.out.println("------------------------- example ------------------------");
         System.out.println("----------------------------------------------------------");
         com.tencent.tcvectordb.VectorDBExample.example();
-//        System.out.println("----------------------------------------------------------");
-//        System.out.println("----------------- example with embedding -----------------");
-//        System.out.println("----------------------------------------------------------");
-//        com.tencent.tcvectordb.VectorDBExampleWithEmbedding.example();
-//        System.out.println("----------------------------------------------------------");
-//        System.out.println("----------------- example with ai doc -----------------");
-//        System.out.println("----------------------------------------------------------");
-//        VectorDBExampleWithAI_doc.example();
+        System.out.println("----------------------------------------------------------");
+        System.out.println("----------------- example with embedding -----------------");
+        System.out.println("----------------------------------------------------------");
+        com.tencent.tcvectordb.VectorDBExampleWithEmbedding.example();
+        System.out.println("----------------------------------------------------------");
+        System.out.println("----------------- example with ai doc -----------------");
+        System.out.println("----------------------------------------------------------");
+        VectorDBExampleWithAI_doc.example();
     }
 }

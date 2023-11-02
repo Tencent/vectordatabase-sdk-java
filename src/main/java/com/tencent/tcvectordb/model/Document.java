@@ -108,7 +108,7 @@ public class Document {
             for (DocField field : docFields) {
                 switch (field.getFieldType()) {
                     case Uint64:
-                        node.put(field.getName(), field.getLongValue());
+                        node.put(field.getName(), Long.valueOf(field.getValue().toString()));
                         break;
                     default:
                         node.put(field.getName(), field.getStringValue());

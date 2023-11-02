@@ -63,12 +63,12 @@ public class VectorDBExampleWithAI_doc {
         Map<String, Object> metaDataMap = new HashMap<>();
         metaDataMap.put("bookName", "向量数据库库12");
         metaDataMap.put("bookId", "123456");
-        uploadFile(client, "/data/home/yihaoan/projects/test/test13.md", metaDataMap);
+        uploadFile(client, "test15.md", metaDataMap);
         // 解析加载文件需要等待时间
         Thread.sleep(1000 * 10);
 
         queryData(client);
-        GetFile(client, "test13.md");
+        GetFile(client, "test15.md");
         updateAndDelete(client);
         deleteAndDrop(client);
     }
@@ -193,7 +193,7 @@ public class VectorDBExampleWithAI_doc {
                 .build();
         List<Document> qdos = collection.query(queryParam);
         for (Document doc : qdos) {
-            System.out.println("\tres: " + doc.toString());
+            System.out.println("\tres: " + JSONUtil.toJSONString(doc));
         }
 
         // search
@@ -209,7 +209,7 @@ public class VectorDBExampleWithAI_doc {
         List<Document> searchRes = collection.search(searchByContentsParam);
         int i = 0;
         for (Document doc : searchRes) {
-            System.out.println("\tres" +(i++)+": "+ doc.toString());
+            System.out.println("\tres" +(i++)+": "+ JSONUtil.toJSONString(doc));
         }
     }
 

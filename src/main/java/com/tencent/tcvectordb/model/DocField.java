@@ -47,10 +47,6 @@ public class DocField {
         return value.toString();
     }
 
-    public Long getLongValue() {
-        return Long.valueOf(value.toString());
-    }
-
     public FieldType getFieldType() {
         if (this.value == null) {
             throw new VectorDBException("DocField value is null, " + "filed name is " + this.name);

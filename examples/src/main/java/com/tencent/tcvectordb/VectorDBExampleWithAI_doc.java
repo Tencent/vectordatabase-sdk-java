@@ -34,7 +34,9 @@ import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.enums.AppendKeywordsToChunkEnum;
 import com.tencent.tcvectordb.model.param.enums.AppendTitleToChunkEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
+import com.tencent.tcvectordb.utils.JSONUtil;
 
+import javax.print.Doc;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +70,7 @@ public class VectorDBExampleWithAI_doc {
         queryData(client);
         GetFile(client, "test13.md");
         updateAndDelete(client);
-//        deleteAndDrop(client);
+        deleteAndDrop(client);
     }
 
 

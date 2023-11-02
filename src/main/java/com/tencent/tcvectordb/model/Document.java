@@ -20,6 +20,8 @@
 
 package com.tencent.tcvectordb.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -59,6 +61,9 @@ public class Document {
     }
 
     public List<Double> getVector() {
+        if (vector==null || vector.isEmpty()){
+            return Collections.EMPTY_LIST;
+        }
         return Collections.unmodifiableList(vector);
     }
 

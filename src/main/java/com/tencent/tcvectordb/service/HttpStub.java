@@ -471,24 +471,25 @@ public class HttpStub implements Stub {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.addUserMetadata("string--fileType", fileType.getDataFileType());
         metadata.addUserMetadata("string--id", uploadUrlRes.getFileId());
-        for (Map.Entry<String, Object> entry : metaDataMap.entrySet()) {
-            String key = entry.getKey();
-            if (key.contains("_")){
-                throw new VectorDBException("user metadata key can not contain _");
+        if (metaDataMap!=null && !metaDataMap.isEmpty()){
+            for (Map.Entry<String, Object> entry : metaDataMap.entrySet()) {
+                String key = entry.getKey();
+                if (key.contains("_")){
+                    throw new VectorDBException("user metadata key can not contain _");
+                }
+                Object value = entry.getValue();
+                String enKey = URLEncoder.encode(key, String.valueOf(StandardCharsets.UTF_8));
+                if (value instanceof String){
+                    enKey = "string-" + enKey;
+                } else if (value instanceof Long || value instanceof Integer ) {
+                    enKey = "uint64-" + enKey;
+                }else {
+                    throw new VectorDBException("user metadata value must be string、long or int");
+                }
+                String enValue = URLEncoder.encode(value.toString(), String.valueOf(StandardCharsets.UTF_8));
+                metadata.addUserMetadata(enKey, enValue);
             }
-            Object value = entry.getValue();
-            String enKey = URLEncoder.encode(key, String.valueOf(StandardCharsets.UTF_8));
-            if (value instanceof String){
-                enKey = "string-" + enKey;
-            } else if (value instanceof Long || value instanceof Integer ) {
-                enKey = "uint64-" + enKey;
-            }else {
-                throw new VectorDBException("user metadata value must be string、long or int");
-            }
-            String enValue = URLEncoder.encode(value.toString(), String.valueOf(StandardCharsets.UTF_8));
-            metadata.addUserMetadata(enKey, enValue);
         }
-
         putObjectRequest.withMetadata(metadata);
         putObjectRequest.withKey(uploadPath);
 

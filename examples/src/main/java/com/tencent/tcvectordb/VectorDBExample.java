@@ -68,12 +68,14 @@ public class VectorDBExample {
      * @return {@link ConnectParam}
      */
     private static ConnectParam initConnectParam() {
-        System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
-        System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
+        String vdb_url="http://21.0.83.231:8100";
+        String vdb_key = "qRxBIyRCm4VZc3U3BhklvuGim0Rg9BaXJi1qp3gb";
+        System.out.println("\tvdb_url: " + vdb_url);
+        System.out.println("\tvdb_key: " + vdb_key);
         return ConnectParam.newBuilder()
-                .withUrl(System.getProperty("vdb_url"))
+                .withUrl(vdb_url)
                 .withUsername("root")
-                .withKey(System.getProperty("vdb_key"))
+                .withKey(vdb_key)
                 .withTimeout(30)
                 .build();
     }
@@ -392,8 +394,8 @@ public class VectorDBExample {
     private static CreateCollectionParam initCreateCollectionParam(String collName) {
         return CreateCollectionParam.newBuilder()
                 .withName(collName)
-                .withShardNum(2)
-                .withReplicaNum(1)
+                .withShardNum(3)
+                .withReplicaNum(2)
                 .withDescription("test collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", 3, IndexType.HNSW,

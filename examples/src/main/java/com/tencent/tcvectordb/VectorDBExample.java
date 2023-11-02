@@ -189,7 +189,7 @@ public class VectorDBExample {
                                 "布大惊，与陈宫商议。宫曰：“闻刘玄德新领徐州，可往投之。"))
                         .build()));
         System.out.println("---------------------- upsert ----------------------");
-        InsertParam insertParam = InsertParam.newBuilder().addAllDocument(documentList).build();
+        InsertParam insertParam = InsertParam.newBuilder().addAllDocument(documentList).withBuildIndex(false).build();
         collection.upsert(insertParam);
 
         // notice：upsert 操作可用会有延迟
@@ -209,9 +209,9 @@ public class VectorDBExample {
                 // 使用 filter 过滤数据
                 .withFilter(filterParam)
                 // limit 限制返回行数，1 到 16384 之间
-                 .withLimit(2)
+                .withLimit(2)
                 // 偏移
-                 .withOffset(1)
+                .withOffset(1)
                 // 指定返回的 fields
                 .withOutputFields(outputFields)
                 // 是否返回 vector 数据

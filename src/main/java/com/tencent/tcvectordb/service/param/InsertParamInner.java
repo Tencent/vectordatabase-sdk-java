@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.model.Document;
+import com.tencent.tcvectordb.model.param.dml.InsertParam;
 
 import java.util.List;
 
@@ -19,13 +20,13 @@ public class InsertParamInner {
     private String database;
     private String collection;
     private List<Document> documents;
-    private Boolean buildIndex = true;
+    private Boolean buildIndex;
 
-    public InsertParamInner(String database, String collection,
-                            List<Document> documents) {
+    public InsertParamInner(String database, String collection, InsertParam param) {
         this.database = database;
         this.collection = collection;
-        this.documents = documents;
+        this.documents = param.getDocuments();
+        this.buildIndex = param.isBuildIndex();
     }
 
     public String getDatabase() {

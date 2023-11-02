@@ -132,7 +132,7 @@ public class AICollection extends BaseCollection{
     }
 
     public BaseRes rebuildIndex(RebuildIndexParam rebuildIndexParam) throws VectorDBException{
-        return this.stub.rebuildIndex(new RebuildIndexParamInner(this.database, this.collection, rebuildIndexParam));
+        return this.stub.rebuildAIIndex(new RebuildIndexParamInner(this.database, this.collection, rebuildIndexParam));
     }
 
     @Override

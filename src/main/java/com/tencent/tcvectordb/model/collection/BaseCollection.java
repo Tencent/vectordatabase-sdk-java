@@ -105,9 +105,7 @@ public abstract class BaseCollection {
 
     public abstract AffectRes update(UpdateParam param, Document document) throws VectorDBException;
 
-    public BaseRes rebuildIndex(RebuildIndexParam rebuildIndexParam) {
-        return this.stub.rebuildIndex(new RebuildIndexParamInner(this.database, this.collection, rebuildIndexParam));
-    }
+    public abstract BaseRes rebuildIndex(RebuildIndexParam rebuildIndexParam);
 
     @Override
     public String toString() {

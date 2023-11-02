@@ -56,19 +56,19 @@ public class VectorDBExampleWithAI_doc {
 
         // 测试前清理环境
         System.out.println("---------------------- clear before test ----------------------");
-        anySafe(() -> clear(client));
-        createDatabaseAndCollection(client);
+//        anySafe(() -> clear(client));
+//        createDatabaseAndCollection(client);
         Map<String, Object> metaDataMap = new HashMap<>();
-        metaDataMap.put("bookName", "向量数据库库");
+        metaDataMap.put("bookName", "向量数据库库12");
         metaDataMap.put("bookId", "123456");
-        uploadFile(client, "/data/home/yihaoan/projects/test/test12.md", metaDataMap);
+        uploadFile(client, "/data/home/yihaoan/projects/test/test13.md", metaDataMap);
         // 解析加载文件需要等待时间
         Thread.sleep(1000 * 10);
 
         queryData(client);
-        GetFile(client, "test12.md");
+        GetFile(client, "test13.md");
         updateAndDelete(client);
-        deleteAndDrop(client);
+//        deleteAndDrop(client);
     }
 
 
@@ -78,13 +78,15 @@ public class VectorDBExampleWithAI_doc {
      * @return {@link ConnectParam}
      */
     private static ConnectParam initConnectParam() {
-        System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
-        System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
+        String vdb_url="http://21.0.83.204:8100";
+        String vdb_key = "RPo223wN2yXyUq16dmHcGyzXHaYfWCZWNMGwBC01";
+        System.out.println("\tvdb_url: " + vdb_url);
+        System.out.println("\tvdb_key: " + vdb_key);
         return ConnectParam.newBuilder()
-                .withUrl(System.getProperty("vdb_url"))
+                .withUrl(vdb_url)
                 .withUsername("root")
-                .withKey(System.getProperty("vdb_key"))
-                .withTimeout(30)
+                .withKey(vdb_key)
+                .withTimeout(100)
                 .build();
     }
 

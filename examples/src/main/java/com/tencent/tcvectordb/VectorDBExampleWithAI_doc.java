@@ -167,7 +167,6 @@ public class VectorDBExampleWithAI_doc {
     }
 
 
-
     private static void queryData(VectorDBClient client) {
         Database database = client.database(DBNAME);
         AICollection collection = database.describeAICollection(COLL_NAME);

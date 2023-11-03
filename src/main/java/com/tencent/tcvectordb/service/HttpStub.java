@@ -444,6 +444,10 @@ public class HttpStub implements Stub {
             throw new VectorDBException("file is not existed");
         }
 
+        if (file.length()<=0){
+            throw new VectorDBException("file is empty");
+        }
+
         FileTypeEnum fileType = FileUtils.getFileType(file);
         if(fileType == FileTypeEnum.UNSUPPORT){
             throw new VectorDBException("only markdown file can upload");

@@ -61,12 +61,12 @@ public class VectorDBExampleWithAI_doc {
         Map<String, Object> metaDataMap = new HashMap<>();
         metaDataMap.put("bookName", "向量数据库库12");
         metaDataMap.put("bookId", "123456");
-        uploadFile(client, "test16.md", metaDataMap);
+        uploadFile(client, "/data/home/yihaoan/projects/test/test17.md", metaDataMap);
         // 解析加载文件需要等待时间
         Thread.sleep(1000 * 10);
 
         queryData(client);
-        GetFile(client, "test16.md");
+        GetFile(client, "test17.md");
         updateAndDelete(client);
         deleteAndDrop(client);
     }

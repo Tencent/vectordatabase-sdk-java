@@ -56,6 +56,7 @@ public class Collection extends BaseCollection {
     public void setEmbedding(Embedding embedding) {
         this.embedding = embedding;
     }
+
     public AffectRes upsert(InsertParam param) throws VectorDBException {
         InsertParamInner insertParam = new InsertParamInner(
                 database, collection, param);

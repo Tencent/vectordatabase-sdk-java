@@ -99,8 +99,6 @@ public abstract class BaseCollection {
 
     public abstract List<Document> query(QueryParam param) throws VectorDBException;
 
-    public abstract List<List<Document>> searchById(SearchByIdParam param) throws VectorDBException;
-
     public abstract AffectRes delete(DeleteParam param) throws VectorDBException;
 
     public abstract AffectRes update(UpdateParam param, Document document) throws VectorDBException;

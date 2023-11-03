@@ -93,14 +93,9 @@ public class AICollection extends BaseCollection{
                 new QueryParamInner(database, collection, param, this.readConsistency));
     }
 
-    public List<Document> search(SearchParam param) throws VectorDBException {
+    public List<Document> search(SearchByContentsParam param) throws VectorDBException {
         return this.stub.searchAIDocument(new SearchParamInner(
                 database, collection, param, this.readConsistency)).getDocuments();
-    }
-
-    public List<List<Document>> searchById(SearchByIdParam param) throws VectorDBException {
-        return this.stub.searchDocument(new SearchParamInner(
-                database, collection, param, this.readConsistency), DataBaseTypeEnum.AI_DOC).getDocuments();
     }
 
     public AffectRes delete(DeleteParam param) throws VectorDBException {

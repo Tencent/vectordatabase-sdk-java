@@ -58,7 +58,7 @@ public class Collection extends BaseCollection {
     }
     public AffectRes upsert(InsertParam param) throws VectorDBException {
         InsertParamInner insertParam = new InsertParamInner(
-                database, collection, param.getDocuments());
+                database, collection, param);
         return super.stub.upsertDocument(insertParam);
     }
 

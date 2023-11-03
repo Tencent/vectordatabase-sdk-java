@@ -6,6 +6,24 @@ public class UploadUrlRes extends BaseRes{
     private String fileId;
     private Credential credentials;
     private UploadCondtion uploadCondition;
+    private String cosRegion;
+    private String cosBucket;
+
+    public String getCosRegion() {
+        return cosRegion;
+    }
+
+    public void setCosRegion(String cosRegion) {
+        this.cosRegion = cosRegion;
+    }
+
+    public String getCosBucket() {
+        return cosBucket;
+    }
+
+    public void setCosBucket(String cosBucket) {
+        this.cosBucket = cosBucket;
+    }
 
     public UploadCondtion getUploadCondition() {
         return uploadCondition;

@@ -26,7 +26,6 @@ import com.tencent.tcvectordb.model.Database;
 import com.tencent.tcvectordb.model.DocField;
 import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.collection.AICollection;
-import com.tencent.tcvectordb.model.collection.Collection;
 import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
@@ -36,7 +35,6 @@ import com.tencent.tcvectordb.model.param.enums.AppendTitleToChunkEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.utils.JSONUtil;
 
-import javax.print.Doc;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -63,12 +61,12 @@ public class VectorDBExampleWithAI_doc {
         Map<String, Object> metaDataMap = new HashMap<>();
         metaDataMap.put("bookName", "向量数据库库12");
         metaDataMap.put("bookId", "123456");
-        uploadFile(client, "test15.md", metaDataMap);
+        uploadFile(client, "test16.md", metaDataMap);
         // 解析加载文件需要等待时间
         Thread.sleep(1000 * 10);
 
         queryData(client);
-        GetFile(client, "test15.md");
+        GetFile(client, "test16.md");
         updateAndDelete(client);
         deleteAndDrop(client);
     }
@@ -219,11 +217,11 @@ public class VectorDBExampleWithAI_doc {
 
         // filter 限制仅会更新 id = "0003"
         System.out.println("---------------------- update ----------------------");
-        Filter filterParam = new Filter("_indexed_status=0");
+        Filter filterParam = new Filter("_file_name=\"test16.md\"");
         List<String> documentIds = Arrays.asList("1166304506301120512", "1166305232221896704");
         UpdateParam updateParam = UpdateParam
                 .newBuilder()
-                .addAllDocumentId(documentIds)
+//                .addAllDocumentId(documentIds)
                 .withFilter(filterParam)
                 .build();
         Document updateDoc = Document
@@ -240,10 +238,10 @@ public class VectorDBExampleWithAI_doc {
 
         //     filter 限制只会删除 _indexed_status=0 成功
         System.out.println("---------------------- delete ----------------------");
-        Filter filterParam1 = new Filter("_indexed_status=0");
+        Filter filterParam1 = new Filter("_file_name=\"test16.md\"");
         DeleteParam build = DeleteParam
                 .newBuilder()
-                .addAllDocumentId(documentIds)
+//                .addAllDocumentId(documentIds)
                 .withFilter(filterParam1)
                 .build();
         AffectRes affectRes = collection.delete(build);

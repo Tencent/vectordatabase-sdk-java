@@ -39,18 +39,18 @@ import java.util.*;
  */
 public class AICollection extends BaseCollection{
     private AIStatus aiStatus;
-    private int maxFiles;
+    private int expectedFileNum;
     // 文件的平均大小
     private int averageFileSize;
     private String language;
     private DocumentPreprocessParams documentPreprocess;
 
-    public int getMaxFiles() {
-        return maxFiles;
+    public int getExpectedFileNum() {
+        return expectedFileNum;
     }
 
-    public void setMaxFiles(int maxFiles) {
-        this.maxFiles = maxFiles;
+    public void setExpectedFileNum(int expectedFileNum) {
+        this.expectedFileNum = expectedFileNum;
     }
 
     public int getAverageFileSize() {

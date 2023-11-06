@@ -37,7 +37,7 @@ import java.util.List;
 public class CreateAICollectionParam extends AICollection {
 
     // 最大文件数
-    private int maxFiles;
+    private int expectedFileNum;
     // 文件的平均大小
     private int averageFileSize;
 
@@ -51,14 +51,10 @@ public class CreateAICollectionParam extends AICollection {
         this.shardNum = builder.shardNum;
         this.description = builder.description;
         this.indexes = builder.indexes;
-        this.maxFiles = builder.maxFiles;
+        this.expectedFileNum = builder.expectedFileNum;
         this.averageFileSize = builder.averageFileSize;
         this.documentPreprocess = builder.documentPreprocess;
         this.language = builder.language;
-    }
-
-    public int getMaxFiles() {
-        return maxFiles;
     }
 
     public int getAverageFileSize() {
@@ -83,7 +79,16 @@ public class CreateAICollectionParam extends AICollection {
         private int shardNum = 1;
         private String description;
         private final List<IndexField> indexes;
-        private int maxFiles;
+        private int expectedFileNum;
+
+        public int getExpectedFileNum() {
+            return expectedFileNum;
+        }
+
+        public void setExpectedFileNum(int expectedFileNum) {
+            this.expectedFileNum = expectedFileNum;
+        }
+
         private int averageFileSize;
 
         private String language;
@@ -119,8 +124,8 @@ public class CreateAICollectionParam extends AICollection {
             return this;
         }
 
-        public Builder withMaxFiles(int maxFiles) {
-            this.maxFiles = maxFiles;
+        public Builder withExpectedFileNum(int expectedFileNum) {
+            this.expectedFileNum = expectedFileNum;
             return this;
         }
 

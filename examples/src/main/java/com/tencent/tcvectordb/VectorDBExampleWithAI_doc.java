@@ -61,12 +61,12 @@ public class VectorDBExampleWithAI_doc {
         Map<String, Object> metaDataMap = new HashMap<>();
         metaDataMap.put("bookName", "向量数据库库12");
         metaDataMap.put("bookId", "123456");
-        uploadFile(client, "/data/home/yihaoan/projects/test/test17.md", metaDataMap);
+        uploadFile(client, "/data/home/yihaoan/projects/test/test18.md", metaDataMap);
         // 解析加载文件需要等待时间
         Thread.sleep(1000 * 10);
 
         queryData(client);
-        GetFile(client, "test17.md");
+        GetFile(client, "test18.md");
         updateAndDelete(client);
         deleteAndDrop(client);
     }
@@ -216,7 +216,7 @@ public class VectorDBExampleWithAI_doc {
 
         // filter 限制仅会更新 id = "0003"
         System.out.println("---------------------- update ----------------------");
-        Filter filterParam = new Filter("_file_name=\"test16.md\"");
+        Filter filterParam = new Filter("_file_name=\"test18.md\"");
         List<String> documentIds = Arrays.asList("1166304506301120512", "1166305232221896704");
         UpdateParam updateParam = UpdateParam
                 .newBuilder()
@@ -237,7 +237,7 @@ public class VectorDBExampleWithAI_doc {
 
         //     filter 限制只会删除 _indexed_status=0 成功
         System.out.println("---------------------- delete ----------------------");
-        Filter filterParam1 = new Filter("_file_name=\"test16.md\"");
+        Filter filterParam1 = new Filter("_file_name=\"test18.md\"");
         DeleteParam build = DeleteParam
                 .newBuilder()
 //                .addAllDocumentId(documentIds)
@@ -271,7 +271,7 @@ public class VectorDBExampleWithAI_doc {
                 .withShardNum(2)
                 .withReplicaNum(1)
                 .withDescription("test create ai collection")
-                .withMaxFiles(1000000)
+                .withExpectedFileNum(1000000)
                 .withLanguage(LanuageType.ZH)
                 .withAverageFileSize(1024000)
                 .withDocumentPreprocess(new DocumentPreprocessParams(AppendTitleToChunkEnum.AppendTitleToChunkEmbedding, AppendKeywordsToChunkEnum.AppendKeywordsToChunkEmbedding))

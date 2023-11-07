@@ -595,7 +595,7 @@ public class HttpStub implements Stub {
                 builder.addFilterField(new DocField(name, mapper.readValue(
                         ele.toString(), new TypeReference<ChunkInfo>() {
                         })));
-            } else if (StringUtils.equals("sourceFile", name)) {
+            } else if (StringUtils.equals("sourceFile", name) || StringUtils.equals("_file_info", name)) {
                 builder.addFilterField(new DocField(name, node2Doc(ele)));
             } else {
                 if (ele.isInt()) {

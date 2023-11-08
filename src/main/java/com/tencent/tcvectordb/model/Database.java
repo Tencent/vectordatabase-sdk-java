@@ -132,7 +132,7 @@ public class Database {
 
     public List<AICollection> listAICollections() throws VectorDBException {
         // 只有ai database可以查看ai表
-        if (!this.dbType.equals(DataBaseTypeEnum.AI_DOC)){
+        if (!(this.dbType.equals(DataBaseTypeEnum.AI_DOC) || this.dbType.equals(DataBaseTypeEnum.AI_DB))){
             throw new VectorDBException("database can not support create ai collection");
         }
         List<AICollection> collections = stub.listAICollections(this.databaseName);
@@ -163,14 +163,14 @@ public class Database {
     }
 
     public AffectRes setAIAlias(String collectionName, String aliasName) {
-        if (!this.dbType.equals(DataBaseTypeEnum.AI_DOC)){
+        if (!(this.dbType.equals(DataBaseTypeEnum.AI_DOC) || this.dbType.equals(DataBaseTypeEnum.AI_DB))){
             return new AffectRes();
         }
         return stub.setAIAlias(this.databaseName, collectionName, aliasName);
     }
 
     public AffectRes deleteAIAlias(String aliasName) {
-        if (!this.dbType.equals(DataBaseTypeEnum.AI_DOC)){
+        if (!(this.dbType.equals(DataBaseTypeEnum.AI_DOC) || this.dbType.equals(DataBaseTypeEnum.AI_DB))){
             return new AffectRes();
         }
         return stub.deleteAIAlias(this.databaseName, aliasName);

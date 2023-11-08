@@ -61,12 +61,12 @@ public class VectorDBExampleWithAI_doc {
         Map<String, Object> metaDataMap = new HashMap<>();
         metaDataMap.put("bookName", "向量数据库库12");
         metaDataMap.put("bookId", "123456");
-        uploadFile(client, "/data/home/yihaoan/projects/test/test18.md", metaDataMap);
+        uploadFile(client, "/data/home/yihaoan/projects/test/test19.md", metaDataMap);
         // 解析加载文件需要等待时间
         Thread.sleep(1000 * 10);
 
         queryData(client);
-        GetFile(client, "test18.md");
+        GetFile(client, "test19.md");
         updateAndDelete(client);
         deleteAndDrop(client);
     }
@@ -78,8 +78,8 @@ public class VectorDBExampleWithAI_doc {
      * @return {@link ConnectParam}
      */
     private static ConnectParam initConnectParam() {
-        String vdb_url="http://21.0.83.204:8100";
-        String vdb_key = "RPo223wN2yXyUq16dmHcGyzXHaYfWCZWNMGwBC01";
+        String vdb_url="http://lb-3fuz86n6-e8g7tor5zvbql29p.clb.ap-guangzhou.tencentclb.com:60000";
+        String vdb_key = "bwf0s9Hs1glqln1BgtxVc2ZLKq4FGGw5rShS54K9";
         System.out.println("\tvdb_url: " + vdb_url);
         System.out.println("\tvdb_key: " + vdb_key);
         return ConnectParam.newBuilder()
@@ -216,7 +216,7 @@ public class VectorDBExampleWithAI_doc {
 
         // filter 限制仅会更新 id = "0003"
         System.out.println("---------------------- update ----------------------");
-        Filter filterParam = new Filter("_file_name=\"test18.md\"");
+        Filter filterParam = new Filter("_file_name=\"test19.md\"");
         List<String> documentIds = Arrays.asList("1166304506301120512", "1166305232221896704");
         UpdateParam updateParam = UpdateParam
                 .newBuilder()
@@ -237,7 +237,7 @@ public class VectorDBExampleWithAI_doc {
 
         //     filter 限制只会删除 _indexed_status=0 成功
         System.out.println("---------------------- delete ----------------------");
-        Filter filterParam1 = new Filter("_file_name=\"test18.md\"");
+        Filter filterParam1 = new Filter("_file_name=\"test19.md\"");
         DeleteParam build = DeleteParam
                 .newBuilder()
 //                .addAllDocumentId(documentIds)

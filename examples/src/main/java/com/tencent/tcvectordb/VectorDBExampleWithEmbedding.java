@@ -447,7 +447,7 @@ public class VectorDBExampleWithEmbedding {
         return CreateCollectionParam.newBuilder()
                 .withName(collName)
                 .withShardNum(2)
-                .withReplicaNum(1)
+                .withReplicaNum(0)
                 .withDescription("test embedding collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", BGE_BASE_ZH.getDimension(), IndexType.HNSW,

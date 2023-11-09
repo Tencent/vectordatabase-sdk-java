@@ -131,7 +131,7 @@ public class VectorDBExampleWithAI_doc {
         }
 
         // 5. 设置 collection 别名
-        System.out.println("---------------------- setAlias ----------------------");
+        System.out.println("---------------------- setAIAlias ----------------------");
         AffectRes affectRes = db.setAIAlias(COLL_NAME, COLL_NAME_ALIAS);
         System.out.println("\tres: " + affectRes.toString());
         Thread.sleep(5*1000);

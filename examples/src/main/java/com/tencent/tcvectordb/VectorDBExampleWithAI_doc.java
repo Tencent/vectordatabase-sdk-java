@@ -214,7 +214,7 @@ public class VectorDBExampleWithAI_doc {
         // update
         // 1. update 提供基于 [主键查询] 和 [Filter 过滤] 的部分字段更新或者非索引字段新增
 
-        // filter 限制仅会更新 id = "0003"
+        // filter 限制仅会更新 条件符合的记录
         System.out.println("---------------------- update ----------------------");
         Filter filterParam = new Filter("_file_name=\"test19.md\"");
         List<String> documentIds = Arrays.asList("1166304506301120512", "1166305232221896704");
@@ -235,7 +235,7 @@ public class VectorDBExampleWithAI_doc {
         // 1. delete 提供基于[ 主键查询]和[Filter 过滤]的数据删除能力
         // 2. 删除功能会受限于 collection 的索引类型，部分索引类型不支持删除操作
 
-        //     filter 限制只会删除 _indexed_status=0 成功
+        //     filter 限制只会删除命中的记录
         System.out.println("---------------------- delete ----------------------");
         Filter filterParam1 = new Filter("_file_name=\"test19.md\"");
         DeleteParam build = DeleteParam

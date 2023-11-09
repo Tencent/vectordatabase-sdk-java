@@ -119,12 +119,12 @@ public class VectorDBExampleWithAI_doc {
 //        Database db = client.database(DBNAME);
 
         // 3. 创建 collection
-        System.out.println("---------------------- createCollection ----------------------");
+        System.out.println("---------------------- createAICollection ----------------------");
         CreateAICollectionParam collectionParam = initCreateAICollectionParam(COLL_NAME);
         db.createAICollection(collectionParam);
 
         // 4. 列出所有 collection
-        System.out.println("---------------------- listCollections ----------------------");
+        System.out.println("---------------------- listAICollections ----------------------");
         List<AICollection> cols = db.listAICollections();
         for (AICollection col : cols) {
             System.out.println("\tres: " + col.toString());
@@ -137,18 +137,18 @@ public class VectorDBExampleWithAI_doc {
         Thread.sleep(5*1000);
 
         // 6. describe collection
-        System.out.println("---------------------- describeCollection ----------------------");
+        System.out.println("---------------------- describeAICollection ----------------------");
         AICollection descCollRes = db.describeAICollection(COLL_NAME);
         System.out.println("\tres: " + descCollRes.toString());
 
 
         // 7. delete alias
-        System.out.println("---------------------- deleteAlias ----------------------");
+        System.out.println("---------------------- deleteAIAlias ----------------------");
         AffectRes affectRes1 = db.deleteAIAlias(COLL_NAME_ALIAS);
         System.out.println("\tres: " + affectRes1);
 
         // 8. describe collection
-        System.out.println("---------------------- describeCollection ----------------------");
+        System.out.println("---------------------- describeAICollection ----------------------");
         AICollection descCollRes1 = db.describeAICollection(COLL_NAME);
         System.out.println("\tres: " + descCollRes1.toString());
 

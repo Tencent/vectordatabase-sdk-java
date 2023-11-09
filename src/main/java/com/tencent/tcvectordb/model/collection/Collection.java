@@ -94,7 +94,7 @@ public class Collection extends BaseCollection {
     }
 
     public BaseRes rebuildIndex(RebuildIndexParam rebuildIndexParam) {
-        return this.stub.rebuildIndex(new RebuildIndexParamInner(this.database, this.collection, rebuildIndexParam));
+        return this.stub.rebuildIndex(new RebuildIndexParamInner(database, collection, rebuildIndexParam));
     }
 
     @Override

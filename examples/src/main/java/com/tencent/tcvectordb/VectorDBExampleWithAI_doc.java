@@ -61,12 +61,12 @@ public class VectorDBExampleWithAI_doc {
         Map<String, Object> metaDataMap = new HashMap<>();
         metaDataMap.put("bookName", "向量数据库库12");
         metaDataMap.put("bookId", "123456");
-        uploadFile(client, "/data/home/yihaoan/projects/test/test19.md", metaDataMap);
+        uploadFile(client, "/data/home/yihaoan/projects/test/test21.md", metaDataMap);
         // 解析加载文件需要等待时间
         Thread.sleep(1000 * 10);
 
         queryData(client);
-        GetFile(client, "test19.md");
+        GetFile(client, "test21.md");
         updateAndDelete(client);
         deleteAndDrop(client);
     }
@@ -78,15 +78,13 @@ public class VectorDBExampleWithAI_doc {
      * @return {@link ConnectParam}
      */
     private static ConnectParam initConnectParam() {
-        String vdb_url="http://lb-3fuz86n6-e8g7tor5zvbql29p.clb.ap-guangzhou.tencentclb.com:60000";
-        String vdb_key = "bwf0s9Hs1glqln1BgtxVc2ZLKq4FGGw5rShS54K9";
-        System.out.println("\tvdb_url: " + vdb_url);
-        System.out.println("\tvdb_key: " + vdb_key);
+        System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
+        System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
         return ConnectParam.newBuilder()
-                .withUrl(vdb_url)
+                .withUrl(System.getProperty("vdb_url"))
                 .withUsername("root")
-                .withKey(vdb_key)
-                .withTimeout(100)
+                .withKey(System.getProperty("vdb_key"))
+                .withTimeout(30)
                 .build();
     }
 
@@ -157,13 +155,13 @@ public class VectorDBExampleWithAI_doc {
     private static void uploadFile(VectorDBClient client, String filePath, Map<String, Object> metaDataMap) throws Exception {
         Database database = client.database(DBNAME);
         AICollection collection = database.describeAICollection(COLL_NAME);
-        collection.upload(DBNAME, COLL_NAME, filePath, metaDataMap);
+        collection.upload(filePath, metaDataMap);
     }
 
     private static void GetFile(VectorDBClient client, String fileName) {
         Database database = client.database(DBNAME);
         AICollection collection = database.describeAICollection(COLL_NAME);
-        System.out.println(collection.getFile(DBNAME, COLL_NAME, fileName, ""));
+        System.out.println(collection.getFile(fileName, ""));
     }
 
 
@@ -216,7 +214,7 @@ public class VectorDBExampleWithAI_doc {
 
         // filter 限制仅会更新 条件符合的记录
         System.out.println("---------------------- update ----------------------");
-        Filter filterParam = new Filter("_file_name=\"test19.md\"");
+        Filter filterParam = new Filter("_file_name=\"test21.md\"");
         List<String> documentIds = Arrays.asList("1166304506301120512", "1166305232221896704");
         UpdateParam updateParam = UpdateParam
                 .newBuilder()
@@ -237,7 +235,7 @@ public class VectorDBExampleWithAI_doc {
 
         //     filter 限制只会删除命中的记录
         System.out.println("---------------------- delete ----------------------");
-        Filter filterParam1 = new Filter("_file_name=\"test19.md\"");
+        Filter filterParam1 = new Filter("_file_name=\"test21.md\"");
         DeleteParam build = DeleteParam
                 .newBuilder()
 //                .addAllDocumentId(documentIds)
@@ -245,6 +243,10 @@ public class VectorDBExampleWithAI_doc {
                 .build();
         AffectRes affectRes = collection.delete(build);
         System.out.println("\tres: " + affectRes.toString());
+
+        // truncate collection
+        System.out.println("---------------------- truncate ----------------------");
+        database.truncateAICollections(COLL_NAME);
     }
 
     private static void deleteAndDrop(VectorDBClient client) {

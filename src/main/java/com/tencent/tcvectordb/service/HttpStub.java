@@ -170,7 +170,7 @@ public class HttpStub implements Stub {
     @Override
     public AffectRes truncateCollection(String databaseName, String collectionName, DataBaseTypeEnum dbType) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_FLUSH);
-        if (dbType.equals(DataBaseTypeEnum.AI_DOC) || dbType.equals(DataBaseTypeEnum.AI_DB)){
+        if (DataBaseTypeEnum.isAIDataBase(dbType)){
             url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_COL_FLUSH);
         }
         String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
@@ -238,7 +238,7 @@ public class HttpStub implements Stub {
     @Override
     public SearchRes searchDocument(SearchParamInner param, DataBaseTypeEnum dbType) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_SEARCH);
-        if (dbType.equals(DataBaseTypeEnum.AI_DOC) || dbType.equals(DataBaseTypeEnum.AI_DB)){
+        if (DataBaseTypeEnum.isAIDataBase(dbType)){
             url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_SEARCH);
         }
         JsonNode jsonNode = this.post(url, param.toString());

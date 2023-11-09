@@ -77,7 +77,7 @@ public interface Stub {
     Collection describeCollection(String databaseName, String collectionName);
 
     /**
-     * describe collection
+     * truncate collection
      */
     AffectRes truncateCollection(String databaseName, String collectionName, DataBaseTypeEnum dbType);
 

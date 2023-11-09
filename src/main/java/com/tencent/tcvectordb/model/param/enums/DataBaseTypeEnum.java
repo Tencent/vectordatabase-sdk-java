@@ -14,6 +14,10 @@ public enum DataBaseTypeEnum {
         this.dataBaseType = dataBaseType;
     }
 
+    public static boolean isAIDataBase(DataBaseTypeEnum dbType){
+        return dbType.equals(DataBaseTypeEnum.AI_DOC) || dbType.equals(DataBaseTypeEnum.AI_DB);
+    }
+
     @JsonValue
     public String getDataBaseType() {
         return dataBaseType;

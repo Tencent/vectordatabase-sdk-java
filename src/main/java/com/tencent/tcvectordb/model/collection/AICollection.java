@@ -37,7 +37,7 @@ import java.util.*;
 /**
  * VectorDB Collection
  */
-public class AICollection extends BaseCollection{
+public class AICollection extends BaseCollection {
     private AIStatus aiStatus;
     private int expectedFileNum;
     // 文件的平均大小
@@ -108,16 +108,16 @@ public class AICollection extends BaseCollection{
                 new UpdateParamInner(database, collection, param, document));
     }
 
-    public void upload(String databaseName, String collectionName, String filePath, Map<String, Object> metaDataMap) throws Exception {
-        this.stub.upload(databaseName, collectionName, filePath, metaDataMap);
+    public void upload(String filePath, Map<String, Object> metaDataMap) throws Exception {
+        this.stub.upload(database, collection, filePath, metaDataMap);
     }
 
-    public GetFileRes getFile(String databaseName, String collectionName, String fileName, String fileId){
-        return this.stub.getFile(databaseName, collectionName, fileName, fileId);
+    public GetFileRes getFile(String fileName, String fileId) {
+        return this.stub.getFile(database, collection, fileName, fileId);
     }
 
-    public BaseRes rebuildIndex(RebuildIndexParam rebuildIndexParam) throws VectorDBException{
-        return this.stub.rebuildAIIndex(new RebuildIndexParamInner(this.database, this.collection, rebuildIndexParam));
+    public BaseRes rebuildIndex(RebuildIndexParam rebuildIndexParam) throws VectorDBException {
+        return this.stub.rebuildAIIndex(new RebuildIndexParamInner(database, collection, rebuildIndexParam));
     }
 
     @Override

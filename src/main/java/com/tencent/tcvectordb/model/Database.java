@@ -49,7 +49,6 @@ public class Database {
 
     @JsonIgnore
     private DataBaseTypeEnum dbType;
-    private static final Logger logger = LoggerFactory.getLogger(Database.class.getName());
 
     public Database(Stub stub, String databaseName, ReadConsistencyEnum readConsistency) {
         this.stub = stub;
@@ -107,6 +106,10 @@ public class Database {
         return stub.truncateCollection(this.databaseName, collectionName, this.dbType);
     }
 
+    public AffectRes truncateAICollections(String collectionName) {
+        return stub.truncateCollection(this.databaseName, collectionName, this.dbType);
+    }
+
     public Collection describeCollection(String collectionName) throws VectorDBException {
         Collection collection = stub.describeCollection(this.databaseName, collectionName);
         collection.setStub(stub);
@@ -131,10 +134,6 @@ public class Database {
     }
 
     public List<AICollection> listAICollections() throws VectorDBException {
-        // 只有ai database可以查看ai表
-        if (!(this.dbType.equals(DataBaseTypeEnum.AI_DOC) || this.dbType.equals(DataBaseTypeEnum.AI_DB))){
-            throw new VectorDBException("database can not support create ai collection");
-        }
         List<AICollection> collections = stub.listAICollections(this.databaseName);
         collections.forEach(c -> {
             c.setStub(stub);
@@ -163,16 +162,10 @@ public class Database {
     }
 
     public AffectRes setAIAlias(String collectionName, String aliasName) {
-        if (!(this.dbType.equals(DataBaseTypeEnum.AI_DOC) || this.dbType.equals(DataBaseTypeEnum.AI_DB))){
-            return new AffectRes();
-        }
         return stub.setAIAlias(this.databaseName, collectionName, aliasName);
     }
 
     public AffectRes deleteAIAlias(String aliasName) {
-        if (!(this.dbType.equals(DataBaseTypeEnum.AI_DOC) || this.dbType.equals(DataBaseTypeEnum.AI_DB))){
-            return new AffectRes();
-        }
         return stub.deleteAIAlias(this.databaseName, aliasName);
     }
 

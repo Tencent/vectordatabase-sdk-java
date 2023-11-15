@@ -61,12 +61,12 @@ public class VectorDBExampleWithAI_doc {
         Map<String, Object> metaDataMap = new HashMap<>();
         metaDataMap.put("bookName", "向量数据库库12");
         metaDataMap.put("bookId", "123456");
-        uploadFile(client, "/data/home/yihaoan/projects/test/test21.md", metaDataMap);
+        uploadFile(client, "/data/home/yihaoan/projects/test/test22.md", metaDataMap);
         // 解析加载文件需要等待时间
         Thread.sleep(1000 * 10);
 
         queryData(client);
-        GetFile(client, "test21.md");
+        GetFile(client, "test22.md");
         updateAndDelete(client);
         deleteAndDrop(client);
     }
@@ -80,10 +80,12 @@ public class VectorDBExampleWithAI_doc {
     private static ConnectParam initConnectParam() {
         System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
         System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
+        String vdb_url = "http://lb-rz3tigrs-971c4fayxj2hsidv.clb.ap-guangzhou.tencentclb.com:20000";
+        String vdb_key = "e72DMhqC8zLcoLZWQ5LArJ7gDxok25ewseMcmP1s";
         return ConnectParam.newBuilder()
-                .withUrl(System.getProperty("vdb_url"))
+                .withUrl(vdb_url)
                 .withUsername("root")
-                .withKey(System.getProperty("vdb_key"))
+                .withKey(vdb_key)
                 .withTimeout(30)
                 .build();
     }
@@ -193,9 +195,8 @@ public class VectorDBExampleWithAI_doc {
 
         // search
         System.out.println("---------------------- search ----------------------");
-        SearchContenOption option = SearchContenOption.newBuilder().withChunkExpand(Arrays.asList(1,1)).build();
+//        SearchContenOption option = SearchContenOption.newBuilder().withChunkExpand(Arrays.asList(1,1)).build();
         SearchByContentsParam searchByContentsParam = SearchByContentsParam.newBuilder()
-                .withSearchContenOption(option)
                 .withContent("什么是 AI 中的向量表示")
                 .withLimit(5)
                 .build();
@@ -274,7 +275,6 @@ public class VectorDBExampleWithAI_doc {
                 .withExpectedFileNum(1000000)
                 .withLanguage(LanuageType.ZH)
                 .withAverageFileSize(1024000)
-                .withDocumentPreprocess(new DocumentPreprocessParams(AppendTitleToChunkEnum.AppendTitleToChunkEmbedding, AppendKeywordsToChunkEnum.AppendKeywordsToChunkEmbedding))
                 .addField(new FilterIndex("bookName", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("author", FieldType.String, IndexType.FILTER))
                 .build();

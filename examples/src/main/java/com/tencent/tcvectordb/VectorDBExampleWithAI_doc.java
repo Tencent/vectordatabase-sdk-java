@@ -198,7 +198,6 @@ public class VectorDBExampleWithAI_doc {
 //        SearchContenOption option = SearchContenOption.newBuilder().withChunkExpand(Arrays.asList(1,1)).build();
         SearchByContentsParam searchByContentsParam = SearchByContentsParam.newBuilder()
                 .withContent("什么是 AI 中的向量表示")
-                .withLimit(5)
                 .build();
         List<Document> searchRes = collection.search(searchByContentsParam);
         int i = 0;

@@ -94,7 +94,7 @@ public class AICollection extends BaseCollection {
     }
 
     public List<Document> search(SearchByContentsParam param) throws VectorDBException {
-        return this.stub.searchAIDocument(new SearchParamInner(
+        return this.stub.searchAIDocument(new SearchDocParamInner(
                 database, collection, param, this.readConsistency)).getDocuments();
     }
 

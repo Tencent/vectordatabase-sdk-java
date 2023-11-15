@@ -30,9 +30,13 @@ import java.util.List;
  * Search By Vector Param
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SearchByContentsParam extends SearchParam {
+public class SearchByContentsParam{
     private String content;
     private SearchContenOption options;
+    private Params params;
+    private String filter;
+    private List<String> outputFields;
+    private int limit;
 
     public SearchContenOption getOptions() {
         return options;
@@ -50,21 +54,60 @@ public class SearchByContentsParam extends SearchParam {
         this.content = content;
     }
 
+    public Params getParams() {
+        return params;
+    }
+
+    public void setParams(Params params) {
+        this.params = params;
+    }
+
+    public String getFilter() {
+        return filter;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
+    }
+
+    public List<String> getOutputFields() {
+        return outputFields;
+    }
+
+    public void setOutputFields(List<String> outputFields) {
+        this.outputFields = outputFields;
+    }
+
+    public int getLimit() {
+        return limit;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
     private SearchByContentsParam(Builder builder) {
-        super(builder);
         this.content = builder.content;
         this.options = builder.searchContenOption;
+        this.params = builder.params;
+        this.filter = builder.filter;
+        this.outputFields = builder.outputFields;
+        this.limit = builder.limit;
     }
 
     public static Builder newBuilder() {
         return new Builder();
     }
 
-    public static class Builder extends SearchParam.Builder<Builder> {
+    public static class Builder{
         private String content;
         private SearchContenOption searchContenOption;
+        private Params params;
+        private String filter;
+        private List<String> outputFields;
+        protected int limit;
+
         private Builder() {
-            super();
             this.content = "";
         }
 
@@ -72,21 +115,38 @@ public class SearchByContentsParam extends SearchParam {
             this.content = content;
             return this;
         }
-        public Builder withSearchContenOption(SearchContenOption searchContenOption) {
+
+        public Builder withSearchContentOption(SearchContenOption searchContenOption) {
             this.searchContenOption = searchContenOption;
             return this;
         }
+
+        public Builder withParams(Params params) {
+            this.params = params;
+            return this;
+        }
+
+        public Builder withFilter(String filter) {
+            this.filter = filter;
+            return this;
+        }
+
+        public Builder withOutputFields(List<String> outputFields) {
+            this.outputFields = outputFields;
+            return this;
+        }
+
+        public Builder withLimit(int limit) {
+            this.limit = limit;
+            return this;
+        }
+
 
         public SearchByContentsParam build() {
             if (content.isEmpty()) {
                 throw new ParamException("SearchByContentsParam error: content is empty");
             }
             return new SearchByContentsParam(this);
-        }
-
-        @Override
-        protected Builder self() {
-            return this;
         }
     }
 }

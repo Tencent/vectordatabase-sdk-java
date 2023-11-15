@@ -387,9 +387,9 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public SearchContentRes searchAIDocument(SearchParamInner searchParamInner) {
+    public SearchContentRes searchAIDocument(SearchDocParamInner searchDocParamInner) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_SEARCH);
-        JsonNode jsonNode = this.post(url, searchParamInner.toString());
+        JsonNode jsonNode = this.post(url, searchDocParamInner.toString());
         JsonNode multiDocsNode = jsonNode.get("documents");
         int code = 0;
         if (jsonNode.get("code") != null) {

@@ -270,8 +270,6 @@ public class VectorDBExampleWithAI_doc {
     private static CreateAICollectionParam initCreateAICollectionParam(String collName) {
         return CreateAICollectionParam.newBuilder()
                 .withName(collName)
-                .withShardNum(2)
-                .withReplicaNum(1)
                 .withDescription("test create ai collection")
                 .withExpectedFileNum(1000000)
                 .withLanguage(LanuageType.ZH)

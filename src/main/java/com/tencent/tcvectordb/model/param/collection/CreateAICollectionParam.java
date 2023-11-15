@@ -47,8 +47,6 @@ public class CreateAICollectionParam extends AICollection {
 
     private CreateAICollectionParam(Builder builder) {
         this.collection = builder.name;
-        this.replicaNum = builder.replicaNum;
-        this.shardNum = builder.shardNum;
         this.description = builder.description;
         this.indexes = builder.indexes;
         this.expectedFileNum = builder.expectedFileNum;
@@ -75,8 +73,6 @@ public class CreateAICollectionParam extends AICollection {
 
     public static class Builder {
         private String name;
-        private int replicaNum = 2;
-        private int shardNum = 1;
         private String description;
         private final List<IndexField> indexes;
         private int expectedFileNum;
@@ -101,16 +97,6 @@ public class CreateAICollectionParam extends AICollection {
 
         public Builder withName(String name) {
             this.name = name;
-            return this;
-        }
-
-        public Builder withReplicaNum(int replicaNum) {
-            this.replicaNum = replicaNum;
-            return this;
-        }
-
-        public Builder withShardNum(int shardNum) {
-            this.shardNum = shardNum;
             return this;
         }
 
@@ -147,9 +133,6 @@ public class CreateAICollectionParam extends AICollection {
         public CreateAICollectionParam build() throws ParamException {
             if (StringUtils.isEmpty(this.name)) {
                 throw new ParamException("ConnectParam error: name is null");
-            }
-            if (this.indexes.isEmpty()) {
-                throw new ParamException("ConnectParam error: indexes is empty");
             }
             return new CreateAICollectionParam(this);
         }

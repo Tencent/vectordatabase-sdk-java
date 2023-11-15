@@ -78,8 +78,8 @@ public class SearchByContentsParam extends SearchParam {
         }
 
         public SearchByContentsParam build() {
-            if (content.isEmpty() || searchContenOption==null) {
-                throw new ParamException("SearchByContentsParam error: content or searchContenOption is empty");
+            if (content.isEmpty()) {
+                throw new ParamException("SearchByContentsParam error: content is empty");
             }
             return new SearchByContentsParam(this);
         }

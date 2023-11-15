@@ -29,9 +29,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.tencent.tcvectordb.model.param.collection.FieldType;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * VectorDB Document
@@ -43,6 +41,7 @@ public class Document {
     private Double score;
     private String doc;
     private List<DocField> docFields;
+    private Map<String, Object> docKeyValue;
 
     public String getId() {
         return id;
@@ -58,6 +57,10 @@ public class Document {
 
     public List<DocField> getDocFields() {
         return docFields;
+    }
+
+    public Map<String, Object> getDocKeyValue() {
+        return docKeyValue;
     }
 
     public List<Double> getVector() {
@@ -85,6 +88,24 @@ public class Document {
 
     public void setDocFields(List<DocField> docFields) {
         this.docFields = docFields;
+    }
+
+    public Object getObject(String key) {
+        if (Objects.isNull(docFields) || docFields.isEmpty()) {
+            return null;
+        }
+        ensureDocKeyValue();
+
+        return docKeyValue.get(key);
+    }
+
+    private void ensureDocKeyValue() {
+        if (Objects.isNull(docKeyValue)) {
+            docKeyValue = new TreeMap<>();
+            for (DocField docField : docFields) {
+                docKeyValue.put(docField.getName(), docField.getValue());
+            }
+        }
     }
 
     @Override

@@ -193,7 +193,7 @@ public class VectorDBExampleWithEmbedding {
         System.out.println("---------------------- upsert ----------------------");
         InsertParam insertParam = InsertParam.newBuilder()
                 .addAllDocument(documentList)
-                .withBuildIndex(false)
+                .withBuildIndex(true)
                 .build();
         collection.upsert(insertParam);
 

@@ -187,7 +187,7 @@ public class VectorDBExample {
                                 "布大惊，与陈宫商议。宫曰：“闻刘玄德新领徐州，可往投之。"))
                         .build()));
         System.out.println("---------------------- upsert ----------------------");
-        InsertParam insertParam = InsertParam.newBuilder().addAllDocument(documentList).withBuildIndex(false).build();
+        InsertParam insertParam = InsertParam.newBuilder().addAllDocument(documentList).withBuildIndex(true).build();
         collection.upsert(insertParam);
 
         // notice：upsert 操作可用会有延迟

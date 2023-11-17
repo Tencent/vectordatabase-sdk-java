@@ -52,13 +52,13 @@ public class VectorDBExample {
 
         // 测试前清理环境
         System.out.println("---------------------- clear before test ----------------------");
-//        anySafe(() -> clear(client));
-//        createDatabaseAndCollection(client);
-//        upsertData(client);
-//        queryData(client);
+        anySafe(() -> clear(client));
+        createDatabaseAndCollection(client);
+        upsertData(client);
+        queryData(client);
         updateAndDelete(client);
-//        deleteAndDrop(client);
-//        testFilter();
+        deleteAndDrop(client);
+        testFilter();
     }
 
 
@@ -71,9 +71,9 @@ public class VectorDBExample {
         System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
         System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
         return ConnectParam.newBuilder()
-                .withUrl("http://lb-3fuz86n6-e8g7tor5zvbql29p.clb.ap-guangzhou.tencentclb.com:20000")
+                .withUrl(System.getProperty("vdb_url"))
                 .withUsername("root")
-                .withKey("m3Z9Ylv562fDq4Txii26tOe6TkRxBGPOQWMLRSS4")
+                .withKey(System.getProperty("vdb_key"))
                 .withTimeout(30)
                 .build();
     }
@@ -334,11 +334,11 @@ public class VectorDBExample {
         // query
         System.out.println("----------------------  query ----------------------");
         documentIds = Arrays.asList("0001", "0002", "0003", "0004", "0005");
-//        List<String> outputFields = Arrays.asList("id", "bookName", "page", "extend");
+        List<String> outputFields = Arrays.asList("id", "bookName", "page", "extend");
         QueryParam queryParam = QueryParam.newBuilder()
                 .withDocumentIds(documentIds)
                 // 使用 filter 过滤数据
-//                .withOutputFields(outputFields)
+                .withOutputFields(outputFields)
                 // 是否返回 vector 数据
                 .withRetrieveVector(false)
                 .build();

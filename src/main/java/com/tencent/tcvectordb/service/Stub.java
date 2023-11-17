@@ -1,8 +1,7 @@
 package com.tencent.tcvectordb.service;
 
-import com.tencent.tcvectordb.exception.VectorDBException;
-import com.tencent.tcvectordb.model.collection.AICollection;
-import com.tencent.tcvectordb.model.collection.Collection;
+import com.tencent.tcvectordb.model.AICollection;
+import com.tencent.tcvectordb.model.Collection;
 import com.tencent.tcvectordb.model.Database;
 import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.collection.CreateAICollectionParam;

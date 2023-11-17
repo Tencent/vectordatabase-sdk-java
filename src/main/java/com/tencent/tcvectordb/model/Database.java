@@ -22,18 +22,13 @@ package com.tencent.tcvectordb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tencent.tcvectordb.exception.VectorDBException;
-import com.tencent.tcvectordb.model.collection.AICollection;
-import com.tencent.tcvectordb.model.collection.Collection;
 import com.tencent.tcvectordb.model.param.collection.CreateAICollectionParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.DataBaseType;
-import com.tencent.tcvectordb.model.param.entity.DataBaseTypeRes;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.Stub;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;

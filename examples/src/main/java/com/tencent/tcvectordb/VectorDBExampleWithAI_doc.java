@@ -25,13 +25,11 @@ import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.Database;
 import com.tencent.tcvectordb.model.DocField;
 import com.tencent.tcvectordb.model.Document;
-import com.tencent.tcvectordb.model.collection.AICollection;
+import com.tencent.tcvectordb.model.AICollection;
 import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
-import com.tencent.tcvectordb.model.param.enums.AppendKeywordsToChunkEnum;
-import com.tencent.tcvectordb.model.param.enums.AppendTitleToChunkEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.utils.JSONUtil;
 

@@ -22,7 +22,7 @@ package com.tencent.tcvectordb.model.param.collection;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencent.tcvectordb.exception.ParamException;
-import com.tencent.tcvectordb.model.collection.Collection;
+import com.tencent.tcvectordb.model.Collection;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;

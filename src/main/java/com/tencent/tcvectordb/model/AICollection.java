@@ -18,83 +18,104 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.tencent.tcvectordb.model.collection;
+package com.tencent.tcvectordb.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.exception.VectorDBException;
-import com.tencent.tcvectordb.model.Document;
-import com.tencent.tcvectordb.model.collection.BaseCollection;
-import com.tencent.tcvectordb.model.param.collection.Embedding;
-import com.tencent.tcvectordb.model.param.collection.IndexField;
+import com.tencent.tcvectordb.model.param.collection.DocumentPreprocessParams;
 import com.tencent.tcvectordb.model.param.dml.*;
-import com.tencent.tcvectordb.model.param.entity.AffectRes;
-import com.tencent.tcvectordb.model.param.entity.BaseRes;
-import com.tencent.tcvectordb.model.param.entity.SearchRes;
-import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
-import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
-import com.tencent.tcvectordb.service.Stub;
+import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.service.param.*;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * VectorDB Collection
  */
-public class Collection extends BaseCollection {
-    protected Embedding embedding;
+public class AICollection extends BaseCollection {
+    private AIStatus aiStatus;
+    private int expectedFileNum;
+    // 文件的平均大小
+    private int averageFileSize;
+    private String language;
+    private DocumentPreprocessParams documentPreprocess;
 
-    public Embedding getEmbedding() {
-        return embedding;
+    public int getExpectedFileNum() {
+        return expectedFileNum;
     }
 
-    public void setEmbedding(Embedding embedding) {
-        this.embedding = embedding;
+    public void setExpectedFileNum(int expectedFileNum) {
+        this.expectedFileNum = expectedFileNum;
     }
 
-    public AffectRes upsert(InsertParam param) throws VectorDBException {
-        InsertParamInner insertParam = new InsertParamInner(
-                database, collection, param);
-        return super.stub.upsertDocument(insertParam);
+    public int getAverageFileSize() {
+        return averageFileSize;
+    }
+
+    public void setAverageFileSize(int averageFileSize) {
+        this.averageFileSize = averageFileSize;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public DocumentPreprocessParams getDocumentPreprocess() {
+        return documentPreprocess;
+    }
+
+    public void setDocumentPreprocess(DocumentPreprocessParams documentPreprocess) {
+        this.documentPreprocess = documentPreprocess;
+    }
+
+    public AIStatus getAiStatus() {
+        return aiStatus;
+    }
+
+    public void setAiStatus(AIStatus aiStatus) {
+        this.aiStatus = aiStatus;
+    }
+
+    public AICollection() {
     }
 
     public List<Document> query(QueryParam param) throws VectorDBException {
-        return this.stub.queryDocument(
+        return this.stub.queryAIDocument(
                 new QueryParamInner(database, collection, param, this.readConsistency));
     }
 
-    public List<List<Document>> search(SearchByVectorParam param) throws VectorDBException {
-        return this.stub.searchDocument(new SearchParamInner(
-                database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE).getDocuments();
-    }
-
-    public List<List<Document>> searchById(SearchByIdParam param) throws VectorDBException {
-        return this.stub.searchDocument(new SearchParamInner(
-                database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE).getDocuments();
-    }
-
-    public SearchRes searchByEmbeddingItems(SearchByEmbeddingItemsParam param) throws VectorDBException {
-        return this.stub.searchDocument(new SearchParamInner(
-                database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE);
+    public List<Document> search(SearchByContentsParam param) throws VectorDBException {
+        return this.stub.searchAIDocument(new SearchDocParamInner(
+                database, collection, param, this.readConsistency)).getDocuments();
     }
 
     public AffectRes delete(DeleteParam param) throws VectorDBException {
-        return this.stub.deleteDocument(
+        return this.stub.deleteAIDocument(
                 new DeleteParamInner(database, collection, param));
     }
 
     public AffectRes update(UpdateParam param, Document document) throws VectorDBException {
-        return this.stub.updateDocument(
+        return this.stub.updateAIDocument(
                 new UpdateParamInner(database, collection, param, document));
     }
 
-    public BaseRes rebuildIndex(RebuildIndexParam rebuildIndexParam) {
-        return this.stub.rebuildIndex(new RebuildIndexParamInner(database, collection, rebuildIndexParam));
+    public void upload(String filePath, Map<String, Object> metaDataMap) throws Exception {
+        this.stub.upload(database, collection, filePath, metaDataMap);
+    }
+
+    public GetFileRes getFile(String fileName, String fileId) {
+        return this.stub.getFile(database, collection, fileName, fileId);
+    }
+
+    public BaseRes rebuildIndex(RebuildIndexParam rebuildIndexParam) throws VectorDBException {
+        return this.stub.rebuildAIIndex(new RebuildIndexParamInner(database, collection, rebuildIndexParam));
     }
 
     @Override

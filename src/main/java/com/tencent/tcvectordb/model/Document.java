@@ -25,11 +25,13 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.tencent.tcvectordb.model.param.collection.FieldType;
+import com.tencent.tcvectordb.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * VectorDB Document
@@ -84,6 +86,12 @@ public class Document {
                 switch (field.getFieldType()) {
                     case Uint64:
                         node.put(field.getName(), field.getLongValue());
+                        break;
+                    case Array:
+                        List<String> strValues = (List<String>) ((List) field.getValue());
+                        ArrayNode strNode = JsonNodeFactory.instance.arrayNode();
+                        strValues.forEach(strNode::add);
+                        node.set(field.getName(), strNode);
                         break;
                     default:
                         node.put(field.getName(), field.getStringValue());

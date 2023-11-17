@@ -20,37 +20,15 @@
 
 package com.tencent.tcvectordb.model.param.collection;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-
 /**
- * FieldType
+ * FilterIndex
  */
-public enum FieldType {
-    /**
-     * uint64
-     */
-    Uint64("uint64"),
-    /**
-     * string
-     */
-    String("string"),
-    /**
-     * vector
-     */
-    Vector("vector"),
+public class FilterArrayIndex extends IndexField {
 
-    Array("array");
-
-    private final String value;
-
-    private FieldType(String value) {
-        this.value = value;
+    public FilterArrayIndex(String fieldName, FieldElementType fieldElementType, IndexType indexType) {
+        setFieldName(fieldName);
+        setFieldType(FieldType.Array);
+        setFieldElementType(fieldElementType);
+        setIndexType(indexType);
     }
-
-    @JsonValue
-    public String getValue() {
-        return value;
-    }
-
-
 }

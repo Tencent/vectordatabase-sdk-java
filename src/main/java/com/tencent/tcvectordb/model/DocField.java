@@ -23,6 +23,8 @@ package com.tencent.tcvectordb.model;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.param.collection.FieldType;
 
+import java.util.List;
+
 /**
  * Doc Field
  */
@@ -58,6 +60,9 @@ public class DocField {
         String valueClassName = this.value.getClass().getName();
         if (valueClassName.equals("java.lang.Integer") || valueClassName.equals("java.lang.Long")) {
             return FieldType.Uint64;
+        }
+        if (this.value instanceof List) {
+            return FieldType.Array;
         }
         return FieldType.String;
     }

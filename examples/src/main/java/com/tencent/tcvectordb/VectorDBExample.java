@@ -52,13 +52,13 @@ public class VectorDBExample {
 
         // 测试前清理环境
         System.out.println("---------------------- clear before test ----------------------");
-        anySafe(() -> clear(client));
-        createDatabaseAndCollection(client);
-        upsertData(client);
-        queryData(client);
+//        anySafe(() -> clear(client));
+//        createDatabaseAndCollection(client);
+//        upsertData(client);
+//        queryData(client);
         updateAndDelete(client);
-        deleteAndDrop(client);
-        testFilter();
+//        deleteAndDrop(client);
+//        testFilter();
     }
 
 
@@ -71,9 +71,9 @@ public class VectorDBExample {
         System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
         System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
         return ConnectParam.newBuilder()
-                .withUrl(System.getProperty("vdb_url"))
+                .withUrl("http://lb-3fuz86n6-e8g7tor5zvbql29p.clb.ap-guangzhou.tencentclb.com:20000")
                 .withUsername("root")
-                .withKey(System.getProperty("vdb_key"))
+                .withKey("m3Z9Ylv562fDq4Txii26tOe6TkRxBGPOQWMLRSS4")
                 .withTimeout(30)
                 .build();
     }
@@ -110,6 +110,7 @@ public class VectorDBExample {
         db.createCollection(collectionParam);
 
         // 4. 列出所有 collection
+//        Database db = client.database(DBNAME);
         System.out.println("---------------------- listCollections ----------------------");
         List<Collection> cols = db.listCollections();
         for (Collection col : cols) {
@@ -151,6 +152,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("author", "吴承恩"))
                         .addDocField(new DocField("page", 21))
                         .addDocField(new DocField("segment", "富贵功名，前缘分定，为人切莫欺心。"))
+                        .addDocField(new DocField("array_test", Arrays.asList("1","2","3")))
                         .build(),
                 Document.newBuilder()
                         .withId("0002")
@@ -160,6 +162,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("page", 22))
                         .addDocField(new DocField("segment",
                                 "正大光明，忠良善果弥深。些些狂妄天加谴，眼前不遇待时临。"))
+                        .addDocField(new DocField("array_test", Arrays.asList("4","5","6")))
                         .build(),
                 Document.newBuilder()
                         .withId("0003")
@@ -168,6 +171,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("author", "罗贯中"))
                         .addDocField(new DocField("page", 23))
                         .addDocField(new DocField("segment", "细作探知这个消息，飞报吕布。"))
+                        .addDocField(new DocField("array_test", Arrays.asList("7","8","9")))
                         .build(),
                 Document.newBuilder()
                         .withId("0004")
@@ -176,6 +180,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("author", "罗贯中"))
                         .addDocField(new DocField("page", 24))
                         .addDocField(new DocField("segment", "富贵功名，前缘分定，为人切莫欺心。"))
+                        .addDocField(new DocField("array_test", Arrays.asList("10","11","12")))
                         .build(),
                 Document.newBuilder()
                         .withId("0005")
@@ -200,14 +205,15 @@ public class VectorDBExample {
 
         System.out.println("---------------------- query ----------------------");
         List<String> documentIds = Arrays.asList("0001", "0002", "0003", "0004", "0005");
-        Filter filterParam = new Filter("bookName=\"三国演义\"");
+        Filter filterParam = new Filter("bookName=\"三国演义\"")
+                .and(Filter.exclude("array_test", Arrays.asList("7")));
         List<String> outputFields = Arrays.asList("id", "bookName");
         QueryParam queryParam = QueryParam.newBuilder()
                 .withDocumentIds(documentIds)
                 // 使用 filter 过滤数据
                 .withFilter(filterParam)
                 // limit 限制返回行数，1 到 16384 之间
-                 .withLimit(2)
+                 .withLimit(3)
                 // 偏移
                  .withOffset(1)
                 // 指定返回的 fields
@@ -294,6 +300,7 @@ public class VectorDBExample {
                 .addDocField(new DocField("page", 100))
                 // 支持添加新的内容
                 .addDocField(new DocField("extend", "extendContent"))
+                .addDocField(new DocField("array_test", Arrays.asList("extendContent", "extendContent1")))
                 .build();
         collection.update(updateParam, updateDoc);
 
@@ -327,11 +334,11 @@ public class VectorDBExample {
         // query
         System.out.println("----------------------  query ----------------------");
         documentIds = Arrays.asList("0001", "0002", "0003", "0004", "0005");
-        List<String> outputFields = Arrays.asList("id", "bookName", "page", "extend");
+//        List<String> outputFields = Arrays.asList("id", "bookName", "page", "extend");
         QueryParam queryParam = QueryParam.newBuilder()
                 .withDocumentIds(documentIds)
                 // 使用 filter 过滤数据
-                .withOutputFields(outputFields)
+//                .withOutputFields(outputFields)
                 // 是否返回 vector 数据
                 .withRetrieveVector(false)
                 .build();
@@ -399,6 +406,7 @@ public class VectorDBExample {
                         MetricType.COSINE, new HNSWParams(16, 200)))
                 .addField(new FilterIndex("bookName", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("author", FieldType.String, IndexType.FILTER))
+                .addField(new FilterArrayIndex("array_test", FieldElementType.String, IndexType.FILTER))
                 .build();
     }
 
@@ -411,10 +419,19 @@ public class VectorDBExample {
                 .and("a=1")
                 .or("r=\"or\"")
                 .orNot("rn=2")
-                .andNot("an=\"andNot\"")
+                .andNot("an=\"andNot\"").and(Filter.include("key", Arrays.asList("1","2","3")))
                 .getCond());
         System.out.println("\tres: " + Filter.in("key", Arrays.asList("v1", "v2", "v3")));
         System.out.println("\tres: " + Filter.in("key", Arrays.asList(1, 2, 3)));
+        System.out.println(Document.newBuilder()
+                .withId("0003")
+                .withVector(Arrays.asList(0.2123, 0.23, 0.213))
+                .addDocField(new DocField("bookName", "三国演义"))
+                .addDocField(new DocField("author", "罗贯中"))
+                .addDocField(new DocField("page", 23))
+                .addDocField(new DocField("segment", "细作探知这个消息，飞报吕布。"))
+                .addDocField(new DocField("array_test", Arrays.asList("7","8","9")))
+                .build().toString());
     }
 
 

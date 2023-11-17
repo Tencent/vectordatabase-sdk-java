@@ -1,14 +1,14 @@
 package com.tencent.tcvectordb;
 
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws Exception {
         System.out.println("----------------------------------------------------------");
         System.out.println("------------------------- example ------------------------");
         System.out.println("----------------------------------------------------------");
-        VectorDBExample.example();
+        com.tencent.tcvectordb.VectorDBExample.example();
         System.out.println("----------------------------------------------------------");
         System.out.println("----------------- example with embedding -----------------");
         System.out.println("----------------------------------------------------------");
-        VectorDBExampleWithEmbedding.example();
+        com.tencent.tcvectordb.VectorDBExampleWithEmbedding.example();
     }
 }

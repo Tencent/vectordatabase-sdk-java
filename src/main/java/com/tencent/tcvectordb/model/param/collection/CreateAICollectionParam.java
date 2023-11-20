@@ -21,6 +21,8 @@
 package com.tencent.tcvectordb.model.param.collection;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.model.AICollection;
 import org.apache.commons.lang3.StringUtils;
@@ -34,15 +36,6 @@ import java.util.List;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class CreateAICollectionParam extends AICollection {
 
-    // 最大文件数
-    private int expectedFileNum;
-    // 文件的平均大小
-    private int averageFileSize;
-
-    private String language;
-
-    private DocumentPreprocessParams documentPreprocess;
-
     private CreateAICollectionParam(Builder builder) {
         this.collection = builder.name;
         this.description = builder.description;
@@ -51,6 +44,7 @@ public class CreateAICollectionParam extends AICollection {
         this.averageFileSize = builder.averageFileSize;
         this.documentPreprocess = builder.documentPreprocess;
         this.language = builder.language;
+        this.enableWordsEmbedding = builder.enableWordsEmbedding;
     }
 
     public int getAverageFileSize() {
@@ -74,6 +68,7 @@ public class CreateAICollectionParam extends AICollection {
         private String description;
         private final List<IndexField> indexes;
         private int expectedFileNum;
+        private boolean enableWordsEmbedding;
 
         public int getExpectedFileNum() {
             return expectedFileNum;
@@ -125,6 +120,11 @@ public class CreateAICollectionParam extends AICollection {
 
         public Builder withDocumentPreprocess(DocumentPreprocessParams documentPreprocess) {
             this.documentPreprocess = documentPreprocess;
+            return this;
+        }
+
+        public Builder withEnableWordsEmbedding(boolean enableWordsEmbedding) {
+            this.enableWordsEmbedding = enableWordsEmbedding;
             return this;
         }
 

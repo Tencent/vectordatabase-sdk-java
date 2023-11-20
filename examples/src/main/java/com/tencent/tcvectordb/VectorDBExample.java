@@ -42,7 +42,7 @@ import java.util.List;
 public class VectorDBExample {
 
     private static final String DBNAME = "book";
-    private static final String COLL_NAME = "book_segments_1";
+    private static final String COLL_NAME = "book_segments_9";
     private static final String COLL_NAME_ALIAS = "collection_alias_1";
 
     public static void example() throws InterruptedException {
@@ -95,7 +95,7 @@ public class VectorDBExample {
     private static void createDatabaseAndCollection(VectorDBClient client) {
         // 1. 创建数据库
         System.out.println("---------------------- createDatabase ----------------------");
-        Database db = client.createDatabase(DBNAME);
+//        Database db = client.createDatabase(DBNAME);
 
         // 2. 列出所有数据库
         System.out.println("---------------------- listCollections ----------------------");
@@ -103,6 +103,7 @@ public class VectorDBExample {
         for (String s : database) {
             System.out.println("\tres: " + s);
         }
+        Database db = client.database(DBNAME);
 
         // 3. 创建 collection
         System.out.println("---------------------- createCollection ----------------------");
@@ -187,14 +188,23 @@ public class VectorDBExample {
                                 "布大惊，与陈宫商议。宫曰：“闻刘玄德新领徐州，可往投之。"))
                         .build()));
         System.out.println("---------------------- upsert ----------------------");
-        InsertParam insertParam = InsertParam.newBuilder().addAllDocument(documentList).withBuildIndex(true).build();
+        InsertParam insertParam = InsertParam.newBuilder().addAllDocument(documentList).withBuildIndex(false).build();
         collection.upsert(insertParam);
 
         // notice：upsert 操作可用会有延迟
         Thread.sleep(1000 * 5);
+
+        RebuildIndexParam rebuildIndexParam = RebuildIndexParam
+                .newBuilder()
+                .withDropBeforeRebuild(false)
+                .withThrottle(1)
+                .build();
+        collection.rebuildIndex(rebuildIndexParam);
+
+        Thread.sleep(1000 * 10);
     }
 
-    private static void queryData(VectorDBClient client) {
+    private static void queryData(VectorDBClient client) throws InterruptedException {
         Database database = client.database(DBNAME);
         Collection collection = database.describeCollection(COLL_NAME);
 
@@ -271,6 +281,10 @@ public class VectorDBExample {
                 System.out.println("\tres: " + doc.toString());
             }
         }
+
+
+
+
     }
 
     private static void updateAndDelete(VectorDBClient client) throws InterruptedException {
@@ -390,14 +404,15 @@ public class VectorDBExample {
      * @return
      */
     private static CreateCollectionParam initCreateCollectionParam(String collName) {
+
         return CreateCollectionParam.newBuilder()
                 .withName(collName)
                 .withShardNum(3)
-                .withReplicaNum(2)
+                .withReplicaNum(1)
                 .withDescription("test collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
-                .addField(new VectorIndex("vector", 3, IndexType.HNSW,
-                        MetricType.COSINE, new HNSWParams(16, 200)))
+                .addField(new VectorIndex("vector", 3, IndexType.IVF_FLAT,
+                        MetricType.COSINE, new IVFFLATParams(1)))
                 .addField(new FilterIndex("bookName", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("author", FieldType.String, IndexType.FILTER))
                 .build();

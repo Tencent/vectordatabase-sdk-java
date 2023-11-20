@@ -7,6 +7,15 @@ import java.util.List;
 public class SearchContenOption {
     private String resultType;
     private List<Integer> chunkExpand;
+    private RerankOption rerank;
+
+    public RerankOption getRerank() {
+        return rerank;
+    }
+
+    public void setRerank(RerankOption rerank) {
+        this.rerank = rerank;
+    }
 
     public String getResultType() {
         return resultType;
@@ -27,6 +36,7 @@ public class SearchContenOption {
     public SearchContenOption(Builder builder) {
         this.resultType = "chunks";
         this.chunkExpand = builder.chunkExpand;
+        this.rerank = builder.rerank;
     }
 
     public static Builder newBuilder() {
@@ -36,12 +46,18 @@ public class SearchContenOption {
     public static final class Builder {
         private String resultType;
         private List<Integer> chunkExpand;
+        private RerankOption rerank;
 
         private Builder() {
         }
 
         public Builder withChunkExpand(List<Integer> chunkExpand) {
             this.chunkExpand = chunkExpand;
+            return this;
+        }
+
+        public Builder withRerank(RerankOption rerank){
+            this.rerank = rerank;
             return this;
         }
 

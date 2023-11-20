@@ -37,11 +37,20 @@ import java.util.*;
  */
 public class AICollection extends BaseCollection {
     private AIStatus aiStatus;
-    private int expectedFileNum;
+    protected int expectedFileNum;
     // 文件的平均大小
-    private int averageFileSize;
-    private String language;
-    private DocumentPreprocessParams documentPreprocess;
+    protected int averageFileSize;
+    protected String language;
+    protected DocumentPreprocessParams documentPreprocess;
+    protected boolean enableWordsEmbedding;
+
+    public boolean isEnableWordsEmbedding() {
+        return enableWordsEmbedding;
+    }
+
+    public void setEnableWordsEmbedding(boolean enableWordsEmbedding) {
+        this.enableWordsEmbedding = enableWordsEmbedding;
+    }
 
     public int getExpectedFileNum() {
         return expectedFileNum;

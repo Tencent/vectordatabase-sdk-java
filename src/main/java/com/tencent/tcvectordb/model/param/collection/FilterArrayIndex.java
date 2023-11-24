@@ -18,50 +18,17 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.tencent.tcvectordb.model;
-
-import com.tencent.tcvectordb.exception.VectorDBException;
-import com.tencent.tcvectordb.model.param.collection.FieldType;
-
-import java.util.List;
+package com.tencent.tcvectordb.model.param.collection;
 
 /**
- * Doc Field
+ * FilterIndex
  */
-public class DocField {
-    private final String name;
-    private final Object value;
+public class FilterArrayIndex extends IndexField {
 
-    public DocField(String name, Object value) {
-        this.name = name;
-        this.value = value;
+    public FilterArrayIndex(String fieldName, FieldElementType fieldElementType, IndexType indexType) {
+        setFieldName(fieldName);
+        setFieldType(FieldType.Array);
+        setFieldElementType(fieldElementType);
+        setIndexType(indexType);
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public Object getValue() {
-        return value;
-    }
-
-    public String getStringValue() {
-        return value.toString();
-    }
-
-    public FieldType getFieldType() {
-        if (this.value == null) {
-            throw new VectorDBException("DocField value is null, " + "filed name is " + this.name);
-        }
-        String valueClassName = this.value.getClass().getName();
-        if (valueClassName.equals("java.lang.Integer") || valueClassName.equals("java.lang.Long")) {
-            return FieldType.Uint64;
-        }
-        if (this.value instanceof List) {
-            return FieldType.Array;
-        }
-        return FieldType.String;
-    }
-
-
 }

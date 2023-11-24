@@ -18,49 +18,28 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.tencent.tcvectordb.model;
+package com.tencent.tcvectordb.model.param.collection;
 
-import com.tencent.tcvectordb.exception.VectorDBException;
-import com.tencent.tcvectordb.model.param.collection.FieldType;
-
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Doc Field
+ * FieldType
  */
-public class DocField {
-    private final String name;
-    private final Object value;
+public enum FieldElementType {
+    /**
+     * string
+     */
+    String("string");
 
-    public DocField(String name, Object value) {
-        this.name = name;
+    private final String value;
+
+    private FieldElementType(String value) {
         this.value = value;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public Object getValue() {
+    @JsonValue
+    public String getValue() {
         return value;
-    }
-
-    public String getStringValue() {
-        return value.toString();
-    }
-
-    public FieldType getFieldType() {
-        if (this.value == null) {
-            throw new VectorDBException("DocField value is null, " + "filed name is " + this.name);
-        }
-        String valueClassName = this.value.getClass().getName();
-        if (valueClassName.equals("java.lang.Integer") || valueClassName.equals("java.lang.Long")) {
-            return FieldType.Uint64;
-        }
-        if (this.value instanceof List) {
-            return FieldType.Array;
-        }
-        return FieldType.String;
     }
 
 

@@ -111,6 +111,7 @@ public class VectorDBExample {
         db.createCollection(collectionParam);
 
         // 4. 列出所有 collection
+//        Database db = client.database(DBNAME);
         System.out.println("---------------------- listCollections ----------------------");
         List<Collection> cols = db.listCollections();
         for (Collection col : cols) {
@@ -152,6 +153,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("author", "吴承恩"))
                         .addDocField(new DocField("page", 21))
                         .addDocField(new DocField("segment", "富贵功名，前缘分定，为人切莫欺心。"))
+                        .addDocField(new DocField("array_test", Arrays.asList("1","2","3")))
                         .build(),
                 Document.newBuilder()
                         .withId("0002")
@@ -161,6 +163,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("page", 22))
                         .addDocField(new DocField("segment",
                                 "正大光明，忠良善果弥深。些些狂妄天加谴，眼前不遇待时临。"))
+                        .addDocField(new DocField("array_test", Arrays.asList("4","5","6")))
                         .build(),
                 Document.newBuilder()
                         .withId("0003")
@@ -169,6 +172,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("author", "罗贯中"))
                         .addDocField(new DocField("page", 23))
                         .addDocField(new DocField("segment", "细作探知这个消息，飞报吕布。"))
+                        .addDocField(new DocField("array_test", Arrays.asList("7","8","9")))
                         .build(),
                 Document.newBuilder()
                         .withId("0004")
@@ -177,6 +181,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("author", "罗贯中"))
                         .addDocField(new DocField("page", 24))
                         .addDocField(new DocField("segment", "富贵功名，前缘分定，为人切莫欺心。"))
+                        .addDocField(new DocField("array_test", Arrays.asList("10","11","12")))
                         .build(),
                 Document.newBuilder()
                         .withId("0005")
@@ -193,15 +198,6 @@ public class VectorDBExample {
 
         // notice：upsert 操作可用会有延迟
         Thread.sleep(1000 * 5);
-
-        RebuildIndexParam rebuildIndexParam = RebuildIndexParam
-                .newBuilder()
-                .withDropBeforeRebuild(false)
-                .withThrottle(1)
-                .build();
-        collection.rebuildIndex(rebuildIndexParam);
-
-        Thread.sleep(1000 * 10);
     }
 
     private static void queryData(VectorDBClient client) throws InterruptedException {
@@ -210,7 +206,8 @@ public class VectorDBExample {
 
         System.out.println("---------------------- query ----------------------");
         List<String> documentIds = Arrays.asList("0001", "0002", "0003", "0004", "0005");
-        Filter filterParam = new Filter("bookName=\"三国演义\"");
+        Filter filterParam = new Filter("bookName=\"三国演义\"")
+                .and(Filter.exclude("array_test", Arrays.asList("7")));
         List<String> outputFields = Arrays.asList("id", "bookName");
         QueryParam queryParam = QueryParam.newBuilder()
                 .withDocumentIds(documentIds)
@@ -308,6 +305,7 @@ public class VectorDBExample {
                 .addDocField(new DocField("page", 100))
                 // 支持添加新的内容
                 .addDocField(new DocField("extend", "extendContent"))
+                .addDocField(new DocField("array_test", Arrays.asList("extendContent", "extendContent1")))
                 .build();
         collection.update(updateParam, updateDoc);
 
@@ -378,11 +376,10 @@ public class VectorDBExample {
 
 
     private static void clear(VectorDBClient client) {
-//        List<String> databases = client.listDatabase();
-//        for (String database : databases) {
-//            client.dropDatabase(database);
-//        }
-        client.dropDatabase("book");
+        List<String> databases = client.listDatabase();
+        for (String database : databases) {
+            client.dropDatabase(database);
+        }
     }
 
 
@@ -415,6 +412,7 @@ public class VectorDBExample {
                         MetricType.COSINE, new IVFFLATParams(1)))
                 .addField(new FilterIndex("bookName", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("author", FieldType.String, IndexType.FILTER))
+                .addField(new FilterArrayIndex("array_test", FieldElementType.String, IndexType.FILTER))
                 .build();
     }
 
@@ -427,10 +425,19 @@ public class VectorDBExample {
                 .and("a=1")
                 .or("r=\"or\"")
                 .orNot("rn=2")
-                .andNot("an=\"andNot\"")
+                .andNot("an=\"andNot\"").and(Filter.include("key", Arrays.asList("1","2","3")))
                 .getCond());
         System.out.println("\tres: " + Filter.in("key", Arrays.asList("v1", "v2", "v3")));
         System.out.println("\tres: " + Filter.in("key", Arrays.asList(1, 2, 3)));
+        System.out.println(Document.newBuilder()
+                .withId("0003")
+                .withVector(Arrays.asList(0.2123, 0.23, 0.213))
+                .addDocField(new DocField("bookName", "三国演义"))
+                .addDocField(new DocField("author", "罗贯中"))
+                .addDocField(new DocField("page", 23))
+                .addDocField(new DocField("segment", "细作探知这个消息，飞报吕布。"))
+                .addDocField(new DocField("array_test", Arrays.asList("7","8","9")))
+                .build().toString());
     }
 
 

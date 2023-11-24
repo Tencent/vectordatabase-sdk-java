@@ -37,7 +37,9 @@ public enum FieldType {
     /**
      * vector
      */
-    Vector("vector");
+    Vector("vector"),
+
+    Array("array");
 
     private final String value;
 

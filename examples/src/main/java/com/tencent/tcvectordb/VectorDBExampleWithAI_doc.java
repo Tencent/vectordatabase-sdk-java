@@ -53,14 +53,14 @@ public class VectorDBExampleWithAI_doc {
 
         // 测试前清理环境
         System.out.println("---------------------- clear before test ----------------------");
-//        anySafe(() -> clear(client));
-//        createDatabaseAndCollection(client);
-//        loadAndSplitText(client, "/Users/anyihao/tmp/test23.md", "file2");
-//        // 解析加载文件需要等待时间
-//        Thread.sleep(1000 * 10);
-//
-//        queryData(client);
-//        GetFile(client, "file2");
+        anySafe(() -> clear(client));
+        createDatabaseAndCollection(client);
+        loadAndSplitText(client, "/Users/anyihao/tmp/test23.md", "file2");
+        // 解析加载文件需要等待时间
+        Thread.sleep(1000 * 10);
+
+        queryData(client);
+        GetFile(client, "file2");
         updateAndDelete(client);
         deleteAndDrop(client);
     }

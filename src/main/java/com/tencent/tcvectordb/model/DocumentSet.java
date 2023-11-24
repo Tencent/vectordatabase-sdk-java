@@ -97,7 +97,7 @@ public class DocumentSet {
                         CollectionViewConditionParam.newBuilder().withDocumnetSetIds(Arrays.asList(documentSetId)).build()));
     }
 
-    public String getFileText() {
+    public String getText() {
         return this.stub.getFile(database, collectionViewName, documentSetName, documentSetId).getDocumentSet().getText();
     }
 

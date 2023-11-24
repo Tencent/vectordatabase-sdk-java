@@ -130,7 +130,7 @@ public class Document {
             for (DocField field : docFields) {
                 switch (field.getFieldType()) {
                     case Uint64:
-                        node.put(field.getName(), field.getLongValue());
+                        node.put(field.getName(), Long.valueOf(field.getStringValue()));
                         break;
                     case Array:
                         List<String> strValues = (List<String>) ((List) field.getValue());

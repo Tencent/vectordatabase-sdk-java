@@ -1,15 +1,13 @@
 package com.tencent.tcvectordb.model.param.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 
 public class ChunkInfo {
     private String text;
     private int endPos;
     private int startPos;
-    private List<String> nextChunks;
-    private List<String> preChunks;
+    private List<String> next;
+    private List<String> pre;
 
     public int getEndPos() {
         return endPos;
@@ -33,8 +31,8 @@ public class ChunkInfo {
                 "text='" + text + '\'' +
                 ", endPos=" + endPos +
                 ", startPos=" + startPos +
-                ", nextChunks=" + nextChunks +
-                ", preChunks=" + preChunks +
+                ", nextChunks=" + next +
+                ", preChunks=" + pre +
                 '}';
     }
 
@@ -46,20 +44,20 @@ public class ChunkInfo {
         this.text = text;
     }
 
-    public List<String> getNextChunks() {
-        return nextChunks;
+    public List<String> getNext() {
+        return next;
     }
 
-    public void setNextChunks(List<String> nextChunks) {
-        this.nextChunks = nextChunks;
+    public void setNext(List<String> next) {
+        this.next = next;
     }
 
-    public List<String> getPreChunks() {
-        return preChunks;
+    public List<String> getPre() {
+        return pre;
     }
 
-    public void setPreChunks(List<String> preChunks) {
-        this.preChunks = preChunks;
+    public void setPre(List<String> pre) {
+        this.pre = pre;
     }
 
 }

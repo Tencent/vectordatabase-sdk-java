@@ -7,17 +7,17 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CollectionViewConditionParam {
-    private List<String> documnetSetIds;
-    private List<String> documnetSetNames;
+    private List<String> documentSetId;
+    private List<String> documentSetName;
     private String filter;
 
     private int limit;
     private int offset;
 
     public CollectionViewConditionParam(Builder builder) {
-        this.documnetSetIds = builder.documnetSetIds;
-        this.documnetSetNames = builder.documnetSetNames;
-        this.filter = builder.filter.getCond();
+        this.documentSetId = builder.documnetSetIds;
+        this.documentSetName = builder.documnetSetNames;
+        this.filter = builder.filter;
         this.limit = builder.limit;
         this.offset = builder.offset;
     }
@@ -29,7 +29,7 @@ public class CollectionViewConditionParam {
     public static class Builder {
         private List<String> documnetSetIds;
         private List<String> documnetSetNames;
-        private Filter filter;
+        private String filter;
 
         private int limit;
         private int offset;
@@ -48,7 +48,7 @@ public class CollectionViewConditionParam {
         }
 
         public Builder withFilter(Filter filter) {
-            this.filter = filter;
+            this.filter = filter.getCond();
             return this;
         }
         public Builder withLimit(int limit) {
@@ -66,20 +66,20 @@ public class CollectionViewConditionParam {
         }
     }
 
-    public List<String> getDocumnetSetIds() {
-        return documnetSetIds;
+    public List<String> getDocumentSetId() {
+        return documentSetId;
     }
 
-    public void setDocumnetSetIds(List<String> documnetSetIds) {
-        this.documnetSetIds = documnetSetIds;
+    public void setDocumentSetId(List<String> documentSetId) {
+        this.documentSetId = documentSetId;
     }
 
-    public List<String> getDocumnetSetNames() {
-        return documnetSetNames;
+    public List<String> getDocumentSetName() {
+        return documentSetName;
     }
 
-    public void setDocumnetSetNames(List<String> documnetSetNames) {
-        this.documnetSetNames = documnetSetNames;
+    public void setDocumentSetName(List<String> documentSetName) {
+        this.documentSetName = documentSetName;
     }
 
     public String getFilter() {

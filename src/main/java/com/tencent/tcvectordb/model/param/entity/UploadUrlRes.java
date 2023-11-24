@@ -3,7 +3,7 @@ package com.tencent.tcvectordb.model.param.entity;
 public class UploadUrlRes extends BaseRes{
     private String cosEndpoint;
     private String uploadPath;
-    private String fileId;
+    private String documentSetId;
     private Credential credentials;
     private UploadCondtion uploadCondition;
     private String cosRegion;
@@ -49,12 +49,12 @@ public class UploadUrlRes extends BaseRes{
         this.uploadPath = uploadPath;
     }
 
-    public String getFileId() {
-        return fileId;
+    public String getDocumentSetId() {
+        return documentSetId;
     }
 
-    public void setFileId(String fileId) {
-        this.fileId = fileId;
+    public void setDocumentSetId(String documentSetId) {
+        this.documentSetId = documentSetId;
     }
 
     public Credential getCredentials() {

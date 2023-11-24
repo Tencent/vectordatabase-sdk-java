@@ -142,7 +142,7 @@ public interface Stub {
 
     void upload(String databaseName, String collectionName, String documentSetName, String filePath, Map<String, Object> metaDataMap) throws Exception;
 
-    GetFileRes getFile(String databaseName, String collectionName, String fileName, String fileId);
+    GetDocumentSetRes getFile(String databaseName, String collectionName, String fileName, String fileId);
 
     BaseRes rebuildAIIndex(RebuildIndexParamInner param);
 }

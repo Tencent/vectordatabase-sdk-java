@@ -26,15 +26,14 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.param.dml.CollectionViewConditionParam;
-import com.tencent.tcvectordb.model.param.dml.Params;
 import com.tencent.tcvectordb.model.param.dml.SearchByContentsParam;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.DocumentSetInfo;
-import com.tencent.tcvectordb.model.param.entity.GetFileRes;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.Stub;
 import com.tencent.tcvectordb.service.param.CollectionViewDeleteParamInner;
 import com.tencent.tcvectordb.service.param.SearchDocParamInner;
+import com.tencent.tcvectordb.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -98,8 +97,8 @@ public class DocumentSet {
                         CollectionViewConditionParam.newBuilder().withDocumnetSetIds(Arrays.asList(documentSetId)).build()));
     }
 
-    public String getText() {
-        return this.stub.getFile(database, collectionViewName, documentSetName, documentSetId).getFileContent().getFileText();
+    public String getFileText() {
+        return this.stub.getFile(database, collectionViewName, documentSetName, documentSetId).getDocumentSet().getText();
     }
 
     public Stub getStub() {
@@ -138,6 +137,9 @@ public class DocumentSet {
         if (StringUtils.isNotEmpty(textPrefix)) {
             node.put("textPrefix", textPrefix);
         }
+        if (documentSetInfo!=null) {
+            node.put("documentSetInfo", JsonUtils.toJsonString(documentSetInfo));
+        }
 
         if (docFields != null && !docFields.isEmpty()) {
             for (DocField field : docFields) {
@@ -155,6 +157,10 @@ public class DocumentSet {
 
     private DocumentSet(Builder builder) {
         this.docFields = builder.docFields;
+        this.documentSetInfo = builder.documentSetInfo;
+        this.documentSetName = builder.documnetSetName;
+        this.documentSetId = builder.documentSetId;
+        this.textPrefix = builder.textPrefix;
     }
 
     public static Builder newBuilder() {

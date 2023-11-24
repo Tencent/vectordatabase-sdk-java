@@ -45,7 +45,7 @@ public class CollectionView {
     @JsonIgnore
     private Stub stub;
     private String database;
-    protected String name;
+    protected String collectionView;
     @JsonIgnore
     protected ReadConsistencyEnum readConsistency;
     private int replicaNum;
@@ -56,7 +56,7 @@ public class CollectionView {
     protected int expectedFileNum;
     // 文件的平均大小
     protected int averageFileSize;
-    protected SplitterPreprocessParams splitterPreprocessParams;
+    protected SplitterPreprocessParams splitterPreprocess;
     protected EmbeddingParams embedding;
     private List<String> alias;
 
@@ -66,16 +66,16 @@ public class CollectionView {
         return indexes;
     }
 
-    public String getName() {
-        return name;
+    public String getCollectionView() {
+        return collectionView;
     }
 
     public AIStatus getStats() {
         return stats;
     }
 
-    public SplitterPreprocessParams getSplitterPreprocessParams() {
-        return splitterPreprocessParams;
+    public SplitterPreprocessParams getSplitterPreprocess() {
+        return splitterPreprocess;
     }
 
     public List<String> getAlias() {
@@ -169,9 +169,9 @@ public class CollectionView {
 
     public List<DocumentSet> query(CollectionViewConditionParam param) throws VectorDBException {
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
-                new CollectionViewQueryParamInner(database, name, param, this.readConsistency));
+                new CollectionViewQueryParamInner(database, collectionView, param, this.readConsistency));
         documentSets.forEach(documentSet -> {
-            documentSet.setCollectionViewName(name);
+            documentSet.setCollectionViewName(collectionView);
             documentSet.setStub(stub);
             documentSet.setDatabase(database);
         });
@@ -180,11 +180,11 @@ public class CollectionView {
 
     public List<DocumentSet> query() throws VectorDBException {
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
-                new CollectionViewQueryParamInner(database, name,
+                new CollectionViewQueryParamInner(database, collectionView,
                         CollectionViewConditionParam.newBuilder().build(), this.readConsistency));
 
         documentSets.forEach(documentSet -> {
-            documentSet.setCollectionViewName(name);
+            documentSet.setCollectionViewName(collectionView);
             documentSet.setStub(stub);
             documentSet.setDatabase(database);
         });
@@ -193,11 +193,11 @@ public class CollectionView {
 
     public List<DocumentSet> query(int limit) throws VectorDBException {
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
-                new CollectionViewQueryParamInner(database, name,
+                new CollectionViewQueryParamInner(database, collectionView,
                         CollectionViewConditionParam.newBuilder().withLimit(limit).build(),
                         this.readConsistency));
         documentSets.forEach(documentSet -> {
-            documentSet.setCollectionViewName(name);
+            documentSet.setCollectionViewName(collectionView);
             documentSet.setStub(stub);
             documentSet.setDatabase(database);
         });
@@ -206,12 +206,12 @@ public class CollectionView {
 
     public List<DocumentSet> query(int limit, int offset) throws VectorDBException {
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
-                new CollectionViewQueryParamInner(database, name,
+                new CollectionViewQueryParamInner(database, collectionView,
                         CollectionViewConditionParam.newBuilder().withLimit(limit).withOffset(offset).build(),
                         this.readConsistency));
 
         documentSets.forEach(documentSet -> {
-            documentSet.setCollectionViewName(name);
+            documentSet.setCollectionViewName(collectionView);
             documentSet.setStub(stub);
             documentSet.setDatabase(database);
         });
@@ -220,12 +220,12 @@ public class CollectionView {
 
     public DocumentSet getDocumentSetByName(String documentSetName) throws VectorDBException {
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
-                new CollectionViewQueryParamInner(database, name,
+                new CollectionViewQueryParamInner(database, collectionView,
                         CollectionViewConditionParam.newBuilder().withDocumnetSetNames(Arrays.asList(documentSetName)).build(),
                         this.readConsistency));
         if (documentSets.size()>0){
             DocumentSet documentSet = documentSets.get(0);
-            documentSet.setCollectionViewName(name);
+            documentSet.setCollectionViewName(collectionView);
             documentSet.setStub(stub);
             documentSet.setDatabase(database);
             return documentSet;
@@ -235,12 +235,12 @@ public class CollectionView {
 
     public DocumentSet getDocumentSetById(String documentSetId) throws VectorDBException {
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
-                new CollectionViewQueryParamInner(database, name,
+                new CollectionViewQueryParamInner(database, collectionView,
                         CollectionViewConditionParam.newBuilder().withDocumnetSetIds(Arrays.asList(documentSetId)).build(),
                         this.readConsistency));
         if (documentSets.size()>0){
             DocumentSet documentSet = documentSets.get(0);
-            documentSet.setCollectionViewName(name);
+            documentSet.setCollectionViewName(collectionView);
             documentSet.setStub(stub);
             documentSet.setDatabase(database);
             return documentSet;
@@ -250,43 +250,43 @@ public class CollectionView {
 
     public List<Document> search(SearchByContentsParam param) throws VectorDBException {
         return this.stub.searchAIDocument(new SearchDocParamInner(
-                database, name, param, this.readConsistency)).getDocuments();
+                database, collectionView, param, this.readConsistency)).getDocuments();
     }
 
 
     public AffectRes deleteDocumentSets(CollectionViewConditionParam param) throws VectorDBException {
         return this.stub.deleteAIDocument(
-                new CollectionViewDeleteParamInner(database, name, param));
+                new CollectionViewDeleteParamInner(database, collectionView, param));
     }
 
     public AffectRes deleteByDocumentSetName(String documentSetName) throws VectorDBException {
         return this.stub.deleteAIDocument(
-                new CollectionViewDeleteParamInner(database, name,
+                new CollectionViewDeleteParamInner(database, collectionView,
                         CollectionViewConditionParam.newBuilder().withDocumnetSetIds(Arrays.asList(documentSetName)).build()));
     }
 
     public AffectRes deleteByDocumentSetId(String documentSetId) throws VectorDBException {
         return this.stub.deleteAIDocument(
-                new CollectionViewDeleteParamInner(database, name,
+                new CollectionViewDeleteParamInner(database, collectionView,
                         CollectionViewConditionParam.newBuilder().withDocumnetSetIds(Arrays.asList(documentSetId)).build()));
     }
 
     public AffectRes update(CollectionViewConditionParam param, Map<String, Object> updateFieldValues) throws VectorDBException {
 
         return this.stub.updateAIDocument(
-                new CollectionViewUpdateParamInner(database, name, param, updateFieldValues));
+                new CollectionViewUpdateParamInner(database, collectionView, param, updateFieldValues));
     }
 
     public void loadAndSplitText(LoadAndSplitTextParam loadAndSplitTextParam) throws Exception {
-        this.stub.upload(database, name, loadAndSplitTextParam.getLocalFilePath(), loadAndSplitTextParam.getDocumentSetName(),null);
+        this.stub.upload(database, collectionView,  loadAndSplitTextParam.getDocumentSetName(), loadAndSplitTextParam.getLocalFilePath(),null);
     }
 
-    public GetFileRes getFile(String fileName, String fileId) {
-        return this.stub.getFile(database, name, fileName, fileId);
+    public GetDocumentSetRes getFile(String fileName, String fileId) {
+        return this.stub.getFile(database, collectionView, fileName, fileId);
     }
 
     public BaseRes rebuildIndex(RebuildIndexParam rebuildIndexParam) throws VectorDBException {
-        return this.stub.rebuildAIIndex(new RebuildIndexParamInner(database, name, rebuildIndexParam));
+        return this.stub.rebuildAIIndex(new RebuildIndexParamInner(database, collectionView, rebuildIndexParam));
     }
 
     @Override

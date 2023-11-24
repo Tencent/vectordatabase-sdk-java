@@ -103,6 +103,7 @@ public class JsonUtils {
         try {
             return PARAMS_DESERIALIZE_MAPPER.readValue(jsonStr, clz);
         } catch (JsonProcessingException e) {
+            System.out.println(e);
             throw new ParamException(String.format(
                     "can't parse content=%s", jsonStr));
         }

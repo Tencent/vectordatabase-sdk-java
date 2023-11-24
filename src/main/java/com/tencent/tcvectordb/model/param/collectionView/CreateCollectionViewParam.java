@@ -36,11 +36,11 @@ import java.util.List;
 public class CreateCollectionViewParam extends CollectionView {
 
     private CreateCollectionViewParam(Builder builder) {
-        this.name = builder.name;
+        this.collectionView = builder.name;
         this.description = builder.description;
         this.expectedFileNum = builder.expectedFileNum;
         this.averageFileSize = builder.averageFileSize;
-        this.splitterPreprocessParams = builder.splitterPreprocess;
+        this.splitterPreprocess = builder.splitterPreprocess;
         this.embedding = builder.embedding;
         this.indexes = builder.indexes;
     }
@@ -49,8 +49,8 @@ public class CreateCollectionViewParam extends CollectionView {
         return averageFileSize;
     }
 
-    public SplitterPreprocessParams getSplitterPreprocessParams() {
-        return splitterPreprocessParams;
+    public SplitterPreprocessParams getSplitterPreprocess() {
+        return splitterPreprocess;
     }
 
     public static Builder newBuilder() {

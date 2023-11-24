@@ -1,31 +1,31 @@
 package com.tencent.tcvectordb.model.param.entity;
 
 public class AIStatus {
-    private long indexedDocuments;
-    private long totalDocuments;
-    private long unIndexedDocuments;
+    private long indexedDocumentSets;
+    private long totalDocumentSets;
+    private long unIndexedDocumentSets;
 
-    public long getIndexedDocuments() {
-        return indexedDocuments;
+    public long getIndexedDocumentSets() {
+        return indexedDocumentSets;
     }
 
-    public void setIndexedDocuments(long indexedDocuments) {
-        this.indexedDocuments = indexedDocuments;
+    public void setIndexedDocumentSets(long indexedDocumentSets) {
+        this.indexedDocumentSets = indexedDocumentSets;
     }
 
-    public long getTotalDocuments() {
-        return totalDocuments;
+    public long getTotalDocumentSets() {
+        return totalDocumentSets;
     }
 
-    public void setTotalDocuments(long totalDocuments) {
-        this.totalDocuments = totalDocuments;
+    public void setTotalDocumentSets(long totalDocumentSets) {
+        this.totalDocumentSets = totalDocumentSets;
     }
 
-    public long getUnIndexedDocuments() {
-        return unIndexedDocuments;
+    public long getUnIndexedDocumentSets() {
+        return unIndexedDocumentSets;
     }
 
-    public void setUnIndexedDocuments(long unIndexedDocuments) {
-        this.unIndexedDocuments = unIndexedDocuments;
+    public void setUnIndexedDocumentSets(long unIndexedDocumentSets) {
+        this.unIndexedDocumentSets = unIndexedDocumentSets;
     }
 }

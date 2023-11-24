@@ -30,6 +30,7 @@ import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
+import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -53,15 +54,15 @@ public class VectorDBExampleWithAI_doc {
         // 测试前清理环境
         System.out.println("---------------------- clear before test ----------------------");
 //        anySafe(() -> clear(client));
-        createDatabaseAndCollection(client);
-        loadAndSplitText(client, "/data/home/yihaoan/projects/test/test23.md", "file1");
+//        createDatabaseAndCollection(client);
+//        loadAndSplitText(client, "/Users/anyihao/tmp/test23.md", "file2");
 //        // 解析加载文件需要等待时间
 //        Thread.sleep(1000 * 10);
 //
 //        queryData(client);
-//        GetFile(client, "test23.md");
-//        updateAndDelete(client);
-//        deleteAndDrop(client);
+//        GetFile(client, "file2");
+        updateAndDelete(client);
+        deleteAndDrop(client);
     }
 
 
@@ -73,8 +74,8 @@ public class VectorDBExampleWithAI_doc {
     private static ConnectParam initConnectParam() {
         System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
         System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
-        String vdb_url = "http://lb-3fuz86n6-e8g7tor5zvbql29p.clb.ap-guangzhou.tencentclb.com:60000";
-        String vdb_key = "tko5oh7A8xXc4POf3piBXeXSYhBFH5eAtMgXTrDd";
+        String vdb_url = "http://9.135.180.240:8100";
+        String vdb_key = "r81OtTBXUIoJIp1AukZHkxvqRDTNixtIHPC5c9hT";
         return ConnectParam.newBuilder()
                 .withUrl(vdb_url)
                 .withUsername("root")
@@ -100,7 +101,7 @@ public class VectorDBExampleWithAI_doc {
     private static void createDatabaseAndCollection(VectorDBClient client) throws InterruptedException {
         // 1. 创建数据库
         System.out.println("---------------------- create AI Database ----------------------");
-//        AIDatabase db = client.createAIDatabase(DBNAME);
+        AIDatabase db = client.createAIDatabase(DBNAME);
 
         // 2. 列出所有数据库
         System.out.println("---------------------- listDatabase ----------------------");
@@ -109,7 +110,7 @@ public class VectorDBExampleWithAI_doc {
             System.out.println("\tres: " + s);
         }
 
-        AIDatabase db = client.aiDatabase(DBNAME);
+//        AIDatabase db = client.aiDatabase(DBNAME);
 
         // 3. 创建 collection
         System.out.println("---------------------- createCollectionView ----------------------");
@@ -173,7 +174,6 @@ public class VectorDBExampleWithAI_doc {
         // 4. 如果仅需要部分 field 的数据，可以指定 output_fields 用于指定返回数据包含哪些 field，不指定默认全部返回
         System.out.println("---------------------- query ----------------------");
         Filter filterParam = new Filter("_indexed_status=2");
-//        List<String> documentIds = Arrays.asList("1165953225640378368", "1165953228927545344");
         CollectionViewConditionParam queryParam = CollectionViewConditionParam.newBuilder()
 //                .withDocumentIds(documentIds)
                 // 使用 filter 过滤数据
@@ -181,20 +181,22 @@ public class VectorDBExampleWithAI_doc {
                 // limit 限制返回行数，1 到 16384 之间
                 .withLimit(100)
                 .build();
-        List<DocumentSet> qdos = collection.query(queryParam);
+        List<DocumentSet> qdos = collection.query(10);
         for (DocumentSet doc : qdos) {
             System.out.println("\tres: " + doc.toString());
         }
 
         // search
         System.out.println("---------------------- search ----------------------");
+
         SearchContenOption option = SearchContenOption.newBuilder().withChunkExpand(Arrays.asList(1,1))
-                .withRerank(new RerankOption(true, 2.5))
+//                .withRerank(new RerankOption(true, 2.5))
                 .build();
         SearchByContentsParam searchByContentsParam = SearchByContentsParam.newBuilder()
                 .withContent("什么是 AI 中的向量表示")
                 .withSearchContentOption(option)
                 .build();
+//        System.out.println(JsonUtils.toJsonString(qdos.get(0).search(searchByContentsParam)));
         List<Document> searchRes = collection.search(searchByContentsParam);
         int i = 0;
         for (Document doc : searchRes) {
@@ -210,10 +212,10 @@ public class VectorDBExampleWithAI_doc {
 
         // filter 限制仅会更新 条件符合的记录
         System.out.println("---------------------- update ----------------------");
-        Filter filterParam = new Filter("_file_name=\"test21.md\"");
+        Filter filterParam = new Filter("documentSetName=\"file2\"");
         CollectionViewConditionParam updateParam = CollectionViewConditionParam
                 .newBuilder()
-//                .addAllDocumentId(documentIds)
+                .withDocumnetSetNames(Arrays.asList("file2"))
                 .withFilter(filterParam)
                 .build();
         Map<String, Object> updateFieldValues = new HashMap<>();
@@ -221,20 +223,23 @@ public class VectorDBExampleWithAI_doc {
         updateFieldValues.put("extend", "extendContent");
         collection.update(updateParam, updateFieldValues);
 
+        System.out.println(collection.query(10).get(0).toString());
+
         // delete
         // 1. delete 提供基于[ 主键查询]和[Filter 过滤]的数据删除能力
         // 2. 删除功能会受限于 collection 的索引类型，部分索引类型不支持删除操作
 
         //     filter 限制只会删除命中的记录
         System.out.println("---------------------- delete ----------------------");
-        Filter filterParam1 = new Filter("_file_name=\"test21.md\"");
+        Filter filterParam1 = new Filter("_file_name=\"file2\"");
         CollectionViewConditionParam build = CollectionViewConditionParam
                 .newBuilder()
-//                .addAllDocumentId(documentIds)
+                .withDocumnetSetNames(Arrays.asList("file2"))
                 .withFilter(filterParam1)
                 .build();
         AffectRes affectRes = collection.deleteDocumentSets(build);
         System.out.println("\tres: " + affectRes.toString());
+        System.out.println(collection.query().size());
 
         // truncate collection
         System.out.println("---------------------- truncate ----------------------");

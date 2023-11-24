@@ -171,7 +171,7 @@ public class HttpStub implements Stub {
         if (DataBaseTypeEnum.isAIDataBase(dbType)){
             url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_COL_FLUSH);
         }
-        String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
+        String body = String.format("{\"database\":\"%s\",\"collectionView\":\"%s\"}",
                 databaseName, collectionName);
         JsonNode jsonNode = this.post(url, body);
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
@@ -307,7 +307,7 @@ public class HttpStub implements Stub {
     @Override
     public AffectRes setAIAlias(String databaseName, String collectionName, String aliasName) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_ALIAS_SET);
-        String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\",\"alias\":\"%s\"}",
+        String body = String.format("{\"database\":\"%s\",\"collectionView\":\"%s\",\"alias\":\"%s\"}",
                 databaseName, collectionName, aliasName);
         JsonNode jsonNode = this.post(url, body);
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
@@ -324,7 +324,7 @@ public class HttpStub implements Stub {
 
     @Override
     public List<CollectionView> listCollectionView(String databaseName) {
-        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_COL_DESCRIBE);
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_COL_LIST);
         JsonNode jsonNode = this.post(url, String.format("{\"database\":\"%s\"}", databaseName));
         JsonNode closJson = jsonNode.get("collectionViews");
         if (closJson == null) {
@@ -336,10 +336,10 @@ public class HttpStub implements Stub {
     @Override
     public CollectionView describeCollectionView(String databaseName, String collectionName) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_COL_DESCRIBE);
-        String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
+        String body = String.format("{\"database\":\"%s\",\"collectionView\":\"%s\"}",
                 databaseName, collectionName);
         JsonNode jsonNode = this.post(url, body);
-        JsonNode dbsJson = jsonNode.get("collection");
+        JsonNode dbsJson = jsonNode.get("collectionView");
         if (dbsJson == null) {
             return null;
         }
@@ -358,7 +358,7 @@ public class HttpStub implements Stub {
     public List<DocumentSet> queryAIDocument(CollectionViewQueryParamInner queryParamInner) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_QUERY);
         JsonNode jsonNode = this.post(url, queryParamInner.toString());
-        JsonNode docsNode = jsonNode.get("documents");
+        JsonNode docsNode = jsonNode.get("documentSets");
         List<DocumentSet> dosc = new ArrayList<>();
         if (docsNode == null) {
             return dosc;
@@ -472,7 +472,7 @@ public class HttpStub implements Stub {
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.addUserMetadata("string--fileType", fileType.getDataFileType());
-        metadata.addUserMetadata("string--id", uploadUrlRes.getFileId());
+        metadata.addUserMetadata("string--id", uploadUrlRes.getDocumentSetId());
         if (metaDataMap!=null && !metaDataMap.isEmpty()){
             for (Map.Entry<String, Object> entry : metaDataMap.entrySet()) {
                 String key = entry.getKey();
@@ -502,13 +502,41 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public GetFileRes getFile(String databaseName, String collectionName, String documentSetName, String documentSetId) {
+    public GetDocumentSetRes getFile(String databaseName, String collectionName, String documentSetName, String documentSetId) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_GET_FILE);
-        String body = String.format("{\"database\":\"%s\",\"collectionView\":\"%s\",\"fileName\":\"%s\"," +
-                        "\"fileId\":\"%s\"}",
+        String body = String.format("{\"database\":\"%s\",\"collectionView\":\"%s\",\"documentSetName\":\"%s\"," +
+                        "\"documentSetId\":\"%s\"}",
                 databaseName, collectionName, documentSetName, documentSetId);
         JsonNode jsonNode = this.post(url, body);
-        return JsonUtils.collectionDeserializer(jsonNode.toString(), new TypeReference<GetFileRes>() {});
+        int code = 0;
+        if (jsonNode.get("code") != null) {
+            code = jsonNode.get("code").asInt();
+        }
+        String msg = "";
+        if (jsonNode.get("msg") != null) {
+            msg = jsonNode.get("msg").asText();
+        }
+        String warning = "";
+        if (jsonNode.get("warning") != null) {
+            warning = jsonNode.get("warning").asText();
+        }
+        int count = 0;
+        if (jsonNode.get("count") != null) {
+            count = jsonNode.get("count").asInt();
+        }
+
+        GetDocumentSetRes res = new GetDocumentSetRes(code, msg, warning, count);
+        JsonNode multiDocsNode = jsonNode.get("documentSet");
+        if (multiDocsNode == null) {
+            return res;
+        }
+        try {
+            res.setDocumentSet(node2DocumentFileContent(multiDocsNode));
+        } catch (JsonProcessingException ex) {
+            throw new VectorDBException(String.format("VectorDBServer response " +
+                    "from search error: can't parse documents=%s", multiDocsNode));
+        }
+        return res;
     }
 
 
@@ -589,7 +617,7 @@ public class HttpStub implements Stub {
                 builder.withDoc(ele.asText());
             } else if (StringUtils.equals("score", name)) {
                 builder.withScore(ele.asDouble());
-            } else if (StringUtils.equals("chunk", name)) {
+            } else if (StringUtils.equals("data", name)) {
                 builder.addFilterField(new DocField(name, mapper.readValue(
                         ele.toString(), new TypeReference<ChunkInfo>() {
                         })));
@@ -618,16 +646,15 @@ public class HttpStub implements Stub {
             if (StringUtils.equals("documentSetId", name)) {
                 builder.withDocumentSetId(ele.asText());
             } else if (StringUtils.equals("documentSetInfo", name)) {
-                builder.withDocumentSetInfo(mapper.readValue(
+                DocumentSetInfo documentSetInfo = mapper.readValue(
                         ele.toString(), new TypeReference<DocumentSetInfo>() {
-                        }));
-            } else if (StringUtils.equals("documnetSetName", name)) {
+                        });
+                builder.withDocumentSetInfo(documentSetInfo);
+            } else if (StringUtils.equals("documentSetName", name)) {
                 builder.withDocumnetSetName(ele.asText());
             }else if (StringUtils.equals("textPrefix", name)) {
-                builder.withDocumnetSetName(ele.asText());
-            } else if (StringUtils.equals("textPrefix", name)) {
-                builder.withDocumnetSetName(ele.asText());
-            } else {
+                builder.withTextPrefix(ele.asText());
+            }else {
                 if (ele.isInt()) {
                     builder.addFilterField(new DocField(name, ele.asInt()));
                 } else if (ele.isLong()) {
@@ -638,5 +665,37 @@ public class HttpStub implements Stub {
             }
         }
         return builder.build();
+    }
+
+    private DocumentFileContent node2DocumentFileContent(JsonNode node) throws JsonProcessingException{
+        DocumentFileContent documentFileContent = new DocumentFileContent();
+        documentFileContent.setDocFields(new ArrayList<>());
+        Iterator<String> iterator = node.fieldNames();
+        ObjectMapper mapper = new ObjectMapper();
+        while (iterator.hasNext()) {
+            String name = iterator.next();
+            JsonNode ele = node.get(name);
+            if (StringUtils.equals("documentSetId", name)) {
+                documentFileContent.setDocumentSetId(ele.asText());
+            } else if (StringUtils.equals("documentSetInfo", name)) {
+                DocumentSetInfo documentSetInfo = mapper.readValue(
+                        ele.toString(), new TypeReference<DocumentSetInfo>() {
+                        });
+                documentFileContent.setDocumentSetInfo(documentSetInfo);
+            } else if (StringUtils.equals("documentSetName", name)) {
+                documentFileContent.setDocumentSetId(ele.asText());
+            }else if (StringUtils.equals("text", name)) {
+                documentFileContent.setText(ele.asText());
+            }else {
+                if (ele.isInt()) {
+                    documentFileContent.addFilterField(new DocField(name, ele.asInt()));
+                } else if (ele.isLong()) {
+                    documentFileContent.addFilterField(new DocField(name, ele.asLong()));
+                } else {
+                    documentFileContent.addFilterField(new DocField(name, ele.asText()));
+                }
+            }
+        }
+        return documentFileContent;
     }
 }

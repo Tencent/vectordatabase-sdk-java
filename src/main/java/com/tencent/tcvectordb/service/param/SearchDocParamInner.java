@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.model.param.dml.SearchByContentsParam;
-import com.tencent.tcvectordb.model.param.dml.SearchParam;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 
 /**
@@ -14,13 +13,13 @@ import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SearchDocParamInner {
     private String database;
-    private String collection;
+    private String collectionView;
     private SearchByContentsParam search;
     private ReadConsistencyEnum readConsistency = ReadConsistencyEnum.EVENTUAL_CONSISTENCY;
 
-    public SearchDocParamInner(String database, String collection, SearchByContentsParam search, ReadConsistencyEnum readConsistency) {
+    public SearchDocParamInner(String database, String collectionView, SearchByContentsParam search, ReadConsistencyEnum readConsistency) {
         this.database = database;
-        this.collection = collection;
+        this.collectionView = collectionView;
         this.search = search;
         this.readConsistency = readConsistency;
     }
@@ -29,8 +28,8 @@ public class SearchDocParamInner {
         return database;
     }
 
-    public String getCollection() {
-        return collection;
+    public String getCollectionView() {
+        return collectionView;
     }
 
     public SearchByContentsParam getSearch() {

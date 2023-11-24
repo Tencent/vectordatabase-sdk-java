@@ -4,11 +4,14 @@ import com.tencent.tcvectordb.model.DocumentSet;
 
 public class EmbeddingParams {
     private String language;
-    private boolean enableWordEmbedding;
+    private boolean enableWordsEmbedding;
+
+    public EmbeddingParams() {
+    }
 
     public EmbeddingParams(Builder builder) {
         this.language = builder.language.getValue();
-        this.enableWordEmbedding = builder.enableWordEmbedding;
+        this.enableWordsEmbedding = builder.enableWordEmbedding;
     }
 
     public String getLanguage() {
@@ -19,12 +22,12 @@ public class EmbeddingParams {
         this.language = language.getValue();
     }
 
-    public boolean isEnableWordEmbedding() {
-        return enableWordEmbedding;
+    public boolean isEnableWordsEmbedding() {
+        return enableWordsEmbedding;
     }
 
-    public void setEnableWordEmbedding(boolean enableWordEmbedding) {
-        this.enableWordEmbedding = enableWordEmbedding;
+    public void setEnableWordsEmbedding(boolean enableWordsEmbedding) {
+        this.enableWordsEmbedding = enableWordsEmbedding;
     }
 
     public static DocumentSet.Builder newBuilder() {

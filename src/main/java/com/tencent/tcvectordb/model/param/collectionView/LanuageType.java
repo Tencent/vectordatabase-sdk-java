@@ -18,7 +18,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.tencent.tcvectordb.model.param.collection;
+package com.tencent.tcvectordb.model.param.collectionView;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 

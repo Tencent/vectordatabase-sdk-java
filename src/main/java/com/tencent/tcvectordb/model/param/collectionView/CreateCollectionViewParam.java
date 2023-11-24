@@ -18,13 +18,12 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.tencent.tcvectordb.model.param.collection;
+package com.tencent.tcvectordb.model.param.collectionView;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencent.tcvectordb.exception.ParamException;
-import com.tencent.tcvectordb.model.AICollection;
+import com.tencent.tcvectordb.model.CollectionView;
+import com.tencent.tcvectordb.model.param.collection.IndexField;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -34,29 +33,24 @@ import java.util.List;
  * Create Collection Param
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class CreateAICollectionParam extends AICollection {
+public class CreateCollectionViewParam extends CollectionView {
 
-    private CreateAICollectionParam(Builder builder) {
-        this.collection = builder.name;
+    private CreateCollectionViewParam(Builder builder) {
+        this.name = builder.name;
         this.description = builder.description;
-        this.indexes = builder.indexes;
         this.expectedFileNum = builder.expectedFileNum;
         this.averageFileSize = builder.averageFileSize;
-        this.documentPreprocess = builder.documentPreprocess;
-        this.language = builder.language;
-        this.enableWordsEmbedding = builder.enableWordsEmbedding;
+        this.splitterPreprocessParams = builder.splitterPreprocess;
+        this.embedding = builder.embedding;
+        this.indexes = builder.indexes;
     }
 
     public int getAverageFileSize() {
         return averageFileSize;
     }
 
-    public String getLanguage() {
-        return language;
-    }
-
-    public DocumentPreprocessParams getDocumentPreprocess() {
-        return documentPreprocess;
+    public SplitterPreprocessParams getSplitterPreprocessParams() {
+        return splitterPreprocessParams;
     }
 
     public static Builder newBuilder() {
@@ -67,8 +61,11 @@ public class CreateAICollectionParam extends AICollection {
         private String name;
         private String description;
         private final List<IndexField> indexes;
-        private int expectedFileNum;
-        private boolean enableWordsEmbedding;
+        private int expectedFileNum=1024;
+        private int averageFileSize=10240;
+        private SplitterPreprocessParams splitterPreprocess;
+
+        private EmbeddingParams embedding;
 
         public int getExpectedFileNum() {
             return expectedFileNum;
@@ -77,12 +74,6 @@ public class CreateAICollectionParam extends AICollection {
         public void setExpectedFileNum(int expectedFileNum) {
             this.expectedFileNum = expectedFileNum;
         }
-
-        private int averageFileSize;
-
-        private String language;
-
-        private DocumentPreprocessParams documentPreprocess;
 
         private Builder() {
             this.indexes = new ArrayList<>();
@@ -102,37 +93,21 @@ public class CreateAICollectionParam extends AICollection {
             this.indexes.add(field);
             return this;
         }
-
-        public Builder withExpectedFileNum(int expectedFileNum) {
-            this.expectedFileNum = expectedFileNum;
+        public Builder withEmbedding(EmbeddingParams embedding) {
+            this.embedding = embedding;
             return this;
         }
 
-        public Builder withAverageFileSize(int averageFileSize) {
-            this.averageFileSize = averageFileSize;
+        public Builder withSplitterPreprocess(SplitterPreprocessParams documentPreprocess) {
+            this.splitterPreprocess = documentPreprocess;
             return this;
         }
 
-        public Builder withLanguage(LanuageType languageType) {
-            this.language = languageType.getValue();
-            return this;
-        }
-
-        public Builder withDocumentPreprocess(DocumentPreprocessParams documentPreprocess) {
-            this.documentPreprocess = documentPreprocess;
-            return this;
-        }
-
-        public Builder withEnableWordsEmbedding(boolean enableWordsEmbedding) {
-            this.enableWordsEmbedding = enableWordsEmbedding;
-            return this;
-        }
-
-        public CreateAICollectionParam build() throws ParamException {
+        public CreateCollectionViewParam build() throws ParamException {
             if (StringUtils.isEmpty(this.name)) {
                 throw new ParamException("ConnectParam error: name is null");
             }
-            return new CreateAICollectionParam(this);
+            return new CreateCollectionViewParam(this);
         }
     }
 

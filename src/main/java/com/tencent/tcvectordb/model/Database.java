@@ -22,7 +22,6 @@ package com.tencent.tcvectordb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tencent.tcvectordb.exception.VectorDBException;
-import com.tencent.tcvectordb.model.param.collection.CreateAICollectionParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.DataBaseType;
@@ -42,30 +41,21 @@ public class Database {
     @JsonIgnore
     private final ReadConsistencyEnum readConsistency;
 
-    @JsonIgnore
-    private DataBaseTypeEnum dbType;
-
     public Database(Stub stub, String databaseName, ReadConsistencyEnum readConsistency) {
         this.stub = stub;
         this.databaseName = databaseName;
         this.readConsistency = readConsistency;
-        this.dbType = DataBaseTypeEnum.BASE;
-        initDataBaseType();
+//        ensureDataBaseType();
     }
 
-    public Database(Stub stub, String databaseName, ReadConsistencyEnum readConsistency, DataBaseTypeEnum dbType) {
-        this.stub = stub;
-        this.databaseName = databaseName;
-        this.readConsistency = readConsistency;
-        this.dbType = dbType;
-    }
-
-    private void initDataBaseType() throws VectorDBException{
+    private void ensureDataBaseType() throws VectorDBException{
         Map<String, DataBaseType> dataBaseTypeMap = stub.listDatabaseInfos();
         if (!dataBaseTypeMap.containsKey(this.databaseName)){
             throw new VectorDBException("database not existed");
         }
-        this.dbType = DataBaseTypeEnum.valueOf(dataBaseTypeMap.get(this.databaseName).getDbType());
+        if(DataBaseTypeEnum.isAIDataBase(DataBaseTypeEnum.valueOf(dataBaseTypeMap.get(this.databaseName).getDbType()))){
+            throw new VectorDBException("database is ai database");
+        }
     }
 
     public String getDatabaseName() {
@@ -74,10 +64,6 @@ public class Database {
 
     public ReadConsistencyEnum getReadConsistency() {
         return readConsistency;
-    }
-
-    public DataBaseTypeEnum getDBType(){
-        return dbType;
     }
 
     public Collection createCollection(CreateCollectionParam param) throws VectorDBException {
@@ -98,11 +84,7 @@ public class Database {
     }
 
     public AffectRes truncateCollections(String collectionName) {
-        return stub.truncateCollection(this.databaseName, collectionName, this.dbType);
-    }
-
-    public AffectRes truncateAICollections(String collectionName) {
-        return stub.truncateCollection(this.databaseName, collectionName, this.dbType);
+        return stub.truncateCollection(this.databaseName, collectionName, DataBaseTypeEnum.BASE_DB);
     }
 
     public Collection describeCollection(String collectionName) throws VectorDBException {
@@ -127,43 +109,6 @@ public class Database {
     public Collection collection(String collectionName) throws VectorDBException {
         return describeCollection(collectionName);
     }
-
-    public List<AICollection> listAICollections() throws VectorDBException {
-        List<AICollection> collections = stub.listAICollections(this.databaseName);
-        collections.forEach(c -> {
-            c.setStub(stub);
-            c.setReadConsistency(readConsistency);
-        });
-        return collections;
-    }
-
-    public AICollection createAICollection(CreateAICollectionParam param) throws VectorDBException {
-        param.setDatabase(databaseName);
-        param.setReadConsistency(readConsistency);
-        stub.createAICollection(param);
-        param.setStub(this.stub);
-        return param;
-    }
-
-    public AICollection describeAICollection(String collectionName) throws VectorDBException {
-        AICollection collection = stub.describeAICollection(this.databaseName, collectionName);
-        collection.setStub(stub);
-        collection.setReadConsistency(readConsistency);
-        return collection;
-    }
-
-    public void dropAICollection(String collectionName) throws VectorDBException {
-        stub.dropAICollection(this.databaseName, collectionName);
-    }
-
-    public AffectRes setAIAlias(String collectionName, String aliasName) {
-        return stub.setAIAlias(this.databaseName, collectionName, aliasName);
-    }
-
-    public AffectRes deleteAIAlias(String aliasName) {
-        return stub.deleteAIAlias(this.databaseName, aliasName);
-    }
-
 
     @Override
     public String toString() {

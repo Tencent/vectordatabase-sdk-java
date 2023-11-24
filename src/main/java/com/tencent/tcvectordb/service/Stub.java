@@ -1,10 +1,7 @@
 package com.tencent.tcvectordb.service;
 
-import com.tencent.tcvectordb.model.AICollection;
-import com.tencent.tcvectordb.model.Collection;
-import com.tencent.tcvectordb.model.Database;
-import com.tencent.tcvectordb.model.Document;
-import com.tencent.tcvectordb.model.param.collection.CreateAICollectionParam;
+import com.tencent.tcvectordb.model.*;
+import com.tencent.tcvectordb.model.param.collectionView.CreateCollectionViewParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
@@ -31,7 +28,7 @@ public interface Stub {
     /**
      * create ai_database
      */
-    void createAIDatabase(Database database);
+    void createAIDatabase(AIDatabase aiDatabase);
 
     /**
      * decribe database
@@ -42,7 +39,7 @@ public interface Stub {
     /**
      * drop ai_database
      */
-    void dropAIDatabase(Database database);
+    void dropAIDatabase(AIDatabase aiDatabase);
 
     /**
      * list databases
@@ -63,7 +60,7 @@ public interface Stub {
     /**
      * create AI collection
      */
-    void createAICollection(CreateAICollectionParam params);
+    void createCollectionView(CreateCollectionViewParam params);
 
     /**
      * list collections
@@ -129,21 +126,21 @@ public interface Stub {
 
     AffectRes deleteAIAlias(String databaseName, String aliasName);
 
-    List<AICollection> listAICollections(String databaseName);
+    List<CollectionView> listCollectionView(String databaseName);
 
-    AICollection describeAICollection(String databaseName, String collectionName);
+    CollectionView describeCollectionView(String databaseName, String collectionName);
 
-    void dropAICollection(String databaseName, String collectionName);
+    void dropCollectionView(String databaseName, String collectionName);
 
-    List<Document> queryAIDocument(QueryParamInner queryParamInner);
+    List<DocumentSet> queryAIDocument(CollectionViewQueryParamInner queryParamInner);
 
-    AffectRes deleteAIDocument(DeleteParamInner deleteParamInner);
+    AffectRes deleteAIDocument(CollectionViewDeleteParamInner deleteParamInner);
 
     SearchContentRes searchAIDocument(SearchDocParamInner searchDocParamInner);
 
-    AffectRes updateAIDocument(UpdateParamInner updateParamInner);
+    AffectRes updateAIDocument(CollectionViewUpdateParamInner updateParamInner);
 
-    void upload(String databaseName, String collectionName, String filePath, Map<String, Object> metaDataMap) throws Exception;
+    void upload(String databaseName, String collectionName, String documentSetName, String filePath, Map<String, Object> metaDataMap) throws Exception;
 
     GetFileRes getFile(String databaseName, String collectionName, String fileName, String fileId);
 

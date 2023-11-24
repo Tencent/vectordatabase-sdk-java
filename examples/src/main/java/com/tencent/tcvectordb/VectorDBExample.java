@@ -95,7 +95,7 @@ public class VectorDBExample {
     private static void createDatabaseAndCollection(VectorDBClient client) {
         // 1. 创建数据库
         System.out.println("---------------------- createDatabase ----------------------");
-//        Database db = client.createDatabase(DBNAME);
+        Database db = client.createDatabase(DBNAME);
 
         // 2. 列出所有数据库
         System.out.println("---------------------- listCollections ----------------------");
@@ -103,7 +103,7 @@ public class VectorDBExample {
         for (String s : database) {
             System.out.println("\tres: " + s);
         }
-        Database db = client.database(DBNAME);
+//        Database db = client.database(DBNAME);
 
         // 3. 创建 collection
         System.out.println("---------------------- createCollection ----------------------");

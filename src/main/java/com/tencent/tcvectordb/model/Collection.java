@@ -20,17 +20,21 @@
 
 package com.tencent.tcvectordb.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.param.collection.Embedding;
+import com.tencent.tcvectordb.model.param.collection.IndexField;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.BaseRes;
 import com.tencent.tcvectordb.model.param.entity.SearchRes;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
+import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
+import com.tencent.tcvectordb.service.Stub;
 import com.tencent.tcvectordb.service.param.*;
 
 import java.util.Date;
@@ -39,8 +43,78 @@ import java.util.List;
 /**
  * VectorDB Collection
  */
-public class Collection extends BaseCollection {
+public class Collection{
+    @JsonIgnore
+    private Stub stub;
+    private String database;
+    protected String collection;
+    protected int replicaNum = 2;
+    protected int shardNum = 1;
+    protected String description;
+    protected List<IndexField> indexes;
+    private String createTime;
+    @JsonIgnore
+    protected ReadConsistencyEnum readConsistency;
+    private long documentCount;
+    private Collection.IndexStatus indexStatus;
+    private List<String> alias;
     protected Embedding embedding;
+
+    public void setStub(Stub stub) {
+        this.stub = stub;
+    }
+
+    public String getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(String database) {
+        this.database = database;
+    }
+
+    public String getCollection() {
+        return collection;
+    }
+
+    public int getReplicaNum() {
+        return replicaNum;
+    }
+
+    public int getShardNum() {
+        return shardNum;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public List<IndexField> getIndexes() {
+        return indexes;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public long getDocumentCount() {
+        return documentCount;
+    }
+
+    public Collection.IndexStatus getIndexStatus() {
+        return indexStatus;
+    }
+
+    public List<String> getAlias() {
+        return alias;
+    }
+
+    public ReadConsistencyEnum getReadConsistency() {
+        return readConsistency;
+    }
+
+    public void setReadConsistency(ReadConsistencyEnum readConsistency) {
+        this.readConsistency = readConsistency;
+    }
 
     public Embedding getEmbedding() {
         return embedding;
@@ -53,7 +127,7 @@ public class Collection extends BaseCollection {
     public AffectRes upsert(InsertParam param) throws VectorDBException {
         InsertParamInner insertParam = new InsertParamInner(
                 database, collection, param);
-        return super.stub.upsertDocument(insertParam);
+        return this.stub.upsertDocument(insertParam);
     }
 
     public List<Document> query(QueryParam param) throws VectorDBException {

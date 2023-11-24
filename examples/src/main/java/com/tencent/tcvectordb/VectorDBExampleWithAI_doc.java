@@ -22,11 +22,10 @@ package src.main.java.com.tencent.tcvectordb;
 
 import com.tencent.tcvectordb.client.VectorDBClient;
 import com.tencent.tcvectordb.exception.VectorDBException;
-import com.tencent.tcvectordb.model.Database;
-import com.tencent.tcvectordb.model.DocField;
-import com.tencent.tcvectordb.model.Document;
-import com.tencent.tcvectordb.model.AICollection;
+import com.tencent.tcvectordb.model.*;
 import com.tencent.tcvectordb.model.param.collection.*;
+import com.tencent.tcvectordb.model.param.collectionView.CreateCollectionViewParam;
+import com.tencent.tcvectordb.model.param.collectionView.LoadAndSplitTextParam;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
@@ -53,19 +52,16 @@ public class VectorDBExampleWithAI_doc {
 
         // 测试前清理环境
         System.out.println("---------------------- clear before test ----------------------");
-        anySafe(() -> clear(client));
+//        anySafe(() -> clear(client));
         createDatabaseAndCollection(client);
-        Map<String, Object> metaDataMap = new HashMap<>();
-        metaDataMap.put("bookName", "向量数据库库12");
-        metaDataMap.put("bookId", "123456");
-        uploadFile(client, "/data/home/yihaoan/projects/test/test23.md", metaDataMap);
-        // 解析加载文件需要等待时间
-        Thread.sleep(1000 * 10);
-
-        queryData(client);
-        GetFile(client, "test23.md");
-        updateAndDelete(client);
-        deleteAndDrop(client);
+        loadAndSplitText(client, "/data/home/yihaoan/projects/test/test23.md", "file1");
+//        // 解析加载文件需要等待时间
+//        Thread.sleep(1000 * 10);
+//
+//        queryData(client);
+//        GetFile(client, "test23.md");
+//        updateAndDelete(client);
+//        deleteAndDrop(client);
     }
 
 
@@ -77,8 +73,8 @@ public class VectorDBExampleWithAI_doc {
     private static ConnectParam initConnectParam() {
         System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
         System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
-        String vdb_url = "http://21.0.83.204:8100";
-        String vdb_key = "RPo223wN2yXyUq16dmHcGyzXHaYfWCZWNMGwBC01";
+        String vdb_url = "http://lb-3fuz86n6-e8g7tor5zvbql29p.clb.ap-guangzhou.tencentclb.com:60000";
+        String vdb_key = "tko5oh7A8xXc4POf3piBXeXSYhBFH5eAtMgXTrDd";
         return ConnectParam.newBuilder()
                 .withUrl(vdb_url)
                 .withUsername("root")
@@ -104,7 +100,7 @@ public class VectorDBExampleWithAI_doc {
     private static void createDatabaseAndCollection(VectorDBClient client) throws InterruptedException {
         // 1. 创建数据库
         System.out.println("---------------------- create AI Database ----------------------");
-        Database db = client.createAIDatabase(DBNAME);
+//        AIDatabase db = client.createAIDatabase(DBNAME);
 
         // 2. 列出所有数据库
         System.out.println("---------------------- listDatabase ----------------------");
@@ -113,17 +109,17 @@ public class VectorDBExampleWithAI_doc {
             System.out.println("\tres: " + s);
         }
 
-//        Database db = client.database(DBNAME);
+        AIDatabase db = client.aiDatabase(DBNAME);
 
         // 3. 创建 collection
-        System.out.println("---------------------- createAICollection ----------------------");
-        CreateAICollectionParam collectionParam = initCreateAICollectionParam(COLL_NAME);
-        db.createAICollection(collectionParam);
+        System.out.println("---------------------- createCollectionView ----------------------");
+        CreateCollectionViewParam collectionParam = initCreateCollectionViewParam(COLL_NAME);
+        db.createCollectionView(collectionParam);
 
         // 4. 列出所有 collection
-        System.out.println("---------------------- listAICollections ----------------------");
-        List<AICollection> cols = db.listAICollections();
-        for (AICollection col : cols) {
+        System.out.println("---------------------- listCollectionView ----------------------");
+        List<CollectionView> cols = db.listCollectionView();
+        for (CollectionView col : cols) {
             System.out.println("\tres: " + col.toString());
         }
 
@@ -134,8 +130,8 @@ public class VectorDBExampleWithAI_doc {
         Thread.sleep(5*1000);
 
         // 6. describe collection
-        System.out.println("---------------------- describeAICollection ----------------------");
-        AICollection descCollRes = db.describeAICollection(COLL_NAME);
+        System.out.println("---------------------- describeCollectionView ----------------------");
+        CollectionView descCollRes = db.describeCollectionView(COLL_NAME);
         System.out.println("\tres: " + descCollRes.toString());
 
 
@@ -145,28 +141,30 @@ public class VectorDBExampleWithAI_doc {
         System.out.println("\tres: " + affectRes1);
 
         // 8. describe collection
-        System.out.println("---------------------- describeAICollection ----------------------");
-        AICollection descCollRes1 = db.describeAICollection(COLL_NAME);
+        System.out.println("---------------------- describeCollectionView ----------------------");
+        CollectionView descCollRes1 = db.describeCollectionView(COLL_NAME);
         System.out.println("\tres: " + descCollRes1.toString());
 
     }
 
-    private static void uploadFile(VectorDBClient client, String filePath, Map<String, Object> metaDataMap) throws Exception {
-        Database database = client.database(DBNAME);
-        AICollection collection = database.describeAICollection(COLL_NAME);
-        collection.upload(filePath, metaDataMap);
+    private static void loadAndSplitText(VectorDBClient client, String filePath, String documentSetName) throws Exception {
+        AIDatabase database = client.aiDatabase(DBNAME);
+        CollectionView collection = database.describeCollectionView(COLL_NAME);
+        LoadAndSplitTextParam param = LoadAndSplitTextParam.newBuilder()
+                .withLocalFilePath(filePath).withDocumentSetName(documentSetName).Build();
+        collection.loadAndSplitText(param);
     }
 
     private static void GetFile(VectorDBClient client, String fileName) {
-        Database database = client.database(DBNAME);
-        AICollection collection = database.describeAICollection(COLL_NAME);
+        AIDatabase database = client.aiDatabase(DBNAME);
+        CollectionView collection = database.describeCollectionView(COLL_NAME);
         System.out.println(collection.getFile(fileName, ""));
     }
 
 
     private static void queryData(VectorDBClient client) {
-        Database database = client.database(DBNAME);
-        AICollection collection = database.describeAICollection(COLL_NAME);
+        AIDatabase database = client.aiDatabase(DBNAME);
+        CollectionView collection = database.describeCollectionView(COLL_NAME);
 
         // query  查询
         // 1. query 用于查询数据
@@ -176,17 +174,15 @@ public class VectorDBExampleWithAI_doc {
         System.out.println("---------------------- query ----------------------");
         Filter filterParam = new Filter("_indexed_status=2");
 //        List<String> documentIds = Arrays.asList("1165953225640378368", "1165953228927545344");
-        QueryParam queryParam = QueryParam.newBuilder()
+        CollectionViewConditionParam queryParam = CollectionViewConditionParam.newBuilder()
 //                .withDocumentIds(documentIds)
                 // 使用 filter 过滤数据
                 .withFilter(filterParam)
                 // limit 限制返回行数，1 到 16384 之间
                 .withLimit(100)
-                // 是否返回 vector 数据
-                .withRetrieveVector(false)
                 .build();
-        List<Document> qdos = collection.query(queryParam);
-        for (Document doc : qdos) {
+        List<DocumentSet> qdos = collection.query(queryParam);
+        for (DocumentSet doc : qdos) {
             System.out.println("\tres: " + doc.toString());
         }
 
@@ -207,27 +203,23 @@ public class VectorDBExampleWithAI_doc {
     }
 
     private static void updateAndDelete(VectorDBClient client) throws InterruptedException {
-        Database database = client.database(DBNAME);
-        AICollection collection = database.describeAICollection(COLL_NAME);
+        AIDatabase database = client.aiDatabase(DBNAME);
+        CollectionView collection = database.describeCollectionView(COLL_NAME);
         // update
         // 1. update 提供基于 [主键查询] 和 [Filter 过滤] 的部分字段更新或者非索引字段新增
 
         // filter 限制仅会更新 条件符合的记录
         System.out.println("---------------------- update ----------------------");
         Filter filterParam = new Filter("_file_name=\"test21.md\"");
-        List<String> documentIds = Arrays.asList("1166304506301120512", "1166305232221896704");
-        UpdateParam updateParam = UpdateParam
+        CollectionViewConditionParam updateParam = CollectionViewConditionParam
                 .newBuilder()
 //                .addAllDocumentId(documentIds)
                 .withFilter(filterParam)
                 .build();
-        Document updateDoc = Document
-                .newBuilder()
-                .addDocField(new DocField("page", 100))
-                // 支持添加新的内容
-                .addDocField(new DocField("extend", "extendContent"))
-                .build();
-        collection.update(updateParam, updateDoc);
+        Map<String, Object> updateFieldValues = new HashMap<>();
+        updateFieldValues.put("page", 100);
+        updateFieldValues.put("extend", "extendContent");
+        collection.update(updateParam, updateFieldValues);
 
         // delete
         // 1. delete 提供基于[ 主键查询]和[Filter 过滤]的数据删除能力
@@ -236,25 +228,25 @@ public class VectorDBExampleWithAI_doc {
         //     filter 限制只会删除命中的记录
         System.out.println("---------------------- delete ----------------------");
         Filter filterParam1 = new Filter("_file_name=\"test21.md\"");
-        DeleteParam build = DeleteParam
+        CollectionViewConditionParam build = CollectionViewConditionParam
                 .newBuilder()
 //                .addAllDocumentId(documentIds)
                 .withFilter(filterParam1)
                 .build();
-        AffectRes affectRes = collection.delete(build);
+        AffectRes affectRes = collection.deleteDocumentSets(build);
         System.out.println("\tres: " + affectRes.toString());
 
         // truncate collection
         System.out.println("---------------------- truncate ----------------------");
-        database.truncateAICollections(COLL_NAME);
+        database.truncateCollectionView(COLL_NAME);
     }
 
     private static void deleteAndDrop(VectorDBClient client) {
-        Database database = client.database(DBNAME);
+        AIDatabase database = client.aiDatabase(DBNAME);
 
         // 删除 collection
         System.out.println("---------------------- dropCollection ----------------------");
-        database.dropAICollection(COLL_NAME);
+        database.dropCollectionView(COLL_NAME);
 
         // 删除 database
         System.out.println("---------------------- dropDatabase ----------------------");
@@ -267,14 +259,10 @@ public class VectorDBExampleWithAI_doc {
     }
 
 
-    private static CreateAICollectionParam initCreateAICollectionParam(String collName) {
-        return CreateAICollectionParam.newBuilder()
+    private static CreateCollectionViewParam initCreateCollectionViewParam(String collName) {
+        return CreateCollectionViewParam.newBuilder()
                 .withName(collName)
                 .withDescription("test create ai collection")
-                .withExpectedFileNum(1000000)
-                .withLanguage(LanuageType.ZH)
-                .withAverageFileSize(1024000)
-                .withEnableWordsEmbedding(true)
                 .addField(new FilterIndex("bookName", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("author", FieldType.String, IndexType.FILTER))
                 .build();

@@ -30,12 +30,13 @@ import java.util.List;
  * Search By Vector Param
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SearchByContentsParam{
+public class SearchByContentsParam {
     private String content;
     private SearchContenOption options;
     private Params params;
     private String filter;
     private List<String> outputFields;
+    private List<String> documentSetName;
     private int limit;
 
     public SearchContenOption getOptions() {
@@ -86,6 +87,14 @@ public class SearchByContentsParam{
         this.limit = limit;
     }
 
+    public List<String> getDocumentSetName() {
+        return documentSetName;
+    }
+
+    public void setDocumentSetName(List<String> documentSetName) {
+        this.documentSetName = documentSetName;
+    }
+
     private SearchByContentsParam(Builder builder) {
         this.content = builder.content;
         this.options = builder.searchContenOption;
@@ -93,6 +102,7 @@ public class SearchByContentsParam{
         this.filter = builder.filter;
         this.outputFields = builder.outputFields;
         this.limit = builder.limit;
+        this.documentSetName = builder.documentSetName;
     }
 
     public static Builder newBuilder() {
@@ -106,6 +116,8 @@ public class SearchByContentsParam{
         private String filter;
         private List<String> outputFields;
         protected int limit;
+
+        private List<String> documentSetName;
 
         private Builder() {
             this.content = "";
@@ -138,6 +150,11 @@ public class SearchByContentsParam{
 
         public Builder withLimit(int limit) {
             this.limit = limit;
+            return this;
+        }
+
+        public Builder withDocumentSerName(List<String> documentSetName) {
+            this.documentSetName = documentSetName;
             return this;
         }
 

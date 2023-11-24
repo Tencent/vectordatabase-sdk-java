@@ -12,12 +12,10 @@ import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.region.Region;
 import com.tencent.tcvectordb.exception.VectorDBException;
-import com.tencent.tcvectordb.model.AICollection;
+import com.tencent.tcvectordb.model.*;
 import com.tencent.tcvectordb.model.Collection;
-import com.tencent.tcvectordb.model.Database;
-import com.tencent.tcvectordb.model.DocField;
-import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.collection.*;
+import com.tencent.tcvectordb.model.param.collectionView.CreateCollectionViewParam;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
@@ -78,9 +76,9 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public void createAIDatabase(Database database) {
+    public void createAIDatabase(AIDatabase aiDatabase) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DB_CREATE);
-        this.post(url, database.toString());
+        this.post(url, aiDatabase.toString());
     }
 
     @Override
@@ -93,9 +91,9 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public void dropAIDatabase(Database database) {
+    public void dropAIDatabase(AIDatabase aiDatabase) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DB_DROP);
-        this.post(url, database.toString());
+        this.post(url, aiDatabase.toString());
     }
 
     @Override
@@ -137,7 +135,7 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public void createAICollection(CreateAICollectionParam params) {
+    public void createCollectionView(CreateCollectionViewParam params) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_COL_CREATE);
         this.post(url, params.toString());
     }
@@ -325,18 +323,18 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public List<AICollection> listAICollections(String databaseName) {
-        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_COL_LIST);
+    public List<CollectionView> listCollectionView(String databaseName) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_COL_DESCRIBE);
         JsonNode jsonNode = this.post(url, String.format("{\"database\":\"%s\"}", databaseName));
-        JsonNode closJson = jsonNode.get("collections");
+        JsonNode closJson = jsonNode.get("collectionViews");
         if (closJson == null) {
             return new ArrayList<>();
         }
-        return JsonUtils.collectionDeserializer(closJson.toString(), new TypeReference<List<AICollection>>() {});
+        return JsonUtils.collectionDeserializer(closJson.toString(), new TypeReference<List<CollectionView>>() {});
     }
 
     @Override
-    public AICollection describeAICollection(String databaseName, String collectionName) {
+    public CollectionView describeCollectionView(String databaseName, String collectionName) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_COL_DESCRIBE);
         String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
                 databaseName, collectionName);
@@ -345,11 +343,11 @@ public class HttpStub implements Stub {
         if (dbsJson == null) {
             return null;
         }
-        return JsonUtils.collectionDeserializer(dbsJson.toString(), new TypeReference<AICollection>() {});
+        return JsonUtils.collectionDeserializer(dbsJson.toString(), new TypeReference<CollectionView>() {});
     }
 
     @Override
-    public void dropAICollection(String databaseName, String collectionName) {
+    public void dropCollectionView(String databaseName, String collectionName) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_COL_DROP);
         String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
                 databaseName, collectionName);
@@ -357,11 +355,11 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public List<Document> queryAIDocument(QueryParamInner queryParamInner) {
+    public List<DocumentSet> queryAIDocument(CollectionViewQueryParamInner queryParamInner) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_QUERY);
         JsonNode jsonNode = this.post(url, queryParamInner.toString());
         JsonNode docsNode = jsonNode.get("documents");
-        List<Document> dosc = new ArrayList<>();
+        List<DocumentSet> dosc = new ArrayList<>();
         if (docsNode == null) {
             return dosc;
         }
@@ -369,7 +367,7 @@ public class HttpStub implements Stub {
             Iterator<JsonNode> iterator = docsNode.elements();
             while (iterator.hasNext()) {
                 JsonNode node = iterator.next();
-                Document doc = node2Doc(node);
+                DocumentSet doc = node2DocmentSet(node);
                 dosc.add(doc);
             }
             return dosc;
@@ -380,7 +378,7 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public AffectRes deleteAIDocument(DeleteParamInner deleteParamInner) {
+    public AffectRes deleteAIDocument(CollectionViewDeleteParamInner deleteParamInner) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_DELETE);
         JsonNode jsonNode = this.post(url, deleteParamInner.toString());
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
@@ -422,23 +420,23 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public AffectRes updateAIDocument(UpdateParamInner updateParamInner) {
+    public AffectRes updateAIDocument(CollectionViewUpdateParamInner updateParamInner) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_UPDATE);
         JsonNode jsonNode = this.post(url, updateParamInner.toString());
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
-    public UploadUrlRes getUploadUrl(String databaseName, String collectionName, String fileName, String fileType) {
+    public UploadUrlRes getUploadUrl(String databaseName, String collectionViewName, String documentSetName, String fileName, String fileType) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_UPLOADER_URL);
-        String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\",\"fileName\":\"%s\"," +
+        String body = String.format("{\"database\":\"%s\",\"collectionView\":\"%s\", \"documentSetName\":\"%s\", \"fileName\":\"%s\"," +
                         "\"fileType\":\"%s\"}",
-                databaseName, collectionName, fileName, fileType);
+                databaseName, collectionViewName, documentSetName, fileName, fileType);
         JsonNode jsonNode = this.post(url, body);
         return JsonUtils.collectionDeserializer(jsonNode.toString(), new TypeReference<UploadUrlRes>() {});
     }
 
     @Override
-    public void upload(String databaseName, String collectionName, String filePath, Map<String, Object> metaDataMap) throws Exception{
+    public void upload(String databaseName, String collectionViewName, String documentSetName, String filePath, Map<String, Object> metaDataMap) throws Exception{
         File file = new File(filePath);
         if (!file.exists() || !file.isFile()){
             throw new VectorDBException("file is not existed");
@@ -452,7 +450,7 @@ public class HttpStub implements Stub {
         if(fileType == FileTypeEnum.UNSUPPORT){
             throw new VectorDBException("only markdown file can upload");
         }
-        UploadUrlRes uploadUrlRes = getUploadUrl(databaseName, collectionName, file.getName(), fileType.getDataFileType());
+        UploadUrlRes uploadUrlRes = getUploadUrl(databaseName, collectionViewName, documentSetName, file.getName(), fileType.getDataFileType());
         if(uploadUrlRes.getCredentials()==null || uploadUrlRes.getCredentials().getTmpSecretId().equals("") || uploadUrlRes.getUploadCondition()==null
                 || uploadUrlRes.getUploadCondition().getMaxSupportContentLength()==0){
             throw new VectorDBException("get file upload url failed");
@@ -504,11 +502,11 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public GetFileRes getFile(String databaseName, String collectionName, String fileName, String fileId) {
+    public GetFileRes getFile(String databaseName, String collectionName, String documentSetName, String documentSetId) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_GET_FILE);
-        String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\",\"fileName\":\"%s\"," +
+        String body = String.format("{\"database\":\"%s\",\"collectionView\":\"%s\",\"fileName\":\"%s\"," +
                         "\"fileId\":\"%s\"}",
-                databaseName, collectionName, fileName, fileId);
+                databaseName, collectionName, documentSetName, documentSetId);
         JsonNode jsonNode = this.post(url, body);
         return JsonUtils.collectionDeserializer(jsonNode.toString(), new TypeReference<GetFileRes>() {});
     }
@@ -595,8 +593,40 @@ public class HttpStub implements Stub {
                 builder.addFilterField(new DocField(name, mapper.readValue(
                         ele.toString(), new TypeReference<ChunkInfo>() {
                         })));
-            } else if (StringUtils.equals("sourceFile", name) || StringUtils.equals("_file_info", name)) {
+            } else if (StringUtils.equals("documentSet", name)) {
                 builder.addFilterField(new DocField(name, node2Doc(ele)));
+            } else {
+                if (ele.isInt()) {
+                    builder.addFilterField(new DocField(name, ele.asInt()));
+                } else if (ele.isLong()) {
+                    builder.addFilterField(new DocField(name, ele.asLong()));
+                } else {
+                    builder.addFilterField(new DocField(name, ele.asText()));
+                }
+            }
+        }
+        return builder.build();
+    }
+
+    private DocumentSet node2DocmentSet(JsonNode node) throws JsonProcessingException {
+        DocumentSet.Builder builder = DocumentSet.newBuilder();
+        Iterator<String> iterator = node.fieldNames();
+        ObjectMapper mapper = new ObjectMapper();
+        while (iterator.hasNext()) {
+            String name = iterator.next();
+            JsonNode ele = node.get(name);
+            if (StringUtils.equals("documentSetId", name)) {
+                builder.withDocumentSetId(ele.asText());
+            } else if (StringUtils.equals("documentSetInfo", name)) {
+                builder.withDocumentSetInfo(mapper.readValue(
+                        ele.toString(), new TypeReference<DocumentSetInfo>() {
+                        }));
+            } else if (StringUtils.equals("documnetSetName", name)) {
+                builder.withDocumnetSetName(ele.asText());
+            }else if (StringUtils.equals("textPrefix", name)) {
+                builder.withDocumnetSetName(ele.asText());
+            } else if (StringUtils.equals("textPrefix", name)) {
+                builder.withDocumnetSetName(ele.asText());
             } else {
                 if (ele.isInt()) {
                     builder.addFilterField(new DocField(name, ele.asInt()));

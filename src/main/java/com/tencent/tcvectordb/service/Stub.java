@@ -78,6 +78,11 @@ public interface Stub {
     AffectRes truncateCollection(String databaseName, String collectionName, DataBaseTypeEnum dbType);
 
     /**
+     * truncate collection
+     */
+    AffectRes truncateCollectionView(String databaseName, String collectionName, DataBaseTypeEnum dbType);
+
+    /**
      * drop collection
      */
     void dropCollection(String databaseName, String collectionName);

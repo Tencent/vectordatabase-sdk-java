@@ -168,9 +168,15 @@ public class HttpStub implements Stub {
     @Override
     public AffectRes truncateCollection(String databaseName, String collectionName, DataBaseTypeEnum dbType) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_FLUSH);
-        if (DataBaseTypeEnum.isAIDataBase(dbType)){
-            url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_COL_FLUSH);
-        }
+        String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
+                databaseName, collectionName);
+        JsonNode jsonNode = this.post(url, body);
+        return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
+    }
+
+    @Override
+    public AffectRes truncateCollectionView(String databaseName, String collectionName, DataBaseTypeEnum dbType) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_COL_FLUSH);
         String body = String.format("{\"database\":\"%s\",\"collectionView\":\"%s\"}",
                 databaseName, collectionName);
         JsonNode jsonNode = this.post(url, body);

@@ -44,9 +44,8 @@ public class AIDatabase {
     }
 
     public AffectRes truncateCollectionView(String collectionName) {
-        return stub.truncateCollection(this.databaseName, collectionName, DataBaseTypeEnum.AI_DB);
+        return stub.truncateCollectionView(this.databaseName, collectionName, DataBaseTypeEnum.AI_DB);
     }
-
 
     public AffectRes setAlias(String collectionName, String aliasName) {
         return stub.setAlias(this.databaseName, collectionName, aliasName);

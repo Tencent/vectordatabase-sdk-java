@@ -137,7 +137,6 @@ public class Document {
                         ArrayNode strNode = JsonNodeFactory.instance.arrayNode();
                         strValues.forEach(strNode::add);
                         node.set(field.getName(), strNode);
-                        node.put(field.getName(), Long.valueOf(field.getValue().toString()));
                         break;
                     default:
                         node.put(field.getName(), field.getStringValue());

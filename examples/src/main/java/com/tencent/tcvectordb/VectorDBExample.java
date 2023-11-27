@@ -193,14 +193,14 @@ public class VectorDBExample {
                                 "布大惊，与陈宫商议。宫曰：“闻刘玄德新领徐州，可往投之。"))
                         .build()));
         System.out.println("---------------------- upsert ----------------------");
-        InsertParam insertParam = InsertParam.newBuilder().addAllDocument(documentList).withBuildIndex(false).build();
+        InsertParam insertParam = InsertParam.newBuilder().addAllDocument(documentList).build();
         collection.upsert(insertParam);
 
         // notice：upsert 操作可用会有延迟
         Thread.sleep(1000 * 5);
     }
 
-    private static void queryData(VectorDBClient client) throws InterruptedException {
+    private static void queryData(VectorDBClient client) {
         Database database = client.database(DBNAME);
         Collection collection = database.describeCollection(COLL_NAME);
 
@@ -214,9 +214,9 @@ public class VectorDBExample {
                 // 使用 filter 过滤数据
                 .withFilter(filterParam)
                 // limit 限制返回行数，1 到 16384 之间
-                .withLimit(2)
+                 .withLimit(3)
                 // 偏移
-                .withOffset(1)
+                 .withOffset(1)
                 // 指定返回的 fields
                 .withOutputFields(outputFields)
                 // 是否返回 vector 数据
@@ -278,10 +278,6 @@ public class VectorDBExample {
                 System.out.println("\tres: " + doc.toString());
             }
         }
-
-
-
-
     }
 
     private static void updateAndDelete(VectorDBClient client) throws InterruptedException {
@@ -376,10 +372,11 @@ public class VectorDBExample {
 
 
     private static void clear(VectorDBClient client) {
-        List<String> databases = client.listDatabase();
-        for (String database : databases) {
-            client.dropDatabase(database);
-        }
+//        List<String> databases = client.listDatabase();
+//        for (String database : databases) {
+//            client.dropDatabase(database);
+//        }
+        client.dropDatabase(DBNAME);
     }
 
 
@@ -404,12 +401,12 @@ public class VectorDBExample {
 
         return CreateCollectionParam.newBuilder()
                 .withName(collName)
-                .withShardNum(3)
-                .withReplicaNum(1)
+                .withShardNum(1)
+                .withReplicaNum(0)
                 .withDescription("test collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
-                .addField(new VectorIndex("vector", 3, IndexType.IVF_FLAT,
-                        MetricType.COSINE, new IVFFLATParams(1)))
+                .addField(new VectorIndex("vector", 3, IndexType.HNSW,
+                        MetricType.COSINE, new HNSWParams(16, 200)))
                 .addField(new FilterIndex("bookName", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("author", FieldType.String, IndexType.FILTER))
                 .addField(new FilterArrayIndex("array_test", FieldElementType.String, IndexType.FILTER))

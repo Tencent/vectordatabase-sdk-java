@@ -55,12 +55,12 @@ public class VectorDBExampleWithAI_doc {
         System.out.println("---------------------- clear before test ----------------------");
         anySafe(() -> clear(client));
         createDatabaseAndCollection(client);
-        loadAndSplitText(client, "/Users/anyihao/tmp/test23.md", "file2");
+        loadAndSplitText(client, System.getProperty("file"), System.getProperty("documentSetName"));
         // 解析加载文件需要等待时间
         Thread.sleep(1000 * 10);
 
         queryData(client);
-        GetFile(client, "file2");
+        GetFile(client, System.getProperty("file"));
         updateAndDelete(client);
         deleteAndDrop(client);
     }
@@ -172,14 +172,11 @@ public class VectorDBExampleWithAI_doc {
         // 4. 如果仅需要部分 field 的数据，可以指定 output_fields 用于指定返回数据包含哪些 field，不指定默认全部返回
         System.out.println("---------------------- query ----------------------");
         Filter filterParam = new Filter("_indexed_status=2");
-        CollectionViewConditionParam queryParam = CollectionViewConditionParam.newBuilder()
-//                .withDocumentIds(documentIds)
-                // 使用 filter 过滤数据
-                .withFilter(filterParam)
-                // limit 限制返回行数，1 到 16384 之间
-                .withLimit(100)
-                .build();
-        List<DocumentSet> qdos = collection.query(10);
+        CollectionViewQueryParam queryParam = CollectionViewQueryParam.newBuilder().
+                withLimit(10).
+                withFilter(filterParam).
+                build();
+        List<DocumentSet> qdos = collection.query(queryParam);
         for (DocumentSet doc : qdos) {
             System.out.println("\tres: " + doc.toString());
         }

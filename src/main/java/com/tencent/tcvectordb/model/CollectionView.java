@@ -167,7 +167,7 @@ public class CollectionView {
     public CollectionView() {
     }
 
-    public List<DocumentSet> query(CollectionViewConditionParam param) throws VectorDBException {
+    public List<DocumentSet> query(CollectionViewQueryParam param) throws VectorDBException {
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
                 new CollectionViewQueryParamInner(database, collectionView, param, this.readConsistency));
         documentSets.forEach(documentSet -> {
@@ -181,7 +181,7 @@ public class CollectionView {
     public List<DocumentSet> query() throws VectorDBException {
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
                 new CollectionViewQueryParamInner(database, collectionView,
-                        CollectionViewConditionParam.newBuilder().build(), this.readConsistency));
+                        CollectionViewQueryParam.newBuilder().build(), this.readConsistency));
 
         documentSets.forEach(documentSet -> {
             documentSet.setCollectionViewName(collectionView);
@@ -194,7 +194,7 @@ public class CollectionView {
     public List<DocumentSet> query(int limit) throws VectorDBException {
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
                 new CollectionViewQueryParamInner(database, collectionView,
-                        CollectionViewConditionParam.newBuilder().withLimit(limit).build(),
+                        CollectionViewQueryParam.newBuilder().withLimit(limit).build(),
                         this.readConsistency));
         documentSets.forEach(documentSet -> {
             documentSet.setCollectionViewName(collectionView);
@@ -207,7 +207,7 @@ public class CollectionView {
     public List<DocumentSet> query(int limit, int offset) throws VectorDBException {
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
                 new CollectionViewQueryParamInner(database, collectionView,
-                        CollectionViewConditionParam.newBuilder().withLimit(limit).withOffset(offset).build(),
+                        CollectionViewQueryParam.newBuilder().withLimit(limit).withOffset(offset).build(),
                         this.readConsistency));
 
         documentSets.forEach(documentSet -> {
@@ -221,7 +221,7 @@ public class CollectionView {
     public DocumentSet getDocumentSetByName(String documentSetName) throws VectorDBException {
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
                 new CollectionViewQueryParamInner(database, collectionView,
-                        CollectionViewConditionParam.newBuilder().withDocumnetSetNames(Arrays.asList(documentSetName)).build(),
+                        CollectionViewQueryParam.newBuilder().withDocumnetSetNames(Arrays.asList(documentSetName)).build(),
                         this.readConsistency));
         if (documentSets.size()>0){
             DocumentSet documentSet = documentSets.get(0);
@@ -236,7 +236,7 @@ public class CollectionView {
     public DocumentSet getDocumentSetById(String documentSetId) throws VectorDBException {
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
                 new CollectionViewQueryParamInner(database, collectionView,
-                        CollectionViewConditionParam.newBuilder().withDocumnetSetIds(Arrays.asList(documentSetId)).build(),
+                        CollectionViewQueryParam.newBuilder().withDocumnetSetIds(Arrays.asList(documentSetId)).build(),
                         this.readConsistency));
         if (documentSets.size()>0){
             DocumentSet documentSet = documentSets.get(0);

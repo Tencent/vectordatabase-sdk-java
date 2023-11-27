@@ -9,6 +9,8 @@ public class DocumentSetInfo {
     private String indexedStatus;
     private String createTime;
     private String lastUpdateTime;
+    private String indexedErrorMsg;
+    private String keywords;
 
     public int getTextLength() {
         return textLength;
@@ -58,6 +60,22 @@ public class DocumentSetInfo {
         this.lastUpdateTime = lastUpdateTime;
     }
 
+    public String getIndexedErrorMsg() {
+        return indexedErrorMsg;
+    }
+
+    public void setIndexedErrorMsg(String indexedErrorMsg) {
+        this.indexedErrorMsg = indexedErrorMsg;
+    }
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
     @Override
     public String toString() {
         return "DocumentSetInfo{" +
@@ -67,6 +85,8 @@ public class DocumentSetInfo {
                 ", indexedStatus='" + indexedStatus + '\'' +
                 ", createTime='" + createTime + '\'' +
                 ", lastUpdateTime='" + lastUpdateTime + '\'' +
+                ", indexedErrorMsg='" + indexedErrorMsg + '\'' +
+                ", keywords='" + keywords + '\'' +
                 '}';
     }
 }

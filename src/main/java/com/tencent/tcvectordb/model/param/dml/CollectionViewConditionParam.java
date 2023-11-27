@@ -7,19 +7,17 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CollectionViewConditionParam {
-    private List<String> documentSetId;
-    private List<String> documentSetName;
-    private String filter;
-
-    private int limit;
-    private int offset;
+    protected List<String> documentSetId;
+    protected List<String> documentSetName;
+    protected String filter;
 
     public CollectionViewConditionParam(Builder builder) {
         this.documentSetId = builder.documnetSetIds;
         this.documentSetName = builder.documnetSetNames;
         this.filter = builder.filter;
-        this.limit = builder.limit;
-        this.offset = builder.offset;
+    }
+
+    public CollectionViewConditionParam() {
     }
 
     public static Builder newBuilder() {
@@ -30,13 +28,6 @@ public class CollectionViewConditionParam {
         private List<String> documnetSetIds;
         private List<String> documnetSetNames;
         private String filter;
-
-        private int limit;
-        private int offset;
-
-        private Builder() {
-        }
-
         public Builder withDocumnetSetIds(List<String> documnetSetIds) {
             this.documnetSetIds = documnetSetIds;
             return this;
@@ -49,15 +40,6 @@ public class CollectionViewConditionParam {
 
         public Builder withFilter(Filter filter) {
             this.filter = filter.getCond();
-            return this;
-        }
-        public Builder withLimit(int limit) {
-            this.limit = limit;
-            return this;
-        }
-
-        public Builder withOffset(int offset) {
-            this.offset = offset;
             return this;
         }
 
@@ -88,21 +70,5 @@ public class CollectionViewConditionParam {
 
     public void setFilter(String filter) {
         this.filter = filter;
-    }
-
-    public int getLimit() {
-        return limit;
-    }
-
-    public void setLimit(int limit) {
-        this.limit = limit;
-    }
-
-    public int getOffset() {
-        return offset;
-    }
-
-    public void setOffset(int offset) {
-        this.offset = offset;
     }
 }

@@ -480,23 +480,11 @@ public class HttpStub implements Stub {
         metadata.addUserMetadata("string--fileType", fileType.getDataFileType());
         metadata.addUserMetadata("string--id", uploadUrlRes.getDocumentSetId());
         if (metaDataMap!=null && !metaDataMap.isEmpty()){
-            for (Map.Entry<String, Object> entry : metaDataMap.entrySet()) {
-                String key = entry.getKey();
-                if (key.contains("_")){
-                    throw new VectorDBException("user metadata key can not contain _");
-                }
-                Object value = entry.getValue();
-                String enKey = URLEncoder.encode(key, String.valueOf(StandardCharsets.UTF_8));
-                if (value instanceof String){
-                    enKey = "string-" + enKey;
-                } else if (value instanceof Long || value instanceof Integer ) {
-                    enKey = "uint64-" + enKey;
-                }else {
-                    throw new VectorDBException("user metadata value must be string、long or int");
-                }
-                String enValue = URLEncoder.encode(value.toString(), String.valueOf(StandardCharsets.UTF_8));
-                metadata.addUserMetadata(enKey, enValue);
-            }
+            String metaJson = URLEncoder.encode(JsonUtils.toJsonString(metaDataMap),String.valueOf(StandardCharsets.UTF_8));
+            metadata.addUserMetadata("x-cos-meta-data", metaJson);
+        }
+        if (JsonUtils.toJsonString(metadata).length()>2048){
+            throw new VectorDBException("cos header for param MetaData is too large, it can not be more than 2k");
         }
         putObjectRequest.withMetadata(metadata);
         putObjectRequest.withKey(uploadPath);

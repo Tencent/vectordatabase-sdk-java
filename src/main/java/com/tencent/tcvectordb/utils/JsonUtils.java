@@ -12,11 +12,13 @@ import com.tencent.tcvectordb.model.param.collection.ParamsSerializer;
 import com.tencent.tcvectordb.serializer.EmbeddingDeserialize;
 import com.tencent.tcvectordb.serializer.ParamsDeserialize;
 
+import java.text.SimpleDateFormat;
+
 public class JsonUtils {
     private JsonUtils() {
     }
 
-
+    private static final String DATE_FORMAT_STR_ISO8601_CH = "yyyy-MM-dd HH:mm:ss";
     private static final ObjectMapper DESERIALIZE_IGNORE_KEY_MAPPER = new ObjectMapper();
     private static final ObjectMapper PARAMS_DESERIALIZE_MAPPER = new ObjectMapper();
     private static final ObjectMapper SERIALIZE_MAPPER = new ObjectMapper();
@@ -25,6 +27,8 @@ public class JsonUtils {
     static {
         DESERIALIZE_IGNORE_KEY_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
+        DESERIALIZE_IGNORE_KEY_MAPPER.setDateFormat(new SimpleDateFormat(DATE_FORMAT_STR_ISO8601_CH));
+        PARAMS_DESERIALIZE_MAPPER.setDateFormat(new SimpleDateFormat(DATE_FORMAT_STR_ISO8601_CH));
 
         SimpleModule module = new SimpleModule();
         module.addDeserializer(ParamsSerializer.class, new ParamsDeserialize());

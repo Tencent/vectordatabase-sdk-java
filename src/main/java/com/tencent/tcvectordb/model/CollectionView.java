@@ -277,8 +277,8 @@ public class CollectionView {
                 new CollectionViewUpdateParamInner(database, collectionView, param, updateFieldValues));
     }
 
-    public void loadAndSplitText(LoadAndSplitTextParam loadAndSplitTextParam) throws Exception {
-        this.stub.upload(database, collectionView,  loadAndSplitTextParam.getDocumentSetName(), loadAndSplitTextParam.getLocalFilePath(),null);
+    public void loadAndSplitText(LoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
+        this.stub.upload(database, collectionView,  loadAndSplitTextParam.getDocumentSetName(), loadAndSplitTextParam.getLocalFilePath(),metaDataMap);
     }
 
     public GetDocumentSetRes getFile(String fileName, String fileId) {

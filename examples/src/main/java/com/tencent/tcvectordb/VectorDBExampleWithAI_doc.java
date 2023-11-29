@@ -55,12 +55,15 @@ public class VectorDBExampleWithAI_doc {
         System.out.println("---------------------- clear before test ----------------------");
         anySafe(() -> clear(client));
         createDatabaseAndCollection(client);
-        loadAndSplitText(client, System.getProperty("file"), System.getProperty("documentSetName"));
+        Map<String, Object> metaDataMap = new HashMap<>();
+        metaDataMap.put("book_name", "向量数据库");
+        metaDataMap.put("book_id", 1234);
+        loadAndSplitText(client, "/Users/anyihao/tmp/test23.md", "file2", metaDataMap);
         // 解析加载文件需要等待时间
         Thread.sleep(1000 * 10);
 
         queryData(client);
-        GetFile(client, System.getProperty("file"));
+        GetFile(client, "file2");
         updateAndDelete(client);
         deleteAndDrop(client);
     }
@@ -74,11 +77,13 @@ public class VectorDBExampleWithAI_doc {
     private static ConnectParam initConnectParam() {
         System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
         System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
+        String vdb_url = "http://9.135.180.240:8100";
+        String vdb_key = "r81OtTBXUIoJIp1AukZHkxvqRDTNixtIHPC5c9hT";
         return ConnectParam.newBuilder()
-                .withUrl(System.getProperty("vdb_url"))
+                .withUrl(vdb_url)
                 .withUsername("root")
-                .withKey(System.getProperty("vdb_key"))
-                .withTimeout(30)
+                .withKey(vdb_key)
+                .withTimeout(100)
                 .build();
     }
 
@@ -146,12 +151,12 @@ public class VectorDBExampleWithAI_doc {
 
     }
 
-    private static void loadAndSplitText(VectorDBClient client, String filePath, String documentSetName) throws Exception {
+    private static void loadAndSplitText(VectorDBClient client, String filePath, String documentSetName, Map<String, Object> metaDataMap) throws Exception {
         AIDatabase database = client.aiDatabase(DBNAME);
         CollectionView collection = database.describeCollectionView(COLL_NAME);
         LoadAndSplitTextParam param = LoadAndSplitTextParam.newBuilder()
                 .withLocalFilePath(filePath).withDocumentSetName(documentSetName).Build();
-        collection.loadAndSplitText(param);
+        collection.loadAndSplitText(param, metaDataMap);
     }
 
     private static void GetFile(VectorDBClient client, String fileName) {

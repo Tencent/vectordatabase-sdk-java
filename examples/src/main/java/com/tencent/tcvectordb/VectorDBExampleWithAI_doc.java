@@ -25,6 +25,8 @@ import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.*;
 import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.collectionView.CreateCollectionViewParam;
+import com.tencent.tcvectordb.model.param.collectionView.EmbeddingParams;
+import com.tencent.tcvectordb.model.param.collectionView.LanuageType;
 import com.tencent.tcvectordb.model.param.collectionView.LoadAndSplitTextParam;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
@@ -58,6 +60,7 @@ public class VectorDBExampleWithAI_doc {
         Map<String, Object> metaDataMap = new HashMap<>();
         metaDataMap.put("book_name", "向量数据库");
         metaDataMap.put("book_id", 1234);
+        metaDataMap.put("author-array", Arrays.asList("1","2","3"));
         loadAndSplitText(client, "/Users/anyihao/tmp/test23.md", "file2", metaDataMap);
         // 解析加载文件需要等待时间
         Thread.sleep(1000 * 10);
@@ -180,6 +183,7 @@ public class VectorDBExampleWithAI_doc {
         CollectionViewQueryParam queryParam = CollectionViewQueryParam.newBuilder().
                 withLimit(10).
                 withFilter(filterParam).
+                withOutputFields(Arrays.asList("book_id", "author-array")).
                 build();
         List<DocumentSet> qdos = collection.query(queryParam);
         for (DocumentSet doc : qdos) {
@@ -190,18 +194,18 @@ public class VectorDBExampleWithAI_doc {
         System.out.println("---------------------- search ----------------------");
 
         SearchContenOption option = SearchContenOption.newBuilder().withChunkExpand(Arrays.asList(1,1))
-//                .withRerank(new RerankOption(true, 2.5))
+//                .withRerank(new RerankOption(true, 3))
                 .build();
         SearchByContentsParam searchByContentsParam = SearchByContentsParam.newBuilder()
-                .withContent("什么是 AI 中的向量表示")
+                .withContent("什么是向量")
                 .withSearchContentOption(option)
                 .build();
-//        System.out.println(JsonUtils.toJsonString(qdos.get(0).search(searchByContentsParam)));
-        List<Document> searchRes = collection.search(searchByContentsParam);
-        int i = 0;
-        for (Document doc : searchRes) {
-            System.out.println("\tres" +(i++)+": "+ doc.toString());
-        }
+        System.out.println(qdos.get(0).search(searchByContentsParam).toString());
+//        List<Document> searchRes = collection.search(searchByContentsParam);
+//        int i = 0;
+//        for (Document doc : searchRes) {
+//            System.out.println("\tres" +(i++)+": "+ doc.toString());
+//        }
     }
 
     private static void updateAndDelete(VectorDBClient client) throws InterruptedException {
@@ -221,6 +225,7 @@ public class VectorDBExampleWithAI_doc {
         Map<String, Object> updateFieldValues = new HashMap<>();
         updateFieldValues.put("page", 100);
         updateFieldValues.put("extend", "extendContent");
+        updateFieldValues.put("array_test", Arrays.asList("1", "2","5"));
         collection.update(updateParam, updateFieldValues);
 
         System.out.println(collection.query(10).get(0).toString());
@@ -268,8 +273,10 @@ public class VectorDBExampleWithAI_doc {
         return CreateCollectionViewParam.newBuilder()
                 .withName(collName)
                 .withDescription("test create ai collection")
+                .withEmbedding(EmbeddingParams.newBuilder().withEnableWordEmbedding(true).withLanguage(LanuageType.ZH).Build())
                 .addField(new FilterIndex("bookName", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("author", FieldType.String, IndexType.FILTER))
+                .addField(new FilterArrayIndex("array_test", FieldElementType.String, IndexType.FILTER))
                 .build();
     }
 }

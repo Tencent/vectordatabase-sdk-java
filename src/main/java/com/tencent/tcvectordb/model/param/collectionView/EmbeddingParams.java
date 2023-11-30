@@ -30,8 +30,8 @@ public class EmbeddingParams {
         this.enableWordsEmbedding = enableWordsEmbedding;
     }
 
-    public static DocumentSet.Builder newBuilder() {
-        return new DocumentSet.Builder();
+    public static Builder newBuilder() {
+        return new Builder();
     }
     public static class Builder{
         private LanuageType language;

@@ -54,21 +54,21 @@ public class VectorDBExampleWithAI_doc {
         VectorDBClient client = new VectorDBClient(connectParam, ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
 
         // 测试前清理环境
-        System.out.println("---------------------- clear before test ----------------------");
-        anySafe(() -> clear(client));
-        createDatabaseAndCollection(client);
-        Map<String, Object> metaDataMap = new HashMap<>();
-        metaDataMap.put("book_name", "向量数据库");
-        metaDataMap.put("book_id", 1234);
-        metaDataMap.put("author-array", Arrays.asList("1","2","3"));
-        loadAndSplitText(client, "/Users/anyihao/tmp/test23.md", "file2", metaDataMap);
-        // 解析加载文件需要等待时间
-        Thread.sleep(1000 * 10);
+//        System.out.println("---------------------- clear before test ----------------------");
+//        anySafe(() -> clear(client));
+//        createDatabaseAndCollection(client);
+//        Map<String, Object> metaDataMap = new HashMap<>();
+//        metaDataMap.put("book_name", "向量数据库");
+//        metaDataMap.put("book_id", 1235);
+//        metaDataMap.put("author-array", Arrays.asList("4","5","6"));
+//        loadAndSplitText(client, "/Users/anyihao/tmp/test23.md", "file4", metaDataMap);
+//        // 解析加载文件需要等待时间
+//        Thread.sleep(1000 * 10);
 
         queryData(client);
-        GetFile(client, "file2");
-        updateAndDelete(client);
-        deleteAndDrop(client);
+//        GetFile(client, "file2");
+//        updateAndDelete(client);
+//        deleteAndDrop(client);
     }
 
 
@@ -181,7 +181,7 @@ public class VectorDBExampleWithAI_doc {
         System.out.println("---------------------- query ----------------------");
         Filter filterParam = new Filter("_indexed_status=2");
         CollectionViewQueryParam queryParam = CollectionViewQueryParam.newBuilder().
-                withLimit(10).
+                withLimit(2).
                 withFilter(filterParam).
                 withOutputFields(Arrays.asList("book_id", "author-array")).
                 build();

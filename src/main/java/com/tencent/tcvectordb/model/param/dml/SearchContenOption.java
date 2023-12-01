@@ -1,9 +1,12 @@
 package com.tencent.tcvectordb.model.param.dml;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencent.tcvectordb.exception.ParamException;
 
 import java.util.List;
 
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SearchContenOption {
     private String resultType;
     private List<Integer> chunkExpand;

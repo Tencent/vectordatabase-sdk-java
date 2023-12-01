@@ -37,7 +37,7 @@ public class SearchByContentsParam {
     private String filter;
     private List<String> outputFields;
     private List<String> documentSetName;
-    private int limit;
+    private Integer limit;
 
     public SearchContenOption getOptions() {
         return options;
@@ -79,7 +79,7 @@ public class SearchByContentsParam {
         this.outputFields = outputFields;
     }
 
-    public int getLimit() {
+    public Integer getLimit() {
         return limit;
     }
 
@@ -115,7 +115,7 @@ public class SearchByContentsParam {
         private Params params;
         private String filter;
         private List<String> outputFields;
-        protected int limit;
+        protected Integer limit;
 
         private List<String> documentSetName;
 

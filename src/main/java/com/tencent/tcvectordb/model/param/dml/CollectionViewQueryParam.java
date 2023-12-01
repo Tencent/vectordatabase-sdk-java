@@ -1,6 +1,7 @@
 package com.tencent.tcvectordb.model.param.dml;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
@@ -8,24 +9,25 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CollectionViewQueryParam extends CollectionViewConditionParam{
     private List<String> outputFields;
-    private int limit;
-    private int offset;
+
+    private Integer limit;
+    private Integer offset;
 
     public CollectionViewQueryParam(Builder builder) {
         super();
         this.limit = builder.limit;
         this.offset = builder.offset;
         this.outputFields = builder.outputFields;
-
     }
+
     public static Builder newBuilder() {
         return new Builder();
     }
 
     public static class Builder extends CollectionViewConditionParam.Builder {
 
-        private int limit;
-        private int offset;
+        private Integer limit;
+        private Integer offset;
         private List<String> outputFields;
         private List<String> documnetSetIds;
         private List<String> documnetSetNames;
@@ -44,12 +46,12 @@ public class CollectionViewQueryParam extends CollectionViewConditionParam{
             this.filter = filter.getCond();
             return this;
         }
-        public Builder withLimit(int limit) {
+        public Builder withLimit(Integer limit) {
             this.limit = limit;
             return this;
         }
 
-        public Builder withOffset(int offset) {
+        public Builder withOffset(Integer offset) {
             this.offset = offset;
             return this;
         }
@@ -88,7 +90,7 @@ public class CollectionViewQueryParam extends CollectionViewConditionParam{
         this.filter = filter;
     }
 
-    public int getLimit() {
+    public Integer getLimit() {
         return limit;
     }
 
@@ -96,7 +98,7 @@ public class CollectionViewQueryParam extends CollectionViewConditionParam{
         this.limit = limit;
     }
 
-    public int getOffset() {
+    public Integer getOffset() {
         return offset;
     }
 

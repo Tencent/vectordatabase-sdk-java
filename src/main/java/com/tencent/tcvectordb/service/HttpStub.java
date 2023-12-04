@@ -469,7 +469,7 @@ public class HttpStub implements Stub {
         String uploadPath = uploadUrlRes.getUploadPath();
         String cosEndpoint = uploadUrlRes.getCosEndpoint();
         String bucket = uploadUrlRes.getCosBucket();
-        String region = cosEndpoint.split("\\.")[2];
+        String region = uploadUrlRes.getCosRegion();
         BasicSessionCredentials cred = new BasicSessionCredentials(uploadUrlRes.getCredentials().getTmpSecretId(),
                 uploadUrlRes.getCredentials().getTmpSecretKey(), uploadUrlRes.getCredentials().getToken());
         ClientConfig cosClientConfig = new ClientConfig(new Region(region));

@@ -467,7 +467,6 @@ public class HttpStub implements Stub {
                     filePath, uploadUrlRes.getUploadCondition().getMaxSupportContentLength()));
         }
         String uploadPath = uploadUrlRes.getUploadPath();
-        String cosEndpoint = uploadUrlRes.getCosEndpoint();
         String bucket = uploadUrlRes.getCosBucket();
         String region = uploadUrlRes.getCosRegion();
         BasicSessionCredentials cred = new BasicSessionCredentials(uploadUrlRes.getCredentials().getTmpSecretId(),

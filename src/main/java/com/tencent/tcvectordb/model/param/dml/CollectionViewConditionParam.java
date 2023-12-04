@@ -12,8 +12,8 @@ public class CollectionViewConditionParam {
     protected String filter;
 
     public CollectionViewConditionParam(Builder builder) {
-        this.documentSetId = builder.documnetSetIds;
-        this.documentSetName = builder.documnetSetNames;
+        this.documentSetId = builder.documentSetIds;
+        this.documentSetName = builder.documentSetNames;
         this.filter = builder.filter;
     }
 
@@ -25,16 +25,16 @@ public class CollectionViewConditionParam {
     }
 
     public static class Builder {
-        private List<String> documnetSetIds;
-        private List<String> documnetSetNames;
+        private List<String> documentSetIds;
+        private List<String> documentSetNames;
         private String filter;
-        public Builder withDocumnetSetIds(List<String> documnetSetIds) {
-            this.documnetSetIds = documnetSetIds;
+        public Builder withDocumentSetIds(List<String> documnetSetIds) {
+            this.documentSetIds = documnetSetIds;
             return this;
         }
 
-        public Builder withDocumnetSetNames(List<String> documnetSetNames) {
-            this.documnetSetNames = documnetSetNames;
+        public Builder withDocumentSetNames(List<String> documnetSetNames) {
+            this.documentSetNames = documnetSetNames;
             return this;
         }
 

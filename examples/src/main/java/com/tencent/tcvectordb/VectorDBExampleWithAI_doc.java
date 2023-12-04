@@ -216,7 +216,7 @@ public class VectorDBExampleWithAI_doc {
         Filter filterParam = new Filter("documentSetName=\"file2\"");
         CollectionViewConditionParam updateParam = CollectionViewConditionParam
                 .newBuilder()
-                .withDocumnetSetNames(Arrays.asList("file2"))
+                .withDocumentSetNames(Arrays.asList("file2"))
                 .withFilter(filterParam)
                 .build();
         Map<String, Object> updateFieldValues = new HashMap<>();
@@ -236,7 +236,7 @@ public class VectorDBExampleWithAI_doc {
         Filter filterParam1 = new Filter("_file_name=\"file2\"");
         CollectionViewConditionParam build = CollectionViewConditionParam
                 .newBuilder()
-                .withDocumnetSetNames(Arrays.asList("file2"))
+                .withDocumentSetNames(Arrays.asList("file2"))
                 .withFilter(filterParam1)
                 .build();
         AffectRes affectRes = collection.deleteDocumentSets(build);

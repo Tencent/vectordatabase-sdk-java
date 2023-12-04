@@ -221,7 +221,7 @@ public class CollectionView {
     public DocumentSet getDocumentSetByName(String documentSetName) throws VectorDBException {
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
                 new CollectionViewQueryParamInner(database, collectionView,
-                        CollectionViewQueryParam.newBuilder().withDocumnetSetNames(Arrays.asList(documentSetName)).build(),
+                        CollectionViewQueryParam.newBuilder().withDocumentSetNames(Arrays.asList(documentSetName)).build(),
                         this.readConsistency));
         if (documentSets.size()>0){
             DocumentSet documentSet = documentSets.get(0);
@@ -236,7 +236,7 @@ public class CollectionView {
     public DocumentSet getDocumentSetById(String documentSetId) throws VectorDBException {
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
                 new CollectionViewQueryParamInner(database, collectionView,
-                        CollectionViewQueryParam.newBuilder().withDocumnetSetIds(Arrays.asList(documentSetId)).build(),
+                        CollectionViewQueryParam.newBuilder().withDocumentSetIds(Arrays.asList(documentSetId)).build(),
                         this.readConsistency));
         if (documentSets.size()>0){
             DocumentSet documentSet = documentSets.get(0);
@@ -262,13 +262,13 @@ public class CollectionView {
     public AffectRes deleteByDocumentSetName(String documentSetName) throws VectorDBException {
         return this.stub.deleteAIDocument(
                 new CollectionViewDeleteParamInner(database, collectionView,
-                        CollectionViewConditionParam.newBuilder().withDocumnetSetIds(Arrays.asList(documentSetName)).build()));
+                        CollectionViewConditionParam.newBuilder().withDocumentSetIds(Arrays.asList(documentSetName)).build()));
     }
 
     public AffectRes deleteByDocumentSetId(String documentSetId) throws VectorDBException {
         return this.stub.deleteAIDocument(
                 new CollectionViewDeleteParamInner(database, collectionView,
-                        CollectionViewConditionParam.newBuilder().withDocumnetSetIds(Arrays.asList(documentSetId)).build()));
+                        CollectionViewConditionParam.newBuilder().withDocumentSetIds(Arrays.asList(documentSetId)).build()));
     }
 
     public AffectRes update(CollectionViewConditionParam param, Map<String, Object> updateFieldValues) throws VectorDBException {

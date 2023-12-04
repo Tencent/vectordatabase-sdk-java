@@ -1,7 +1,6 @@
 package com.tencent.tcvectordb.model.param.dml;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
@@ -29,16 +28,16 @@ public class CollectionViewQueryParam extends CollectionViewConditionParam{
         private Integer limit;
         private Integer offset;
         private List<String> outputFields;
-        private List<String> documnetSetIds;
-        private List<String> documnetSetNames;
+        private List<String> documentSetIds;
+        private List<String> documentSetNames;
         private String filter;
-        public Builder withDocumnetSetIds(List<String> documnetSetIds) {
-            this.documnetSetIds = documnetSetIds;
+        public Builder withDocumentSetIds(List<String> documentSetIds) {
+            this.documentSetIds = documentSetIds;
             return this;
         }
 
-        public Builder withDocumnetSetNames(List<String> documnetSetNames) {
-            this.documnetSetNames = documnetSetNames;
+        public Builder withDocumentSetNames(List<String> documentSetNames) {
+            this.documentSetNames = documentSetNames;
             return this;
         }
 

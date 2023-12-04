@@ -94,7 +94,7 @@ public class DocumentSet {
     public AffectRes delete() throws VectorDBException {
         return this.stub.deleteAIDocument(
                 new CollectionViewDeleteParamInner(database, collectionViewName,
-                        CollectionViewConditionParam.newBuilder().withDocumnetSetIds(Arrays.asList(documentSetId)).build()));
+                        CollectionViewConditionParam.newBuilder().withDocumentSetIds(Arrays.asList(documentSetId)).build()));
     }
 
     public String getText() {

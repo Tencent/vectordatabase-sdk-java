@@ -54,21 +54,21 @@ public class VectorDBExampleWithAI_doc {
         VectorDBClient client = new VectorDBClient(connectParam, ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
 
         // 测试前清理环境
-//        System.out.println("---------------------- clear before test ----------------------");
-//        anySafe(() -> clear(client));
-//        createDatabaseAndCollection(client);
-//        Map<String, Object> metaDataMap = new HashMap<>();
-//        metaDataMap.put("book_name", "向量数据库");
-//        metaDataMap.put("book_id", 1235);
-//        metaDataMap.put("author-array", Arrays.asList("4","5","6"));
-//        loadAndSplitText(client, "/Users/anyihao/tmp/test23.md", "file4", metaDataMap);
-//        // 解析加载文件需要等待时间
-//        Thread.sleep(1000 * 10);
+        System.out.println("---------------------- clear before test ----------------------");
+        anySafe(() -> clear(client));
+        createDatabaseAndCollection(client);
+        Map<String, Object> metaDataMap = new HashMap<>();
+        metaDataMap.put("book_name", "向量数据库");
+        metaDataMap.put("book_id", 1235);
+        metaDataMap.put("author-array", Arrays.asList("4","5","6"));
+        loadAndSplitText(client, System.getProperty("file_path"), System.getProperty("documentSetName"), metaDataMap);
+        // 解析加载文件需要等待时间
+        Thread.sleep(1000 * 10);
 
         queryData(client);
-//        GetFile(client, "file2");
-//        updateAndDelete(client);
-//        deleteAndDrop(client);
+        GetFile(client, System.getProperty("file_name"));
+        updateAndDelete(client);
+        deleteAndDrop(client);
     }
 
 
@@ -80,12 +80,10 @@ public class VectorDBExampleWithAI_doc {
     private static ConnectParam initConnectParam() {
         System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
         System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
-        String vdb_url = "http://9.135.180.240:8100";
-        String vdb_key = "r81OtTBXUIoJIp1AukZHkxvqRDTNixtIHPC5c9hT";
         return ConnectParam.newBuilder()
-                .withUrl(vdb_url)
+                .withUrl(System.getProperty("vdb_url"))
                 .withUsername("root")
-                .withKey(vdb_key)
+                .withKey(System.getProperty("vdb_key"))
                 .withTimeout(100)
                 .build();
     }

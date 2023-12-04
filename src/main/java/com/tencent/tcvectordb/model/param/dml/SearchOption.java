@@ -7,7 +7,7 @@ import java.util.List;
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SearchContenOption {
+public class SearchOption {
     private String resultType;
     private List<Integer> chunkExpand;
     private RerankOption rerank;
@@ -36,7 +36,7 @@ public class SearchContenOption {
         this.chunkExpand = chunkExpand;
     }
 
-    public SearchContenOption(Builder builder) {
+    public SearchOption(Builder builder) {
         this.resultType = "chunks";
         this.chunkExpand = builder.chunkExpand;
         this.rerank = builder.rerank;
@@ -64,11 +64,11 @@ public class SearchContenOption {
             return this;
         }
 
-        public SearchContenOption build() {
+        public SearchOption build() {
             if (chunkExpand.size()!=2){
                 throw new ParamException("SearchContenOption error: chunkExpand must have tow integers");
             }
-            return new SearchContenOption(this);
+            return new SearchOption(this);
         }
     }
 

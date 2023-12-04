@@ -32,7 +32,6 @@ import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
-import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -191,7 +190,7 @@ public class VectorDBExampleWithAI_doc {
         // search
         System.out.println("---------------------- search ----------------------");
 
-        SearchContenOption option = SearchContenOption.newBuilder().withChunkExpand(Arrays.asList(1,1))
+        SearchOption option = SearchOption.newBuilder().withChunkExpand(Arrays.asList(1,1))
                 .withRerank(new RerankOption(true, 3))
                 .build();
         SearchByContentsParam searchByContentsParam = SearchByContentsParam.newBuilder()

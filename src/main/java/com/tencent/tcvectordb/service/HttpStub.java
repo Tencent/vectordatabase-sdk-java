@@ -468,7 +468,7 @@ public class HttpStub implements Stub {
         }
         String uploadPath = uploadUrlRes.getUploadPath();
         String cosEndpoint = uploadUrlRes.getCosEndpoint();
-        String bucket = cosEndpoint.split("\\.")[0].replace("https://", "").replace("htt[://", "");
+        String bucket = uploadUrlRes.getCosBucket();
         String region = cosEndpoint.split("\\.")[2];
         BasicSessionCredentials cred = new BasicSessionCredentials(uploadUrlRes.getCredentials().getTmpSecretId(),
                 uploadUrlRes.getCredentials().getTmpSecretKey(), uploadUrlRes.getCredentials().getToken());

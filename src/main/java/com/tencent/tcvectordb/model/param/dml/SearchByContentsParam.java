@@ -23,7 +23,6 @@ package com.tencent.tcvectordb.model.param.dml;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencent.tcvectordb.exception.ParamException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,18 +31,16 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SearchByContentsParam {
     private String content;
-    private SearchContenOption options;
-    private Params params;
+    private SearchOption options;
     private String filter;
-    private List<String> outputFields;
     private List<String> documentSetName;
     private Integer limit;
 
-    public SearchContenOption getOptions() {
+    public SearchOption getOptions() {
         return options;
     }
 
-    public void setOptions(SearchContenOption options) {
+    public void setOptions(SearchOption options) {
         this.options = options;
     }
 
@@ -55,28 +52,12 @@ public class SearchByContentsParam {
         this.content = content;
     }
 
-    public Params getParams() {
-        return params;
-    }
-
-    public void setParams(Params params) {
-        this.params = params;
-    }
-
     public String getFilter() {
         return filter;
     }
 
     public void setFilter(String filter) {
         this.filter = filter;
-    }
-
-    public List<String> getOutputFields() {
-        return outputFields;
-    }
-
-    public void setOutputFields(List<String> outputFields) {
-        this.outputFields = outputFields;
     }
 
     public Integer getLimit() {
@@ -97,10 +78,8 @@ public class SearchByContentsParam {
 
     private SearchByContentsParam(Builder builder) {
         this.content = builder.content;
-        this.options = builder.searchContenOption;
-        this.params = builder.params;
+        this.options = builder.searchOption;
         this.filter = builder.filter;
-        this.outputFields = builder.outputFields;
         this.limit = builder.limit;
         this.documentSetName = builder.documentSetName;
     }
@@ -111,10 +90,8 @@ public class SearchByContentsParam {
 
     public static class Builder{
         private String content;
-        private SearchContenOption searchContenOption;
-        private Params params;
+        private SearchOption searchOption;
         private String filter;
-        private List<String> outputFields;
         protected Integer limit;
 
         private List<String> documentSetName;
@@ -128,13 +105,8 @@ public class SearchByContentsParam {
             return this;
         }
 
-        public Builder withSearchContentOption(SearchContenOption searchContenOption) {
-            this.searchContenOption = searchContenOption;
-            return this;
-        }
-
-        public Builder withParams(Params params) {
-            this.params = params;
+        public Builder withSearchContentOption(SearchOption searchOption) {
+            this.searchOption = searchOption;
             return this;
         }
 
@@ -143,10 +115,6 @@ public class SearchByContentsParam {
             return this;
         }
 
-        public Builder withOutputFields(List<String> outputFields) {
-            this.outputFields = outputFields;
-            return this;
-        }
 
         public Builder withLimit(int limit) {
             this.limit = limit;

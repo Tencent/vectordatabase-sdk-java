@@ -28,13 +28,13 @@ public class CollectionViewConditionParam {
         private List<String> documentSetIds;
         private List<String> documentSetNames;
         private String filter;
-        public Builder withDocumentSetIds(List<String> documnetSetIds) {
-            this.documentSetIds = documnetSetIds;
+        public Builder withDocumentSetIds(List<String> documentSetIds) {
+            this.documentSetIds = documentSetIds;
             return this;
         }
 
-        public Builder withDocumentSetNames(List<String> documnetSetNames) {
-            this.documentSetNames = documnetSetNames;
+        public Builder withDocumentSetNames(List<String> documentSetNames) {
+            this.documentSetNames = documentSetNames;
             return this;
         }
 

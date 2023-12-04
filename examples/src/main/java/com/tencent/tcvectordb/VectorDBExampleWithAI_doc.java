@@ -192,18 +192,18 @@ public class VectorDBExampleWithAI_doc {
         System.out.println("---------------------- search ----------------------");
 
         SearchContenOption option = SearchContenOption.newBuilder().withChunkExpand(Arrays.asList(1,1))
-//                .withRerank(new RerankOption(true, 3))
+                .withRerank(new RerankOption(true, 3))
                 .build();
         SearchByContentsParam searchByContentsParam = SearchByContentsParam.newBuilder()
                 .withContent("什么是向量")
                 .withSearchContentOption(option)
                 .build();
         System.out.println(qdos.get(0).search(searchByContentsParam).toString());
-//        List<Document> searchRes = collection.search(searchByContentsParam);
-//        int i = 0;
-//        for (Document doc : searchRes) {
-//            System.out.println("\tres" +(i++)+": "+ doc.toString());
-//        }
+        List<Document> searchRes = collection.search(searchByContentsParam);
+        int i = 0;
+        for (Document doc : searchRes) {
+            System.out.println("\tres" +(i++)+": "+ doc.toString());
+        }
     }
 
     private static void updateAndDelete(VectorDBClient client) throws InterruptedException {

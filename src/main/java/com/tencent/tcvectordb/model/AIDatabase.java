@@ -47,10 +47,6 @@ public class AIDatabase {
         return stub.truncateCollectionView(this.databaseName, collectionName, DataBaseTypeEnum.AI_DB);
     }
 
-    public AffectRes setAlias(String collectionName, String aliasName) {
-        return stub.setAlias(this.databaseName, collectionName, aliasName);
-    }
-
     public List<CollectionView> listCollectionView() throws VectorDBException {
         List<CollectionView> collections = stub.listCollectionView(this.databaseName);
         collections.forEach(c -> {

@@ -132,7 +132,7 @@ public class DocumentSet {
             node.put("documentSetId", documentSetId);
         }
         if (StringUtils.isNotEmpty(documentSetName)) {
-            node.put("documnetSetName", documentSetName);
+            node.put("documentSetName", documentSetName);
         }
         if (StringUtils.isNotEmpty(textPrefix)) {
             node.put("textPrefix", textPrefix);

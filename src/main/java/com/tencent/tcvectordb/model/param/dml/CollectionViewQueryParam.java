@@ -14,6 +14,9 @@ public class CollectionViewQueryParam extends CollectionViewConditionParam{
 
     public CollectionViewQueryParam(Builder builder) {
         super();
+        this.documentSetName = builder.documentSetNames;
+        this.documentSetId = builder.documentSetIds;
+        this.filter = builder.filter;
         this.limit = builder.limit;
         this.offset = builder.offset;
         this.outputFields = builder.outputFields;

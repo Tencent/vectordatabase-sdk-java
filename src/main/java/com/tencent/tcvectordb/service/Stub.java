@@ -135,7 +135,7 @@ public interface Stub {
 
     CollectionView describeCollectionView(String databaseName, String collectionName);
 
-    void dropCollectionView(String databaseName, String collectionName);
+    AffectRes dropCollectionView(String databaseName, String collectionName);
 
     List<DocumentSet> queryAIDocument(CollectionViewQueryParamInner queryParamInner);
 

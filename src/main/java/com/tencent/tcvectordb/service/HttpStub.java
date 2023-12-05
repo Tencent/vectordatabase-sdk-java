@@ -353,11 +353,12 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public void dropCollectionView(String databaseName, String collectionName) {
+    public AffectRes dropCollectionView(String databaseName, String collectionName) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_COL_DROP);
-        String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
+        String body = String.format("{\"database\":\"%s\",\"collectionView\":\"%s\"}",
                 databaseName, collectionName);
-        this.post(url, body);
+        JsonNode jsonNode = this.post(url, body);
+        return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
     @Override

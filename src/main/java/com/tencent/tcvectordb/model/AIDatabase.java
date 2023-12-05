@@ -71,8 +71,8 @@ public class AIDatabase {
         return collection;
     }
 
-    public void dropCollectionView(String collectionName) throws VectorDBException {
-        stub.dropCollectionView(this.databaseName, collectionName);
+    public AffectRes dropCollectionView(String collectionName) throws VectorDBException {
+        return stub.dropCollectionView(this.databaseName, collectionName);
     }
 
     public AffectRes setAIAlias(String collectionName, String aliasName) {

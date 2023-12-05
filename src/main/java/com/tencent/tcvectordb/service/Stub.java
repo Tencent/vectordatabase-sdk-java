@@ -28,7 +28,7 @@ public interface Stub {
     /**
      * create ai_database
      */
-    void createAIDatabase(AIDatabase aiDatabase);
+    AffectRes createAIDatabase(AIDatabase aiDatabase);
 
     /**
      * decribe database
@@ -39,7 +39,7 @@ public interface Stub {
     /**
      * drop ai_database
      */
-    void dropAIDatabase(AIDatabase aiDatabase);
+    AffectRes dropAIDatabase(AIDatabase aiDatabase);
 
     /**
      * list databases

@@ -76,9 +76,10 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public void createAIDatabase(AIDatabase aiDatabase) {
+    public AffectRes createAIDatabase(AIDatabase aiDatabase) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DB_CREATE);
-        this.post(url, aiDatabase.toString());
+        JsonNode jsonNode = this.post(url, aiDatabase.toString());
+        return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
     @Override
@@ -91,9 +92,10 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public void dropAIDatabase(AIDatabase aiDatabase) {
+    public AffectRes dropAIDatabase(AIDatabase aiDatabase) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DB_DROP);
-        this.post(url, aiDatabase.toString());
+        JsonNode jsonNode =this.post(url, aiDatabase.toString());
+        return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
     @Override

@@ -24,10 +24,7 @@ import com.tencent.tcvectordb.client.VectorDBClient;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.*;
 import com.tencent.tcvectordb.model.param.collection.*;
-import com.tencent.tcvectordb.model.param.collectionView.CreateCollectionViewParam;
-import com.tencent.tcvectordb.model.param.collectionView.EmbeddingParams;
-import com.tencent.tcvectordb.model.param.collectionView.LanuageType;
-import com.tencent.tcvectordb.model.param.collectionView.LoadAndSplitTextParam;
+import com.tencent.tcvectordb.model.param.collectionView.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
@@ -79,10 +76,12 @@ public class VectorDBExampleWithAI_doc {
     private static ConnectParam initConnectParam() {
         System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
         System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
+        String vdb_url = "http://9.135.180.240:8100";
+        String vdb_key = "P0QgXuacfxyEpwJIcmmrvkGFfJmCtmmASc8cPn5l";
         return ConnectParam.newBuilder()
-                .withUrl(System.getProperty("vdb_url"))
+                .withUrl(vdb_url)
                 .withUsername("root")
-                .withKey(System.getProperty("vdb_key"))
+                .withKey(vdb_key)
                 .withTimeout(100)
                 .build();
     }
@@ -180,6 +179,7 @@ public class VectorDBExampleWithAI_doc {
         CollectionViewQueryParam queryParam = CollectionViewQueryParam.newBuilder().
                 withLimit(2).
                 withFilter(filterParam).
+                withDocumentSetNames(Arrays.asList("file4")).
                 withOutputFields(Arrays.asList("book_id", "author-array")).
                 build();
         List<DocumentSet> qdos = collection.query(queryParam);
@@ -213,7 +213,7 @@ public class VectorDBExampleWithAI_doc {
 
         // filter 限制仅会更新 条件符合的记录
         System.out.println("---------------------- update ----------------------");
-        Filter filterParam = new Filter("documentSetName=\"file2\"");
+        Filter filterParam = new Filter("documentSetName=\"file4\"");
         CollectionViewConditionParam updateParam = CollectionViewConditionParam
                 .newBuilder()
                 .withDocumentSetNames(Arrays.asList("file2"))
@@ -273,7 +273,10 @@ public class VectorDBExampleWithAI_doc {
                 .withEmbedding(EmbeddingParams.newBuilder().withEnableWordEmbedding(true).withLanguage(LanuageType.ZH).Build())
                 .addField(new FilterIndex("bookName", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("author", FieldType.String, IndexType.FILTER))
-                .addField(new FilterArrayIndex("array_test", FieldElementType.String, IndexType.FILTER))
+                .addField(new FilterIndex("array_test", FieldType.Array, IndexType.FILTER))
+                .withSplitterPreprocess(SplitterPreprocessParams.newBuilder().
+                        withAppendKeywordsToChunkEnum(true).
+                        withAppendTitleToChunkEnum(false).Build())
                 .build();
     }
 }

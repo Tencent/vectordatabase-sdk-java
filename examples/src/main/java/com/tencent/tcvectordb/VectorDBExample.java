@@ -409,7 +409,7 @@ public class VectorDBExample {
                         MetricType.COSINE, new HNSWParams(16, 200)))
                 .addField(new FilterIndex("bookName", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("author", FieldType.String, IndexType.FILTER))
-                .addField(new FilterArrayIndex("array_test", FieldElementType.String, IndexType.FILTER))
+                .addField(new FilterIndex("array_test", FieldType.Array, IndexType.FILTER))
                 .build();
     }
 

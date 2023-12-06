@@ -35,8 +35,8 @@ public class SplitterPreprocessParams implements ParamsSerializer {
         this.appendKeywordsToChunk = appendKeywordsToChunk;
     }
 
-    public static DocumentSet.Builder newBuilder() {
-        return new DocumentSet.Builder();
+    public static Builder newBuilder() {
+        return new Builder();
     }
 
     public static final class Builder {

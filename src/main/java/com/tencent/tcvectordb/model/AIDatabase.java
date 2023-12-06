@@ -64,19 +64,19 @@ public class AIDatabase {
         return param;
     }
 
-    public CollectionView describeCollectionView(String collectionName) throws VectorDBException {
-        CollectionView collection = stub.describeCollectionView(this.databaseName, collectionName);
+    public CollectionView describeCollectionView(String collectionView) throws VectorDBException {
+        CollectionView collection = stub.describeCollectionView(this.databaseName, collectionView);
         collection.setStub(stub);
         collection.setReadConsistency(readConsistency);
         return collection;
     }
 
-    public AffectRes dropCollectionView(String collectionName) throws VectorDBException {
-        return stub.dropCollectionView(this.databaseName, collectionName);
+    public AffectRes dropCollectionView(String collectionView) throws VectorDBException {
+        return stub.dropCollectionView(this.databaseName, collectionView);
     }
 
-    public AffectRes setAIAlias(String collectionName, String aliasName) {
-        return stub.setAIAlias(this.databaseName, collectionName, aliasName);
+    public AffectRes setAIAlias(String collectionView, String aliasName) {
+        return stub.setAIAlias(this.databaseName, collectionView, aliasName);
     }
 
     public AffectRes deleteAIAlias(String aliasName) {

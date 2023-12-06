@@ -43,8 +43,8 @@ public class AIDatabase {
         return readConsistency;
     }
 
-    public AffectRes truncateCollectionView(String collectionName) {
-        return stub.truncateCollectionView(this.databaseName, collectionName, DataBaseTypeEnum.AI_DB);
+    public AffectRes truncateCollectionView(String collectionViewName) {
+        return stub.truncateCollectionView(this.databaseName, collectionViewName, DataBaseTypeEnum.AI_DB);
     }
 
     public List<CollectionView> listCollectionView() throws VectorDBException {
@@ -71,12 +71,12 @@ public class AIDatabase {
         return collection;
     }
 
-    public AffectRes dropCollectionView(String collectionView) throws VectorDBException {
-        return stub.dropCollectionView(this.databaseName, collectionView);
+    public AffectRes dropCollectionView(String collectionViewName) throws VectorDBException {
+        return stub.dropCollectionView(this.databaseName, collectionViewName);
     }
 
-    public AffectRes setAIAlias(String collectionView, String aliasName) {
-        return stub.setAIAlias(this.databaseName, collectionView, aliasName);
+    public AffectRes setAIAlias(String collectionViewName, String aliasName) {
+        return stub.setAIAlias(this.databaseName, collectionViewName, aliasName);
     }
 
     public AffectRes deleteAIAlias(String aliasName) {

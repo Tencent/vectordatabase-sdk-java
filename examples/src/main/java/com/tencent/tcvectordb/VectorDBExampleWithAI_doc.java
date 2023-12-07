@@ -18,7 +18,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package src.main.java.com.tencent.tcvectordb;
+package com.tencent.tcvectordb;
 
 import com.tencent.tcvectordb.client.VectorDBClient;
 import com.tencent.tcvectordb.exception.VectorDBException;
@@ -40,9 +40,9 @@ import java.util.Map;
  */
 public class VectorDBExampleWithAI_doc {
 
-    private static final String DBNAME = "ai_db_doc_ayh_test";
-    private static final String COLL_NAME = "doc_collection_1";
-    private static final String COLL_NAME_ALIAS = "doc_collection_alias_2";
+    private static final String DBNAME = "db_test-ai";
+    private static final String COLL_NAME = "coll-ai-files";
+    private static final String COLL_NAME_ALIAS = "alias-coll-ai-files";
 
     public static void example() throws Exception {
         // 创建VectorDB Client
@@ -54,15 +54,14 @@ public class VectorDBExampleWithAI_doc {
         anySafe(() -> clear(client));
         createDatabaseAndCollection(client);
         Map<String, Object> metaDataMap = new HashMap<>();
-        metaDataMap.put("book_name", "向量数据库");
-        metaDataMap.put("book_id", 1235);
-        metaDataMap.put("author-array", Arrays.asList("4","5","6"));
-        loadAndSplitText(client, System.getProperty("file_path"), System.getProperty("documentSetName"), metaDataMap);
+        metaDataMap.put("author", "Tencent");
+        metaDataMap.put("tags", Arrays.asList("Embedding","向量","AI"));
+        loadAndSplitText(client, System.getProperty("/data/home/emilyjzhang/腾讯云向量数据库.md"), System.getProperty("腾讯云向量数据库.md"), metaDataMap);
         // 解析加载文件需要等待时间
         Thread.sleep(1000 * 10);
 
         queryData(client);
-        GetFile(client, System.getProperty("file_name"));
+        GetFile(client, System.getProperty("腾讯云向量数据库.md"));
         updateAndDelete(client);
         deleteAndDrop(client);
     }
@@ -76,8 +75,8 @@ public class VectorDBExampleWithAI_doc {
     private static ConnectParam initConnectParam() {
         System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
         System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
-        String vdb_url = "http://9.135.180.240:8100";
-        String vdb_key = "P0QgXuacfxyEpwJIcmmrvkGFfJmCtmmASc8cPn5l";
+        String vdb_url = "http://lb-3fuz86n6-e8g7tor5zvbql29p.clb.ap-guangzhou.tencentclb.com:6000";
+        String vdb_key = "mbjqRphN6kxcbrV9fIGMMofmuxx5rI0m3jxkybez";
         return ConnectParam.newBuilder()
                 .withUrl(vdb_url)
                 .withUsername("root")
@@ -175,12 +174,12 @@ public class VectorDBExampleWithAI_doc {
         // 3. 如果没有主键 id 列表和 filter 则必须传入 limit 和 offset，类似 scan 的数据扫描功能
         // 4. 如果仅需要部分 field 的数据，可以指定 output_fields 用于指定返回数据包含哪些 field，不指定默认全部返回
         System.out.println("---------------------- query ----------------------");
-        Filter filterParam = new Filter("_indexed_status=2");
         CollectionViewQueryParam queryParam = CollectionViewQueryParam.newBuilder().
                 withLimit(2).
-                withFilter(filterParam).
-                withDocumentSetNames(Arrays.asList("file4")).
-                withOutputFields(Arrays.asList("book_id", "author-array")).
+                withFilter(new Filter(Filter.in("author", Arrays.asList("Tencent","tencent"))).
+                        and(Filter.include("tags", Arrays.asList("AI","Embedding")))).
+                withDocumentSetNames(Arrays.asList("腾讯云向量数据库.md")).
+                withOutputFields(Arrays.asList("textPrefix", "author", "tags")).
                 build();
         List<DocumentSet> qdos = collection.query(queryParam);
         for (DocumentSet doc : qdos) {
@@ -196,6 +195,9 @@ public class VectorDBExampleWithAI_doc {
         SearchByContentsParam searchByContentsParam = SearchByContentsParam.newBuilder()
                 .withContent("什么是向量")
                 .withSearchContentOption(option)
+                .withFilter(new Filter(Filter.in("author", Arrays.asList("Tencent","tencent"))).
+                        and(Filter.include("tags", Arrays.asList("AI","Embedding"))).getCond())
+                .withDocumentSetName(Arrays.asList("腾讯云向量数据库.md"))
                 .build();
         System.out.println(qdos.get(0).search(searchByContentsParam).toString());
         List<Document> searchRes = collection.search(searchByContentsParam);
@@ -213,15 +215,15 @@ public class VectorDBExampleWithAI_doc {
 
         // filter 限制仅会更新 条件符合的记录
         System.out.println("---------------------- update ----------------------");
-        Filter filterParam = new Filter("documentSetName=\"file4\"");
+        Filter filterParam = new Filter("author=\"Tencent\"");
         CollectionViewConditionParam updateParam = CollectionViewConditionParam
                 .newBuilder()
-                .withDocumentSetNames(Arrays.asList("file2"))
+                .withDocumentSetNames(Arrays.asList("腾讯云向量数据库.md"))
                 .withFilter(filterParam)
                 .build();
         Map<String, Object> updateFieldValues = new HashMap<>();
         updateFieldValues.put("page", 100);
-        updateFieldValues.put("extend", "extendContent");
+        updateFieldValues.put("author", "tencent");
         updateFieldValues.put("array_test", Arrays.asList("1", "2","5"));
         collection.update(updateParam, updateFieldValues);
 
@@ -233,10 +235,10 @@ public class VectorDBExampleWithAI_doc {
 
         //     filter 限制只会删除命中的记录
         System.out.println("---------------------- delete ----------------------");
-        Filter filterParam1 = new Filter("_file_name=\"file2\"");
+        Filter filterParam1 = new Filter("author=\"Tencent\"");
         CollectionViewConditionParam build = CollectionViewConditionParam
                 .newBuilder()
-                .withDocumentSetNames(Arrays.asList("file2"))
+                .withDocumentSetNames(Arrays.asList("腾讯云向量数据库.md"))
                 .withFilter(filterParam1)
                 .build();
         AffectRes affectRes = collection.deleteDocumentSets(build);
@@ -271,9 +273,8 @@ public class VectorDBExampleWithAI_doc {
                 .withName(collName)
                 .withDescription("test create ai collection")
                 .withEmbedding(EmbeddingParams.newBuilder().withEnableWordEmbedding(true).withLanguage(LanuageType.ZH).Build())
-                .addField(new FilterIndex("bookName", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("author", FieldType.String, IndexType.FILTER))
-                .addField(new FilterIndex("array_test", FieldType.Array, IndexType.FILTER))
+                .addField(new FilterIndex("tags", FieldType.Array, IndexType.FILTER))
                 .withSplitterPreprocess(SplitterPreprocessParams.newBuilder().
                         withAppendKeywordsToChunkEnum(true).
                         withAppendTitleToChunkEnum(false).Build())

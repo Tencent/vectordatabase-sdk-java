@@ -121,7 +121,7 @@ public class SearchByContentsParam {
             return this;
         }
 
-        public Builder withDocumentSerName(List<String> documentSetName) {
+        public Builder withDocumentSetName(List<String> documentSetName) {
             this.documentSetName = documentSetName;
             return this;
         }

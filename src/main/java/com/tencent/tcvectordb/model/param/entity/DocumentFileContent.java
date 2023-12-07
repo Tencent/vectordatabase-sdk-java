@@ -1,11 +1,13 @@
 package com.tencent.tcvectordb.model.param.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencent.tcvectordb.model.DocField;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class DocumentFileContent {
     private String documentSetName;
     private String documentSetId;

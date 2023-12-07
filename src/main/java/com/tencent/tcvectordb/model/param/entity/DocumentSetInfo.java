@@ -1,7 +1,8 @@
 package com.tencent.tcvectordb.model.param.entity;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class DocumentSetInfo {
     private int textLength;
     private int byteLength;

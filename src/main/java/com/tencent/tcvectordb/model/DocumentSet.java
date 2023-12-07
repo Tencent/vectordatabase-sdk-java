@@ -22,6 +22,7 @@ package com.tencent.tcvectordb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.tencent.tcvectordb.exception.VectorDBException;
@@ -147,6 +148,11 @@ public class DocumentSet {
                     case Uint64:
                         node.put(field.getName(), Long.valueOf(field.getValue().toString()));
                         break;
+                    case Array:
+                        List<String> strValues = (List<String>) ((List) field.getValue());
+                        ArrayNode strNode = JsonNodeFactory.instance.arrayNode();
+                        strValues.forEach(strNode::add);
+                        node.set(field.getName(), strNode);
                     default:
                         node.put(field.getName(), field.getStringValue());
                 }

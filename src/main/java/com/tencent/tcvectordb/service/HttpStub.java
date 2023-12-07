@@ -625,7 +625,12 @@ public class HttpStub implements Stub {
                     builder.addFilterField(new DocField(name, ele.asInt()));
                 } else if (ele.isLong()) {
                     builder.addFilterField(new DocField(name, ele.asLong()));
-                } else {
+                } else if (ele.isArray()) {
+                    List values = mapper.readValue(
+                            ele.toString(), new TypeReference<List>() {
+                            });
+                    builder.addFilterField(new DocField(name, values));
+                }else {
                     builder.addFilterField(new DocField(name, ele.asText()));
                 }
             }

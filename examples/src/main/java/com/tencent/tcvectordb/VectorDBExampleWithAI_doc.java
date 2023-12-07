@@ -29,6 +29,7 @@ import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
+import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -56,12 +57,12 @@ public class VectorDBExampleWithAI_doc {
         Map<String, Object> metaDataMap = new HashMap<>();
         metaDataMap.put("author", "Tencent");
         metaDataMap.put("tags", Arrays.asList("Embedding","向量","AI"));
-        loadAndSplitText(client, System.getProperty("/data/home/emilyjzhang/腾讯云向量数据库.md"), System.getProperty("腾讯云向量数据库.md"), metaDataMap);
+        loadAndSplitText(client, "/Users/anyihao/Downloads/jar/腾讯云向量数据库.md", "腾讯云向量数据库.md", metaDataMap);
         // 解析加载文件需要等待时间
         Thread.sleep(1000 * 10);
 
         queryData(client);
-        GetFile(client, System.getProperty("腾讯云向量数据库.md"));
+        GetFile(client, "腾讯云向量数据库.md");
         updateAndDelete(client);
         deleteAndDrop(client);
     }
@@ -75,7 +76,7 @@ public class VectorDBExampleWithAI_doc {
     private static ConnectParam initConnectParam() {
         System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
         System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
-        String vdb_url = "http://lb-3fuz86n6-e8g7tor5zvbql29p.clb.ap-guangzhou.tencentclb.com:6000";
+        String vdb_url = "http://lb-3fuz86n6-e8g7tor5zvbql29p.clb.ap-guangzhou.tencentclb.com:60000";
         String vdb_key = "mbjqRphN6kxcbrV9fIGMMofmuxx5rI0m3jxkybez";
         return ConnectParam.newBuilder()
                 .withUrl(vdb_url)
@@ -160,7 +161,7 @@ public class VectorDBExampleWithAI_doc {
     private static void GetFile(VectorDBClient client, String fileName) {
         AIDatabase database = client.aiDatabase(DBNAME);
         CollectionView collection = database.describeCollectionView(COLL_NAME);
-        System.out.println(collection.getFile(fileName, ""));
+        System.out.println(collection.getFile(fileName, "").toString());
     }
 
 
@@ -179,7 +180,7 @@ public class VectorDBExampleWithAI_doc {
                 withFilter(new Filter(Filter.in("author", Arrays.asList("Tencent","tencent"))).
                         and(Filter.include("tags", Arrays.asList("AI","Embedding")))).
                 withDocumentSetNames(Arrays.asList("腾讯云向量数据库.md")).
-                withOutputFields(Arrays.asList("textPrefix", "author", "tags")).
+//                withOutputFields(Arrays.asList("textPrefix", "author", "tags")).
                 build();
         List<DocumentSet> qdos = collection.query(queryParam);
         for (DocumentSet doc : qdos) {
@@ -199,11 +200,11 @@ public class VectorDBExampleWithAI_doc {
                         and(Filter.include("tags", Arrays.asList("AI","Embedding"))).getCond())
                 .withDocumentSetName(Arrays.asList("腾讯云向量数据库.md"))
                 .build();
-        System.out.println(qdos.get(0).search(searchByContentsParam).toString());
+//        System.out.println(qdos.get(0).search(searchByContentsParam).toString());
         List<Document> searchRes = collection.search(searchByContentsParam);
         int i = 0;
         for (Document doc : searchRes) {
-            System.out.println("\tres" +(i++)+": "+ doc.toString());
+            System.out.println("\tres" +(i++)+": "+ JsonUtils.toJsonString(doc));
         }
     }
 

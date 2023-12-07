@@ -1,6 +1,6 @@
 package com.tencent.tcvectordb.model.param.entity;
 
-import java.util.List;
+import com.tencent.tcvectordb.utils.JsonUtils;
 
 public class GetDocumentSetRes extends BaseRes{
     private DocumentFileContent documentSet;
@@ -20,8 +20,6 @@ public class GetDocumentSetRes extends BaseRes{
 
     @Override
     public String toString() {
-        return "GetDoucmentSetRes{" +
-                "document=" + documentSet +
-                '}';
+        return JsonUtils.toJsonString(this);
     }
 }

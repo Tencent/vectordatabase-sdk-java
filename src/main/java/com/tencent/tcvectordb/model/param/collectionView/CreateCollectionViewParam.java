@@ -38,17 +38,10 @@ public class CreateCollectionViewParam extends CollectionView {
     private CreateCollectionViewParam(Builder builder) {
         this.collectionView = builder.name;
         this.description = builder.description;
-        this.expectedFileNum = builder.expectedFileNum;
-        this.averageFileSize = builder.averageFileSize;
         this.splitterPreprocess = builder.splitterPreprocess;
         this.embedding = builder.embedding;
         this.indexes = builder.indexes;
     }
-
-    public int getAverageFileSize() {
-        return averageFileSize;
-    }
-
     public SplitterPreprocessParams getSplitterPreprocess() {
         return splitterPreprocess;
     }
@@ -61,19 +54,9 @@ public class CreateCollectionViewParam extends CollectionView {
         private String name;
         private String description;
         private final List<IndexField> indexes;
-        private int expectedFileNum=1024;
-        private int averageFileSize=10240;
         private SplitterPreprocessParams splitterPreprocess;
 
         private EmbeddingParams embedding;
-
-        public int getExpectedFileNum() {
-            return expectedFileNum;
-        }
-
-        public void setExpectedFileNum(int expectedFileNum) {
-            this.expectedFileNum = expectedFileNum;
-        }
 
         private Builder() {
             this.indexes = new ArrayList<>();

@@ -1,5 +1,7 @@
 package com.tencent.tcvectordb.model.param.entity;
 
+import com.tencent.tcvectordb.utils.JsonUtils;
+
 import java.util.List;
 
 public class ChunkInfo {
@@ -27,13 +29,7 @@ public class ChunkInfo {
 
     @Override
     public String toString() {
-        return "ChunkInfo{" +
-                "text='" + text + '\'' +
-                ", endPos=" + endPos +
-                ", startPos=" + startPos +
-                ", nextChunks=" + next +
-                ", preChunks=" + pre +
-                '}';
+        return JsonUtils.toJsonString(this);
     }
 
     public String getText() {

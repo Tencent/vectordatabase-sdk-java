@@ -686,7 +686,7 @@ public class HttpStub implements Stub {
                         });
                 documentFileContent.setDocumentSetInfo(documentSetInfo);
             } else if (StringUtils.equals("documentSetName", name)) {
-                documentFileContent.setDocumentSetId(ele.asText());
+                documentFileContent.setDocumentSetName(ele.asText());
             }else if (StringUtils.equals("text", name)) {
                 documentFileContent.setText(ele.asText());
             }else {
@@ -694,6 +694,11 @@ public class HttpStub implements Stub {
                     documentFileContent.addFilterField(new DocField(name, ele.asInt()));
                 } else if (ele.isLong()) {
                     documentFileContent.addFilterField(new DocField(name, ele.asLong()));
+                }else if (ele.isArray()) {
+                    List values = mapper.readValue(
+                            ele.toString(), new TypeReference<List>() {
+                            });
+                    documentFileContent.addFilterField(new DocField(name, values));
                 } else {
                     documentFileContent.addFilterField(new DocField(name, ele.asText()));
                 }

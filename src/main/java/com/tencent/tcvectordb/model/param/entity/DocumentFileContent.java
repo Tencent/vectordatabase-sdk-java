@@ -1,6 +1,7 @@
 package com.tencent.tcvectordb.model.param.entity;
 
 import com.tencent.tcvectordb.model.DocField;
+import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,12 +56,7 @@ public class DocumentFileContent {
 
     @Override
     public String toString() {
-        return "DocumentFileContent{" +
-                "documentSetName='" + documentSetName + '\'' +
-                ", documentSetId='" + documentSetId + '\'' +
-                ", text='" + text + '\'' +
-                ", documentSetInfo=" + documentSetInfo +
-                '}';
+        return JsonUtils.toJsonString(this);
     }
 
     public void addFilterField(DocField docField) {

@@ -41,6 +41,7 @@ import java.util.*;
 /**
  * VectorDB Collection
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class CollectionView {
     @JsonIgnore
     private Stub stub;
@@ -48,14 +49,9 @@ public class CollectionView {
     protected String collectionView;
     @JsonIgnore
     protected ReadConsistencyEnum readConsistency;
-    private int replicaNum;
-    private int shardNum;
     protected String description;
     private String createTime;
     private AIStatus stats;
-    protected int expectedFileNum;
-    // 文件的平均大小
-    protected int averageFileSize;
     protected SplitterPreprocessParams splitterPreprocess;
     protected EmbeddingParams embedding;
     private List<String> alias;
@@ -107,22 +103,6 @@ public class CollectionView {
         this.readConsistency = readConsistency;
     }
 
-    public int getReplicaNum() {
-        return replicaNum;
-    }
-
-    public void setReplicaNum(int replicaNum) {
-        this.replicaNum = replicaNum;
-    }
-
-    public int getShardNum() {
-        return shardNum;
-    }
-
-    public void setShardNum(int shardNum) {
-        this.shardNum = shardNum;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -146,23 +126,6 @@ public class CollectionView {
     public void setEmbedding(EmbeddingParams embedding) {
         this.embedding = embedding;
     }
-
-    public int getExpectedFileNum() {
-        return expectedFileNum;
-    }
-
-    public void setExpectedFileNum(int expectedFileNum) {
-        this.expectedFileNum = expectedFileNum;
-    }
-
-    public int getAverageFileSize() {
-        return averageFileSize;
-    }
-
-    public void setAverageFileSize(int averageFileSize) {
-        this.averageFileSize = averageFileSize;
-    }
-
 
     public CollectionView() {
     }
@@ -281,8 +244,8 @@ public class CollectionView {
         this.stub.upload(database, collectionView,  loadAndSplitTextParam.getDocumentSetName(), loadAndSplitTextParam.getLocalFilePath(),metaDataMap);
     }
 
-    public GetDocumentSetRes getFile(String fileName, String fileId) {
-        return this.stub.getFile(database, collectionView, fileName, fileId);
+    public DocumentFileContent getFile(String fileName, String fileId) {
+        return this.stub.getFile(database, collectionView, fileName, fileId).getDocumentSet();
     }
 
     public BaseRes rebuildIndex(RebuildIndexParam rebuildIndexParam) throws VectorDBException {

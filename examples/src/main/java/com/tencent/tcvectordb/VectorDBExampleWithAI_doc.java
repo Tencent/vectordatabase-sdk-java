@@ -204,7 +204,7 @@ public class VectorDBExampleWithAI_doc {
         List<Document> searchRes = collection.search(searchByContentsParam);
         int i = 0;
         for (Document doc : searchRes) {
-            System.out.println("\tres" +(i++)+": "+ JsonUtils.toJsonString(doc));
+            System.out.println("\tres" +(i++)+": "+ doc.toString());
         }
     }
 

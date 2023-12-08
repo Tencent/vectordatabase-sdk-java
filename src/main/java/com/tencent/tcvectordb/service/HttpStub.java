@@ -609,7 +609,26 @@ public class HttpStub implements Stub {
                 builder.withSearchContentInfo(mapper.readValue(
                         ele.toString(), new TypeReference<ContentInfo>() {
                         }));
-            }else {
+            }else if (StringUtils.equals("documentSet", name)){
+                builder.withSearchDocumentSetInfo(node2SearchDocumentSet(ele));
+            }
+        }
+        return builder.build();
+    }
+
+    private SearchDocumentSetInfo node2SearchDocumentSet(JsonNode node) throws JsonProcessingException{
+        SearchDocumentSetInfo.Builder builder = SearchDocumentSetInfo.newBuilder();
+        Iterator<String> iterator = node.fieldNames();
+        ObjectMapper mapper = new ObjectMapper();
+        while (iterator.hasNext()) {
+            String name = iterator.next();
+            JsonNode ele = node.get(name);
+            if (StringUtils.equals("documentSetName", name)) {
+                builder.withDocumentSetName(ele.toString());
+            } else if (StringUtils.equals("documentSetId", name)){
+                builder.withDocumentSetId(ele.toString());
+            }
+            else {
                 if (ele.isInt()) {
                     builder.addDocField(new DocField(name, ele.asInt()));
                 } else if (ele.isLong()) {
@@ -619,8 +638,6 @@ public class HttpStub implements Stub {
                             ele.toString(), new TypeReference<List>() {
                             });
                     builder.addDocField(new DocField(name, values));
-                }else if (StringUtils.equals("documentSet", name)) {
-                    builder.addDocField(new DocField(name, node2Doc(ele)));
                 }else {
                     builder.addDocField(new DocField(name, ele.asText()));
                 }

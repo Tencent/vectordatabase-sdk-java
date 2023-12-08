@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.tencent.tcvectordb.model.DocField;
+import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.*;
 
@@ -35,27 +36,13 @@ import java.util.*;
 public class SearchContentInfo {
     private Double score;
     private ContentInfo data;
-    private List<DocField> docFields;
-    private Map<String, Object> docKeyValue;
 
+    private SearchDocumentSetInfo documentSet;
     public Double getScore() {
         return score;
     }
-
-    public List<DocField> getDocFields() {
-        return docFields;
-    }
-
-    public Map<String, Object> getDocKeyValue() {
-        return docKeyValue;
-    }
-
     public void setScore(Double score) {
         this.score = score;
-    }
-
-    public void setDocFields(List<DocField> docFields) {
-        this.docFields = docFields;
     }
 
     public ContentInfo getData() {
@@ -66,57 +53,23 @@ public class SearchContentInfo {
         this.data = data;
     }
 
-    public Object getObject(String key) {
-        if (Objects.isNull(docFields) || docFields.isEmpty()) {
-            return null;
-        }
-        ensureDocKeyValue();
-
-        return docKeyValue.get(key);
+    public SearchDocumentSetInfo getDocumentSet() {
+        return documentSet;
     }
 
-    private void ensureDocKeyValue() {
-        if (Objects.isNull(docKeyValue)) {
-            docKeyValue = new TreeMap<>();
-            for (DocField docField : docFields) {
-                docKeyValue.put(docField.getName(), docField.getValue());
-            }
-        }
+    public void setDocumentSet(SearchDocumentSetInfo documentSet) {
+        this.documentSet = documentSet;
     }
 
     @Override
     public String toString() {
-        ObjectNode node = JsonNodeFactory.instance.objectNode();
-        if (score != null) {
-            node.put("score", score);
-        }
-        if (data != null) {
-            node.put("data", data.toString());
-        }
-        if (docFields != null && !docFields.isEmpty()) {
-            for (DocField field : docFields) {
-                switch (field.getFieldType()) {
-                    case Uint64:
-                        node.put(field.getName(), Long.valueOf(field.getStringValue()));
-                        break;
-                    case Array:
-                        List<String> strValues = (List<String>) ((List) field.getValue());
-                        ArrayNode strNode = JsonNodeFactory.instance.arrayNode();
-                        strValues.forEach(strNode::add);
-                        node.set(field.getName(), strNode);
-                        break;
-                    default:
-                        node.put(field.getName(), field.getStringValue());
-                }
-            }
-        }
-        return node.toString();
+        return JsonUtils.toJsonString(this);
     }
 
     private SearchContentInfo(Builder builder) {
         this.score = builder.score;
-        this.docFields = builder.docFields;
         this.data = builder.data;
+        this.documentSet = builder.documentSet;
     }
 
     public static Builder newBuilder() {
@@ -126,10 +79,9 @@ public class SearchContentInfo {
     public static class Builder {
         private Double score;
         private ContentInfo data;
-        private List<DocField> docFields;
+        private SearchDocumentSetInfo documentSet;
 
         public Builder() {
-            this.docFields = new ArrayList<>();
         }
 
         public Builder withSearchContentInfo(ContentInfo data){
@@ -142,13 +94,8 @@ public class SearchContentInfo {
             return this;
         }
 
-        public Builder addDocField(DocField docField) {
-            this.docFields.add(docField);
-            return this;
-        }
-
-        public Builder addDocFields(List<DocField> docFields) {
-            this.docFields.addAll(docFields);
+        public Builder withSearchDocumentSetInfo(SearchDocumentSetInfo documentSet) {
+            this.documentSet = documentSet;
             return this;
         }
 

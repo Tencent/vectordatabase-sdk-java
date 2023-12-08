@@ -58,7 +58,7 @@ public class VectorDBExampleWithAI_doc {
         Map<String, Object> metaDataMap = new HashMap<>();
         metaDataMap.put("author", "Tencent");
         metaDataMap.put("tags", Arrays.asList("Embedding","向量","AI"));
-        loadAndSplitText(client, "/Users/anyihao/Downloads/jar/腾讯云向量数据库.md", "腾讯云向量数据库.md", metaDataMap);
+        loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.md", metaDataMap);
         // 解析加载文件需要等待时间
         Thread.sleep(1000 * 10);
 
@@ -77,12 +77,10 @@ public class VectorDBExampleWithAI_doc {
     private static ConnectParam initConnectParam() {
         System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
         System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
-        String vdb_url = "http://lb-3fuz86n6-e8g7tor5zvbql29p.clb.ap-guangzhou.tencentclb.com:60000";
-        String vdb_key = "mbjqRphN6kxcbrV9fIGMMofmuxx5rI0m3jxkybez";
         return ConnectParam.newBuilder()
-                .withUrl(vdb_url)
+                .withUrl(System.getProperty("vdb_url"))
                 .withUsername("root")
-                .withKey(vdb_key)
+                .withKey(System.getProperty("vdb_key"))
                 .withTimeout(100)
                 .build();
     }

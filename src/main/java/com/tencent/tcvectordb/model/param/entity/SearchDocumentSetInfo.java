@@ -1,5 +1,6 @@
 package com.tencent.tcvectordb.model.param.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -22,6 +23,7 @@ public class SearchDocumentSetInfo {
         this.docFields = builder.docFields;
     }
 
+    @JsonIgnore
     public Map<String, Object> getDocKeyValue() {
         if (Objects.isNull(docFields) || docFields.isEmpty()) {
             return null;
@@ -30,6 +32,7 @@ public class SearchDocumentSetInfo {
         return docKeyValue;
     }
 
+    @JsonIgnore
     public Object getObject(String key) {
         if (Objects.isNull(docFields) || docFields.isEmpty()) {
             return null;

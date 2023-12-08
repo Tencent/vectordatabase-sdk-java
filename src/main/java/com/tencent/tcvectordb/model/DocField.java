@@ -20,6 +20,7 @@
 
 package com.tencent.tcvectordb.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.param.collection.FieldType;
 
@@ -45,10 +46,13 @@ public class DocField {
         return value;
     }
 
+
+    @JsonIgnore
     public String getStringValue() {
         return value.toString();
     }
 
+    @JsonIgnore
     public FieldType getFieldType() {
         if (this.value == null) {
             throw new VectorDBException("DocField value is null, " + "filed name is " + this.name);

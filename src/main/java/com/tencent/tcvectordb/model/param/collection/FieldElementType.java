@@ -25,25 +25,15 @@ import com.fasterxml.jackson.annotation.JsonValue;
 /**
  * FieldType
  */
-public enum FieldType {
-    /**
-     * uint64
-     */
-    Uint64("uint64"),
+public enum FieldElementType {
     /**
      * string
      */
-    String("string"),
-    /**
-     * vector
-     */
-    Vector("vector"),
-
-    Array("array");
+    String("string");
 
     private final String value;
 
-    private FieldType(String value) {
+    private FieldElementType(String value) {
         this.value = value;
     }
 

@@ -33,6 +33,7 @@ public class IndexField {
     private IndexType indexType;
     private MetricType metricType;
     private ParamsSerializer params;
+    private FieldElementType fieldElementType;
 
     private Integer dimension;
     private Integer indexedCount;
@@ -118,5 +119,13 @@ public class IndexField {
 
     public void setDimension(int dimension) {
         this.dimension = dimension;
+    }
+
+    public FieldElementType getFieldElementType() {
+        return fieldElementType;
+    }
+
+    public void setFieldElementType(FieldElementType fieldElementType) {
+        this.fieldElementType = fieldElementType;
     }
 }

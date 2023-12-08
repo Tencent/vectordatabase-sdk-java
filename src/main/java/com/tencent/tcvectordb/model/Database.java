@@ -24,10 +24,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
+import com.tencent.tcvectordb.model.param.entity.DataBaseType;
+import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.Stub;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * VectorDB Database
@@ -42,6 +45,17 @@ public class Database {
         this.stub = stub;
         this.databaseName = databaseName;
         this.readConsistency = readConsistency;
+//        ensureDataBaseType();
+    }
+
+    private void ensureDataBaseType() throws VectorDBException{
+        Map<String, DataBaseType> dataBaseTypeMap = stub.listDatabaseInfos();
+        if (!dataBaseTypeMap.containsKey(this.databaseName)){
+            throw new VectorDBException("database not existed");
+        }
+        if(DataBaseTypeEnum.isAIDataBase(DataBaseTypeEnum.valueOf(dataBaseTypeMap.get(this.databaseName).getDbType()))){
+            throw new VectorDBException("database is ai database");
+        }
     }
 
     public String getDatabaseName() {
@@ -70,7 +84,7 @@ public class Database {
     }
 
     public AffectRes truncateCollections(String collectionName) {
-        return stub.truncateCollection(this.databaseName, collectionName);
+        return stub.truncateCollection(this.databaseName, collectionName, DataBaseTypeEnum.BASE_DB);
     }
 
     public Collection describeCollection(String collectionName) throws VectorDBException {

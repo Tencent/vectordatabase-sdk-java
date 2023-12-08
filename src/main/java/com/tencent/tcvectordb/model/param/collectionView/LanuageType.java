@@ -18,32 +18,30 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.tencent.tcvectordb.model.param.collection;
+package com.tencent.tcvectordb.model.param.collectionView;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * FieldType
+ * LanuageType
  */
-public enum FieldType {
+public enum LanuageType {
     /**
-     * uint64
+     * 中文
      */
-    Uint64("uint64"),
+    ZH("zh"),
     /**
-     * string
+     * 英文
      */
-    String("string"),
+    EN("en"),
     /**
-     * vector
+     * multi
      */
-    Vector("vector"),
-
-    Array("array");
+    MULTI("multi");
 
     private final String value;
 
-    private FieldType(String value) {
+    private LanuageType(String value) {
         this.value = value;
     }
 
@@ -51,6 +49,5 @@ public enum FieldType {
     public String getValue() {
         return value;
     }
-
 
 }

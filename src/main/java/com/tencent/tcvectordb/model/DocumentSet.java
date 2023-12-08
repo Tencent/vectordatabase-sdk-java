@@ -21,12 +21,20 @@
 package com.tencent.tcvectordb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.tencent.tcvectordb.model.param.collection.FieldType;
+import com.tencent.tcvectordb.exception.VectorDBException;
+import com.tencent.tcvectordb.model.param.dml.CollectionViewConditionParam;
+import com.tencent.tcvectordb.model.param.dml.SearchByContentsParam;
+import com.tencent.tcvectordb.model.param.entity.AffectRes;
+import com.tencent.tcvectordb.model.param.entity.DocumentSetInfo;
+import com.tencent.tcvectordb.model.param.entity.SearchContentInfo;
+import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
+import com.tencent.tcvectordb.service.Stub;
+import com.tencent.tcvectordb.service.param.CollectionViewDeleteParamInner;
+import com.tencent.tcvectordb.service.param.SearchDocParamInner;
 import com.tencent.tcvectordb.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -36,25 +44,18 @@ import java.util.*;
  * VectorDB Document
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Document {
-    private String id;
-    private List<Double> vector;
-    private Double score;
-    private String doc;
+public class DocumentSet {
+    @JsonIgnore
+    private Stub stub;
+    private String database;
+    protected String collectionViewName;
+    private ReadConsistencyEnum readConsistency = ReadConsistencyEnum.EVENTUAL_CONSISTENCY;
+    private String documentSetId;
+    private String documentSetName;
+    private String textPrefix;
+    private DocumentSetInfo documentSetInfo;
     private List<DocField> docFields;
     private Map<String, Object> docKeyValue;
-
-    public String getId() {
-        return id;
-    }
-
-    public Double getScore() {
-        return score;
-    }
-
-    public String getDoc() {
-        return doc;
-    }
 
     public List<DocField> getDocFields() {
         return docFields;
@@ -62,29 +63,6 @@ public class Document {
 
     public Map<String, Object> getDocKeyValue() {
         return docKeyValue;
-    }
-
-    public List<Double> getVector() {
-        if (vector==null || vector.isEmpty()){
-            return Collections.EMPTY_LIST;
-        }
-        return Collections.unmodifiableList(vector);
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setVector(List<Double> vector) {
-        this.vector = vector;
-    }
-
-    public void setScore(Double score) {
-        this.score = score;
-    }
-
-    public void setDoc(String doc) {
-        this.doc = doc;
     }
 
     public void setDocFields(List<DocField> docFields) {
@@ -109,35 +87,73 @@ public class Document {
         }
     }
 
+    public List<SearchContentInfo> search(SearchByContentsParam param) throws VectorDBException {
+        param.setDocumentSetName(Arrays.asList(documentSetName));
+        return this.stub.searchAIDocument(new SearchDocParamInner(
+                database, collectionViewName, param, readConsistency)).getDocuments();
+    }
+
+    public AffectRes delete() throws VectorDBException {
+        return this.stub.deleteAIDocument(
+                new CollectionViewDeleteParamInner(database, collectionViewName,
+                        CollectionViewConditionParam.newBuilder().withDocumentSetIds(Arrays.asList(documentSetId)).build()));
+    }
+
+    public String getText() {
+        return this.stub.getFile(database, collectionViewName, documentSetName, documentSetId).getDocumentSet().getText();
+    }
+
+    public Stub getStub() {
+        return stub;
+    }
+
+    public void setStub(Stub stub) {
+        this.stub = stub;
+    }
+
+    public String getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(String database) {
+        this.database = database;
+    }
+
+    public String getCollectionViewName() {
+        return collectionViewName;
+    }
+
+    public void setCollectionViewName(String collectionViewname) {
+        this.collectionViewName = collectionViewname;
+    }
+
     @Override
     public String toString() {
         ObjectNode node = JsonNodeFactory.instance.objectNode();
-        if (StringUtils.isNotBlank(id)) {
-            node.put("id", id);
+        if (StringUtils.isNotBlank(documentSetId)) {
+            node.put("documentSetId", documentSetId);
         }
-        if (vector != null && !vector.isEmpty()) {
-            ArrayNode vectorNode = JsonNodeFactory.instance.arrayNode();
-            vector.forEach(vectorNode::add);
-            node.set("vector", vectorNode);
+        if (StringUtils.isNotEmpty(documentSetName)) {
+            node.put("documentSetName", documentSetName);
         }
-        if (score != null) {
-            node.put("score", score);
+        if (StringUtils.isNotEmpty(textPrefix)) {
+            node.put("textPrefix", textPrefix);
         }
-        if (StringUtils.isNotEmpty(doc)) {
-            node.put("doc", doc);
+        if (documentSetInfo!=null) {
+            node.put("documentSetInfo", JsonUtils.toJsonString(documentSetInfo));
         }
+
         if (docFields != null && !docFields.isEmpty()) {
             for (DocField field : docFields) {
                 switch (field.getFieldType()) {
                     case Uint64:
-                        node.put(field.getName(), Long.valueOf(field.getStringValue()));
+                        node.put(field.getName(), Long.valueOf(field.getValue().toString()));
                         break;
                     case Array:
                         List<String> strValues = (List<String>) ((List) field.getValue());
                         ArrayNode strNode = JsonNodeFactory.instance.arrayNode();
                         strValues.forEach(strNode::add);
                         node.set(field.getName(), strNode);
-                        break;
                     default:
                         node.put(field.getName(), field.getStringValue());
                 }
@@ -146,12 +162,12 @@ public class Document {
         return node.toString();
     }
 
-    private Document(Builder builder) {
-        this.id = builder.id;
-        this.vector = builder.vector;
-        this.doc = builder.doc;
-        this.score = builder.score;
+    private DocumentSet(Builder builder) {
         this.docFields = builder.docFields;
+        this.documentSetInfo = builder.documentSetInfo;
+        this.documentSetName = builder.documnetSetName;
+        this.documentSetId = builder.documentSetId;
+        this.textPrefix = builder.textPrefix;
     }
 
     public static Builder newBuilder() {
@@ -159,34 +175,33 @@ public class Document {
     }
 
     public static class Builder {
-        private String id;
-        private List<Double> vector;
-
-        private Double score;
-        private String doc;
+        private String documentSetId;
+        private String documnetSetName;
+        private String textPrefix;
+        private DocumentSetInfo documentSetInfo;
         private List<DocField> docFields;
 
         public Builder() {
             this.docFields = new ArrayList<>();
         }
 
-        public Builder withId(String id) {
-            this.id = id;
+        public Builder withDocumentSetId(String documentSetId) {
+            this.documentSetId = documentSetId;
             return this;
         }
 
-        public Builder withVector(List<Double> vector) {
-            this.vector = vector;
+        public Builder withDocumnetSetName(String documnetSetName) {
+            this.documnetSetName = documnetSetName;
             return this;
         }
 
-        public Builder withDoc(String doc) {
-            this.doc = doc;
+        public Builder withTextPrefix(String textPrefix) {
+            this.textPrefix = textPrefix;
             return this;
         }
 
-        public Builder withScore(Double score) {
-            this.score = score;
+        public Builder withDocumentSetInfo(DocumentSetInfo documentSetInfo) {
+            this.documentSetInfo = documentSetInfo;
             return this;
         }
 
@@ -214,8 +229,8 @@ public class Document {
             return this;
         }
 
-        public Document build() {
-            return new Document(this);
+        public DocumentSet build() {
+            return new DocumentSet(this);
         }
     }
 }

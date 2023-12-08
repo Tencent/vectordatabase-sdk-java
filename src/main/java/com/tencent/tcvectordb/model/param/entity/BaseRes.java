@@ -6,6 +6,8 @@ public class BaseRes {
     protected String msg;
     protected String warning;
 
+    protected int count;
+
     public BaseRes() {
     }
 
@@ -25,6 +27,14 @@ public class BaseRes {
 
     public String getWarning() {
         return warning;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 
     @Override

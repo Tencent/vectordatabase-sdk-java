@@ -21,8 +21,11 @@
 package com.tencent.tcvectordb.client;
 
 import com.tencent.tcvectordb.exception.VectorDBException;
+import com.tencent.tcvectordb.model.AIDatabase;
 import com.tencent.tcvectordb.model.Database;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
+import com.tencent.tcvectordb.model.param.entity.AffectRes;
+import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.HttpStub;
 import com.tencent.tcvectordb.service.Stub;
@@ -54,6 +57,17 @@ public class VectorDBClient {
         return db;
     }
 
+    public AIDatabase createAIDatabase(String databaseName) throws VectorDBException {
+        AIDatabase db = aiDatabase(databaseName);
+        stub.createAIDatabase(db);
+        return db;
+    }
+
+    public AffectRes dropAIDatabase(String databaseName) throws VectorDBException {
+        AIDatabase db = aiDatabase(databaseName);
+        return stub.dropAIDatabase(db);
+    }
+
     public List<String> listDatabase() throws VectorDBException {
         return stub.listDatabases();
     }
@@ -72,5 +86,9 @@ public class VectorDBClient {
 
     public Database database(String databaseName) {
         return new Database(this.stub, databaseName, this.readConsistency);
+    }
+
+    public AIDatabase aiDatabase(String databaseName){
+        return new AIDatabase(this.stub, databaseName, this.readConsistency);
     }
 }

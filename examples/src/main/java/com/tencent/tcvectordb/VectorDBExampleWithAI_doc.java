@@ -28,6 +28,7 @@ import com.tencent.tcvectordb.model.param.collectionView.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
+import com.tencent.tcvectordb.model.param.entity.SearchContentInfo;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
@@ -201,9 +202,9 @@ public class VectorDBExampleWithAI_doc {
                 .withDocumentSetName(Arrays.asList("腾讯云向量数据库.md"))
                 .build();
 //        System.out.println(qdos.get(0).search(searchByContentsParam).toString());
-        List<Document> searchRes = collection.search(searchByContentsParam);
+        List<SearchContentInfo> searchRes = collection.search(searchByContentsParam);
         int i = 0;
-        for (Document doc : searchRes) {
+        for (SearchContentInfo doc : searchRes) {
             System.out.println("\tres" +(i++)+": "+ doc.toString());
         }
     }

@@ -4,7 +4,7 @@ import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.List;
 
-public class ChunkInfo {
+public class ContentInfo {
     private String text;
     private int endPos;
     private int startPos;

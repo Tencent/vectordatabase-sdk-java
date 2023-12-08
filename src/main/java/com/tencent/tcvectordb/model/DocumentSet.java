@@ -30,6 +30,7 @@ import com.tencent.tcvectordb.model.param.dml.CollectionViewConditionParam;
 import com.tencent.tcvectordb.model.param.dml.SearchByContentsParam;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.DocumentSetInfo;
+import com.tencent.tcvectordb.model.param.entity.SearchContentInfo;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.Stub;
 import com.tencent.tcvectordb.service.param.CollectionViewDeleteParamInner;
@@ -86,7 +87,7 @@ public class DocumentSet {
         }
     }
 
-    public List<Document> search(SearchByContentsParam param) throws VectorDBException {
+    public List<SearchContentInfo> search(SearchByContentsParam param) throws VectorDBException {
         param.setDocumentSetName(Arrays.asList(documentSetName));
         return this.stub.searchAIDocument(new SearchDocParamInner(
                 database, collectionViewName, param, readConsistency)).getDocuments();

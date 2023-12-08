@@ -5,13 +5,13 @@ import com.tencent.tcvectordb.model.Document;
 import java.util.List;
 
 public class SearchContentRes extends BaseRes {
-    private List<Document> documents;
+    private List<SearchContentInfo> documents;
 
-    public List<Document> getDocuments() {
+    public List<SearchContentInfo> getDocuments() {
         return documents;
     }
 
-    public SearchContentRes(int code, String msg, String warning, List<Document> documents) {
+    public SearchContentRes(int code, String msg, String warning, List<SearchContentInfo> documents) {
         super(code, msg, warning);
         this.documents = documents;
     }

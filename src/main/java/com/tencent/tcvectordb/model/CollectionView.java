@@ -211,7 +211,7 @@ public class CollectionView {
         throw new VectorDBException("data not existed!");
     }
 
-    public List<Document> search(SearchByContentsParam param) throws VectorDBException {
+    public List<SearchContentInfo> search(SearchByContentsParam param) throws VectorDBException {
         return this.stub.searchAIDocument(new SearchDocParamInner(
                 database, collectionView, param, this.readConsistency)).getDocuments();
     }

@@ -58,7 +58,7 @@ public class VectorDBExampleWithAI_doc {
         Map<String, Object> metaDataMap = new HashMap<>();
         metaDataMap.put("author", "Tencent");
         metaDataMap.put("tags", Arrays.asList("Embedding","向量","AI"));
-        loadAndSplitText(client, "/Users/anyihao/Downloads/jar/腾讯云向量数据库.md", "腾讯云向量数据库.md", metaDataMap);
+        loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.md", metaDataMap);
         // 解析加载文件需要等待时间
         Thread.sleep(1000 * 10);
 

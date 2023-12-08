@@ -68,6 +68,36 @@ public class Filter {
         return String.format("%s in (%s)", key, String.join(",", strValues));
     }
 
+    public static <T> String include(String key, List<T> values) {
+        if (values == null || values.isEmpty()) {
+            throw new ParamException("Filter in condition values is empty");
+        }
+        List<String> strValues = values.get(0) instanceof String ?
+                values.stream().map(x -> "\"" + x + "\"").collect(Collectors.toList()) :
+                values.stream().map(x -> x + "").collect(Collectors.toList());
+        return String.format("%s include (%s)", key, String.join(",", strValues));
+    }
+
+    public static <T> String exclude(String key, List<T> values) {
+        if (values == null || values.isEmpty()) {
+            throw new ParamException("Filter in condition values is empty");
+        }
+        List<String> strValues = values.get(0) instanceof String ?
+                values.stream().map(x -> "\"" + x + "\"").collect(Collectors.toList()) :
+                values.stream().map(x -> x + "").collect(Collectors.toList());
+        return String.format("%s exclude (%s)", key, String.join(",", strValues));
+    }
+
+    public static <T> String includeAll(String key, List<T> values) {
+        if (values == null || values.isEmpty()) {
+            throw new ParamException("Filter in condition values is empty");
+        }
+        List<String> strValues = values.get(0) instanceof String ?
+                values.stream().map(x -> "\"" + x + "\"").collect(Collectors.toList()) :
+                values.stream().map(x -> x + "").collect(Collectors.toList());
+        return String.format("%s include all (%s)", key, String.join(",", strValues));
+    }
+
     public String getCond() {
         return condBuffer.toString();
     }

@@ -18,11 +18,12 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.tencent.tcvectordb.model.param.collection;
+package com.tencent.tcvectordb.model.param.collectionView;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencent.tcvectordb.exception.ParamException;
-import com.tencent.tcvectordb.model.Collection;
+import com.tencent.tcvectordb.model.CollectionView;
+import com.tencent.tcvectordb.model.param.collection.IndexField;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -32,15 +33,17 @@ import java.util.List;
  * Create Collection Param
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class CreateCollectionParam extends Collection {
+public class CreateCollectionViewParam extends CollectionView {
 
-    private CreateCollectionParam(Builder builder) {
-        this.collection = builder.name;
-        this.replicaNum = builder.replicaNum;
-        this.shardNum = builder.shardNum;
+    private CreateCollectionViewParam(Builder builder) {
+        this.collectionView = builder.name;
         this.description = builder.description;
-        this.indexes = builder.indexes;
+        this.splitterPreprocess = builder.splitterPreprocess;
         this.embedding = builder.embedding;
+        this.indexes = builder.indexes;
+    }
+    public SplitterPreprocessParams getSplitterPreprocess() {
+        return splitterPreprocess;
     }
 
     public static Builder newBuilder() {
@@ -49,12 +52,11 @@ public class CreateCollectionParam extends Collection {
 
     public static class Builder {
         private String name;
-        private int replicaNum = 2;
-        private int shardNum = 1;
         private String description;
-
-        private Embedding embedding;
         private final List<IndexField> indexes;
+        private SplitterPreprocessParams splitterPreprocess;
+
+        private EmbeddingParams embedding;
 
         private Builder() {
             this.indexes = new ArrayList<>();
@@ -62,16 +64,6 @@ public class CreateCollectionParam extends Collection {
 
         public Builder withName(String name) {
             this.name = name;
-            return this;
-        }
-
-        public Builder withReplicaNum(int replicaNum) {
-            this.replicaNum = replicaNum;
-            return this;
-        }
-
-        public Builder withShardNum(int shardNum) {
-            this.shardNum = shardNum;
             return this;
         }
 
@@ -84,20 +76,21 @@ public class CreateCollectionParam extends Collection {
             this.indexes.add(field);
             return this;
         }
-
-        public Builder withEmbedding(Embedding embedding) {
+        public Builder withEmbedding(EmbeddingParams embedding) {
             this.embedding = embedding;
             return this;
         }
 
-        public CreateCollectionParam build() throws ParamException {
+        public Builder withSplitterPreprocess(SplitterPreprocessParams documentPreprocess) {
+            this.splitterPreprocess = documentPreprocess;
+            return this;
+        }
+
+        public CreateCollectionViewParam build() throws ParamException {
             if (StringUtils.isEmpty(this.name)) {
                 throw new ParamException("ConnectParam error: name is null");
             }
-            if (this.indexes.isEmpty()) {
-                throw new ParamException("ConnectParam error: indexes is empty");
-            }
-            return new CreateCollectionParam(this);
+            return new CreateCollectionViewParam(this);
         }
     }
 

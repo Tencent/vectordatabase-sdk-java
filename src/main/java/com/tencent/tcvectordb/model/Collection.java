@@ -33,6 +33,7 @@ import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.BaseRes;
 import com.tencent.tcvectordb.model.param.entity.SearchRes;
+import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.Stub;
 import com.tencent.tcvectordb.service.param.*;
@@ -45,26 +46,22 @@ import java.util.List;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Collection {
-
+public class Collection{
     @JsonIgnore
     private Stub stub;
-    protected String database;
+    private String database;
     protected String collection;
     protected int replicaNum = 2;
     protected int shardNum = 1;
     protected String description;
     protected List<IndexField> indexes;
-    protected String createTime;
-    protected Embedding embedding;
+    private String createTime;
     @JsonIgnore
     protected ReadConsistencyEnum readConsistency;
     private long documentCount;
-    private IndexStatus indexStatus;
+    private Collection.IndexStatus indexStatus;
     private List<String> alias;
-
-    protected Collection() {
-    }
+    protected Embedding embedding;
 
     public void setStub(Stub stub) {
         this.stub = stub;
@@ -102,15 +99,11 @@ public class Collection {
         return createTime;
     }
 
-    public Embedding getEmbedding() {
-        return embedding;
-    }
-
     public long getDocumentCount() {
         return documentCount;
     }
 
-    public IndexStatus getIndexStatus() {
+    public Collection.IndexStatus getIndexStatus() {
         return indexStatus;
     }
 
@@ -126,8 +119,17 @@ public class Collection {
         this.readConsistency = readConsistency;
     }
 
+    public Embedding getEmbedding() {
+        return embedding;
+    }
+
+    public void setEmbedding(Embedding embedding) {
+        this.embedding = embedding;
+    }
+
     public AffectRes upsert(InsertParam param) throws VectorDBException {
-        InsertParamInner insertParam = new InsertParamInner(database, collection, param);
+        InsertParamInner insertParam = new InsertParamInner(
+                database, collection, param);
         return this.stub.upsertDocument(insertParam);
     }
 
@@ -138,17 +140,17 @@ public class Collection {
 
     public List<List<Document>> search(SearchByVectorParam param) throws VectorDBException {
         return this.stub.searchDocument(new SearchParamInner(
-                database, collection, param, this.readConsistency)).getDocuments();
+                database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE).getDocuments();
     }
 
     public List<List<Document>> searchById(SearchByIdParam param) throws VectorDBException {
         return this.stub.searchDocument(new SearchParamInner(
-                database, collection, param, this.readConsistency)).getDocuments();
+                database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE).getDocuments();
     }
 
     public SearchRes searchByEmbeddingItems(SearchByEmbeddingItemsParam param) throws VectorDBException {
         return this.stub.searchDocument(new SearchParamInner(
-                database, collection, param, this.readConsistency));
+                database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE);
     }
 
     public AffectRes delete(DeleteParam param) throws VectorDBException {
@@ -162,7 +164,7 @@ public class Collection {
     }
 
     public BaseRes rebuildIndex(RebuildIndexParam rebuildIndexParam) {
-        return this.stub.rebuildIndex(new RebuildIndexParamInner(this.database, this.collection, rebuildIndexParam));
+        return this.stub.rebuildIndex(new RebuildIndexParamInner(database, collection, rebuildIndexParam));
     }
 
     @Override

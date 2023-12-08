@@ -26,7 +26,6 @@ public class JsonUtils {
 
     static {
         DESERIALIZE_IGNORE_KEY_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
         DESERIALIZE_IGNORE_KEY_MAPPER.setDateFormat(new SimpleDateFormat(DATE_FORMAT_STR_ISO8601_CH));
         PARAMS_DESERIALIZE_MAPPER.setDateFormat(new SimpleDateFormat(DATE_FORMAT_STR_ISO8601_CH));
 
@@ -102,6 +101,7 @@ public class JsonUtils {
         try {
             return PARAMS_DESERIALIZE_MAPPER.readValue(jsonStr, clz);
         } catch (JsonProcessingException e) {
+            System.out.println(e);
             throw new ParamException(String.format(
                     "can't parse content=%s", jsonStr));
         }

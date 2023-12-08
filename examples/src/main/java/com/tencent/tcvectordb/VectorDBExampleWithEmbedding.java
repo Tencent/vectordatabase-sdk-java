@@ -44,8 +44,8 @@ import static com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum.BGE_BA
 public class VectorDBExampleWithEmbedding {
 
     private static final String DBNAME = "book";
-    private static final String COLL_NAME = "book_segments";
-    private static final String COLL_NAME_ALIAS = "collection_alias";
+    private static final String COLL_NAME = "book_segments_2";
+    private static final String COLL_NAME_ALIAS = "collection_alias_2";
 
     public static void example() throws InterruptedException {
         // 创建VectorDB Client
@@ -388,10 +388,11 @@ public class VectorDBExampleWithEmbedding {
 
 
     private static void clear(VectorDBClient client) {
-        List<String> databases = client.listDatabase();
-        for (String database : databases) {
-            client.dropDatabase(database);
-        }
+//        List<String> databases = client.listDatabase();
+//        for (String database : databases) {
+//            client.dropDatabase(database);
+//        }
+        client.dropDatabase(DBNAME);
     }
 
 
@@ -445,8 +446,8 @@ public class VectorDBExampleWithEmbedding {
     private static CreateCollectionParam initCreateEmbeddingCollectionParam(String collName) {
         return CreateCollectionParam.newBuilder()
                 .withName(collName)
-                .withShardNum(3)
-                .withReplicaNum(2)
+                .withShardNum(2)
+                .withReplicaNum(0)
                 .withDescription("test embedding collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", BGE_BASE_ZH.getDimension(), IndexType.HNSW,

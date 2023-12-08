@@ -24,7 +24,7 @@ You can use **Apache Maven** or **Gradle**/**Grails** to download the SDK.
         <dependency>
             <groupId>com.tencent.tcvectordb</groupId>
             <artifactId>vectordatabase-sdk-java</artifactId>
-            <version>1.0.4</version>
+            <version>1.1.0</version>
         </dependency>
        ```
 

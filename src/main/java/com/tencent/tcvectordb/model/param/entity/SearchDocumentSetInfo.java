@@ -23,6 +23,10 @@ public class SearchDocumentSetInfo {
     }
 
     public Map<String, Object> getDocKeyValue() {
+        if (Objects.isNull(docFields) || docFields.isEmpty()) {
+            return null;
+        }
+        ensureDocKeyValue();
         return docKeyValue;
     }
 

@@ -246,6 +246,10 @@ public class CollectionView {
         this.stub.upload(database, collectionView, loadAndSplitTextParam, metaDataMap);
     }
 
+    public void loadAndSplitText(LoadAndSplitTextParam loadAndSplitTextParam) throws Exception {
+        this.stub.upload(database, collectionView, loadAndSplitTextParam, Collections.EMPTY_MAP);
+    }
+
     public DocumentFileContent getFile(String fileName, String fileId) {
         return this.stub.getFile(database, collectionView, fileName, fileId).getDocumentSet();
     }

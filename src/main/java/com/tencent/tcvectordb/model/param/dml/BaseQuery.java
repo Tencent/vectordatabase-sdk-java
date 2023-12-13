@@ -52,5 +52,15 @@ public abstract class BaseQuery {
             this.documentIds.addAll(documentIds);
             return self();
         }
+
+        public T addAllDocumentId(String... documentIds) {
+            if(documentIds.length<1){
+                return self();
+            }
+            for (String documentId : documentIds) {
+                this.documentIds.add(documentId);
+            }
+            return self();
+        }
     }
 }

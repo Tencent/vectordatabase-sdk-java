@@ -488,8 +488,11 @@ public class HttpStub implements Stub {
             metadata.addUserMetadata("data", metaJson);
         }
         if (loadAndSplitTextParam.getSplitterProcess()!=null){
-            metadata.addUserMetadata("append_title_to_chunk", String.valueOf(loadAndSplitTextParam.getSplitterProcess().isAppendTitleToChunk()));
-            metadata.addUserMetadata("append_keywords_to_chunk", String.valueOf(loadAndSplitTextParam.getSplitterProcess().isAppendKeywordsToChunk()));
+            Map<String, Boolean> config = new HashMap<>();
+            config.put("append_title_to_chunk", loadAndSplitTextParam.getSplitterProcess().isAppendTitleToChunk());
+            config.put("append_keywords_to_chunk", loadAndSplitTextParam.getSplitterProcess().isAppendKeywordsToChunk());
+            metadata.addUserMetadata("config", URLEncoder.encode(Base64.getEncoder().encodeToString(JsonUtils.toJsonString(config).getBytes(StandardCharsets.UTF_8)),
+                    String.valueOf(StandardCharsets.UTF_8)));
         }
 
         if (JsonUtils.toJsonString(metadata).length()>2048){

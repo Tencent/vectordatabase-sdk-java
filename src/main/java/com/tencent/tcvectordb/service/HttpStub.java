@@ -481,11 +481,13 @@ public class HttpStub implements Stub {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.addUserMetadata("fileType", fileType.getDataFileType());
         metadata.addUserMetadata("id", uploadUrlRes.getDocumentSetId());
-        if (metaDataMap!=null && !metaDataMap.isEmpty()){
-            String metaJson = URLEncoder.encode(Base64.getEncoder().encodeToString(JsonUtils.toJsonString(metaDataMap).getBytes(StandardCharsets.UTF_8)),
-                    String.valueOf(StandardCharsets.UTF_8));
-            metadata.addUserMetadata("data", metaJson);
+        if (metaDataMap==null || metaDataMap.isEmpty()){
+            metaDataMap = new HashMap<>();
         }
+        String metaJson = URLEncoder.encode(Base64.getEncoder().encodeToString(JsonUtils.toJsonString(metaDataMap).getBytes(StandardCharsets.UTF_8)),
+                String.valueOf(StandardCharsets.UTF_8));
+        metadata.addUserMetadata("data", metaJson);
+
         if (JsonUtils.toJsonString(metadata).length()>2048){
             throw new VectorDBException("cos header for param MetaData is too large, it can not be more than 2k");
         }

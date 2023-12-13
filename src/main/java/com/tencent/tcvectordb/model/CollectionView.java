@@ -243,7 +243,7 @@ public class CollectionView {
     }
 
     public void loadAndSplitText(LoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
-        this.stub.upload(database, collectionView,  loadAndSplitTextParam.getDocumentSetName(), loadAndSplitTextParam.getLocalFilePath(),metaDataMap);
+        this.stub.upload(database, collectionView, loadAndSplitTextParam, metaDataMap);
     }
 
     public DocumentFileContent getFile(String fileName, String fileId) {

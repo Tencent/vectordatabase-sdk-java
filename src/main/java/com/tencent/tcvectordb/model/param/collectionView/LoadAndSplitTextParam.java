@@ -5,10 +5,12 @@ import com.tencent.tcvectordb.model.DocumentSet;
 public class LoadAndSplitTextParam {
     private String localFilePath;
     private String documentSetName;
+    private SplitterPreprocessParams splitterProcess;
 
     public LoadAndSplitTextParam(Builder builder) {
         this.localFilePath = builder.localFilePath;
         this.documentSetName = builder.documentSetName;
+        this.splitterProcess = builder.splitterProcess;
     }
 
     public String getLocalFilePath() {
@@ -27,12 +29,21 @@ public class LoadAndSplitTextParam {
         this.documentSetName = documentSetName;
     }
 
+    public SplitterPreprocessParams getSplitterProcess() {
+        return splitterProcess;
+    }
+
+    public void setSplitterProcess(SplitterPreprocessParams splitterProcess) {
+        this.splitterProcess = splitterProcess;
+    }
+
     public static Builder newBuilder() {
         return new Builder();
     }
     public static class Builder{
         private String localFilePath;
         private String documentSetName;
+        private SplitterPreprocessParams splitterProcess;
 
         public Builder withLocalFilePath(String localFilePath){
             this.localFilePath = localFilePath;
@@ -41,6 +52,11 @@ public class LoadAndSplitTextParam {
 
         public Builder withDocumentSetName(String documentSetName){
             this.documentSetName = documentSetName;
+            return this;
+        }
+
+        public Builder withSplitterProcess(SplitterPreprocessParams splitterProcess){
+            this.splitterProcess = splitterProcess;
             return this;
         }
 

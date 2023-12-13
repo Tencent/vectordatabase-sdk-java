@@ -31,7 +31,7 @@ You can use **Apache Maven** or **Gradle**/**Grails** to download the SDK.
    - Gradle/Grails
 
         ```gradle
-        compile 'com.tencent.tcvectordb:vectordatabase-sdk-java:1.1.0'
+        compile 'com.tencent.tcvectordb:vectordatabase-sdk-java:1.1.1'
         ```
 
 ### Examples

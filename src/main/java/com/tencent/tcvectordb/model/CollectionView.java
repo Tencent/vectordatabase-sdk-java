@@ -227,7 +227,7 @@ public class CollectionView {
     public AffectRes deleteByDocumentSetName(String documentSetName) throws VectorDBException {
         return this.stub.deleteAIDocument(
                 new CollectionViewDeleteParamInner(database, collectionView,
-                        CollectionViewConditionParam.newBuilder().withDocumentSetIds(Arrays.asList(documentSetName)).build()));
+                        CollectionViewConditionParam.newBuilder().withDocumentSetNames(Arrays.asList(documentSetName)).build()));
     }
 
     public AffectRes deleteByDocumentSetId(String documentSetId) throws VectorDBException {
@@ -243,7 +243,13 @@ public class CollectionView {
     }
 
     public void loadAndSplitText(LoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
-        this.stub.upload(database, collectionView,  loadAndSplitTextParam.getDocumentSetName(), loadAndSplitTextParam.getLocalFilePath(),metaDataMap);
+        this.stub.upload(database, collectionView,  loadAndSplitTextParam.getDocumentSetName(), loadAndSplitTextParam.getLocalFilePath(),
+                metaDataMap);
+    }
+
+    public void loadAndSplitText(LoadAndSplitTextParam loadAndSplitTextParam) throws Exception {
+        this.stub.upload(database, collectionView,  loadAndSplitTextParam.getDocumentSetName(), loadAndSplitTextParam.getLocalFilePath(),
+                Collections.EMPTY_MAP);
     }
 
     public DocumentFileContent getFile(String fileName, String fileId) {

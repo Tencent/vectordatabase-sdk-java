@@ -3,6 +3,7 @@ package com.tencent.tcvectordb.model.param.dml;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.Arrays;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -35,6 +36,22 @@ public class CollectionViewConditionParam {
 
         public Builder withDocumentSetNames(List<String> documentSetNames) {
             this.documentSetNames = documentSetNames;
+            return this;
+        }
+
+        public Builder withDocumentSetIds(String... documentSetIds) {
+            if (documentSetIds == null || documentSetIds.length == 0) {
+                return this;
+            }
+            this.documentSetIds = Arrays.asList(documentSetIds);
+            return this;
+        }
+
+        public Builder withDocumentSetNames(String... documentSetNames) {
+            if (documentSetNames == null || documentSetNames.length == 0) {
+                return this;
+            }
+            this.documentSetNames = Arrays.asList(documentSetNames);
             return this;
         }
 

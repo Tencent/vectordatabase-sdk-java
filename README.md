@@ -6,7 +6,7 @@ Java SDK for [Tencent Cloud VectorDB](https://cloud.tencent.com/product/vdb).
 
 ### Docs
  - [Create database instance](https://cloud.tencent.com/document/product/1709/94951)
- - [API Docs](https://cloud.tencent.com/document/product/1709/95112)
+ - [API Docs](https://cloud.tencent.com/document/product/1709/97768)
 
 
 ### Prerequisites

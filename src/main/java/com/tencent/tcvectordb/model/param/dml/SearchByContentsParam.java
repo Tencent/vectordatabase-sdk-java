@@ -23,6 +23,7 @@ package com.tencent.tcvectordb.model.param.dml;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencent.tcvectordb.exception.ParamException;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -126,6 +127,13 @@ public class SearchByContentsParam {
             return this;
         }
 
+        public Builder withDocumentSetName(String... documentSetName) {
+            if (documentSetName == null || documentSetName.length == 0) {
+                return this;
+            }
+            this.documentSetName = Arrays.asList(documentSetName);
+            return this;
+        }
 
         public SearchByContentsParam build() {
             if (content.isEmpty()) {

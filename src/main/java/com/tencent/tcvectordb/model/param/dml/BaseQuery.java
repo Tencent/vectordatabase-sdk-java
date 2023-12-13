@@ -1,6 +1,7 @@
 package com.tencent.tcvectordb.model.param.dml;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class BaseQuery {
@@ -50,6 +51,14 @@ public abstract class BaseQuery {
 
         public T addAllDocumentId(List<String> documentIds) {
             this.documentIds.addAll(documentIds);
+            return self();
+        }
+
+        public T addAllDocumentId(String... documentIds) {
+            if(documentIds==null || documentIds.length==0) {
+                return self();
+            }
+            this.documentIds.addAll(Arrays.asList(documentIds));
             return self();
         }
     }

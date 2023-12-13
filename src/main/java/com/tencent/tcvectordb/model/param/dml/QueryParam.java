@@ -23,6 +23,7 @@ package com.tencent.tcvectordb.model.param.dml;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -118,11 +119,18 @@ public class QueryParam extends BaseQuery {
             return this;
         }
 
+        public Builder addAllOutputFields(String... outputFields) {
+            if(outputFields == null || outputFields.length==0) {
+                return self();
+            }
+            this.outputFields.addAll(Arrays.asList(outputFields));
+            return self();
+        }
+
         public Builder withOutputFields(List<String> outputFields) {
             this.outputFields = outputFields;
             return this;
         }
-
 
         public QueryParam build() {
             return new QueryParam(this);

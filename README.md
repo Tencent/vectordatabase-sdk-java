@@ -6,7 +6,7 @@ Java SDK for [Tencent Cloud VectorDB](https://cloud.tencent.com/product/vdb).
 
 ### Docs
  - [Create database instance](https://cloud.tencent.com/document/product/1709/94951)
- - [API Docs](https://cloud.tencent.com/document/product/1709/95112)
+ - [API Docs](https://cloud.tencent.com/document/product/1709/97768)
 
 
 ### Prerequisites
@@ -24,14 +24,14 @@ You can use **Apache Maven** or **Gradle**/**Grails** to download the SDK.
         <dependency>
             <groupId>com.tencent.tcvectordb</groupId>
             <artifactId>vectordatabase-sdk-java</artifactId>
-            <version>1.1.0</version>
+            <version>1.1.1</version>
         </dependency>
        ```
 
    - Gradle/Grails
 
         ```gradle
-        compile 'com.tencent.tcvectordb:vectordatabase-sdk-java:1.1.0'
+        compile 'com.tencent.tcvectordb:vectordatabase-sdk-java:1.1.1'
         ```
 
 ### Examples

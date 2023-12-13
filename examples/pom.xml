@@ -4,7 +4,7 @@
 
     <groupId>com.tencent.tcvectordb</groupId>
     <artifactId>vectordatabase-sdk-java-examples</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <packaging>jar</packaging>
 
     <name>vectordatabase-sdk-java-examples</name>

@@ -442,8 +442,7 @@ public class HttpStub implements Stub {
         params.put("collectionView", collectionViewName);
         if (documentSetName != null) {
             params.put("documentSetName", documentSetName);
-        }
-        if (fileName!=null) {
+        }else if (fileName!=null) {
             params.put("documentSetName", fileName);
         }
         if (fileType!=null) {

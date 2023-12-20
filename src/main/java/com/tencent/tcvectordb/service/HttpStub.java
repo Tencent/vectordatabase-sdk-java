@@ -437,9 +437,19 @@ public class HttpStub implements Stub {
 
     public UploadUrlRes getUploadUrl(String databaseName, String collectionViewName, String documentSetName, String fileName, String fileType) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_UPLOADER_URL);
-        String body = String.format("{\"database\":\"%s\",\"collectionView\":\"%s\", \"documentSetName\":\"%s\", \"fileName\":\"%s\"," +
-                        "\"fileType\":\"%s\"}",
-                databaseName, collectionViewName, documentSetName, fileName, fileType);
+        Map<String, String> params = new HashMap<>();
+        params.put("database", databaseName);
+        params.put("collectionView", collectionViewName);
+        if (documentSetName != null) {
+            params.put("documentSetName", documentSetName);
+        }
+        if (fileName!=null) {
+            params.put("documentSetName", fileName);
+        }
+        if (fileType!=null) {
+            params.put("fileType", fileType);
+        }
+        String body = JsonUtils.toJsonString(params);
         JsonNode jsonNode = this.post(url, body);
         return JsonUtils.collectionDeserializer(jsonNode.toString(), new TypeReference<UploadUrlRes>() {});
     }

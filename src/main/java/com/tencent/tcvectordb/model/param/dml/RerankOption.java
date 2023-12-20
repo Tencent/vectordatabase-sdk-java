@@ -1,23 +1,30 @@
 package com.tencent.tcvectordb.model.param.dml;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RerankOption {
-    private boolean enable;
-    private double expectRecallMultiples;
+    private Boolean enable;
+    private Double expectRecallMultiples;
 
     public RerankOption(boolean enable, double expectRecallMultiples) {
         this.enable = enable;
         this.expectRecallMultiples = expectRecallMultiples;
     }
 
-    public boolean isEnable() {
-        return enable;
-    }
-
-    public void setEnable(boolean enable) {
+    public RerankOption(boolean enable) {
         this.enable = enable;
     }
 
-    public double getExpectRecallMultiples() {
+    public Boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(Boolean enable) {
+        this.enable = enable;
+    }
+
+    public Double getExpectRecallMultiples() {
         return expectRecallMultiples;
     }
 

@@ -1,16 +1,21 @@
 package com.tencent.tcvectordb.model.param.collectionView;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencent.tcvectordb.model.DocumentSet;
 
+
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class EmbeddingParams {
     private String language;
-    private boolean enableWordsEmbedding;
+    private Boolean enableWordsEmbedding;
 
     public EmbeddingParams() {
     }
 
     public EmbeddingParams(Builder builder) {
-        this.language = builder.language.getValue();
+        if(builder.language != null) {
+            this.language = builder.language.getValue();
+        }
         this.enableWordsEmbedding = builder.enableWordEmbedding;
     }
 
@@ -22,7 +27,7 @@ public class EmbeddingParams {
         this.language = language.getValue();
     }
 
-    public boolean isEnableWordsEmbedding() {
+    public Boolean isEnableWordsEmbedding() {
         return enableWordsEmbedding;
     }
 
@@ -35,7 +40,7 @@ public class EmbeddingParams {
     }
     public static class Builder{
         private LanuageType language;
-        private boolean enableWordEmbedding;
+        private Boolean enableWordEmbedding;
 
         public Builder withLanguage(LanuageType language){
             this.language = language;

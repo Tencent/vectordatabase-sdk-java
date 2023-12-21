@@ -16,6 +16,7 @@ import com.tencent.tcvectordb.model.*;
 import com.tencent.tcvectordb.model.Collection;
 import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.collectionView.CreateCollectionViewParam;
+import com.tencent.tcvectordb.model.param.collectionView.LoadAndSplitTextParam;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
@@ -454,8 +455,8 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public void upload(String databaseName, String collectionViewName, String documentSetName, String filePath, Map<String, Object> metaDataMap) throws Exception{
-        File file = new File(filePath);
+    public void upload(String databaseName, String collectionViewName, LoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception{
+        File file = new File(loadAndSplitTextParam.getLocalFilePath());
         if (!file.exists() || !file.isFile()){
             throw new VectorDBException("file is not existed");
         }
@@ -468,7 +469,7 @@ public class HttpStub implements Stub {
         if(fileType == FileTypeEnum.UNSUPPORT){
             throw new VectorDBException("only markdown file can upload");
         }
-        UploadUrlRes uploadUrlRes = getUploadUrl(databaseName, collectionViewName, documentSetName, file.getName(), fileType.getDataFileType());
+        UploadUrlRes uploadUrlRes = getUploadUrl(databaseName, collectionViewName, loadAndSplitTextParam.getDocumentSetName(), file.getName(), fileType.getDataFileType());
         if(uploadUrlRes.getCredentials()==null || uploadUrlRes.getCredentials().getTmpSecretId().equals("") || uploadUrlRes.getUploadCondition()==null
                 || uploadUrlRes.getUploadCondition().getMaxSupportContentLength()==0){
             throw new VectorDBException("get file upload url failed");
@@ -476,7 +477,7 @@ public class HttpStub implements Stub {
 
         if (file.length()> uploadUrlRes.getUploadCondition().getMaxSupportContentLength()){
             throw new VectorDBException(String.format("%s fileSize is invalid, support max content length is %d bytes",
-                    filePath, uploadUrlRes.getUploadCondition().getMaxSupportContentLength()));
+                    loadAndSplitTextParam.getLocalFilePath(), uploadUrlRes.getUploadCondition().getMaxSupportContentLength()));
         }
         String uploadPath = uploadUrlRes.getUploadPath();
         String bucket = uploadUrlRes.getCosBucket();
@@ -496,6 +497,14 @@ public class HttpStub implements Stub {
         String metaJson = URLEncoder.encode(Base64.getEncoder().encodeToString(JsonUtils.toJsonString(metaDataMap).getBytes(StandardCharsets.UTF_8)),
                 String.valueOf(StandardCharsets.UTF_8));
         metadata.addUserMetadata("data", metaJson);
+
+        if (loadAndSplitTextParam.getSplitterProcess()!=null){
+            Map<String, Boolean> config = new HashMap<>();
+            config.put("append_title_to_chunk", loadAndSplitTextParam.getSplitterProcess().isAppendTitleToChunk());
+            config.put("append_keywords_to_chunk", loadAndSplitTextParam.getSplitterProcess().isAppendKeywordsToChunk());
+            metadata.addUserMetadata("config", URLEncoder.encode(Base64.getEncoder().encodeToString(JsonUtils.toJsonString(config).getBytes(StandardCharsets.UTF_8)),
+                    String.valueOf(StandardCharsets.UTF_8)));
+        }
 
         if (JsonUtils.toJsonString(metadata).length()>2048){
             throw new VectorDBException("cos header for param MetaData is too large, it can not be more than 2k");

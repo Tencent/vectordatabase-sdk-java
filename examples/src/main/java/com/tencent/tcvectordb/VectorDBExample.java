@@ -31,6 +31,7 @@ import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
+import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -303,8 +304,8 @@ public class VectorDBExample {
                 .addDocField(new DocField("extend", "extendContent"))
                 .addDocField(new DocField("array_test", Arrays.asList("extendContent", "extendContent1")))
                 .build();
-        collection.update(updateParam, updateDoc);
-
+        AffectRes affectRes = collection.update(updateParam, updateDoc);
+        System.out.println(affectRes.toString());
         System.out.println("---------------------- delete ----------------------");
         // delete
         // 1. delete 提供基于[ 主键查询]和[Filter 过滤]的数据删除能力
@@ -351,8 +352,8 @@ public class VectorDBExample {
 
         // truncate 会清除整个 Collection 的数据，包括索引
         System.out.println("---------------------- truncate collection ----------------------");
-        AffectRes affectRes = database.truncateCollections(COLL_NAME);
-        System.out.println("\tres: " + affectRes.toString());
+        AffectRes affectRes1 = database.truncateCollections(COLL_NAME);
+        System.out.println("\tres: " + JsonUtils.toJsonString(affectRes1));
 
         // notice：delete操作可用会有延迟
         Thread.sleep(1000 * 5);

@@ -26,14 +26,15 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.tencent.tcvectordb.exception.VectorDBException;
+import com.tencent.tcvectordb.model.param.dml.BaseQuery;
 import com.tencent.tcvectordb.model.param.dml.CollectionViewConditionParam;
+import com.tencent.tcvectordb.model.param.dml.QueryParam;
 import com.tencent.tcvectordb.model.param.dml.SearchByContentsParam;
-import com.tencent.tcvectordb.model.param.entity.AffectRes;
-import com.tencent.tcvectordb.model.param.entity.DocumentSetInfo;
-import com.tencent.tcvectordb.model.param.entity.SearchContentInfo;
+import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.Stub;
 import com.tencent.tcvectordb.service.param.CollectionViewDeleteParamInner;
+import com.tencent.tcvectordb.service.param.CollectionViewQueryParamInner;
 import com.tencent.tcvectordb.service.param.SearchDocParamInner;
 import com.tencent.tcvectordb.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -91,6 +92,18 @@ public class DocumentSet {
         param.setDocumentSetName(Arrays.asList(documentSetName));
         return this.stub.searchAIDocument(new SearchDocParamInner(
                 database, collectionViewName, param, readConsistency)).getDocuments();
+    }
+
+    public GetChunksRes getChunks() throws VectorDBException {
+        return this.stub.getChunks(database, collectionViewName, documentSetName, documentSetId, null, null);
+    }
+
+    public GetChunksRes getChunks(Integer limit) throws VectorDBException {
+        return this.stub.getChunks(database, collectionViewName, documentSetName, documentSetId, limit, null);
+    }
+
+    public GetChunksRes getChunks(Integer limit, Integer offset) throws VectorDBException {
+        return this.stub.getChunks(database, collectionViewName, documentSetName, documentSetId, limit, offset);
     }
 
     public AffectRes delete() throws VectorDBException {

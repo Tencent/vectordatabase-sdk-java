@@ -56,9 +56,9 @@ public class VectorDBExampleWithAI_doc {
         anySafe(() -> clear(client));
         createDatabaseAndCollection(client);
         Map<String, Object> metaDataMap = new HashMap<>();
-        metaDataMap.put("author", "Tencent");
+        metaDataMap.put("author", "Tencent1");
         metaDataMap.put("tags", Arrays.asList("Embedding","向量","AI"));
-        loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.md", metaDataMap);
+        loadAndSplitText(client, "/Users/anyihao/Downloads/jar/腾讯云向量数据库.md", "腾讯云向量数据库.md", metaDataMap);
         // 解析加载文件需要等待时间
         Thread.sleep(1000 * 10);
 
@@ -153,7 +153,9 @@ public class VectorDBExampleWithAI_doc {
         AIDatabase database = client.aiDatabase(DBNAME);
         CollectionView collection = database.describeCollectionView(COLL_NAME);
         LoadAndSplitTextParam param = LoadAndSplitTextParam.newBuilder()
-                .withLocalFilePath(filePath).withDocumentSetName(documentSetName).Build();
+                .withLocalFilePath(filePath).withDocumentSetName(documentSetName)
+                .withSplitterProcess(SplitterPreprocessParams.newBuilder().withAppendKeywordsToChunkEnum(true).Build())
+                .Build();
         collection.loadAndSplitText(param, metaDataMap);
     }
 
@@ -177,7 +179,7 @@ public class VectorDBExampleWithAI_doc {
         System.out.println("---------------------- query ----------------------");
         CollectionViewQueryParam queryParam = CollectionViewQueryParam.newBuilder().
                 withLimit(2).
-                withFilter(new Filter(Filter.in("author", Arrays.asList("Tencent","tencent"))).
+                withFilter(new Filter(Filter.in("author", Arrays.asList("Tencent1","tencent"))).
                         and(Filter.include("tags", Arrays.asList("AI","Embedding")))).
                 withDocumentSetNames(Arrays.asList("腾讯云向量数据库.md")).
 //                withOutputFields(Arrays.asList("textPrefix", "author", "tags")).
@@ -186,6 +188,10 @@ public class VectorDBExampleWithAI_doc {
         for (DocumentSet doc : qdos) {
             System.out.println("\tres: " + doc.toString());
         }
+
+        System.out.println("---------------------- get chunks ----------------------");
+        System.out.println("get chunks res :");
+        System.out.println(JsonUtils.toJsonString(qdos.get(0).getChunks()));
 
         // search
         // 1. search 用于检索数据

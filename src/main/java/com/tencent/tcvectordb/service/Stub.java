@@ -150,5 +150,8 @@ public interface Stub {
 
     GetDocumentSetRes getFile(String databaseName, String collectionName, String fileName, String fileId);
 
+    GetChunksRes getChunks(String databaseName, String collectionName, String documentSetName, String documentSetId,
+                           Integer limit, Integer offset);
+
     BaseRes rebuildAIIndex(RebuildIndexParamInner param);
 }

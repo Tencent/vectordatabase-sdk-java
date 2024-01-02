@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.model.param.dml.CollectionViewConditionParam;
+import com.tencent.tcvectordb.model.param.dml.CollectionViewQueryParam;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -13,9 +14,9 @@ public class CollectionViewQueryParamInner {
     private String database;
     private String collectionView;
     private ReadConsistencyEnum readConsistency;
-    private CollectionViewConditionParam query;
+    private CollectionViewQueryParam query;
 
-    public CollectionViewQueryParamInner(String database, String collectionView, CollectionViewConditionParam query, ReadConsistencyEnum readConsistency) {
+    public CollectionViewQueryParamInner(String database, String collectionView, CollectionViewQueryParam query, ReadConsistencyEnum readConsistency) {
         this.database = database;
         this.collectionView = collectionView;
         this.readConsistency = readConsistency;
@@ -34,7 +35,7 @@ public class CollectionViewQueryParamInner {
         return readConsistency;
     }
 
-    public CollectionViewConditionParam getQuery() {
+    public CollectionViewQueryParam getQuery() {
         return query;
     }
 

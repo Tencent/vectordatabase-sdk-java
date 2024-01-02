@@ -18,6 +18,7 @@ import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.collectionView.CreateCollectionViewParam;
 import com.tencent.tcvectordb.model.param.collectionView.LoadAndSplitTextParam;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
+import com.tencent.tcvectordb.model.param.dml.CollectionViewQueryParam;
 import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.FileTypeEnum;
@@ -499,9 +500,12 @@ public class HttpStub implements Stub {
         metadata.addUserMetadata("data", metaJson);
 
         if (loadAndSplitTextParam.getSplitterProcess()!=null){
-            Map<String, Boolean> config = new HashMap<>();
-            config.put("append_title_to_chunk", loadAndSplitTextParam.getSplitterProcess().isAppendTitleToChunk());
-            config.put("append_keywords_to_chunk", loadAndSplitTextParam.getSplitterProcess().isAppendKeywordsToChunk());
+            Map<String, Object> config = new HashMap<>();
+            config.put("appendTitleToChunk", loadAndSplitTextParam.getSplitterProcess().isAppendTitleToChunk());
+            config.put("appendKeywordsToChunk", loadAndSplitTextParam.getSplitterProcess().isAppendKeywordsToChunk());
+            if (loadAndSplitTextParam.getSplitterProcess().getChunkSplitter()!=null){
+                config.put("chunkSplitter", loadAndSplitTextParam.getSplitterProcess().getChunkSplitter());
+            }
             metadata.addUserMetadata("config", URLEncoder.encode(Base64.getEncoder().encodeToString(JsonUtils.toJsonString(config).getBytes(StandardCharsets.UTF_8)),
                     String.valueOf(StandardCharsets.UTF_8)));
         }
@@ -554,6 +558,30 @@ public class HttpStub implements Stub {
                     "from search error: can't parse documents=%s", multiDocsNode));
         }
         return res;
+    }
+
+    @Override
+    public GetChunksRes getChunks(String databaseName, String collectionName, String documentSetName, String documentSetId,
+                                  Integer limit, Integer offset) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_GET_CHUNKS);
+        Map<String, Object> params = new HashMap<>();
+        params.put("database", databaseName);
+        params.put("collectionView", collectionName);
+        if (documentSetName != null) {
+            params.put("documentSetName", documentSetName);
+        }
+        if (documentSetId != null ) {
+            params.put("documentSetId", documentSetId);
+        }
+        if (limit!=null) {
+            params.put("limit", limit);
+        }
+        if (offset!=null) {
+            params.put("offset", offset);
+        }
+        String body = JsonUtils.toJsonString(params);
+        JsonNode jsonNode = this.post(url, body);
+        return JsonUtils.collectionDeserializer(jsonNode.toString(), new TypeReference<GetChunksRes>() {});
     }
 
 

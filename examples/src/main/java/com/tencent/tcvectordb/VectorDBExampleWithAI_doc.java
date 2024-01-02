@@ -78,9 +78,9 @@ public class VectorDBExampleWithAI_doc {
         System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
         System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
         return ConnectParam.newBuilder()
-                .withUrl("http://9.135.180.240:8100")
+                .withUrl(System.getProperty("vdb_url"))
                 .withUsername("root")
-                .withKey("W4fBISDn81FEHhPgIgGtxLp2YTD2ZJPRqX1QJjZb")
+                .withKey(System.getProperty("vdb_key"))
                 .withTimeout(100)
                 .build();
     }

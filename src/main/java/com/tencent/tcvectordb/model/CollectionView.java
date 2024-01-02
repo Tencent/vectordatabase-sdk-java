@@ -258,6 +258,18 @@ public class CollectionView {
         return this.stub.rebuildAIIndex(new RebuildIndexParamInner(database, collectionView, rebuildIndexParam));
     }
 
+    public GetChunksRes getChunks(String documentSetName, Integer limit, Integer offset) {
+        return this.stub.getChunks(database, collectionView, documentSetName, null, limit, offset);
+    }
+
+    public GetChunksRes getChunks(String documentSetName) {
+        return this.stub.getChunks(database, collectionView, documentSetName, null, null, null);
+    }
+
+    public GetChunksRes getChunks(String documentSetId, String documentSetName, Integer limit, Integer offset) {
+        return this.stub.getChunks(database, collectionView, documentSetName, documentSetId, limit, offset);
+    }
+
     @Override
     public String toString() {
         ObjectMapper mapper = new ObjectMapper();

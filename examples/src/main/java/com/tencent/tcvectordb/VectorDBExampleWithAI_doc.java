@@ -42,7 +42,7 @@ import java.util.Map;
  */
 public class VectorDBExampleWithAI_doc {
 
-    private static final String DBNAME = "db_test-ai";
+    private static final String DBNAME = "db_test-ai-1";
     private static final String COLL_NAME = "coll-ai-files";
     private static final String COLL_NAME_ALIAS = "alias-coll-ai-files";
 
@@ -54,7 +54,7 @@ public class VectorDBExampleWithAI_doc {
         // 测试前清理环境
         System.out.println("---------------------- clear before test ----------------------");
         anySafe(() -> clear(client));
-        createDatabaseAndCollection(client);
+        createAiDatabaseAndCollection(client);
         Map<String, Object> metaDataMap = new HashMap<>();
         metaDataMap.put("author", "Tencent1");
         metaDataMap.put("tags", Arrays.asList("Embedding","向量","AI"));
@@ -78,9 +78,9 @@ public class VectorDBExampleWithAI_doc {
         System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
         System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
         return ConnectParam.newBuilder()
-                .withUrl(System.getProperty("vdb_url"))
+                .withUrl("http://9.135.180.240:8100")
                 .withUsername("root")
-                .withKey(System.getProperty("vdb_key"))
+                .withKey("W4fBISDn81FEHhPgIgGtxLp2YTD2ZJPRqX1QJjZb")
                 .withTimeout(100)
                 .build();
     }
@@ -99,7 +99,7 @@ public class VectorDBExampleWithAI_doc {
         }
     }
 
-    private static void createDatabaseAndCollection(VectorDBClient client) throws InterruptedException {
+    private static void createAiDatabaseAndCollection(VectorDBClient client) throws InterruptedException {
         // 1. 创建数据库
         System.out.println("---------------------- create AI Database ----------------------");
         AIDatabase db = client.createAIDatabase(DBNAME);
@@ -191,7 +191,7 @@ public class VectorDBExampleWithAI_doc {
 
         System.out.println("---------------------- get chunks ----------------------");
         System.out.println("get chunks res :");
-        System.out.println(JsonUtils.toJsonString(qdos.get(0).getChunks()));
+        System.out.println(JsonUtils.toJsonString(collection.getChunks("腾讯云向量数据库.md")));
 
         // search
         // 1. search 用于检索数据

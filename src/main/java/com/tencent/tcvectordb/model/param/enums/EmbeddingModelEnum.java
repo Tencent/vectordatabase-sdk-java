@@ -7,7 +7,8 @@ public enum EmbeddingModelEnum {
     M3E_BASE("m3e-base", 768),
     TEXT2VEC_LARGE_CHINESE("text2vec-large-chinese", 1024),
     E5_LARGE_V2("e5-large-v2", 1024),
-    MULTILINGUAL_E5_BASE("multilingual-e5-base", 768);
+    MULTILINGUAL_E5_BASE("multilingual-e5-base", 768),
+    BGE_LARGE_ZH("bge-large-zh", 1024);
 
     private final String modelName;
     private final int dimension;

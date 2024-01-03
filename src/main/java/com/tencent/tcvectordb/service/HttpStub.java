@@ -17,6 +17,7 @@ import com.tencent.tcvectordb.model.Collection;
 import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.collectionView.CreateCollectionViewParam;
 import com.tencent.tcvectordb.model.param.collectionView.LoadAndSplitTextParam;
+import com.tencent.tcvectordb.model.param.collectionView.SplitterPreprocessParams;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.CollectionViewQueryParam;
 import com.tencent.tcvectordb.model.param.entity.*;
@@ -750,7 +751,12 @@ public class HttpStub implements Stub {
                 builder.withDocumnetSetName(ele.asText());
             }else if (StringUtils.equals("textPrefix", name)) {
                 builder.withTextPrefix(ele.asText());
-            }else {
+            }else if (StringUtils.equals("splitterPreprocess", name)) {
+                SplitterPreprocessParams splitterPreprocess = mapper.readValue(
+                        ele.toString(), new TypeReference<SplitterPreprocessParams>() {
+                        });
+                builder.withSplitProcess(splitterPreprocess);
+            } else {
                 if (ele.isInt()) {
                     builder.addFilterField(new DocField(name, ele.asInt()));
                 } else if (ele.isLong()) {
@@ -788,7 +794,12 @@ public class HttpStub implements Stub {
                 documentFileContent.setDocumentSetName(ele.asText());
             }else if (StringUtils.equals("text", name)) {
                 documentFileContent.setText(ele.asText());
-            }else {
+            } else if (StringUtils.equals("splitterPreprocess", name)) {
+                SplitterPreprocessParams splitterPreprocess = mapper.readValue(
+                        ele.toString(), new TypeReference<SplitterPreprocessParams>() {
+                        });
+                documentFileContent.setSplitterPreprocess(splitterPreprocess);
+            } else {
                 if (ele.isInt()) {
                     documentFileContent.addFilterField(new DocField(name, ele.asInt()));
                 } else if (ele.isLong()) {

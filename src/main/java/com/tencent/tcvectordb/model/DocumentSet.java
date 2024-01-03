@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.tencent.tcvectordb.exception.VectorDBException;
+import com.tencent.tcvectordb.model.param.collectionView.SplitterPreprocessParams;
 import com.tencent.tcvectordb.model.param.dml.BaseQuery;
 import com.tencent.tcvectordb.model.param.dml.CollectionViewConditionParam;
 import com.tencent.tcvectordb.model.param.dml.QueryParam;
@@ -57,6 +58,15 @@ public class DocumentSet {
     private DocumentSetInfo documentSetInfo;
     private List<DocField> docFields;
     private Map<String, Object> docKeyValue;
+    private SplitterPreprocessParams splitterPreprocess;
+
+    public SplitterPreprocessParams getSplitterPreprocess() {
+        return splitterPreprocess;
+    }
+
+    public void setSplitterPreprocess(SplitterPreprocessParams splitterPreprocess) {
+        this.splitterPreprocess = splitterPreprocess;
+    }
 
     public List<DocField> getDocFields() {
         return docFields;
@@ -155,6 +165,9 @@ public class DocumentSet {
         if (documentSetInfo!=null) {
             node.put("documentSetInfo", JsonUtils.toJsonString(documentSetInfo));
         }
+        if (splitterPreprocess!=null) {
+            node.put("splitterPreprocess", JsonUtils.toJsonString(splitterPreprocess));
+        }
 
         if (docFields != null && !docFields.isEmpty()) {
             for (DocField field : docFields) {
@@ -181,6 +194,7 @@ public class DocumentSet {
         this.documentSetName = builder.documnetSetName;
         this.documentSetId = builder.documentSetId;
         this.textPrefix = builder.textPrefix;
+        this.splitterPreprocess = builder.splitterPreprocess;
     }
 
     public static Builder newBuilder() {
@@ -193,6 +207,7 @@ public class DocumentSet {
         private String textPrefix;
         private DocumentSetInfo documentSetInfo;
         private List<DocField> docFields;
+        private SplitterPreprocessParams splitterPreprocess;
 
         public Builder() {
             this.docFields = new ArrayList<>();
@@ -215,6 +230,11 @@ public class DocumentSet {
 
         public Builder withDocumentSetInfo(DocumentSetInfo documentSetInfo) {
             this.documentSetInfo = documentSetInfo;
+            return this;
+        }
+
+        public Builder withSplitProcess(SplitterPreprocessParams splitterPreprocess) {
+            this.splitterPreprocess = splitterPreprocess;
             return this;
         }
 

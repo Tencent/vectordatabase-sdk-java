@@ -73,9 +73,9 @@ public class VectorDBExampleWithEmbedding {
         System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
         System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
         return ConnectParam.newBuilder()
-                .withUrl("http://lb-7lkdphk6-g0wre6at19x5vluc.clb.ap-guangzhou.tencentclb.com:50000")
+                .withUrl(System.getProperty("vdb_url"))
                 .withUsername("root")
-                .withKey("tz63d5UJZY3OF1SvP1GVwDxWmxzTDIj1LnugRmms")
+                .withKey(System.getProperty("vdb_key"))
                 .withTimeout(30)
                 .build();
     }

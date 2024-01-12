@@ -3,6 +3,7 @@ package com.tencent.tcvectordb.service;
 import com.tencent.tcvectordb.model.*;
 import com.tencent.tcvectordb.model.param.collectionView.CreateCollectionViewParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
+import com.tencent.tcvectordb.model.param.collectionView.LoadAndSplitTextParam;
 import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.service.param.*;
@@ -145,9 +146,12 @@ public interface Stub {
 
     AffectRes updateAIDocument(CollectionViewUpdateParamInner updateParamInner);
 
-    void upload(String databaseName, String collectionName, String documentSetName, String filePath, Map<String, Object> metaDataMap) throws Exception;
+    void upload(String databaseName, String collectionName, LoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception;
 
     GetDocumentSetRes getFile(String databaseName, String collectionName, String fileName, String fileId);
+
+    GetChunksRes getChunks(String databaseName, String collectionName, String documentSetName, String documentSetId,
+                           Integer limit, Integer offset);
 
     BaseRes rebuildAIIndex(RebuildIndexParamInner param);
 }

@@ -243,13 +243,11 @@ public class CollectionView {
     }
 
     public void loadAndSplitText(LoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
-        this.stub.upload(database, collectionView,  loadAndSplitTextParam.getDocumentSetName(), loadAndSplitTextParam.getLocalFilePath(),
-                metaDataMap);
+        this.stub.upload(database, collectionView,  loadAndSplitTextParam, metaDataMap);
     }
 
     public void loadAndSplitText(LoadAndSplitTextParam loadAndSplitTextParam) throws Exception {
-        this.stub.upload(database, collectionView,  loadAndSplitTextParam.getDocumentSetName(), loadAndSplitTextParam.getLocalFilePath(),
-                Collections.EMPTY_MAP);
+        this.stub.upload(database, collectionView,  loadAndSplitTextParam, Collections.EMPTY_MAP);
     }
 
     public DocumentFileContent getFile(String fileName, String fileId) {
@@ -258,6 +256,18 @@ public class CollectionView {
 
     public BaseRes rebuildIndex(RebuildIndexParam rebuildIndexParam) throws VectorDBException {
         return this.stub.rebuildAIIndex(new RebuildIndexParamInner(database, collectionView, rebuildIndexParam));
+    }
+
+    public GetChunksRes getChunks(String documentSetName, Integer limit, Integer offset) {
+        return this.stub.getChunks(database, collectionView, documentSetName, null, limit, offset);
+    }
+
+    public GetChunksRes getChunks(String documentSetName) {
+        return this.stub.getChunks(database, collectionView, documentSetName, null, null, null);
+    }
+
+    public GetChunksRes getChunks(String documentSetId, String documentSetName, Integer limit, Integer offset) {
+        return this.stub.getChunks(database, collectionView, documentSetName, documentSetId, limit, offset);
     }
 
     @Override

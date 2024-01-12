@@ -54,7 +54,7 @@ public class VectorDBExampleWithAI_doc {
         // 测试前清理环境
         System.out.println("---------------------- clear before test ----------------------");
         anySafe(() -> clear(client));
-        createDatabaseAndCollection(client);
+        createAiDatabaseAndCollection(client);
         Map<String, Object> metaDataMap = new HashMap<>();
         metaDataMap.put("author", "Tencent");
         metaDataMap.put("tags", Arrays.asList("Embedding","向量","AI"));
@@ -99,7 +99,7 @@ public class VectorDBExampleWithAI_doc {
         }
     }
 
-    private static void createDatabaseAndCollection(VectorDBClient client) throws InterruptedException {
+    private static void createAiDatabaseAndCollection(VectorDBClient client) throws InterruptedException {
         // 1. 创建数据库
         System.out.println("---------------------- create AI Database ----------------------");
         AIDatabase db = client.createAIDatabase(DBNAME);
@@ -153,7 +153,9 @@ public class VectorDBExampleWithAI_doc {
         AIDatabase database = client.aiDatabase(DBNAME);
         CollectionView collection = database.describeCollectionView(COLL_NAME);
         LoadAndSplitTextParam param = LoadAndSplitTextParam.newBuilder()
-                .withLocalFilePath(filePath).withDocumentSetName(documentSetName).Build();
+                .withLocalFilePath(filePath).withDocumentSetName(documentSetName)
+                .withSplitterProcess(SplitterPreprocessParams.newBuilder().withAppendKeywordsToChunkEnum(true).Build())
+                .Build();
         collection.loadAndSplitText(param, metaDataMap);
     }
 
@@ -172,7 +174,8 @@ public class VectorDBExampleWithAI_doc {
         // 1. query 用于查询数据
         // 2. 可以通过传入主键 id 列表或 filter 实现过滤数据的目的
         // 3. 如果没有主键 id 列表和 filter 则必须传入 limit 和 offset，类似 scan 的数据扫描功能
-        // 4. 如果仅需要部分 field 的数据，可以指定 output_fields 用于指定返回数据包含哪些 field，不指定默认全部返回
+        // 4. 如果需要指定部分documentSetName,可以传入documentSetNames
+        // 5. 如果仅需要部分 field 的数据，可以指定 output_fields 用于指定返回数据包含哪些 field，不指定默认全部返回
         System.out.println("---------------------- query ----------------------");
         CollectionViewQueryParam queryParam = CollectionViewQueryParam.newBuilder().
                 withLimit(2).
@@ -186,7 +189,16 @@ public class VectorDBExampleWithAI_doc {
             System.out.println("\tres: " + doc.toString());
         }
 
+        System.out.println("---------------------- get chunks ----------------------");
+        System.out.println("get chunks res :");
+        System.out.println(JsonUtils.toJsonString(collection.getChunks("腾讯云向量数据库.md")));
+
         // search
+        // 1. search 用于检索数据
+        // 2. content 为必填参数，使用该参数值检索数据与之符合的数据
+        // 3. SearchOption配置搜索参数，开启rerank参数只有collectionView开启词向量精排才能使用
+        // 4. 如果需要指定部分documentSetName,可以传入documentSetNames,检索数据会在传入的documentSetName对应的文件中搜索
+        // 5. 可以通过传入filter实现指定在符合条件的文件中检索
         System.out.println("---------------------- search ----------------------");
 
         SearchOption option = SearchOption.newBuilder().withChunkExpand(Arrays.asList(1,1))
@@ -212,8 +224,8 @@ public class VectorDBExampleWithAI_doc {
         CollectionView collection = database.describeCollectionView(COLL_NAME);
         // update
         // 1. update 提供基于 [主键查询] 和 [Filter 过滤] 的部分字段更新或者非索引字段新增
-
-        // filter 限制仅会更新 条件符合的记录
+        // 2. 如果需要指定部分documentSetName,可以传入documentSetNames,指定更新的数据范围
+        // 3. filter 限制仅会更新 条件符合的记录
         System.out.println("---------------------- update ----------------------");
         Filter filterParam = new Filter("author=\"Tencent\"");
         CollectionViewConditionParam updateParam = CollectionViewConditionParam
@@ -231,11 +243,10 @@ public class VectorDBExampleWithAI_doc {
 
         // delete
         // 1. delete 提供基于[ 主键查询]和[Filter 过滤]的数据删除能力
-        // 2. 删除功能会受限于 collection 的索引类型，部分索引类型不支持删除操作
-
-        //     filter 限制只会删除命中的记录
+        // 2. 如果需要指定部分documentSetName,可以传入documentSetNames,指定删除的数据范围
+        // 3. filter 限制只会删除命中的记录
         System.out.println("---------------------- delete ----------------------");
-        Filter filterParam1 = new Filter("author=\"Tencent\"");
+        Filter filterParam1 = new Filter("author=\"tencent\"");
         CollectionViewConditionParam build = CollectionViewConditionParam
                 .newBuilder()
                 .withDocumentSetNames(Arrays.asList("腾讯云向量数据库.md"))

@@ -42,7 +42,7 @@ import java.util.Map;
  */
 public class VectorDBExampleWithAI_doc {
 
-    private static final String DBNAME = "db_test-ai-1";
+    private static final String DBNAME = "db_test-ai";
     private static final String COLL_NAME = "coll-ai-files";
     private static final String COLL_NAME_ALIAS = "alias-coll-ai-files";
 
@@ -56,9 +56,9 @@ public class VectorDBExampleWithAI_doc {
         anySafe(() -> clear(client));
         createAiDatabaseAndCollection(client);
         Map<String, Object> metaDataMap = new HashMap<>();
-        metaDataMap.put("author", "Tencent1");
+        metaDataMap.put("author", "Tencent");
         metaDataMap.put("tags", Arrays.asList("Embedding","向量","AI"));
-        loadAndSplitText(client, "/Users/anyihao/Downloads/jar/腾讯云向量数据库.md", "腾讯云向量数据库.md", metaDataMap);
+        loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.md", metaDataMap);
         // 解析加载文件需要等待时间
         Thread.sleep(1000 * 10);
 
@@ -179,7 +179,7 @@ public class VectorDBExampleWithAI_doc {
         System.out.println("---------------------- query ----------------------");
         CollectionViewQueryParam queryParam = CollectionViewQueryParam.newBuilder().
                 withLimit(2).
-                withFilter(new Filter(Filter.in("author", Arrays.asList("Tencent1","tencent"))).
+                withFilter(new Filter(Filter.in("author", Arrays.asList("Tencent","tencent"))).
                         and(Filter.include("tags", Arrays.asList("AI","Embedding")))).
                 withDocumentSetNames(Arrays.asList("腾讯云向量数据库.md")).
 //                withOutputFields(Arrays.asList("textPrefix", "author", "tags")).

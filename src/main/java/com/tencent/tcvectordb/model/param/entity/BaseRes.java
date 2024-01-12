@@ -8,6 +8,8 @@ public class BaseRes {
 
     protected int count;
 
+    protected String requestId;
+
     public BaseRes() {
     }
 
@@ -15,6 +17,14 @@ public class BaseRes {
         this.code = code;
         this.msg = msg;
         this.warning = warning;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 
     public int getCode() {

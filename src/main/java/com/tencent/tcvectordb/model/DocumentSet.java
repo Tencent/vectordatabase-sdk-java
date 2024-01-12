@@ -26,14 +26,16 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.tencent.tcvectordb.exception.VectorDBException;
+import com.tencent.tcvectordb.model.param.collectionView.SplitterPreprocessParams;
+import com.tencent.tcvectordb.model.param.dml.BaseQuery;
 import com.tencent.tcvectordb.model.param.dml.CollectionViewConditionParam;
+import com.tencent.tcvectordb.model.param.dml.QueryParam;
 import com.tencent.tcvectordb.model.param.dml.SearchByContentsParam;
-import com.tencent.tcvectordb.model.param.entity.AffectRes;
-import com.tencent.tcvectordb.model.param.entity.DocumentSetInfo;
-import com.tencent.tcvectordb.model.param.entity.SearchContentInfo;
+import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.Stub;
 import com.tencent.tcvectordb.service.param.CollectionViewDeleteParamInner;
+import com.tencent.tcvectordb.service.param.CollectionViewQueryParamInner;
 import com.tencent.tcvectordb.service.param.SearchDocParamInner;
 import com.tencent.tcvectordb.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -56,6 +58,15 @@ public class DocumentSet {
     private DocumentSetInfo documentSetInfo;
     private List<DocField> docFields;
     private Map<String, Object> docKeyValue;
+    private SplitterPreprocessParams splitterPreprocess;
+
+    public SplitterPreprocessParams getSplitterPreprocess() {
+        return splitterPreprocess;
+    }
+
+    public void setSplitterPreprocess(SplitterPreprocessParams splitterPreprocess) {
+        this.splitterPreprocess = splitterPreprocess;
+    }
 
     public List<DocField> getDocFields() {
         return docFields;
@@ -91,6 +102,18 @@ public class DocumentSet {
         param.setDocumentSetName(Arrays.asList(documentSetName));
         return this.stub.searchAIDocument(new SearchDocParamInner(
                 database, collectionViewName, param, readConsistency)).getDocuments();
+    }
+
+    public GetChunksRes getChunks() throws VectorDBException {
+        return this.stub.getChunks(database, collectionViewName, documentSetName, documentSetId, null, null);
+    }
+
+    public GetChunksRes getChunks(Integer limit) throws VectorDBException {
+        return this.stub.getChunks(database, collectionViewName, documentSetName, documentSetId, limit, null);
+    }
+
+    public GetChunksRes getChunks(Integer limit, Integer offset) throws VectorDBException {
+        return this.stub.getChunks(database, collectionViewName, documentSetName, documentSetId, limit, offset);
     }
 
     public AffectRes delete() throws VectorDBException {
@@ -142,6 +165,9 @@ public class DocumentSet {
         if (documentSetInfo!=null) {
             node.put("documentSetInfo", JsonUtils.toJsonString(documentSetInfo));
         }
+        if (splitterPreprocess!=null) {
+            node.put("splitterPreprocess", JsonUtils.toJsonString(splitterPreprocess));
+        }
 
         if (docFields != null && !docFields.isEmpty()) {
             for (DocField field : docFields) {
@@ -168,6 +194,7 @@ public class DocumentSet {
         this.documentSetName = builder.documnetSetName;
         this.documentSetId = builder.documentSetId;
         this.textPrefix = builder.textPrefix;
+        this.splitterPreprocess = builder.splitterPreprocess;
     }
 
     public static Builder newBuilder() {
@@ -180,6 +207,7 @@ public class DocumentSet {
         private String textPrefix;
         private DocumentSetInfo documentSetInfo;
         private List<DocField> docFields;
+        private SplitterPreprocessParams splitterPreprocess;
 
         public Builder() {
             this.docFields = new ArrayList<>();
@@ -202,6 +230,11 @@ public class DocumentSet {
 
         public Builder withDocumentSetInfo(DocumentSetInfo documentSetInfo) {
             this.documentSetInfo = documentSetInfo;
+            return this;
+        }
+
+        public Builder withSplitProcess(SplitterPreprocessParams splitterPreprocess) {
+            this.splitterPreprocess = splitterPreprocess;
             return this;
         }
 

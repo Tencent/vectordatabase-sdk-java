@@ -16,7 +16,10 @@ import com.tencent.tcvectordb.model.*;
 import com.tencent.tcvectordb.model.Collection;
 import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.collectionView.CreateCollectionViewParam;
+import com.tencent.tcvectordb.model.param.collectionView.LoadAndSplitTextParam;
+import com.tencent.tcvectordb.model.param.collectionView.SplitterPreprocessParams;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
+import com.tencent.tcvectordb.model.param.dml.CollectionViewQueryParam;
 import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.FileTypeEnum;
@@ -454,8 +457,8 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public void upload(String databaseName, String collectionViewName, String documentSetName, String filePath, Map<String, Object> metaDataMap) throws Exception{
-        File file = new File(filePath);
+    public void upload(String databaseName, String collectionViewName, LoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception{
+        File file = new File(loadAndSplitTextParam.getLocalFilePath());
         if (!file.exists() || !file.isFile()){
             throw new VectorDBException("file is not existed");
         }
@@ -468,7 +471,7 @@ public class HttpStub implements Stub {
         if(fileType == FileTypeEnum.UNSUPPORT){
             throw new VectorDBException("only markdown file can upload");
         }
-        UploadUrlRes uploadUrlRes = getUploadUrl(databaseName, collectionViewName, documentSetName, file.getName(), fileType.getDataFileType());
+        UploadUrlRes uploadUrlRes = getUploadUrl(databaseName, collectionViewName, loadAndSplitTextParam.getDocumentSetName(), file.getName(), fileType.getDataFileType());
         if(uploadUrlRes.getCredentials()==null || uploadUrlRes.getCredentials().getTmpSecretId().equals("") || uploadUrlRes.getUploadCondition()==null
                 || uploadUrlRes.getUploadCondition().getMaxSupportContentLength()==0){
             throw new VectorDBException("get file upload url failed");
@@ -476,7 +479,7 @@ public class HttpStub implements Stub {
 
         if (file.length()> uploadUrlRes.getUploadCondition().getMaxSupportContentLength()){
             throw new VectorDBException(String.format("%s fileSize is invalid, support max content length is %d bytes",
-                    filePath, uploadUrlRes.getUploadCondition().getMaxSupportContentLength()));
+                    loadAndSplitTextParam.getLocalFilePath(), uploadUrlRes.getUploadCondition().getMaxSupportContentLength()));
         }
         String uploadPath = uploadUrlRes.getUploadPath();
         String bucket = uploadUrlRes.getCosBucket();
@@ -496,6 +499,17 @@ public class HttpStub implements Stub {
         String metaJson = URLEncoder.encode(Base64.getEncoder().encodeToString(JsonUtils.toJsonString(metaDataMap).getBytes(StandardCharsets.UTF_8)),
                 String.valueOf(StandardCharsets.UTF_8));
         metadata.addUserMetadata("data", metaJson);
+
+        if (loadAndSplitTextParam.getSplitterProcess()!=null){
+            Map<String, Object> config = new HashMap<>();
+            config.put("appendTitleToChunk", loadAndSplitTextParam.getSplitterProcess().isAppendTitleToChunk());
+            config.put("appendKeywordsToChunk", loadAndSplitTextParam.getSplitterProcess().isAppendKeywordsToChunk());
+            if (loadAndSplitTextParam.getSplitterProcess().getChunkSplitter()!=null){
+                config.put("chunkSplitter", loadAndSplitTextParam.getSplitterProcess().getChunkSplitter());
+            }
+            metadata.addUserMetadata("config", URLEncoder.encode(Base64.getEncoder().encodeToString(JsonUtils.toJsonString(config).getBytes(StandardCharsets.UTF_8)),
+                    String.valueOf(StandardCharsets.UTF_8)));
+        }
 
         if (JsonUtils.toJsonString(metadata).length()>2048){
             throw new VectorDBException("cos header for param MetaData is too large, it can not be more than 2k");
@@ -545,6 +559,30 @@ public class HttpStub implements Stub {
                     "from search error: can't parse documents=%s", multiDocsNode));
         }
         return res;
+    }
+
+    @Override
+    public GetChunksRes getChunks(String databaseName, String collectionName, String documentSetName, String documentSetId,
+                                  Integer limit, Integer offset) {
+        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_GET_CHUNKS);
+        Map<String, Object> params = new HashMap<>();
+        params.put("database", databaseName);
+        params.put("collectionView", collectionName);
+        if (documentSetName != null) {
+            params.put("documentSetName", documentSetName);
+        }
+        if (documentSetId != null ) {
+            params.put("documentSetId", documentSetId);
+        }
+        if (limit!=null) {
+            params.put("limit", limit);
+        }
+        if (offset!=null) {
+            params.put("offset", offset);
+        }
+        String body = JsonUtils.toJsonString(params);
+        JsonNode jsonNode = this.post(url, body);
+        return JsonUtils.collectionDeserializer(jsonNode.toString(), new TypeReference<GetChunksRes>() {});
     }
 
 
@@ -713,7 +751,12 @@ public class HttpStub implements Stub {
                 builder.withDocumnetSetName(ele.asText());
             }else if (StringUtils.equals("textPrefix", name)) {
                 builder.withTextPrefix(ele.asText());
-            }else {
+            }else if (StringUtils.equals("splitterPreprocess", name)) {
+                SplitterPreprocessParams splitterPreprocess = mapper.readValue(
+                        ele.toString(), new TypeReference<SplitterPreprocessParams>() {
+                        });
+                builder.withSplitProcess(splitterPreprocess);
+            } else {
                 if (ele.isInt()) {
                     builder.addFilterField(new DocField(name, ele.asInt()));
                 } else if (ele.isLong()) {
@@ -751,7 +794,12 @@ public class HttpStub implements Stub {
                 documentFileContent.setDocumentSetName(ele.asText());
             }else if (StringUtils.equals("text", name)) {
                 documentFileContent.setText(ele.asText());
-            }else {
+            } else if (StringUtils.equals("splitterPreprocess", name)) {
+                SplitterPreprocessParams splitterPreprocess = mapper.readValue(
+                        ele.toString(), new TypeReference<SplitterPreprocessParams>() {
+                        });
+                documentFileContent.setSplitterPreprocess(splitterPreprocess);
+            } else {
                 if (ele.isInt()) {
                     documentFileContent.addFilterField(new DocField(name, ele.asInt()));
                 } else if (ele.isLong()) {

@@ -34,6 +34,7 @@ public class ApiPath {
     public final static String AI_DOCUMENT_UPDATE = "/ai/documentSet/update";
     public final static String AI_DOCUMENT_UPLOADER_URL = "/ai/documentSet/uploadUrl";
     public final static String AI_GET_FILE = "/ai/documentSet/get";
+    public final static String AI_DOCUMENT_GET_CHUNKS = "/ai/documentSet/getChunks";
     public final static String AI_ALIAS_SET = "/ai/alias/set";
     public final static String AI_ALIAS_DELETE = "/ai/alias/delete";
     public final static String AI_REBUILD_INDEX = "/ai/index/rebuild";

@@ -2,6 +2,7 @@ package com.tencent.tcvectordb.model.param.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencent.tcvectordb.model.DocField;
+import com.tencent.tcvectordb.model.param.collectionView.SplitterPreprocessParams;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.ArrayList;
@@ -15,6 +16,16 @@ public class DocumentFileContent {
     private DocumentSetInfo documentSetInfo;
 
     private List<DocField> docFields;
+
+    private SplitterPreprocessParams splitterPreprocess;
+
+    public SplitterPreprocessParams getSplitterPreprocess() {
+        return splitterPreprocess;
+    }
+
+    public void setSplitterPreprocess(SplitterPreprocessParams splitterPreprocess) {
+        this.splitterPreprocess = splitterPreprocess;
+    }
 
     public String getDocumentSetName() {
         return documentSetName;

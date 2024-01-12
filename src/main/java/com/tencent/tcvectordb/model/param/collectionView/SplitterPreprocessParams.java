@@ -8,6 +8,7 @@ import com.tencent.tcvectordb.model.param.collection.ParamsSerializer;
 public class SplitterPreprocessParams implements ParamsSerializer {
     private boolean appendTitleToChunk;
     private boolean appendKeywordsToChunk;
+    private String chunkSplitter;
 
     public SplitterPreprocessParams() {
         this.appendTitleToChunk = false;
@@ -17,10 +18,15 @@ public class SplitterPreprocessParams implements ParamsSerializer {
     public SplitterPreprocessParams(Builder builder) {
         this.appendTitleToChunk = builder.appendTitleToChunk;
         this.appendKeywordsToChunk = builder.appendKeywordsToChunk;
+        this.chunkSplitter = builder.chunkSplitter;
     }
 
     public boolean isAppendTitleToChunk() {
         return appendTitleToChunk;
+    }
+
+    public String getChunkSplitter() {
+        return chunkSplitter;
     }
 
     public void setAppendTitleToChunk(boolean appendTitleToChunk) {
@@ -42,6 +48,7 @@ public class SplitterPreprocessParams implements ParamsSerializer {
     public static final class Builder {
         private boolean appendTitleToChunk;
         private boolean appendKeywordsToChunk;
+        private String chunkSplitter;
 
         public Builder withAppendTitleToChunkEnum( boolean appendTitleToChunk) {
             this.appendTitleToChunk = appendTitleToChunk;
@@ -50,6 +57,11 @@ public class SplitterPreprocessParams implements ParamsSerializer {
 
         public Builder withAppendKeywordsToChunkEnum(boolean appendKeywordsToChunk) {
             this.appendKeywordsToChunk = appendKeywordsToChunk;
+            return this;
+        }
+
+        public Builder withChunkSplitter(String ChunkSplitter) {
+            this.chunkSplitter = chunkSplitter;
             return this;
         }
 

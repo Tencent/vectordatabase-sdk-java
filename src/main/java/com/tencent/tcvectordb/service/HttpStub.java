@@ -12,17 +12,15 @@ import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.region.Region;
 import com.tencent.tcvectordb.exception.VectorDBException;
-import com.tencent.tcvectordb.model.*;
 import com.tencent.tcvectordb.model.Collection;
-import com.tencent.tcvectordb.model.param.collection.*;
+import com.tencent.tcvectordb.model.*;
+import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.collectionView.CreateCollectionViewParam;
 import com.tencent.tcvectordb.model.param.collectionView.LoadAndSplitTextParam;
 import com.tencent.tcvectordb.model.param.collectionView.SplitterPreprocessParams;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
-import com.tencent.tcvectordb.model.param.dml.CollectionViewQueryParam;
 import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
-import com.tencent.tcvectordb.model.param.enums.FileTypeEnum;
 import com.tencent.tcvectordb.service.param.*;
 import com.tencent.tcvectordb.utils.FileUtils;
 import com.tencent.tcvectordb.utils.JsonUtils;
@@ -97,7 +95,7 @@ public class HttpStub implements Stub {
     @Override
     public AffectRes dropAIDatabase(AIDatabase aiDatabase) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DB_DROP);
-        JsonNode jsonNode =this.post(url, aiDatabase.toString());
+        JsonNode jsonNode = this.post(url, aiDatabase.toString());
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
@@ -110,7 +108,8 @@ public class HttpStub implements Stub {
             return new ArrayList<>();
         }
         try {
-            return mapper.readValue(dbsJson.toString(), new TypeReference<List<String>>() {});
+            return mapper.readValue(dbsJson.toString(), new TypeReference<List<String>>() {
+            });
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format(
                     "VectorDBServer response error: can't parse databases=%s", dbsJson));
@@ -126,7 +125,8 @@ public class HttpStub implements Stub {
             return new HashMap<>();
         }
         try {
-            return mapper.readValue(dbsJson.toString(), new TypeReference<Map<String, DataBaseType>>() {});
+            return mapper.readValue(dbsJson.toString(), new TypeReference<Map<String, DataBaseType>>() {
+            });
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format(
                     "VectorDBServer response error: can't parse databases=%s", dbsJson));
@@ -153,7 +153,8 @@ public class HttpStub implements Stub {
         if (closJson == null) {
             return new ArrayList<>();
         }
-        return JsonUtils.collectionDeserializer(closJson.toString(), new TypeReference<List<Collection>>() {});
+        return JsonUtils.collectionDeserializer(closJson.toString(), new TypeReference<List<Collection>>() {
+        });
     }
 
 
@@ -167,7 +168,8 @@ public class HttpStub implements Stub {
         if (dbsJson == null) {
             return null;
         }
-        return JsonUtils.collectionDeserializer(dbsJson.toString(), new TypeReference<Collection>() {});
+        return JsonUtils.collectionDeserializer(dbsJson.toString(), new TypeReference<Collection>() {
+        });
     }
 
     @Override
@@ -247,7 +249,7 @@ public class HttpStub implements Stub {
     @Override
     public SearchRes searchDocument(SearchParamInner param, DataBaseTypeEnum dbType) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_SEARCH);
-        if (DataBaseTypeEnum.isAIDataBase(dbType)){
+        if (DataBaseTypeEnum.isAIDataBase(dbType)) {
             url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_SEARCH);
         }
         JsonNode jsonNode = this.post(url, param.toString());
@@ -341,7 +343,8 @@ public class HttpStub implements Stub {
         if (closJson == null) {
             return new ArrayList<>();
         }
-        return JsonUtils.collectionDeserializer(closJson.toString(), new TypeReference<List<CollectionView>>() {});
+        return JsonUtils.collectionDeserializer(closJson.toString(), new TypeReference<List<CollectionView>>() {
+        });
     }
 
     @Override
@@ -354,7 +357,8 @@ public class HttpStub implements Stub {
         if (dbsJson == null) {
             return null;
         }
-        return JsonUtils.collectionDeserializer(dbsJson.toString(), new TypeReference<CollectionView>() {});
+        return JsonUtils.collectionDeserializer(dbsJson.toString(), new TypeReference<CollectionView>() {
+        });
     }
 
     @Override
@@ -438,49 +442,47 @@ public class HttpStub implements Stub {
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
-    public UploadUrlRes getUploadUrl(String databaseName, String collectionViewName, String documentSetName, String fileName, String fileType) {
+    public UploadUrlRes getUploadUrl(String databaseName, String collectionViewName, String documentSetName, String fileName) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_UPLOADER_URL);
         Map<String, String> params = new HashMap<>();
         params.put("database", databaseName);
         params.put("collectionView", collectionViewName);
         if (documentSetName != null) {
             params.put("documentSetName", documentSetName);
-        }else if (fileName!=null) {
+        } else if (fileName != null) {
             params.put("documentSetName", fileName);
-        }
-        if (fileType!=null) {
-            params.put("fileType", fileType);
         }
         String body = JsonUtils.toJsonString(params);
         JsonNode jsonNode = this.post(url, body);
-        return JsonUtils.collectionDeserializer(jsonNode.toString(), new TypeReference<UploadUrlRes>() {});
+        return JsonUtils.collectionDeserializer(jsonNode.toString(), new TypeReference<UploadUrlRes>() {
+        });
     }
 
     @Override
-    public void upload(String databaseName, String collectionViewName, LoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception{
+    public void upload(String databaseName, String collectionViewName, LoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
         File file = new File(loadAndSplitTextParam.getLocalFilePath());
-        if (!file.exists() || !file.isFile()){
+        if (!file.exists() || !file.isFile()) {
             throw new VectorDBException("file is not existed");
         }
 
-        if (file.length()<=0){
+        if (file.length() <= 0) {
             throw new VectorDBException("file is empty");
         }
 
-        FileTypeEnum fileType = FileUtils.getFileType(file);
-        if(fileType == FileTypeEnum.UNSUPPORT){
-            throw new VectorDBException("only markdown file can upload");
-        }
-        UploadUrlRes uploadUrlRes = getUploadUrl(databaseName, collectionViewName, loadAndSplitTextParam.getDocumentSetName(), file.getName(), fileType.getDataFileType());
-        if(uploadUrlRes.getCredentials()==null || uploadUrlRes.getCredentials().getTmpSecretId().equals("") || uploadUrlRes.getUploadCondition()==null
-                || uploadUrlRes.getUploadCondition().getMaxSupportContentLength()==0){
+//        FileTypeEnum fileType = FileUtils.getFileType(file);
+//        if(fileType == FileTypeEnum.UNSUPPORT){
+//            throw new VectorDBException("only markdown file can upload");
+//        }
+        UploadUrlRes uploadUrlRes = getUploadUrl(databaseName, collectionViewName, loadAndSplitTextParam.getDocumentSetName(), file.getName());
+        if (uploadUrlRes.getCredentials() == null || uploadUrlRes.getCredentials().getTmpSecretId().equals("") || uploadUrlRes.getUploadCondition() == null
+                || uploadUrlRes.getUploadCondition().getMaxSupportContentLength() == 0) {
             throw new VectorDBException("get file upload url failed");
         }
 
-        if (file.length()> uploadUrlRes.getUploadCondition().getMaxSupportContentLength()){
-            throw new VectorDBException(String.format("%s fileSize is invalid, support max content length is %d bytes",
-                    loadAndSplitTextParam.getLocalFilePath(), uploadUrlRes.getUploadCondition().getMaxSupportContentLength()));
-        }
+//        if (file.length()> uploadUrlRes.getUploadCondition().getMaxSupportContentLength()){
+//            throw new VectorDBException(String.format("%s fileSize is invalid, support max content length is %d bytes",
+//                    loadAndSplitTextParam.getLocalFilePath(), uploadUrlRes.getUploadCondition().getMaxSupportContentLength()));
+//        }
         String uploadPath = uploadUrlRes.getUploadPath();
         String bucket = uploadUrlRes.getCosBucket();
         String region = uploadUrlRes.getCosRegion();
@@ -491,27 +493,35 @@ public class HttpStub implements Stub {
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, uploadPath, file);
 
         ObjectMetadata metadata = new ObjectMetadata();
-        metadata.addUserMetadata("fileType", fileType.getDataFileType());
+        String fileType = FileUtils.getFileType(file);
+
+        if (!"md".equals(fileType) &&
+                Objects.nonNull(loadAndSplitTextParam.getSplitterProcess()) &&
+                StringUtils.isNotBlank(loadAndSplitTextParam.getSplitterProcess().getChunkSplitter())) {
+            logger.warn("only markdown files are allowed to use chunkSplitter");
+        }
+
+        metadata.addUserMetadata("fileType", fileType);
         metadata.addUserMetadata("id", uploadUrlRes.getDocumentSetId());
-        if (metaDataMap==null || metaDataMap.isEmpty()){
+        if (metaDataMap == null || metaDataMap.isEmpty()) {
             metaDataMap = new HashMap<>();
         }
         String metaJson = URLEncoder.encode(Base64.getEncoder().encodeToString(JsonUtils.toJsonString(metaDataMap).getBytes(StandardCharsets.UTF_8)),
                 String.valueOf(StandardCharsets.UTF_8));
         metadata.addUserMetadata("data", metaJson);
 
-        if (loadAndSplitTextParam.getSplitterProcess()!=null){
+        if (loadAndSplitTextParam.getSplitterProcess() != null) {
             Map<String, Object> config = new HashMap<>();
             config.put("appendTitleToChunk", loadAndSplitTextParam.getSplitterProcess().isAppendTitleToChunk());
             config.put("appendKeywordsToChunk", loadAndSplitTextParam.getSplitterProcess().isAppendKeywordsToChunk());
-            if (loadAndSplitTextParam.getSplitterProcess().getChunkSplitter()!=null){
+            if (loadAndSplitTextParam.getSplitterProcess().getChunkSplitter() != null) {
                 config.put("chunkSplitter", loadAndSplitTextParam.getSplitterProcess().getChunkSplitter());
             }
             metadata.addUserMetadata("config", URLEncoder.encode(Base64.getEncoder().encodeToString(JsonUtils.toJsonString(config).getBytes(StandardCharsets.UTF_8)),
                     String.valueOf(StandardCharsets.UTF_8)));
         }
 
-        if (JsonUtils.toJsonString(metadata).length()>2048){
+        if (JsonUtils.toJsonString(metadata).length() > 2048) {
             throw new VectorDBException("cos header for param MetaData is too large, it can not be more than 2k");
         }
         putObjectRequest.withMetadata(metadata);
@@ -571,18 +581,19 @@ public class HttpStub implements Stub {
         if (documentSetName != null) {
             params.put("documentSetName", documentSetName);
         }
-        if (documentSetId != null ) {
+        if (documentSetId != null) {
             params.put("documentSetId", documentSetId);
         }
-        if (limit!=null) {
+        if (limit != null) {
             params.put("limit", limit);
         }
-        if (offset!=null) {
+        if (offset != null) {
             params.put("offset", offset);
         }
         String body = JsonUtils.toJsonString(params);
         JsonNode jsonNode = this.post(url, body);
-        return JsonUtils.collectionDeserializer(jsonNode.toString(), new TypeReference<GetChunksRes>() {});
+        return JsonUtils.collectionDeserializer(jsonNode.toString(), new TypeReference<GetChunksRes>() {
+        });
     }
 
 
@@ -648,46 +659,39 @@ public class HttpStub implements Stub {
     private SearchContentInfo node2SearchDoc(JsonNode node) throws JsonProcessingException {
         SearchContentInfo.Builder builder = SearchContentInfo.newBuilder();
         Iterator<String> iterator = node.fieldNames();
-        ObjectMapper mapper = new ObjectMapper();
         while (iterator.hasNext()) {
             String name = iterator.next();
             JsonNode ele = node.get(name);
             if (StringUtils.equals("score", name)) {
                 builder.withScore(ele.asDouble());
             } else if (StringUtils.equals("data", name)) {
-                builder.withSearchContentInfo(mapper.readValue(
-                        ele.toString(), new TypeReference<ContentInfo>() {
-                        }));
-            }else if (StringUtils.equals("documentSet", name)){
+                builder.withSearchContentInfo(JsonUtils.parseObject(ele.toString(), ContentInfo.class));
+            } else if (StringUtils.equals("documentSet", name)) {
                 builder.withSearchDocumentSetInfo(node2SearchDocumentSet(ele));
             }
         }
         return builder.build();
     }
 
-    private SearchDocumentSetInfo node2SearchDocumentSet(JsonNode node) throws JsonProcessingException{
+    private SearchDocumentSetInfo node2SearchDocumentSet(JsonNode node) throws JsonProcessingException {
         SearchDocumentSetInfo.Builder builder = SearchDocumentSetInfo.newBuilder();
         Iterator<String> iterator = node.fieldNames();
-        ObjectMapper mapper = new ObjectMapper();
         while (iterator.hasNext()) {
             String name = iterator.next();
             JsonNode ele = node.get(name);
             if (StringUtils.equals("documentSetName", name)) {
                 builder.withDocumentSetName(ele.toString());
-            } else if (StringUtils.equals("documentSetId", name)){
+            } else if (StringUtils.equals("documentSetId", name)) {
                 builder.withDocumentSetId(ele.toString());
-            }
-            else {
+            } else {
                 if (ele.isInt()) {
                     builder.addDocField(new DocField(name, ele.asInt()));
                 } else if (ele.isLong()) {
                     builder.addDocField(new DocField(name, ele.asLong()));
                 } else if (ele.isArray()) {
-                    List values = mapper.readValue(
-                            ele.toString(), new TypeReference<List>() {
-                            });
+                    List values = JsonUtils.parseObject(ele.toString(), List.class);
                     builder.addDocField(new DocField(name, values));
-                }else {
+                } else {
                     builder.addDocField(new DocField(name, ele.asText()));
                 }
             }
@@ -698,16 +702,13 @@ public class HttpStub implements Stub {
     private Document node2Doc(JsonNode node) throws JsonProcessingException {
         Document.Builder builder = Document.newBuilder();
         Iterator<String> iterator = node.fieldNames();
-        ObjectMapper mapper = new ObjectMapper();
         while (iterator.hasNext()) {
             String name = iterator.next();
             JsonNode ele = node.get(name);
             if (StringUtils.equals("id", name)) {
                 builder.withId(ele.asText());
             } else if (StringUtils.equals("vector", name)) {
-                List<Double> vector = mapper.readValue(
-                        ele.toString(), new TypeReference<List<Double>>() {
-                        });
+                List<Double> vector = JsonUtils.parseObject(ele.toString(), List.class);
                 builder.withVector(vector);
             } else if (StringUtils.equals("doc", name)) {
                 builder.withDoc(ele.asText());
@@ -721,11 +722,9 @@ public class HttpStub implements Stub {
                 } else if (ele.isLong()) {
                     builder.addFilterField(new DocField(name, ele.asLong()));
                 } else if (ele.isArray()) {
-                    List values = mapper.readValue(
-                            ele.toString(), new TypeReference<List>() {
-                            });
+                    List values = JsonUtils.parseObject(ele.toString(), List.class);
                     builder.addFilterField(new DocField(name, values));
-                }else {
+                } else {
                     builder.addFilterField(new DocField(name, ele.asText()));
                 }
             }
@@ -736,25 +735,20 @@ public class HttpStub implements Stub {
     private DocumentSet node2DocmentSet(JsonNode node) throws JsonProcessingException {
         DocumentSet.Builder builder = DocumentSet.newBuilder();
         Iterator<String> iterator = node.fieldNames();
-        ObjectMapper mapper = new ObjectMapper();
         while (iterator.hasNext()) {
             String name = iterator.next();
             JsonNode ele = node.get(name);
             if (StringUtils.equals("documentSetId", name)) {
                 builder.withDocumentSetId(ele.asText());
             } else if (StringUtils.equals("documentSetInfo", name)) {
-                DocumentSetInfo documentSetInfo = mapper.readValue(
-                        ele.toString(), new TypeReference<DocumentSetInfo>() {
-                        });
+                DocumentSetInfo documentSetInfo = JsonUtils.parseObject(ele.toString(), DocumentSetInfo.class);
                 builder.withDocumentSetInfo(documentSetInfo);
             } else if (StringUtils.equals("documentSetName", name)) {
                 builder.withDocumnetSetName(ele.asText());
-            }else if (StringUtils.equals("textPrefix", name)) {
+            } else if (StringUtils.equals("textPrefix", name)) {
                 builder.withTextPrefix(ele.asText());
-            }else if (StringUtils.equals("splitterPreprocess", name)) {
-                SplitterPreprocessParams splitterPreprocess = mapper.readValue(
-                        ele.toString(), new TypeReference<SplitterPreprocessParams>() {
-                        });
+            } else if (StringUtils.equals("splitterPreprocess", name)) {
+                SplitterPreprocessParams splitterPreprocess = JsonUtils.parseObject(ele.toString(), SplitterPreprocessParams.class);
                 builder.withSplitProcess(splitterPreprocess);
             } else {
                 if (ele.isInt()) {
@@ -763,9 +757,7 @@ public class HttpStub implements Stub {
                     builder.addFilterField(new DocField(name, ele.asLong()));
                     builder.addFilterField(new DocField(name, ele.isLong()));
                 } else if (ele.isArray()) {
-                    List values = mapper.readValue(
-                            ele.toString(), new TypeReference<List>() {
-                            });
+                    List values = JsonUtils.parseObject(ele.toString(), List.class);
                     builder.addFilterField(new DocField(name, values));
                 } else {
                     builder.addFilterField(new DocField(name, ele.asText()));
@@ -775,39 +767,32 @@ public class HttpStub implements Stub {
         return builder.build();
     }
 
-    private DocumentFileContent node2DocumentFileContent(JsonNode node) throws JsonProcessingException{
+    private DocumentFileContent node2DocumentFileContent(JsonNode node) throws JsonProcessingException {
         DocumentFileContent documentFileContent = new DocumentFileContent();
         documentFileContent.setDocFields(new ArrayList<>());
         Iterator<String> iterator = node.fieldNames();
-        ObjectMapper mapper = new ObjectMapper();
         while (iterator.hasNext()) {
             String name = iterator.next();
             JsonNode ele = node.get(name);
             if (StringUtils.equals("documentSetId", name)) {
                 documentFileContent.setDocumentSetId(ele.asText());
             } else if (StringUtils.equals("documentSetInfo", name)) {
-                DocumentSetInfo documentSetInfo = mapper.readValue(
-                        ele.toString(), new TypeReference<DocumentSetInfo>() {
-                        });
+                DocumentSetInfo documentSetInfo = JsonUtils.parseObject(ele.toString(), DocumentSetInfo.class);
                 documentFileContent.setDocumentSetInfo(documentSetInfo);
             } else if (StringUtils.equals("documentSetName", name)) {
                 documentFileContent.setDocumentSetName(ele.asText());
-            }else if (StringUtils.equals("text", name)) {
+            } else if (StringUtils.equals("text", name)) {
                 documentFileContent.setText(ele.asText());
             } else if (StringUtils.equals("splitterPreprocess", name)) {
-                SplitterPreprocessParams splitterPreprocess = mapper.readValue(
-                        ele.toString(), new TypeReference<SplitterPreprocessParams>() {
-                        });
+                SplitterPreprocessParams splitterPreprocess = JsonUtils.parseObject(ele.toString(), SplitterPreprocessParams.class);
                 documentFileContent.setSplitterPreprocess(splitterPreprocess);
             } else {
                 if (ele.isInt()) {
                     documentFileContent.addFilterField(new DocField(name, ele.asInt()));
                 } else if (ele.isLong()) {
                     documentFileContent.addFilterField(new DocField(name, ele.asLong()));
-                }else if (ele.isArray()) {
-                    List values = mapper.readValue(
-                            ele.toString(), new TypeReference<List>() {
-                            });
+                } else if (ele.isArray()) {
+                    List values = JsonUtils.parseObject(ele.toString(), List.class);
                     documentFileContent.addFilterField(new DocField(name, values));
                 } else {
                     documentFileContent.addFilterField(new DocField(name, ele.asText()));

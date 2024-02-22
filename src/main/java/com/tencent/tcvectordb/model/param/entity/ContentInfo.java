@@ -10,6 +10,8 @@ public class ContentInfo {
     private int startPos;
     private List<String> next;
     private List<String> pre;
+    private String paragraphTitle;
+    private List<String> allParentParagraphTitles;
 
     public int getEndPos() {
         return endPos;
@@ -56,4 +58,19 @@ public class ContentInfo {
         this.pre = pre;
     }
 
+    public String getParagraphTitle() {
+        return paragraphTitle;
+    }
+
+    public void setParagraphTitle(String paragraphTitle) {
+        this.paragraphTitle = paragraphTitle;
+    }
+
+    public List<String> getAllParentParagraphTitles() {
+        return allParentParagraphTitles;
+    }
+
+    public void setAllParentParagraphTitles(List<String> allParentParagraphTitles) {
+        this.allParentParagraphTitles = allParentParagraphTitles;
+    }
 }

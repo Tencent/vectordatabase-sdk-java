@@ -57,8 +57,13 @@ public class VectorDBExampleWithAI_doc {
         createAiDatabaseAndCollection(client);
         Map<String, Object> metaDataMap = new HashMap<>();
         metaDataMap.put("author", "Tencent");
-        metaDataMap.put("tags", Arrays.asList("Embedding","向量","AI"));
+        metaDataMap.put("tags", Arrays.asList("Embedding", "向量", "AI"));
         loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.md", metaDataMap);
+        // support markdown, pdf, pptx, docx document
+        // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pdf", metaDataMap);
+        // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pptx", metaDataMap);
+        // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.docx", metaDataMap);
+
         // 解析加载文件需要等待时间
         Thread.sleep(1000 * 10);
 
@@ -129,7 +134,7 @@ public class VectorDBExampleWithAI_doc {
         System.out.println("---------------------- setAIAlias ----------------------");
         AffectRes affectRes = db.setAIAlias(COLL_NAME, COLL_NAME_ALIAS);
         System.out.println("\tres: " + affectRes.toString());
-        Thread.sleep(5*1000);
+        Thread.sleep(5 * 1000);
 
         // 6. describe collection
         System.out.println("---------------------- describeCollectionView ----------------------");
@@ -179,11 +184,11 @@ public class VectorDBExampleWithAI_doc {
         System.out.println("---------------------- query ----------------------");
         CollectionViewQueryParam queryParam = CollectionViewQueryParam.newBuilder().
                 withLimit(2).
-                withFilter(new Filter(Filter.in("author", Arrays.asList("Tencent","tencent"))).
-                        and(Filter.include("tags", Arrays.asList("AI","Embedding")))).
-                withDocumentSetNames(Arrays.asList("腾讯云向量数据库.md")).
+                withFilter(new Filter(Filter.in("author", Arrays.asList("Tencent", "tencent")))
+                        .and(Filter.include("tags", Arrays.asList("AI", "Embedding")))).
+                withDocumentSetNames(Arrays.asList("空内容.pptx"))
 //                withOutputFields(Arrays.asList("textPrefix", "author", "tags")).
-                build();
+                .build();
         List<DocumentSet> qdos = collection.query(queryParam);
         for (DocumentSet doc : qdos) {
             System.out.println("\tres: " + doc.toString());
@@ -191,7 +196,7 @@ public class VectorDBExampleWithAI_doc {
 
         System.out.println("---------------------- get chunks ----------------------");
         System.out.println("get chunks res :");
-        System.out.println(JsonUtils.toJsonString(collection.getChunks("腾讯云向量数据库.md")));
+        System.out.println(JsonUtils.toJsonString(collection.getChunks(null, "doc.docx", 60, 0)));
 
         // search
         // 1. search 用于检索数据
@@ -201,21 +206,21 @@ public class VectorDBExampleWithAI_doc {
         // 5. 可以通过传入filter实现指定在符合条件的文件中检索
         System.out.println("---------------------- search ----------------------");
 
-        SearchOption option = SearchOption.newBuilder().withChunkExpand(Arrays.asList(1,1))
+        SearchOption option = SearchOption.newBuilder().withChunkExpand(Arrays.asList(1, 1))
                 .withRerank(new RerankOption(true, 3))
                 .build();
         SearchByContentsParam searchByContentsParam = SearchByContentsParam.newBuilder()
                 .withContent("什么是向量")
                 .withSearchContentOption(option)
-                .withFilter(new Filter(Filter.in("author", Arrays.asList("Tencent","tencent"))).
-                        and(Filter.include("tags", Arrays.asList("AI","Embedding"))).getCond())
+                .withFilter(new Filter(Filter.in("author", Arrays.asList("Tencent", "tencent")))
+                        .and(Filter.include("tags", Arrays.asList("AI", "Embedding"))).getCond())
                 .withDocumentSetName(Arrays.asList("腾讯云向量数据库.md"))
                 .build();
 //        System.out.println(qdos.get(0).search(searchByContentsParam).toString());
         List<SearchContentInfo> searchRes = collection.search(searchByContentsParam);
         int i = 0;
         for (SearchContentInfo doc : searchRes) {
-            System.out.println("\tres" +(i++)+": "+ doc.toString());
+            System.out.println("\tres" + (i++) + ": " + doc.toString());
         }
     }
 
@@ -236,7 +241,7 @@ public class VectorDBExampleWithAI_doc {
         Map<String, Object> updateFieldValues = new HashMap<>();
         updateFieldValues.put("page", 100);
         updateFieldValues.put("author", "tencent");
-        updateFieldValues.put("array_test", Arrays.asList("1", "2","5"));
+        updateFieldValues.put("array_test", Arrays.asList("1", "2", "5"));
         collection.update(updateParam, updateFieldValues);
 
         System.out.println(collection.query(10).get(0).toString());

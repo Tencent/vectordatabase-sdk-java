@@ -1,7 +1,6 @@
 package com.tencent.tcvectordb.model.param.collectionView;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.tencent.tcvectordb.model.DocumentSet;
 import com.tencent.tcvectordb.model.param.collection.ParamsSerializer;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -60,7 +59,7 @@ public class SplitterPreprocessParams implements ParamsSerializer {
             return this;
         }
 
-        public Builder withChunkSplitter(String ChunkSplitter) {
+        public Builder withChunkSplitter(String chunkSplitter) {
             this.chunkSplitter = chunkSplitter;
             return this;
         }

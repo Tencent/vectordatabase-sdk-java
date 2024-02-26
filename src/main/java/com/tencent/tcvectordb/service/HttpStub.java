@@ -497,7 +497,7 @@ public class HttpStub implements Stub {
 
         if (!"md".equals(fileType) &&
                 Objects.nonNull(loadAndSplitTextParam.getSplitterProcess()) &&
-                StringUtils.isNotBlank(loadAndSplitTextParam.getSplitterProcess().getChunkSplitter())) {
+                StringUtils.isNotEmpty(loadAndSplitTextParam.getSplitterProcess().getChunkSplitter())) {
             logger.warn("only markdown files are allowed to use chunkSplitter");
         }
 

@@ -1,6 +1,6 @@
 package com.tencent.tcvectordb.model.param.entity;
 
-public class UploadCondtion {
+public class UploadCondition {
     private int maxSupportContentLength;
 
     public int getMaxSupportContentLength() {

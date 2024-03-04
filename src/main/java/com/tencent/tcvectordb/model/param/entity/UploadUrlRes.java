@@ -5,7 +5,7 @@ public class UploadUrlRes extends BaseRes{
     private String uploadPath;
     private String documentSetId;
     private Credential credentials;
-    private UploadCondtion uploadCondition;
+    private UploadCondition uploadCondition;
     private String cosRegion;
     private String cosBucket;
 
@@ -25,11 +25,11 @@ public class UploadUrlRes extends BaseRes{
         this.cosBucket = cosBucket;
     }
 
-    public UploadCondtion getUploadCondition() {
+    public UploadCondition getUploadCondition() {
         return uploadCondition;
     }
 
-    public void setUploadCondition(UploadCondtion uploadCondition) {
+    public void setUploadCondition(UploadCondition uploadCondition) {
         this.uploadCondition = uploadCondition;
     }
 

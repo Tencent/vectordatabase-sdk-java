@@ -11,6 +11,8 @@ import com.qcloud.cos.model.ObjectMetadata;
 import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.region.Region;
+import com.tencent.tcvectordb.enums.Code;
+import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.Collection;
 import com.tencent.tcvectordb.model.*;
@@ -469,20 +471,25 @@ public class HttpStub implements Stub {
             throw new VectorDBException("file is empty");
         }
 
-//        FileTypeEnum fileType = FileUtils.getFileType(file);
-//        if(fileType == FileTypeEnum.UNSUPPORT){
-//            throw new VectorDBException("only markdown file can upload");
-//        }
+
         UploadUrlRes uploadUrlRes = getUploadUrl(databaseName, collectionViewName, loadAndSplitTextParam.getDocumentSetName(), file.getName());
-        if (uploadUrlRes.getCredentials() == null || uploadUrlRes.getCredentials().getTmpSecretId().equals("") || uploadUrlRes.getUploadCondition() == null
-                || uploadUrlRes.getUploadCondition().getMaxSupportContentLength() == 0) {
-            throw new VectorDBException("get file upload url failed");
+
+        if (Code.isFailed(uploadUrlRes.getCode()) ||
+                uploadUrlRes.getCredentials() == null ||
+                uploadUrlRes.getCredentials().getTmpSecretId().equals("") ||
+                uploadUrlRes.getUploadCondition() == null ||
+                uploadUrlRes.getUploadCondition().getMaxSupportContentLength() == 0) {
+            String msg = StringUtils.isNotBlank(uploadUrlRes.getMsg()) ? ", " + uploadUrlRes.getMsg() : "";
+            throw new VectorDBException("get file upload url failed" + msg);
         }
 
-//        if (file.length()> uploadUrlRes.getUploadCondition().getMaxSupportContentLength()){
-//            throw new VectorDBException(String.format("%s fileSize is invalid, support max content length is %d bytes",
-//                    loadAndSplitTextParam.getLocalFilePath(), uploadUrlRes.getUploadCondition().getMaxSupportContentLength()));
-//        }
+        String filePath = loadAndSplitTextParam.getLocalFilePath();
+        int maxLength = uploadUrlRes.getUploadCondition().getMaxSupportContentLength();
+
+        if (file.length() > maxLength) {
+            throw new ParamException(String.format("%s file is too large, max size is %d bytes", filePath, maxLength));
+        }
+
         String uploadPath = uploadUrlRes.getUploadPath();
         String bucket = uploadUrlRes.getCosBucket();
         String region = uploadUrlRes.getCosRegion();

@@ -27,15 +27,15 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.param.collectionView.SplitterPreprocessParams;
-import com.tencent.tcvectordb.model.param.dml.BaseQuery;
 import com.tencent.tcvectordb.model.param.dml.CollectionViewConditionParam;
-import com.tencent.tcvectordb.model.param.dml.QueryParam;
 import com.tencent.tcvectordb.model.param.dml.SearchByContentsParam;
-import com.tencent.tcvectordb.model.param.entity.*;
+import com.tencent.tcvectordb.model.param.entity.AffectRes;
+import com.tencent.tcvectordb.model.param.entity.DocumentSetInfo;
+import com.tencent.tcvectordb.model.param.entity.GetChunksRes;
+import com.tencent.tcvectordb.model.param.entity.SearchContentInfo;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.Stub;
 import com.tencent.tcvectordb.service.param.CollectionViewDeleteParamInner;
-import com.tencent.tcvectordb.service.param.CollectionViewQueryParamInner;
 import com.tencent.tcvectordb.service.param.SearchDocParamInner;
 import com.tencent.tcvectordb.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -148,6 +148,10 @@ public class DocumentSet {
 
     public void setCollectionViewName(String collectionViewname) {
         this.collectionViewName = collectionViewname;
+    }
+
+    public DocumentSetInfo getDocumentSetInfo() {
+        return documentSetInfo;
     }
 
     @Override

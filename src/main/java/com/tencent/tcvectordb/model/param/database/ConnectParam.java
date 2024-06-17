@@ -30,13 +30,31 @@ public class ConnectParam {
     private final String url;
     private final String username;
     private final String key;
+    /**
+     * read timeout, unit is second
+     */
     private final int timeout;
+    /**
+     * connect timeout, unit is second
+     */
+    private final int connectTimeout;
+    /**
+     * max idle connection count, unit is second
+     */
+    private final int maxIdleConnections;
+    /**
+     * keep alive duration, unit is second
+     */
+    private final int keepAliveDuration;
 
     private ConnectParam(Builder builder) {
         this.url = builder.url;
         this.username = builder.username;
         this.key = builder.key;
         this.timeout = builder.timeout;
+        this.connectTimeout = builder.connectTimeout;
+        this.maxIdleConnections = builder.maxIdleConnections;
+        this.keepAliveDuration = builder.keepAliveDuration;
     }
 
     public String getUrl() {
@@ -55,15 +73,43 @@ public class ConnectParam {
         return timeout;
     }
 
+    public long getConnectTimeout() {
+        return connectTimeout;
+    }
+
+    public int getMaxIdleConnections() {
+        return maxIdleConnections;
+    }
+
+    public int getKeepAliveDuration() {
+        return keepAliveDuration;
+    }
+
     public static Builder newBuilder() {
         return new Builder();
     }
+
 
     public static class Builder {
         private String url;
         private String username;
         private String key;
+        /**
+         * read timeout, unit is second
+         */
         private int timeout = 10;
+        /**
+         * connect timeout, unit is second
+         */
+        private int connectTimeout = 2;
+        /**
+         * max idle connection count, unit is second
+         */
+        private int maxIdleConnections = 10;
+        /**
+         * keep alive duration, unit is second
+         */
+        private int keepAliveDuration = 5 * 60;
 
         private Builder() {
         }
@@ -89,6 +135,46 @@ public class ConnectParam {
             }
             return this;
         }
+
+        /**
+         * set connect timeout, unit is second, default will be 2 if not set
+         *
+         * @param connectTimeout connect timeout
+         * @return
+         */
+        public Builder withConnectTimeout(int connectTimeout) {
+            if (connectTimeout > 0) {
+                this.connectTimeout = connectTimeout;
+            }
+            return this;
+        }
+
+        /**
+         * set max idle connection, unit is second, default will be 10 if not set
+         *
+         * @param maxIdleConnections max idle connection
+         * @return
+         */
+        public Builder withMaxIdleConnections(int maxIdleConnections) {
+            if (maxIdleConnections > 0) {
+                this.maxIdleConnections = maxIdleConnections;
+            }
+            return this;
+        }
+
+        /**
+         * set keep alive duration, unit is second, default will be 300 if not set
+         *
+         * @param keepAliveDuration keep alive duration
+         * @return
+         */
+        public Builder withKeepAliveDuration(int keepAliveDuration) {
+            if (keepAliveDuration > 0) {
+                this.keepAliveDuration = keepAliveDuration;
+            }
+            return this;
+        }
+
 
         public ConnectParam build() throws ParamException {
             if (StringUtils.isEmpty(this.url)) {

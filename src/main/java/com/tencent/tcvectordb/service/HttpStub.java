@@ -59,10 +59,10 @@ public class HttpStub implements Stub {
                 .add("Authorization", authorization).build();
         logger.debug("header: {}", authorization);
         this.client = new OkHttpClient.Builder()
-                .connectTimeout(2, TimeUnit.SECONDS)
+                .connectTimeout(this.connectParam.getConnectTimeout(), TimeUnit.SECONDS)
                 .readTimeout(connectParam.getTimeout(), TimeUnit.SECONDS)
                 .connectionPool(new ConnectionPool(
-                        10, 5, TimeUnit.MINUTES))
+                        this.connectParam.getMaxIdleConnections(), this.connectParam.getKeepAliveDuration(), TimeUnit.SECONDS))
                 .build();
     }
 

@@ -80,12 +80,12 @@ public class VectorDBExampleWithAI_doc {
      * @return {@link ConnectParam}
      */
     private static ConnectParam initConnectParam() {
-        System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
-        System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
+        System.out.println("\tvdb_url: " + "http://21.0.83.81:8100");
+        System.out.println("\tvdb_key: " + "fZJgayfIxiqtrV1aWKPSIhlA5QXVj6l64ySPirgH");
         return ConnectParam.newBuilder()
-                .withUrl(System.getProperty("vdb_url"))
+                .withUrl("http://21.0.83.81:8100")
                 .withUsername("root")
-                .withKey(System.getProperty("vdb_key"))
+                .withKey("fZJgayfIxiqtrV1aWKPSIhlA5QXVj6l64ySPirgH")
                 .withTimeout(100)
                 .build();
     }
@@ -284,6 +284,8 @@ public class VectorDBExampleWithAI_doc {
                 .withName(collName)
                 .withDescription("test create ai collection")
                 .withEmbedding(EmbeddingParams.newBuilder().withEnableWordEmbedding(true).withLanguage(LanuageType.ZH).Build())
+                .withAverageFileSize(204800)
+                .withExpectedFileNum(10240)
                 .addField(new FilterIndex("author", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("tags", FieldType.Array, IndexType.FILTER))
                 .withSplitterPreprocess(SplitterPreprocessParams.newBuilder().

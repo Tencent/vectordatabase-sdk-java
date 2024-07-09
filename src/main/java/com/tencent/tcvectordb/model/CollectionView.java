@@ -36,6 +36,7 @@ import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.Stub;
 import com.tencent.tcvectordb.service.param.*;
+import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.*;
 
@@ -56,6 +57,8 @@ public class CollectionView {
     private AIStatus stats;
     protected SplitterPreprocessParams splitterPreprocess;
     protected EmbeddingParams embedding;
+    protected Integer expectedFileNum;
+    protected Integer averageFileSize;
     private List<String> alias;
 
     protected List<IndexField> indexes;
@@ -127,6 +130,22 @@ public class CollectionView {
 
     public void setEmbedding(EmbeddingParams embedding) {
         this.embedding = embedding;
+    }
+
+    public int getExpectedFileNum() {
+        return expectedFileNum;
+    }
+
+    public void setExpectedFileNum(int expectedFileNum) {
+        this.expectedFileNum = expectedFileNum;
+    }
+
+    public int getAverageFileSize() {
+        return averageFileSize;
+    }
+
+    public void setAverageFileSize(int averageFileSize) {
+        this.averageFileSize = averageFileSize;
     }
 
     public CollectionView() {
@@ -272,13 +291,7 @@ public class CollectionView {
 
     @Override
     public String toString() {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            throw new ParamException(String.format(
-                    "Create collection param error: %s", e));
-        }
+        return JsonUtils.toJsonString(this);
     }
 
 

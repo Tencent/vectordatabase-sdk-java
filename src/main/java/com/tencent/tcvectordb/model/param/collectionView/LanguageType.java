@@ -23,9 +23,9 @@ package com.tencent.tcvectordb.model.param.collectionView;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * LanuageType
+ * LanguageType
  */
-public enum LanuageType {
+public enum LanguageType {
     /**
      * 中文
      */
@@ -41,7 +41,7 @@ public enum LanuageType {
 
     private final String value;
 
-    private LanuageType(String value) {
+    private LanguageType(String value) {
         this.value = value;
     }
 

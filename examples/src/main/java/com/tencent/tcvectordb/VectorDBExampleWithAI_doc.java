@@ -283,7 +283,9 @@ public class VectorDBExampleWithAI_doc {
         return CreateCollectionViewParam.newBuilder()
                 .withName(collName)
                 .withDescription("test create ai collection")
-                .withEmbedding(EmbeddingParams.newBuilder().withEnableWordEmbedding(true).withLanguage(LanuageType.ZH).Build())
+                .withEmbedding(EmbeddingParams.newBuilder().withEnableWordEmbedding(true).withLanguage(LanguageType.ZH).Build())
+                .withAverageFileSize(204800)
+                .withExpectedFileNum(10240)
                 .addField(new FilterIndex("author", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("tags", FieldType.Array, IndexType.FILTER))
                 .withSplitterPreprocess(SplitterPreprocessParams.newBuilder().

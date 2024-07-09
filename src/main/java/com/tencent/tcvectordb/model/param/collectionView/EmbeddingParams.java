@@ -23,7 +23,7 @@ public class EmbeddingParams {
         return language;
     }
 
-    public void setLanguage(LanuageType language) {
+    public void setLanguage(LanguageType language) {
         this.language = language.getValue();
     }
 
@@ -39,10 +39,10 @@ public class EmbeddingParams {
         return new Builder();
     }
     public static class Builder{
-        private LanuageType language;
+        private LanguageType language;
         private Boolean enableWordEmbedding;
 
-        public Builder withLanguage(LanuageType language){
+        public Builder withLanguage(LanguageType language){
             this.language = language;
             return this;
         }

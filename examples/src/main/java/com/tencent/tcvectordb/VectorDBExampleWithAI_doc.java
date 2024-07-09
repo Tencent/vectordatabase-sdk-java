@@ -80,12 +80,12 @@ public class VectorDBExampleWithAI_doc {
      * @return {@link ConnectParam}
      */
     private static ConnectParam initConnectParam() {
-        System.out.println("\tvdb_url: " + "http://21.0.83.81:8100");
-        System.out.println("\tvdb_key: " + "fZJgayfIxiqtrV1aWKPSIhlA5QXVj6l64ySPirgH");
+        System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
+        System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
         return ConnectParam.newBuilder()
-                .withUrl("http://21.0.83.81:8100")
+                .withUrl(System.getProperty("vdb_url"))
                 .withUsername("root")
-                .withKey("fZJgayfIxiqtrV1aWKPSIhlA5QXVj6l64ySPirgH")
+                .withKey(System.getProperty("vdb_key"))
                 .withTimeout(100)
                 .build();
     }
@@ -283,7 +283,7 @@ public class VectorDBExampleWithAI_doc {
         return CreateCollectionViewParam.newBuilder()
                 .withName(collName)
                 .withDescription("test create ai collection")
-                .withEmbedding(EmbeddingParams.newBuilder().withEnableWordEmbedding(true).withLanguage(LanuageType.ZH).Build())
+                .withEmbedding(EmbeddingParams.newBuilder().withEnableWordEmbedding(true).withLanguage(LanguageType.ZH).Build())
                 .withAverageFileSize(204800)
                 .withExpectedFileNum(10240)
                 .addField(new FilterIndex("author", FieldType.String, IndexType.FILTER))

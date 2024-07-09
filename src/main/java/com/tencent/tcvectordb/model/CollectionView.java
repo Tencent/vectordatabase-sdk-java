@@ -132,19 +132,19 @@ public class CollectionView {
         this.embedding = embedding;
     }
 
-    public int getExpectedFileNum() {
+    public Integer getExpectedFileNum() {
         return expectedFileNum;
     }
 
-    public void setExpectedFileNum(int expectedFileNum) {
+    public void setExpectedFileNum(Integer expectedFileNum) {
         this.expectedFileNum = expectedFileNum;
     }
 
-    public int getAverageFileSize() {
+    public Integer getAverageFileSize() {
         return averageFileSize;
     }
 
-    public void setAverageFileSize(int averageFileSize) {
+    public void setAverageFileSize(Integer averageFileSize) {
         this.averageFileSize = averageFileSize;
     }
 

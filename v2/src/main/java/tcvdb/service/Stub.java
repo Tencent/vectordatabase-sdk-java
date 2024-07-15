@@ -36,11 +36,11 @@ public interface Stub {
     List<String> listDatabases();
 
     /**
-     * list all database, mapping database name to {@link DataBaseType}
+     * list all database, mapping database name to {@link DataBaseInfo}
      *
-     * @return return map, key is database name, value is  {@link DataBaseType}
+     * @return return map, key is database name, value is  {@link DataBaseInfo}
      */
-    Map<String, DataBaseType> listDatabaseInfos();
+    DataBaseInfoRes listDatabaseInfos();
 
     /**
      * create collection in database

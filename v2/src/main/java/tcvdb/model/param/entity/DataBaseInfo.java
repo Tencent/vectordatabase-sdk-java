@@ -1,16 +1,12 @@
 package tcvdb.model.param.entity;
 
-public class DataBaseType {
-    private String dbType;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class DataBaseInfo {
     private String createTime;
-
-    public String getDbType() {
-        return dbType;
-    }
-
-    public void setDbType(String dbType) {
-        this.dbType = dbType;
-    }
 
     public String getCreateTime() {
         return createTime;

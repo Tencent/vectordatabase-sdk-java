@@ -14,10 +14,7 @@ import tcvdb.model.Document;
 import tcvdb.model.Collection;
 import tcvdb.model.param.collection.CreateCollectionParam;
 import tcvdb.model.param.database.ConnectParam;
-import tcvdb.model.param.entity.AffectRes;
-import tcvdb.model.param.entity.BaseRes;
-import tcvdb.model.param.entity.DataBaseType;
-import tcvdb.model.param.entity.SearchRes;
+import tcvdb.model.param.entity.*;
 import tcvdb.service.param.*;
 import tcvdb.utils.JsonUtils;
 
@@ -76,14 +73,14 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public Map<String, DataBaseType> listDatabaseInfos() {
+    public DataBaseInfoRes listDatabaseInfos() {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DB_LIST);
         JsonNode jsonNode = this.get(url);
         JsonNode dbsJson = jsonNode.get("info");
         if (dbsJson == null) {
-            return new HashMap<>();
+            return new DataBaseInfoRes();
         }
-        return JsonUtils.parseObject(dbsJson.toString(), new TypeReference<Map<String, DataBaseType>>() {
+        return JsonUtils.parseObject(dbsJson.toString(), new TypeReference<DataBaseInfoRes>() {
         });
     }
 

@@ -6,7 +6,6 @@ package tcvdb.service;
 public class ApiPath {
     public final static String DB_CREATE = "/v2/database/create";
     public final static String DB_DROP = "/v2/database/drop";
-    public final static String DB_DESCRIBE = "/v2/database/describe";
     public final static String DB_LIST = "/v2/database/list";
     public final static String COL_CREATE = "/v2/collection/create";
     public final static String COL_DROP = "/v2/collection/drop";

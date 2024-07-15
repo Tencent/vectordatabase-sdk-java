@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.tencent.tcvdb</groupId>
-    <artifactId>vectordb-sdk-java</artifactId>
+    <artifactId>vectordatabase-sdk-java</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
@@ -46,11 +46,6 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
             <version>${log4j.slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.qcloud</groupId>
-            <artifactId>cos_api</artifactId>
-            <version>5.6.212</version>
         </dependency>
     </dependencies>
     <build>

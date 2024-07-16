@@ -40,22 +40,10 @@ public class Document {
     private String id;
     private List<Object> vector;
     private Double score;
-    private String text;
     private List<Pair<Integer,Double>> sparseVector;
-    private String textField;
-    private String oldField;
-    private String newField;
     private ContextResult contextResult;
     private List<DocField> docFields;
     private Map<String, Object> docKeyValue;
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
 
     public ContextResult getContextResult() {
         return contextResult;
@@ -108,30 +96,6 @@ public class Document {
         this.sparseVector = sparseVector;
     }
 
-    public String getTextField() {
-        return textField;
-    }
-
-    public void setTextField(String textField) {
-        this.textField = textField;
-    }
-
-    public String getOldField() {
-        return oldField;
-    }
-
-    public void setOldField(String oldField) {
-        this.oldField = oldField;
-    }
-
-    public String getNewField() {
-        return newField;
-    }
-
-    public void setNewField(String newField) {
-        this.newField = newField;
-    }
-
     public void setDocFields(List<DocField> docFields) {
         this.docFields = docFields;
     }
@@ -178,18 +142,6 @@ public class Document {
         if (contextResult != null) {
             node.put("context_result", JsonUtils.toJsonNode(contextResult));
         }
-        if (text != null && !text.isEmpty()) {
-            node.put("text", text);
-        }
-        if (textField != null && !textField.isEmpty()) {
-            node.put("textField", textField);
-        }
-        if (oldField != null && !oldField.isEmpty()) {
-            node.put("old_field", oldField);
-        }
-        if (newField != null && !newField.isEmpty()) {
-            node.put("new_field", newField);
-        }
         if (sparseVector != null && !sparseVector.isEmpty()) {
             node.put("sparse_vector", JsonUtils.toJsonNode(sparseVector));
         }
@@ -220,10 +172,6 @@ public class Document {
         this.docFields = builder.docFields;
         this.contextResult = builder.contextResult;
         this.sparseVector = builder.sparseVector;
-        this.text = builder.text;
-        this.textField = builder.textField;
-        this.oldField = builder.oldField;
-        this.newField = builder.newField;
     }
 
     public static Builder newBuilder() {
@@ -236,11 +184,7 @@ public class Document {
 
         private Double score;
         private List<DocField> docFields;
-        private String text;
         private List<Pair<Integer,Double>> sparseVector;
-        private String textField;
-        private String oldField;
-        private String newField;
         private ContextResult contextResult;
 
         public Builder() {
@@ -261,30 +205,12 @@ public class Document {
             this.score = score;
             return this;
         }
-        public Builder withText(String text) {
-            this.text = text;
-            return this;
-        }
         public Builder withSparseVector(List<Pair<Integer,Double>> sparseVector) {
             this.sparseVector = sparseVector;
             return this;
         }
         public Builder withContextResult(ContextResult contextResult) {
             this.contextResult = contextResult;
-            return this;
-        }
-        public Builder withTextField(String textField) {
-            this.textField = textField;
-            return this;
-        }
-
-        public Builder withOldField(String oldField) {
-            this.oldField = oldField;
-            return this;
-        }
-
-        public Builder withNewField(String newField) {
-            this.newField = newField;
             return this;
         }
 

@@ -1,5 +1,6 @@
 package tcvdb.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import tcvdb.model.*;
 import tcvdb.model.param.collection.CreateCollectionParam;
 import tcvdb.model.param.entity.*;

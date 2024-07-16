@@ -1,17 +1,23 @@
 package tcvdb.utils;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.type.CollectionType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import org.apache.commons.lang3.tuple.Pair;
 import tcvdb.exception.VectorDBException;
 import tcvdb.model.Collection;
 import tcvdb.serializer.CollectionDeserialize;
 import tcvdb.serializer.CollectionSerialize;
 
 import java.text.SimpleDateFormat;
+
+import java.util.*;
 
 public class JsonUtils {
     private JsonUtils() {
@@ -29,6 +35,9 @@ public class JsonUtils {
         module.addDeserializer(Collection.class, new CollectionDeserialize());
         module.addSerializer(Collection.class, new CollectionSerialize());
         MAPPER.registerModule(module);
+        MAPPER.configOverride(Pair.class)
+                .setFormat(JsonFormat.Value.forShape(JsonFormat.Shape.ARRAY));
+        MAPPER.registerModule(new PairListModule());
     }
 
     /**
@@ -131,6 +140,36 @@ public class JsonUtils {
             throw new VectorDBException(
                     String.format("can't deserialize jsonNode content=%s to %s", jsonNode.toString(), clz.getName()),
                     e);
+        }
+    }
+
+    public static List<Pair<Integer, Double>> parseList(JsonNode ele, Class<List> listClass, Class<Pair> pairClass) {
+        try {
+            TypeFactory typeFactory = MAPPER.getTypeFactory();
+            CollectionType pairListType = typeFactory.constructCollectionType(listClass, pairClass);
+            return MAPPER.readValue(ele.toString(), pairListType);
+        }catch (JsonProcessingException e) {
+            throw new VectorDBException(
+                    String.format("can't deserialize jsonNode content=%s to %s", ele.toString(), "pair list"),
+                    e);
+        }
+    }
+
+    public static class PairListModule extends com.fasterxml.jackson.databind.module.SimpleModule {
+        public PairListModule() {
+            addDeserializer(TypeFactory.defaultInstance().constructCollectionType(List.class, Pair.class).getTypeHandler(), new PairListDeserializer());
+        }
+    }
+
+    public static class PairListDeserializer extends com.fasterxml.jackson.databind.JsonDeserializer<List<Pair<Integer, Double>>> {
+        @Override
+        public List<Pair<Integer, Double>> deserialize(com.fasterxml.jackson.core.JsonParser jsonParser, com.fasterxml.jackson.databind.DeserializationContext deserializationContext) throws java.io.IOException {
+            String[][] array = jsonParser.readValueAs(String[][].class);
+            List<Pair<Integer, Double>> pairList = new java.util.ArrayList<>();
+            for (String[] pairArray : array) {
+                pairList.add(Pair.of(Integer.parseInt(pairArray[0]), Double.parseDouble(pairArray[1])));
+            }
+            return pairList;
         }
     }
 }

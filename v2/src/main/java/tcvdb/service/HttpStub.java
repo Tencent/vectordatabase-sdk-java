@@ -1,10 +1,12 @@
 package tcvdb.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tcvdb.exception.VectorDBException;
@@ -315,6 +317,8 @@ public class HttpStub implements Stub {
                 builder.withVector(Collections.singletonList(vector));
             } else if (StringUtils.equals("score", name)) {
                 builder.withScore(ele.asDouble());
+            }else if (StringUtils.equals("sparse_vector", name)) {
+                builder.withSparseVector(JsonUtils.parseList(ele, List.class, Pair.class));
             }else {
                 if (ele.isInt()) {
                     builder.addFilterField(new DocField(name, ele.asInt()));

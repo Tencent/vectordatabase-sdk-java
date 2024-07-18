@@ -7,6 +7,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.*;
 
@@ -24,11 +25,11 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
         this.k1 = 1.2;
     }
 
-    public void setB(float b) {
+    public void setB(Double b) {
         this.b = b;
     }
 
-    public void setK1(float k1) {
+    public void setK1(Double k1) {
         this.k1 = k1;
     }
 
@@ -56,6 +57,10 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
         SparseVectorBm25Encoder sparseVectorBm25Encoder = new SparseVectorBm25Encoder(new JiebaTokenizer(), 0.75, 1.2);
         sparseVectorBm25Encoder.setParams(path);
         return sparseVectorBm25Encoder;
+    }
+
+    public static SparseVectorBm25Encoder getDefaultBm25Encoder() {
+        return getBm25Encoder("zh");
     }
 
     public SparseVectorBm25Encoder(BaseTokenizer tokenizer, Double b, Double k1) {
@@ -170,12 +175,9 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
 
     @Override
     public void setParams(String paramsFile) {
-        File file = new File(paramsFile);
-        if (!file.exists() || !file.isFile()){
-            throw new IllegalArgumentException("params file not exist");
-        }
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(paramsFile);
         try {
-            String fileContent = new String(Files.readAllBytes(file.toPath()));
+            String fileContent = new String(inputStream.readAllBytes());
             Gson gson = new Gson();
             Bm25Parameter bm25Parameter =  gson.fromJson(fileContent, Bm25Parameter.class);
             this.tokenFreq = bm25Parameter.getTokenFreq();

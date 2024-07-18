@@ -1,0 +1,196 @@
+package com.tencent.tcvectordb.encoder;
+
+import com.google.gson.Gson;
+import com.tencent.tcvectordb.tokenizer.BaseTokenizer;
+import com.tencent.tcvectordb.tokenizer.JiebaTokenizer;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.*;
+
+public class SparseVectorBm25Encoder implements BaseSparseEncoder{
+    private BaseTokenizer tokenizer;
+    private Double b;
+    private Double k1;
+
+    private Map<Integer, Integer> tokenFreq;
+    private Integer docCount;
+    private Double averageDocLength;
+
+    public SparseVectorBm25Encoder() {
+        this.b = 0.75;
+        this.k1 = 1.2;
+    }
+
+    public void setB(float b) {
+        this.b = b;
+    }
+
+    public void setK1(float k1) {
+        this.k1 = k1;
+    }
+
+    public void setTokenFreq(Map<Integer, Integer> tokenFreq) {
+        this.tokenFreq = tokenFreq;
+    }
+
+    public void setDocCount(Integer docCount) {
+        this.docCount = docCount;
+    }
+
+    public void setAverageDocLength(Double averageDocLength) {
+        this.averageDocLength = averageDocLength;
+    }
+
+    public static SparseVectorBm25Encoder getBm25Encoder(String language) {
+        String path;
+        if (language.equals("zh")){
+            path = "data/bm25_zh_default.json";
+        }else if (language.equals("en")){
+            path = "data/bm25_en_default.json";
+        }else {
+            throw new IllegalArgumentException("language must be zh or en");
+        }
+        SparseVectorBm25Encoder sparseVectorBm25Encoder = new SparseVectorBm25Encoder(new JiebaTokenizer(), 0.75, 1.2);
+        sparseVectorBm25Encoder.setParams(path);
+        return sparseVectorBm25Encoder;
+    }
+
+    public SparseVectorBm25Encoder(BaseTokenizer tokenizer, Double b, Double k1) {
+        this.tokenizer = tokenizer;
+        this.b = b;
+        this.k1 = k1;
+    }
+
+    private List<Pair<Integer, Integer>> getTokenTF(String text) {
+        List<Integer> tokens = this.tokenizer.encode(text);
+        Map<Integer, Integer> tokenFreq = new HashMap<>();
+        for (Integer token : tokens) {
+            if (tokenFreq.containsKey(token)) {
+                tokenFreq.put(token, tokenFreq.get(token) + 1);
+            } else {
+                tokenFreq.put(token, 1);
+            }
+        }
+        return tokens.stream().map(token->Pair.of(token, tokenFreq.get(token))).toList();
+    }
+
+    @Override
+    public List<List<Pair<Integer, Double>>> encodeTexts(List<String> texts) {
+        if (texts == null || texts.isEmpty()) {
+            throw new IllegalArgumentException("texts is empty");
+        }
+        if (this.tokenFreq == null || this.docCount == null || this.averageDocLength == null) {
+            throw new IllegalArgumentException("BM25 must be fit before encoding documents");
+        }
+        List<List<Pair<Integer, Double>>> sparseVectors = new ArrayList<>();
+        for (String text : texts) {
+            List<Pair<Integer, Integer>> tokensPairs = this.getTokenTF(text);
+            Integer tfSum = tokensPairs.stream().map(Pair::getRight).
+                    reduce(0, Integer::sum);
+            List<Pair<Integer, Double>> sparseVector = new ArrayList<>();
+            for (Pair<Integer, Integer> token : tokensPairs) {
+                Integer freq = token.getValue();
+                double score = (freq+0.0) / (this.k1*(1 - this.b + this.b * (tfSum / this.averageDocLength)) + freq);
+                sparseVector.add(Pair.of(token.getKey(), score));
+            }
+            sparseVectors.add(sparseVector);
+        }
+        return sparseVectors;
+    }
+
+    @Override
+    public List<List<Pair<Integer, Double>>> encodeQueries(List<String> texts) {
+        if (this.tokenFreq == null || this.docCount == null || this.averageDocLength == null) {
+            throw new IllegalArgumentException("BM25 must be fit before encoding documents");
+        }
+        List<List<Pair<Integer, Double>>> sparseVectors = new ArrayList<>();
+        for (String text : texts) {
+            List<Pair<Integer, Integer>> tokensPairs = this.getTokenTF(text);
+            List<Integer> df = tokensPairs.stream().
+                    map(key->this.tokenFreq.getOrDefault(key.getKey(), 1)).toList();
+            Integer idfSum = df.stream().reduce(0, Integer::sum);
+            List<Double> idfs = df.stream().map(idf->Math.log((this.docCount +1) / (idf + 0.5))).toList();
+            List<Pair<Integer, Double>> sparseVector = new ArrayList<>();
+            tokensPairs.forEach(token->{
+                sparseVector.add(Pair.of(token.getKey(), idfs.get(token.getKey()) / idfSum));
+            });
+            sparseVectors.add(sparseVector);
+        }
+        return sparseVectors;
+    }
+
+    @Override
+    public void fitCorpus(List<String> texts) {
+        if (texts == null || texts.isEmpty()) {
+            throw new IllegalArgumentException("texts is empty");
+        }
+        Map<Integer, Integer> tokenFreq = new HashMap<>();
+        int docNum = 0;
+        int sumDocLen = 0;
+        List<Integer> docLengths = new ArrayList<>();
+        for (String text : texts) {
+            List<Pair<Integer,Integer>> tokens = this.getTokenTF(text);
+            docNum += 1;
+            sumDocLen += tokens.stream().map(Pair::getRight).reduce(0, Integer::sum);
+            for (Pair<Integer, Integer> token : tokens) {
+                if (tokenFreq.containsKey(token.getKey())) {
+                    tokenFreq.put(token.getKey(), tokenFreq.get(token.getKey()) + 1);
+                } else {
+                    tokenFreq.put(token.getKey(), 1);
+                }
+            }
+            docLengths.add(tokens.size());
+        }
+        if (this.tokenFreq == null || this.docCount == null || this.averageDocLength == null) {
+            this.tokenFreq = tokenFreq;
+            this.docCount = texts.size();
+            this.averageDocLength = docLengths.stream().reduce(0, Integer::sum) / (double) docLengths.size();
+        }else {
+            this.docCount += docNum;
+            this.averageDocLength = (this.averageDocLength * this.docCount + sumDocLen) / (this.docCount + docNum);
+            for (Integer token : tokenFreq.keySet()) {
+                if (this.tokenFreq.containsKey(token)) {
+                    this.tokenFreq.put(token, this.tokenFreq.get(token) + tokenFreq.get(token));
+                } else {
+                    this.tokenFreq.put(token, tokenFreq.get(token));
+                }
+            }
+
+        }
+
+    }
+
+    @Override
+    public Bm25Parameter downloadParams(String paramsFilePath) {
+        return null;
+    }
+
+    @Override
+    public void setParams(String paramsFile) {
+        File file = new File(paramsFile);
+        if (!file.exists() || !file.isFile()){
+            throw new IllegalArgumentException("params file not exist");
+        }
+        try {
+            String fileContent = new String(Files.readAllBytes(file.toPath()));
+            Gson gson = new Gson();
+            Bm25Parameter bm25Parameter =  gson.fromJson(fileContent, Bm25Parameter.class);
+            this.tokenFreq = bm25Parameter.getTokenFreq();
+            this.docCount = bm25Parameter.getDocCount();
+            this.averageDocLength = bm25Parameter.getAverageDocLength();
+            this.b = bm25Parameter.getB();
+            this.k1 = bm25Parameter.getK1();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void setDict(String dictFile) {
+
+    }
+}

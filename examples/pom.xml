@@ -21,11 +21,6 @@
             <artifactId>vectordatabase-sdk-java</artifactId>
             <version>1.3.4</version>
         </dependency>
-        <dependency>
-            <groupId>com.tencent.tcvdb</groupId>
-            <artifactId>vectordatabase-sdk-java</artifactId>
-            <version>1.0.0</version>
-        </dependency>
     </dependencies>
     <build>
         <finalName>vectordatabase-example</finalName>

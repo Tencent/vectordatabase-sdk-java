@@ -8,9 +8,6 @@
     <packaging>pom</packaging>
 
     <name>vectordatabase-sdk-java</name>
-    <modules>
-        <module>tcvdb_text</module>
-    </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

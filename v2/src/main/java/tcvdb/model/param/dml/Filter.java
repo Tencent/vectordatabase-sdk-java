@@ -49,7 +49,7 @@ public class Filter {
     }
 
     public Filter andNot(String cond) {
-        this.condBuffer.append(" and not ").append(cond);
+        this.condBuffer.append(" and not ( ").append(cond).append(" )");
         return this;
     }
 

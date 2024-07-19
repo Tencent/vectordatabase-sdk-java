@@ -5,25 +5,30 @@ import com.tencent.tcvectordb.hash.BaseHash;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class BaseTokenizer {
     protected BaseHash hash;
-    protected List<String> stopWords;
+    protected Set<String> stopWords;
     protected Boolean lowerCase;
     protected String dictFilePath;
 
-    public BaseTokenizer(BaseHash hash, List<String> stopWords, Boolean lowerCase, String dictFilePath) {
+    protected Boolean enableStopWords;
+
+
+    public BaseTokenizer(BaseHash hash, Boolean enableStopWords, Set<String> stopWords, Boolean lowerCase, String dictFilePath) {
         this.hash = hash;
         this.stopWords = stopWords;
         this.lowerCase = lowerCase;
         this.dictFilePath = dictFilePath;
+        this.enableStopWords = enableStopWords;
     }
 
     public BaseTokenizer() {
     }
 
     public abstract List<String> tokenize(String text);
-    public abstract List<Integer> encode(String text);
+    public abstract List<Long> encode(String text);
     public abstract String decode(List<Integer> tokens);
 
     public Map<String, Object> getParameter(){
@@ -32,10 +37,11 @@ public abstract class BaseTokenizer {
         param.put("stopWords", stopWords);
         param.put("lowerCase", lowerCase);
         param.put("dictFilePath", dictFilePath);
+        param.put("enableStopWords", enableStopWords);
         return param;
     }
 
-    public void updateParameter(BaseHash hash, List<String> stopWords, Boolean lowerCase, String dictFilePath){
+    public void updateParameter(BaseHash hash, Set<String> stopWords, Boolean lowerCase, String dictFilePath){
         this.hash = hash;
         this.stopWords = stopWords;
         this.lowerCase = lowerCase;
@@ -46,4 +52,5 @@ public abstract class BaseTokenizer {
         if (stopWords.isEmpty()) return false;
         return stopWords.contains(word);
     }
+    public abstract void loadDict(String dictFile);
 }

@@ -1,16 +1,17 @@
 package com.tencent.tcvectordb.tokenizer;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class StopWords {
-    public static List<String> getStopWordsFromFile(String filePath) {
-        List<String> lines = new ArrayList<>();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+    public static Set<String> getStopWordsFromFile(String filePath) {
+        Set<String> lines = new HashSet<>();
+        InputStream inputStream = StopWords.class.getClassLoader().getResourceAsStream(filePath);
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 lines.add(line);

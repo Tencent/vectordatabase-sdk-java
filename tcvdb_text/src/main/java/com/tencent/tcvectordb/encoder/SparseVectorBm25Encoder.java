@@ -3,6 +3,7 @@ package com.tencent.tcvectordb.encoder;
 import com.google.gson.Gson;
 import com.tencent.tcvectordb.tokenizer.BaseTokenizer;
 import com.tencent.tcvectordb.tokenizer.JiebaTokenizer;
+import com.tencent.tcvectordb.utils.JsonUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
@@ -16,11 +17,13 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
     private Double b;
     private Double k1;
 
-    private Map<Integer, Integer> tokenFreq;
+    private Map<String, Integer> tokenFreq;
     private Integer docCount;
     private Double averageDocLength;
+    private Boolean enableStopWords;
 
     public SparseVectorBm25Encoder() {
+        this.tokenizer = new JiebaTokenizer();
         this.b = 0.75;
         this.k1 = 1.2;
     }
@@ -33,7 +36,7 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
         this.k1 = k1;
     }
 
-    public void setTokenFreq(Map<Integer, Integer> tokenFreq) {
+    public void setTokenFreq(Map<String, Integer> tokenFreq) {
         this.tokenFreq = tokenFreq;
     }
 
@@ -69,34 +72,34 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
         this.k1 = k1;
     }
 
-    private List<Pair<Integer, Integer>> getTokenTF(String text) {
-        List<Integer> tokens = this.tokenizer.encode(text);
-        Map<Integer, Integer> tokenFreq = new HashMap<>();
-        for (Integer token : tokens) {
+    private List<Pair<Long, Integer>> getTokenTF(String text) {
+        List<Long> tokens = this.tokenizer.encode(text);
+        Map<Long, Integer> tokenFreq = new HashMap<>();
+        for (Long token : tokens) {
             if (tokenFreq.containsKey(token)) {
                 tokenFreq.put(token, tokenFreq.get(token) + 1);
             } else {
                 tokenFreq.put(token, 1);
             }
         }
-        return tokens.stream().map(token->Pair.of(token, tokenFreq.get(token))).toList();
+        return tokenFreq.entrySet().stream().map(token->Pair.of(token.getKey(), token.getValue())).toList();
     }
 
     @Override
-    public List<List<Pair<Integer, Double>>> encodeTexts(List<String> texts) {
+    public List<List<Pair<Long, Double>>> encodeTexts(List<String> texts) {
         if (texts == null || texts.isEmpty()) {
             throw new IllegalArgumentException("texts is empty");
         }
         if (this.tokenFreq == null || this.docCount == null || this.averageDocLength == null) {
             throw new IllegalArgumentException("BM25 must be fit before encoding documents");
         }
-        List<List<Pair<Integer, Double>>> sparseVectors = new ArrayList<>();
+        List<List<Pair<Long, Double>>> sparseVectors = new ArrayList<>();
         for (String text : texts) {
-            List<Pair<Integer, Integer>> tokensPairs = this.getTokenTF(text);
+            List<Pair<Long, Integer>> tokensPairs = this.getTokenTF(text);
             Integer tfSum = tokensPairs.stream().map(Pair::getRight).
                     reduce(0, Integer::sum);
-            List<Pair<Integer, Double>> sparseVector = new ArrayList<>();
-            for (Pair<Integer, Integer> token : tokensPairs) {
+            List<Pair<Long, Double>> sparseVector = new ArrayList<>();
+            for (Pair<Long, Integer> token : tokensPairs) {
                 Integer freq = token.getValue();
                 double score = (freq+0.0) / (this.k1*(1 - this.b + this.b * (tfSum / this.averageDocLength)) + freq);
                 sparseVector.add(Pair.of(token.getKey(), score));
@@ -107,21 +110,22 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
     }
 
     @Override
-    public List<List<Pair<Integer, Double>>> encodeQueries(List<String> texts) {
+    public List<List<Pair<Long, Double>>> encodeQueries(List<String> texts) {
         if (this.tokenFreq == null || this.docCount == null || this.averageDocLength == null) {
             throw new IllegalArgumentException("BM25 must be fit before encoding documents");
         }
-        List<List<Pair<Integer, Double>>> sparseVectors = new ArrayList<>();
+        List<List<Pair<Long, Double>>> sparseVectors = new ArrayList<>();
         for (String text : texts) {
-            List<Pair<Integer, Integer>> tokensPairs = this.getTokenTF(text);
+            List<Pair<Long, Integer>> tokensPairs = this.getTokenTF(text);
             List<Integer> df = tokensPairs.stream().
-                    map(key->this.tokenFreq.getOrDefault(key.getKey(), 1)).toList();
-            Integer idfSum = df.stream().reduce(0, Integer::sum);
+                    map(key->this.tokenFreq.getOrDefault(key.getKey().toString(), 1)).toList();
+
             List<Double> idfs = df.stream().map(idf->Math.log((this.docCount +1) / (idf + 0.5))).toList();
-            List<Pair<Integer, Double>> sparseVector = new ArrayList<>();
-            tokensPairs.forEach(token->{
-                sparseVector.add(Pair.of(token.getKey(), idfs.get(token.getKey()) / idfSum));
-            });
+            Double idfSum = idfs.stream().reduce(0.0, Double::sum);
+            List<Pair<Long, Double>> sparseVector = new ArrayList<>();
+            for (int i = 0; i < tokensPairs.size(); i++) {
+                sparseVector.add(Pair.of(tokensPairs.get(i).getKey(), idfs.get(i) / idfSum));
+            }
             sparseVectors.add(sparseVector);
         }
         return sparseVectors;
@@ -132,31 +136,31 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
         if (texts == null || texts.isEmpty()) {
             throw new IllegalArgumentException("texts is empty");
         }
-        Map<Integer, Integer> tokenFreq = new HashMap<>();
+        Map<String, Integer> tokenFreq = new HashMap<>();
         int docNum = 0;
         int sumDocLen = 0;
         List<Integer> docLengths = new ArrayList<>();
         for (String text : texts) {
-            List<Pair<Integer,Integer>> tokens = this.getTokenTF(text);
+            List<Pair<Long,Integer>> tokens = this.getTokenTF(text);
             docNum += 1;
             sumDocLen += tokens.stream().map(Pair::getRight).reduce(0, Integer::sum);
-            for (Pair<Integer, Integer> token : tokens) {
-                if (tokenFreq.containsKey(token.getKey())) {
-                    tokenFreq.put(token.getKey(), tokenFreq.get(token.getKey()) + 1);
+            for (Pair<Long, Integer> token : tokens) {
+                if (tokenFreq.containsKey(token.getKey().toString())) {
+                    tokenFreq.put(token.getKey().toString(), tokenFreq.get(token.getKey().toString()) + 1);
                 } else {
-                    tokenFreq.put(token.getKey(), 1);
+                    tokenFreq.put(token.getKey().toString(), 1);
                 }
             }
             docLengths.add(tokens.size());
         }
         if (this.tokenFreq == null || this.docCount == null || this.averageDocLength == null) {
             this.tokenFreq = tokenFreq;
-            this.docCount = texts.size();
+            this.docCount = docNum;
             this.averageDocLength = docLengths.stream().reduce(0, Integer::sum) / (double) docLengths.size();
         }else {
             this.docCount += docNum;
             this.averageDocLength = (this.averageDocLength * this.docCount + sumDocLen) / (this.docCount + docNum);
-            for (Integer token : tokenFreq.keySet()) {
+            for (String token : tokenFreq.keySet()) {
                 if (this.tokenFreq.containsKey(token)) {
                     this.tokenFreq.put(token, this.tokenFreq.get(token) + tokenFreq.get(token));
                 } else {
@@ -178,8 +182,8 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(paramsFile);
         try {
             String fileContent = new String(inputStream.readAllBytes());
-            Gson gson = new Gson();
-            Bm25Parameter bm25Parameter =  gson.fromJson(fileContent, Bm25Parameter.class);
+
+            Bm25Parameter bm25Parameter =  JsonUtils.parseObject(fileContent, Bm25Parameter.class);
             this.tokenFreq = bm25Parameter.getTokenFreq();
             this.docCount = bm25Parameter.getDocCount();
             this.averageDocLength = bm25Parameter.getAverageDocLength();
@@ -193,6 +197,28 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
 
     @Override
     public void setDict(String dictFile) {
+        this.tokenizer.loadDict(dictFile);
+    }
+    // build模式
+    public static class Builder {
+        private BaseTokenizer tokenizer;
+        private Double b;
+        private Double k1;
+        public Builder withTokenizer(BaseTokenizer tokenizer) {
+            this.tokenizer = tokenizer;
+            return this;
+        }
+        public Builder withB(Double b) {
+            this.b = b;
+            return this;
+        }
 
+        public Builder withK1(Double k1) {
+            this.k1 = k1;
+            return this;
+        }
+        public SparseVectorBm25Encoder build() {
+            return new SparseVectorBm25Encoder(tokenizer, b, k1);
+        }
     }
 }

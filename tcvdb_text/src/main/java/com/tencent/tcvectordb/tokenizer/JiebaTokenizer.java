@@ -1,20 +1,20 @@
 package com.tencent.tcvectordb.tokenizer;
 
 import com.huaban.analysis.jieba.JiebaSegmenter;
-import com.huaban.analysis.jieba.SegToken;
 import com.huaban.analysis.jieba.WordDictionary;
 import com.tencent.tcvectordb.hash.BaseHash;
 import com.tencent.tcvectordb.hash.Mm3BaseHash;
 
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Set;
 
 public class JiebaTokenizer extends BaseTokenizer{
 
     private JiebaSegmenter segmenter;
 
-    public JiebaTokenizer(BaseHash hash, List<String> stopWords, Boolean lowerCase, String dictFilePath) {
-        super(hash, stopWords, lowerCase, dictFilePath);
+    public JiebaTokenizer(BaseHash hash, Boolean enableStopWords, Set<String> stopWords, Boolean lowerCase, String dictFilePath) {
+        super(hash, enableStopWords, stopWords, lowerCase, dictFilePath);
         if (!dictFilePath.isEmpty()) {
             WordDictionary.getInstance().init(Paths.get(dictFilePath));
         }
@@ -25,11 +25,12 @@ public class JiebaTokenizer extends BaseTokenizer{
         super();
         this.hash = new Mm3BaseHash();
         this.segmenter = new JiebaSegmenter();
+        this.stopWords = StopWords.getStopWordsFromFile("data/stopwords.txt");
     }
 
     public void setDict(String dicFile) {
         if (!dicFile.isEmpty()) {
-            WordDictionary.getInstance().init(Paths.get(dicFile));
+            WordDictionary.getInstance().loadUserDict(Paths.get(dicFile));
         }
     }
 
@@ -39,7 +40,7 @@ public class JiebaTokenizer extends BaseTokenizer{
         if(sentence.isEmpty()){
             return List.of();
         }
-        if (this.lowerCase){
+        if (this.lowerCase!=null && this.lowerCase){
             sentence = sentence.toLowerCase();
         }
         List<String> words;
@@ -47,16 +48,19 @@ public class JiebaTokenizer extends BaseTokenizer{
         words = words.stream().filter(word -> {
             if(word.equals(" ") || word.equals("　")) {
                 return false;
-            }else if (this.stopWords.contains(word)) {
+            }else if (this.enableStopWords!=null && this.enableStopWords &&
+                    this.stopWords!=null && this.stopWords.contains(word)) {
                 return false;
             }
             return true;
         }).toList();
+
+
         return words;
     }
 
     @Override
-    public List<Integer> encode(String text) {
+    public List<Long> encode(String text) {
         return this.tokenize(text).stream().map(word -> this.hash.hash(word)).toList();
     }
 
@@ -65,10 +69,48 @@ public class JiebaTokenizer extends BaseTokenizer{
         return null;
     }
 
-    public void updateParameter(BaseHash hash, List<String> stopWords, Boolean lowerCase, String dictFilePath){
+    public void updateParameter(BaseHash hash, Set<String> stopWords, Boolean lowerCase, String dictFilePath){
         this.hash = hash;
         this.stopWords = stopWords;
         this.lowerCase = lowerCase;
         this.dictFilePath = dictFilePath;
     }
+
+    @Override
+    public void loadDict(String dictFile) {
+        WordDictionary.getInstance().loadUserDict(Paths.get(dictFile));
+    }
+
+    //生成builder模式
+    public static class Builder{
+        private BaseHash hash;
+        private Set<String> stopWords;
+        private Boolean lowerCase;
+        private String dictFilePath;
+        private Boolean enableStopWords;
+        public Builder withHash(BaseHash hash){
+            this.hash = hash;
+            return this;
+        }
+        public Builder withStopWords(Set<String> stopWords){
+            this.stopWords = stopWords;
+            return this;
+        }
+        public Builder withLowerCase(Boolean lowerCase){
+            this.lowerCase = lowerCase;
+            return this;
+        }
+        public Builder withDictFilePath(String dictFilePath){
+            this.dictFilePath = dictFilePath;
+            return this;
+        }
+        public Builder withEnableStopWords(Boolean enableStopWords){
+            this.enableStopWords = enableStopWords;
+            return this;
+        }
+        public JiebaTokenizer build(){
+            return new JiebaTokenizer(hash, enableStopWords, stopWords, lowerCase, dictFilePath);
+        }
+    }
+
 }

@@ -355,7 +355,8 @@ public class VectorDBExample {
                 .and("a=1")
                 .or("r=\"or\"")
                 .orNot("rn=2")
-                .andNot("an=\"andNot\"").and(Filter.include("key", Arrays.asList("1", "2", "3")))
+                .andNot("an=\"andNot\" and an=3").and("an=1").
+                and(Filter.include("key", Arrays.asList("1", "2", "3")))
                 .getCond());
         System.out.println("\tres: " + Filter.in("key", Arrays.asList("v1", "v2", "v3")));
         System.out.println("\tres: " + Filter.in("key", Arrays.asList(1, 2, 3)));

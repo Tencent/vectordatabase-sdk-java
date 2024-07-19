@@ -6,7 +6,7 @@ import com.tencent.tcvectordb.tokenizer.JiebaTokenizer;
 import java.io.File;
 import java.util.Arrays;
 
-public class Main {
+public class example {
     public static void main(String[] args) {
 //        userDict();
         quickStart();
@@ -29,7 +29,7 @@ public class Main {
     }
     public static void userDict(){
         JiebaTokenizer tokenizer = new JiebaTokenizer();
-        String projectPath = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        String projectPath = example.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 
         // 创建一个 File 对象来表示工程路径
         File projectDirectory = new File(projectPath);

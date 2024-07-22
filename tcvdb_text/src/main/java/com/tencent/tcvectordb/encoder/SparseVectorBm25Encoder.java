@@ -1,15 +1,12 @@
 package com.tencent.tcvectordb.encoder;
 
-import com.google.gson.Gson;
+
 import com.tencent.tcvectordb.tokenizer.BaseTokenizer;
 import com.tencent.tcvectordb.tokenizer.JiebaTokenizer;
 import com.tencent.tcvectordb.utils.JsonUtils;
 import org.apache.commons.lang3.tuple.Pair;
-
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.util.*;
 
 public class SparseVectorBm25Encoder implements BaseSparseEncoder{

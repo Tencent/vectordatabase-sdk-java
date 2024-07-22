@@ -18,10 +18,10 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.tencent.tcvectordb.model.param.dml;;
+package com.tencent.tcvdb.model.param.dml;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.tencent.tcvectordb.exception.ParamException;
+import com.tencent.tcvdb.exception.ParamException;
 
 import java.util.List;
 import java.util.stream.Collectors;

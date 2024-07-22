@@ -2,10 +2,6 @@ package com.tencent.tcvectordb.hash;
 
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
-import net.jpountz.xxhash.XXHash32;
-import net.jpountz.xxhash.XXHashFactory;
-
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 public class Mm3BaseHash implements BaseHash {

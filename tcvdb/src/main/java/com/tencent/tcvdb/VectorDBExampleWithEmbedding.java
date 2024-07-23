@@ -43,7 +43,7 @@ import static com.tencent.tcvdb.model.param.enums.EmbeddingModelEnum.BGE_BASE_ZH
  */
 public class VectorDBExampleWithEmbedding {
 
-    private static final String DBNAME = "book";
+    private static final String DBNAME = "book_2";
     private static final String COLL_NAME = "book_segments_2";
     private static final String COLL_NAME_ALIAS = "collection_alias_2";
 
@@ -77,6 +77,7 @@ public class VectorDBExampleWithEmbedding {
         List<Document> documentList = new ArrayList<>(Arrays.asList(
                 Document.newBuilder()
                         .withId("0001")
+                        .withVectorByText("embedding($text, 'm3e-base')")
                         .addDocField(new DocField("bookName", "西游记"))
                         .addDocField(new DocField("author", "吴承恩"))
                         .addDocField(new DocField("page", 21))
@@ -85,6 +86,7 @@ public class VectorDBExampleWithEmbedding {
                         .build(),
                 Document.newBuilder()
                         .withId("0002")
+                        .withVectorByText("embedding($text, 'm3e-base')")
                         .addDocField(new DocField("bookName", "西游记"))
                         .addDocField(new DocField("author", "吴承恩"))
                         .addDocField(new DocField("page", 22))
@@ -95,6 +97,7 @@ public class VectorDBExampleWithEmbedding {
                         .build(),
                 Document.newBuilder()
                         .withId("0003")
+                        .withVectorByText("embedding($text, 'm3e-base')")
                         .addDocField(new DocField("bookName", "三国演义"))
                         .addDocField(new DocField("author", "罗贯中"))
                         .addDocField(new DocField("page", 23))
@@ -103,6 +106,7 @@ public class VectorDBExampleWithEmbedding {
                         .build(),
                 Document.newBuilder()
                         .withId("0004")
+                        .withVectorByText("embedding($text, 'm3e-base')")
                         .addDocField(new DocField("bookName", "三国演义"))
                         .addDocField(new DocField("author", "罗贯中"))
                         .addDocField(new DocField("page", 24))
@@ -111,6 +115,7 @@ public class VectorDBExampleWithEmbedding {
                         .build(),
                 Document.newBuilder()
                         .withId("0005")
+                        .withVectorByText("embedding($text, 'm3e-base')")
                         .addDocField(new DocField("bookName", "三国演义"))
                         .addDocField(new DocField("author", "罗贯中"))
                         .addDocField(new DocField("page", 25))
@@ -171,7 +176,7 @@ public class VectorDBExampleWithEmbedding {
         System.out.println("---------------------- searchById ----------------------");
         SearchParam searchByIdParam = SearchParam.newBuilder()
                 .withAnn(Arrays.asList(AnnOption.newBuilder().withFieldName("id")
-                        .withData(Collections.singletonList(documentIds))
+                        .withDocumentIds(documentIds)
                         // 若使用 HNSW 索引，则需要指定参数ef，ef越大，召回率越高，但也会影响检索速度
                         .withParam(new HNSWSearchParams(100))
                         .build()))
@@ -208,7 +213,7 @@ public class VectorDBExampleWithEmbedding {
         List<Document> allRes = collection.query(queryParam);
         SearchParam searchByVectorParam = SearchParam.newBuilder()
                 .withAnn(Arrays.asList(AnnOption.newBuilder().withFieldName("vector")
-                        .withData(allRes.stream().map(Document::getVector).collect(Collectors.toList()))
+                        .withData(allRes.stream().flatMap(document -> document.getVector().stream()).collect(Collectors.toList()))
                         // 若使用 HNSW 索引，则需要指定参数ef，ef越大，召回率越高，但也会影响检索速度
                         .withParam(new HNSWSearchParams(100))
                         .build()))
@@ -232,9 +237,9 @@ public class VectorDBExampleWithEmbedding {
         // 查询结果可以通过 SearchRes#getDocuments
         System.out.println("---------------------- searchByEmbeddingItems ----------------------");
         SearchParam searchByEmbeddingItemsParam = SearchParam.newBuilder()
-                .withAnn(Arrays.asList(AnnOption.newBuilder().withFieldName("id")
-                        .withData(Arrays.asList("embedding('闻刘玄德新领徐州', 'bge-base-zh')",
-                                "embedding('细作探知这个消息', 'bge-base-zh')"))
+                .withAnn(Arrays.asList(AnnOption.newBuilder().withFieldName("vector")
+                        .withData(Arrays.asList("embedding('闻刘玄德新领徐州', 'm3e-base')",
+                                "embedding('细作探知这个消息', 'm3e-base')"))
                         // 若使用 HNSW 索引，则需要指定参数ef，ef越大，召回率越高，但也会影响检索速度
                         .withParam(new HNSWSearchParams(100))
                         .build()))
@@ -384,19 +389,13 @@ public class VectorDBExampleWithEmbedding {
         return CreateCollectionParam.newBuilder()
                 .withName(collName)
                 .withShardNum(1)
-                .withReplicaNum(1)
+                .withReplicaNum(0)
                 .withDescription("test embedding collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", BGE_BASE_ZH.getDimension(), IndexType.HNSW,
                         MetricType.COSINE, new HNSWParams(16, 200)))
                 .addField(new FilterIndex("bookName", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("author", FieldType.String, IndexType.FILTER))
-                .withEmbedding(
-                        WordsEmbedding
-                                .newBuilder()
-                                .withFieldName("text")
-                                .withEmptyInputRerank("norank")
-                                .build())
                 .build();
     }
 

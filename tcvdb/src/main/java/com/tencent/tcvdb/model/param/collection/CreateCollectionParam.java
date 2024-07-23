@@ -40,8 +40,6 @@ public class CreateCollectionParam extends Collection {
         this.shardNum = builder.shardNum;
         this.description = builder.description;
         this.indexes = builder.indexes;
-        this.wordsEmbedding = builder.wordsEmbedding;
-        this.partition = builder.partition;
     }
 
     public static Builder newBuilder() {
@@ -53,9 +51,7 @@ public class CreateCollectionParam extends Collection {
         private int replicaNum = 2;
         private int shardNum = 1;
         private String description;
-        private WordsEmbedding wordsEmbedding;
         private final List<IndexField> indexes;
-        private Partition partition;
 
         private Builder() {
             this.indexes = new ArrayList<>();
@@ -72,13 +68,9 @@ public class CreateCollectionParam extends Collection {
         }
 
         /**
-         * {@link  Builder#withShardNum(int)} has been deprecated, please use {@link  Builder#withPartition(Partition)}
-         * instead. {@link Partition} class.
-         *
          * @param shardNum
          * @return {@link Builder}
          */
-        @Deprecated
         public Builder withShardNum(int shardNum) {
             this.shardNum = shardNum;
             return this;
@@ -91,16 +83,6 @@ public class CreateCollectionParam extends Collection {
 
         public Builder addField(IndexField field) {
             this.indexes.add(field);
-            return this;
-        }
-
-        public Builder withEmbedding(WordsEmbedding wordsEmbedding) {
-            this.wordsEmbedding = wordsEmbedding;
-            return this;
-        }
-
-        public Builder withPartition(Partition partition) {
-            this.partition = partition;
             return this;
         }
 

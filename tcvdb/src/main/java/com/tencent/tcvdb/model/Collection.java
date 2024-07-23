@@ -29,13 +29,9 @@ import com.tencent.tcvdb.model.param.entity.AffectRes;
 import com.tencent.tcvdb.model.param.entity.SearchRes;
 import com.tencent.tcvdb.service.param.*;
 import com.tencent.tcvdb.model.param.collection.IndexField;
-import com.tencent.tcvdb.model.param.collection.Partition;
-import com.tencent.tcvdb.model.param.collection.WordsEmbedding;
-import com.tencent.tcvdb.model.param.dml.*;
 import com.tencent.tcvdb.model.param.entity.BaseRes;
 import com.tencent.tcvdb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvdb.service.Stub;
-import com.tencent.tcvdb.service.param.*;
 import com.tencent.tcvdb.utils.JsonUtils;
 
 import java.util.Date;
@@ -58,11 +54,9 @@ public class Collection {
     private String createTime;
     @JsonIgnore
     protected ReadConsistencyEnum readConsistency;
-    private long documentCount;
+    private Long documentCount;
     private IndexStatus indexStatus;
     private List<String> alias;
-    protected WordsEmbedding wordsEmbedding;
-    protected Partition partition;
 
     public void setStub(Stub stub) {
         this.stub = stub;
@@ -100,7 +94,7 @@ public class Collection {
         return createTime;
     }
 
-    public long getDocumentCount() {
+    public Long getDocumentCount() {
         return documentCount;
     }
 
@@ -120,16 +114,8 @@ public class Collection {
         this.readConsistency = readConsistency;
     }
 
-    public WordsEmbedding getEmbedding() {
-        return wordsEmbedding;
-    }
-
-    public void setEmbedding(WordsEmbedding wordsEmbedding) {
-        this.wordsEmbedding = wordsEmbedding;
-    }
-
-    public Partition getPartition() {
-        return partition;
+    public void setDocumentCount(Long documentCount) {
+        this.documentCount = documentCount;
     }
 
     public AffectRes upsert(InsertParam param) throws VectorDBException {

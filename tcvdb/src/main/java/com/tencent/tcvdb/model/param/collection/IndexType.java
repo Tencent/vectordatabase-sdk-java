@@ -63,7 +63,7 @@ public enum IndexType {
      */
     FILTER("filter"),
 
-    INVERTED("inverted");
+    SPARSE_INVERTED("inverted");
 
     private final String value;
 

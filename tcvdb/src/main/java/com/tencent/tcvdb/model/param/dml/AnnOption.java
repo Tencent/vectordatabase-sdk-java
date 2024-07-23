@@ -10,6 +10,7 @@ import java.util.List;
 public class AnnOption {
     private String fieldName;
     private List<Object> data;
+    private List<String> documentIds;
     private Params params;
 
     public String getFieldName() {
@@ -36,10 +37,19 @@ public class AnnOption {
         this.params = params;
     }
 
+    public List<String> getDocumentIds() {
+        return documentIds;
+    }
+
+    public void setDocumentIds(List<String> documentIds) {
+        this.documentIds = documentIds;
+    }
+
     public AnnOption(Builder builder) {
         this.fieldName = builder.fieldName;
         this.data = builder.data;
         this.params = builder.params;
+        this.documentIds = builder.documentIds;
     }
 
     public static Builder newBuilder() {
@@ -50,6 +60,8 @@ public class AnnOption {
         private String fieldName;
         private List<Object> data;
         private Params params;
+
+        private List<String> documentIds;
 
         private Builder() {
         }
@@ -68,11 +80,12 @@ public class AnnOption {
             this.params = params;
             return this;
         }
+        public Builder withDocumentIds(List<String> documentIds){
+            this.documentIds = documentIds;
+            return this;
+        }
 
         public AnnOption build() {
-            if (fieldName == null || data.isEmpty()){
-                throw new ParamException("RetrieveOption error: fieldName or data is null");
-            }
             return new AnnOption(this);
         }
     }

@@ -41,7 +41,7 @@ public enum FieldType {
 
     Array("array"),
 
-    SparseVector("sparse_vector");
+    SparseVector("sparseVector");
 
     private final String value;
 

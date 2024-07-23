@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.tencent.tcvdb.exception.VectorDBException;
 import com.tencent.tcvdb.model.Collection;
-import com.tencent.tcvdb.model.param.collection.Partition;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -24,20 +23,6 @@ public class CollectionDeserialize extends JsonDeserializer<Collection> {
         ifNeedInit();
 
         Collection collection = InternalUtils.jsonNodeToObject(p.getCodec().readTree(p), Collection.class);
-        Partition partition = collection.getPartition();
-
-        if (Objects.nonNull(partition) &&
-                !Objects.equals(0, partition.getPartitionNum()) &&
-                !Objects.equals(partition.getPartitionNum(), collection.getShardNum())) {
-
-            try {
-                this.shardNumField.set(collection, partition.getPartitionNum());
-            } catch (IllegalAccessException e) {
-                throw new VectorDBException(
-                        String.format("set shardNum to %s type instance failed", Collection.class.getName()), e);
-            }
-
-        }
         return collection;
     }
 

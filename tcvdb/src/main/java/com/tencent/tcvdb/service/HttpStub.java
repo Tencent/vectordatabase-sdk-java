@@ -318,11 +318,12 @@ public class HttpStub implements Stub {
             } else if (StringUtils.equals("vector", name)) {
                 List<Double> vector = JsonUtils.parseObject(ele.toString(), new TypeReference<List<Double>>() {
                 });
-                builder.withVector(Collections.singletonList(vector));
+                builder.withVectorByList(Collections.singletonList(vector));
             } else if (StringUtils.equals("score", name)) {
                 builder.withScore(ele.asDouble());
             }else if (StringUtils.equals("sparse_vector", name)) {
-                builder.withSparseVector(JsonUtils.parseList(ele, List.class, Pair.class));
+                builder.withSparseVectorList(JsonUtils.parseObject(ele.toString(), new TypeReference<List<Object>>() {
+                }));
             }else {
                 if (ele.isInt()) {
                     builder.addFilterField(new DocField(name, ele.asInt()));

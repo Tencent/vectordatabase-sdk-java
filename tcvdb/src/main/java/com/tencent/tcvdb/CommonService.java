@@ -22,7 +22,7 @@ public class CommonService {
      */
     private static ConnectParam initConnectParam() {
         String vdbURL = "http://9.135.180.240:9500";
-        String vdbKey = "tRMfYDhPFsyXgzE1cBUZYOXqIMSH6pxzxkmj0xL0";
+        String vdbKey = "OFxd1WfoOejNYK20ZEAMdRnRsJI3HErLrRgOyS6i";
         System.out.println("\tvdb_url: " + vdbURL);
         System.out.println("\tvdb_key: " + vdbKey);
         return ConnectParam.newBuilder()

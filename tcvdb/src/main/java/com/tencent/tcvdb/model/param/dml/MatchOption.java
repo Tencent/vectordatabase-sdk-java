@@ -2,14 +2,16 @@ package com.tencent.tcvdb.model.param.dml;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencent.tcvdb.exception.ParamException;
+import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MatchOption {
     private String fieldName;
-    private List<Object> data;
+    private List<List<List<Object>>> data;
     private Integer limit;
 
     public String getFieldName() {
@@ -20,11 +22,11 @@ public class MatchOption {
         this.fieldName = fieldName;
     }
 
-    public List<Object> getData() {
+    public List<List<List<Object>>> getData() {
         return data;
     }
 
-    public void setData(List<Object> data) {
+    public void setData(List<List<List<Object>>> data) {
         this.data = data;
     }
 
@@ -48,7 +50,7 @@ public class MatchOption {
 
     public static final class Builder {
         private String fieldName;
-        private List<Object> data;
+        private List<List<List<Object>>> data;
         private Integer limit;
 
         private Builder() {
@@ -59,8 +61,19 @@ public class MatchOption {
             return this;
         }
 
-        public Builder withData(List<Object> data){
-            this.data = data;
+        public Builder withData(List<List<Pair<Long, Double>>> data){
+            List<List<List<Object>>> sparseData = new ArrayList<>();
+            for (List<Pair<Long, Double>> dataItem : data){
+                List<List<Object>> pairsList = new ArrayList<>();
+                for (Pair<Long, Double> dataItemItem : dataItem){
+                    List<Object> pairTmp = new ArrayList<>();
+                    pairTmp.add(dataItemItem.getLeft());
+                    pairTmp.add(dataItemItem.getRight());
+                    pairsList.add(pairTmp);
+                }
+                sparseData.add(pairsList);
+            }
+            this.data = sparseData;
             return this;
         }
 

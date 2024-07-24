@@ -1,5 +1,6 @@
 package com.tencent.tcvdb.utils;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -10,6 +11,7 @@ import com.tencent.tcvdb.exception.VectorDBException;
 import com.tencent.tcvdb.model.Collection;
 import com.tencent.tcvdb.serializer.CollectionDeserialize;
 import com.tencent.tcvdb.serializer.CollectionSerialize;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.text.SimpleDateFormat;
 
@@ -29,8 +31,8 @@ public class JsonUtils {
         module.addDeserializer(com.tencent.tcvdb.model.Collection.class, new CollectionDeserialize());
         module.addSerializer(Collection.class, new CollectionSerialize());
         MAPPER.registerModule(module);
-//        MAPPER.configOverride(Pair.class)
-//                .setFormat(JsonFormat.Value.forShape(JsonFormat.Shape.ARRAY));
+        MAPPER.configOverride(Pair.class)
+                .setFormat(JsonFormat.Value.forShape(JsonFormat.Shape.ARRAY));
 //        MAPPER.registerModule(new PairListModule());
     }
 

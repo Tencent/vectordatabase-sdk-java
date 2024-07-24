@@ -21,7 +21,6 @@
 package com.tencent.tcvdb;
 
 
-
 import com.tencent.tcvdb.client.VectorDBClient;
 import com.tencent.tcvdb.model.Collection;
 import com.tencent.tcvdb.model.Database;
@@ -30,12 +29,10 @@ import com.tencent.tcvdb.model.Document;
 import com.tencent.tcvdb.model.param.collection.*;
 import com.tencent.tcvdb.model.param.dml.*;
 import com.tencent.tcvdb.model.param.entity.AffectRes;
-import com.tencent.tcvdb.model.param.enums.PartitionTypeEnum;
 import com.tencent.tcvdb.utils.JsonUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -57,7 +54,7 @@ public class VectorDBExample {
         // 测试
         createDatabaseAndCollection(client);
         upsertData(client);
-        queryData(client);
+        queryAndSearchData(client);
         updateAndDelete(client);
         deleteAndDrop(client);
         testFilter();
@@ -127,7 +124,7 @@ public class VectorDBExample {
         Thread.sleep(1000 * 5);
     }
 
-    private static void queryData(VectorDBClient client) {
+    private static void queryAndSearchData(VectorDBClient client) {
         Database database = client.database(DBNAME);
         Collection collection = database.describeCollection(COLL_NAME);
 
@@ -194,6 +191,8 @@ public class VectorDBExample {
                         // 若使用 HNSW 索引，则需要指定参数ef，ef越大，召回率越高，但也会影响检索速度
                         .withParam(new HNSWSearchParams(100))
                         .build()))
+                // 支持词嵌入 rerank 能力，通过设置 enable 为 true 来开启，
+//                .withRerank(WordsEmbeddingRerankOption.newBuilder().withEnable(true).withExpectRecallMultiples(3.0).build())
                 // 指定 Top K 的 K 值
                 .withLimit(2)
                 // 过滤获取到结果

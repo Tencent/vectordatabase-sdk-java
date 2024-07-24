@@ -4,31 +4,17 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RerankOption {
-    private Boolean enable;
-    private Double expectRecallMultiples;
+    protected String method;
 
-    public RerankOption(boolean enable, double expectRecallMultiples) {
-        this.enable = enable;
-        this.expectRecallMultiples = expectRecallMultiples;
+    public RerankOption(String method) {
+        this.method = method;
     }
 
-    public RerankOption(boolean enable) {
-        this.enable = enable;
+    public String getMethod() {
+        return method;
     }
 
-    public Boolean isEnable() {
-        return enable;
-    }
-
-    public void setEnable(Boolean enable) {
-        this.enable = enable;
-    }
-
-    public Double getExpectRecallMultiples() {
-        return expectRecallMultiples;
-    }
-
-    public void setExpectRecallMultiples(double expectRecallMultiples) {
-        this.expectRecallMultiples = expectRecallMultiples;
+    public void setMethod(String method) {
+        this.method = method;
     }
 }

@@ -51,8 +51,70 @@
             <groupId>com.tencent.tcvdb</groupId>
             <artifactId>tcvdb_text</artifactId>
             <version>1.0.0-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>/Users/anyihao/.m2/repository/com/tencent/tcvdb/tcvdb_text/1.0.0-SNAPSHOT/tcvdb_text-1.0.0-SNAPSHOT.jar</systemPath>
+        </dependency>
+        <!-- grpc-netty -->
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-netty-shaded</artifactId>
+            <version>1.61.1</version>
+        </dependency>
+        <!-- grpc-protobuf -->
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-protobuf</artifactId>
+            <version>1.61.1</version>
+        </dependency>
+        <!-- grpc-stub -->
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-stub</artifactId>
+            <version>1.61.1</version>
+        </dependency>
+        <!-- apache.tomcat annotations-api -->
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>annotations-api</artifactId>
+            <version>6.0.53</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- protobuf-java -->
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>4.26.1</version>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.github.ascopes</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <!-- 此处写入protobuf-maven-plugin的版本 -->
+                <version>1.1.3</version>
+
+                <!-- protobuf-maven-plugin 的配置信息 -->
+                <configuration>
+                    <!-- 此处的版本为上面protobuf-java的版本 -->
+                    <protocVersion>4.26.1</protocVersion>
+                    <!-- proto文件默认位置： src/main/protobuf/helloworld.proto；生成位置：target/generated-sources/protobuf  -->
+                    <sourceDirectories>
+                        <sourceDirectory>src/main/java/com/tencent/tcvdb/rpc/proto</sourceDirectory>
+                    </sourceDirectories>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
 <!--    <build>-->
 <!--        <plugins>-->
 <!--            <plugin>-->

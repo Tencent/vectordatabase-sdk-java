@@ -15,6 +15,10 @@ public class AffectRes extends BaseRes {
         return affectedCount;
     }
 
+    public AffectRes(int code, String msg, String warning, long affectedCount) {
+        super(code, msg, warning);
+        this.affectedCount = affectedCount;
+    }
 
     @Override
     public String toString() {

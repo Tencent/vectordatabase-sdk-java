@@ -24,16 +24,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencent.tcvdb.exception.VectorDBException;
+import com.tencent.tcvdb.model.param.collection.IndexField;
+import com.tencent.tcvdb.model.param.collection.WordsEmbeddingParam;
 import com.tencent.tcvdb.model.param.dml.*;
 import com.tencent.tcvdb.model.param.entity.AffectRes;
-import com.tencent.tcvdb.model.param.entity.SearchRes;
-import com.tencent.tcvdb.service.param.*;
-import com.tencent.tcvdb.model.param.collection.IndexField;
 import com.tencent.tcvdb.model.param.entity.BaseRes;
+import com.tencent.tcvdb.model.param.entity.SearchRes;
 import com.tencent.tcvdb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvdb.service.Stub;
+import com.tencent.tcvdb.service.param.*;
 import com.tencent.tcvdb.utils.JsonUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -45,7 +48,7 @@ import java.util.List;
 public class Collection {
     @JsonIgnore
     private Stub stub;
-    private String database;
+    protected String database;
     protected String collection;
     protected int replicaNum = 2;
     protected int shardNum = 1;
@@ -54,9 +57,19 @@ public class Collection {
     private String createTime;
     @JsonIgnore
     protected ReadConsistencyEnum readConsistency;
-    private Long documentCount;
-    private IndexStatus indexStatus;
+    protected Long documentCount;
+    protected IndexStatus indexStatus;
     private List<String> alias;
+
+    protected WordsEmbeddingParam wordsEmbedding;
+
+    public WordsEmbeddingParam getWordsEmbedding() {
+        return wordsEmbedding;
+    }
+
+    public void setWordsEmbedding(WordsEmbeddingParam wordsEmbedding) {
+        this.wordsEmbedding = wordsEmbedding;
+    }
 
     public void setStub(Stub stub) {
         this.stub = stub;
@@ -114,6 +127,34 @@ public class Collection {
         this.readConsistency = readConsistency;
     }
 
+    public void setReplicaNum(int replicaNum) {
+        this.replicaNum = replicaNum;
+    }
+
+    public void setShardNum(int shardNum) {
+        this.shardNum = shardNum;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setIndexes(List<IndexField> indexes) {
+        this.indexes = indexes;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public void setIndexStatus(IndexStatus indexStatus) {
+        this.indexStatus = indexStatus;
+    }
+
+    public void setAlias(List<String> alias) {
+        this.alias = alias;
+    }
+
     public void setDocumentCount(Long documentCount) {
         this.documentCount = documentCount;
     }
@@ -166,6 +207,24 @@ public class Collection {
 
         public Date getStartTime() {
             return startTime;
+        }
+
+        public IndexStatus() {
+        }
+
+        public IndexStatus(String status, String startTime) {
+            this.status = status;
+            String formatPattern = "yyyy-MM-dd HH:mm:ss";
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat(formatPattern);
+            try {
+                Date date = dateFormat.parse(startTime);
+                this.startTime = date;
+                System.out.println("Parsed Date: " + date);
+            } catch (ParseException e) {
+                System.err.println("Failed to parse date: " + e.getMessage());
+            }
+
         }
 
         @Override

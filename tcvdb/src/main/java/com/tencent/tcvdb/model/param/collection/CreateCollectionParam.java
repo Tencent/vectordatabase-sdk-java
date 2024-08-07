@@ -40,6 +40,7 @@ public class CreateCollectionParam extends Collection {
         this.shardNum = builder.shardNum;
         this.description = builder.description;
         this.indexes = builder.indexes;
+        this.wordsEmbedding = builder.wordsEmbedding;
     }
 
     public static Builder newBuilder() {
@@ -51,6 +52,7 @@ public class CreateCollectionParam extends Collection {
         private int replicaNum = 2;
         private int shardNum = 1;
         private String description;
+        private WordsEmbeddingParam wordsEmbedding;
         private final List<IndexField> indexes;
 
         private Builder() {
@@ -83,6 +85,10 @@ public class CreateCollectionParam extends Collection {
 
         public Builder addField(IndexField field) {
             this.indexes.add(field);
+            return this;
+        }
+        public Builder withWordsEmbedding(WordsEmbeddingParam wordsEmbedding) {
+            this.wordsEmbedding = wordsEmbedding;
             return this;
         }
 

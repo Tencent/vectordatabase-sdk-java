@@ -20,6 +20,18 @@ public class GeneralParams implements Params {
         this.Radius = builder.Radius;
     }
 
+    public int getEf() {
+        return ef;
+    }
+
+    public int getNProbe() {
+        return NProbe;
+    }
+
+    public double getRadius() {
+        return Radius;
+    }
+
     public static Builder newBuilder() {
         return new Builder();
     }

@@ -2,30 +2,29 @@ package com.tencent.tcvdb.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-
 import com.tencent.tcvdb.exception.VectorDBException;
 import com.tencent.tcvdb.model.Collection;
+import com.tencent.tcvdb.model.Database;
+import com.tencent.tcvdb.model.DocField;
+import com.tencent.tcvdb.model.Document;
+import com.tencent.tcvdb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvdb.model.param.database.ConnectParam;
 import com.tencent.tcvdb.model.param.entity.AffectRes;
 import com.tencent.tcvdb.model.param.entity.BaseRes;
 import com.tencent.tcvdb.model.param.entity.DataBaseInfoRes;
 import com.tencent.tcvdb.model.param.entity.SearchRes;
 import com.tencent.tcvdb.service.param.*;
+import com.tencent.tcvdb.utils.JsonUtils;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.tencent.tcvdb.model.Database;
-import com.tencent.tcvdb.model.DocField;
-import com.tencent.tcvdb.model.Document;
-import com.tencent.tcvdb.model.param.collection.CreateCollectionParam;
-import com.tencent.tcvdb.model.param.entity.*;
-import com.tencent.tcvdb.service.param.*;
-import com.tencent.tcvdb.utils.JsonUtils;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**

@@ -32,7 +32,7 @@ import java.util.List;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class InsertParam {
-    private boolean buildIndex;
+    private Boolean buildIndex;
     private List<Document> documents;
 
     private InsertParam(Builder builder) {
@@ -40,7 +40,7 @@ public class InsertParam {
         this.buildIndex = builder.buildIndex;
     }
 
-    public boolean isBuildIndex() {
+    public Boolean isBuildIndex() {
         return buildIndex;
     }
 
@@ -53,7 +53,7 @@ public class InsertParam {
     }
 
     public static class Builder {
-        private boolean buildIndex = true;
+        private Boolean buildIndex = true;
         private List<Document> documents;
 
         public Builder() {

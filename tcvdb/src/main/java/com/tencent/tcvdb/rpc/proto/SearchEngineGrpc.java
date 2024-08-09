@@ -1,5 +1,7 @@
 package com.tencent.tcvdb.rpc.proto;
 
+import com.tencent.tcvdb.service.ApiPath;
+
 import static io.grpc.MethodDescriptor.generateFullMethodName;
 
 /**
@@ -112,7 +114,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvdb.rpc.proto.Olama.CreateCollectionResponse> getCreateCollectionMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "createCollection",
+      fullMethodName = ApiPath.COL_CREATE,
       requestType = com.tencent.tcvdb.rpc.proto.Olama.CreateCollectionRequest.class,
       responseType = com.tencent.tcvdb.rpc.proto.Olama.CreateCollectionResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -143,7 +145,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvdb.rpc.proto.Olama.DropCollectionResponse> getDropCollectionMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "dropCollection",
+      fullMethodName = ApiPath.COL_DROP,
       requestType = com.tencent.tcvdb.rpc.proto.Olama.DropCollectionRequest.class,
       responseType = com.tencent.tcvdb.rpc.proto.Olama.DropCollectionResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -174,7 +176,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvdb.rpc.proto.Olama.TruncateCollectionResponse> getTruncateCollectionMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "truncateCollection",
+      fullMethodName = ApiPath.COL_FLUSH,
       requestType = com.tencent.tcvdb.rpc.proto.Olama.TruncateCollectionRequest.class,
       responseType = com.tencent.tcvdb.rpc.proto.Olama.TruncateCollectionResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -205,7 +207,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvdb.rpc.proto.Olama.DescribeCollectionResponse> getDescribeCollectionMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "describeCollection",
+      fullMethodName = ApiPath.COL_DESCRIBE,
       requestType = com.tencent.tcvdb.rpc.proto.Olama.DescribeCollectionRequest.class,
       responseType = com.tencent.tcvdb.rpc.proto.Olama.DescribeCollectionResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -236,7 +238,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvdb.rpc.proto.Olama.ListCollectionsResponse> getListCollectionsMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "listCollections",
+      fullMethodName =ApiPath.COL_LIST,
       requestType = com.tencent.tcvdb.rpc.proto.Olama.ListCollectionsRequest.class,
       responseType = com.tencent.tcvdb.rpc.proto.Olama.ListCollectionsResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -267,7 +269,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvdb.rpc.proto.Olama.RebuildIndexResponse> getRebuildIndexMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "rebuildIndex",
+      fullMethodName = ApiPath.REBUILD_INDEX,
       requestType = com.tencent.tcvdb.rpc.proto.Olama.RebuildIndexRequest.class,
       responseType = com.tencent.tcvdb.rpc.proto.Olama.RebuildIndexResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -298,7 +300,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvdb.rpc.proto.Olama.UpsertResponse> getUpsertMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "upsert",
+      fullMethodName = ApiPath.DOC_UPSERT,
       requestType = com.tencent.tcvdb.rpc.proto.Olama.UpsertRequest.class,
       responseType = com.tencent.tcvdb.rpc.proto.Olama.UpsertResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -329,7 +331,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvdb.rpc.proto.Olama.UpdateResponse> getUpdateMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "update",
+      fullMethodName = ApiPath.DOC_UPDATE,
       requestType = com.tencent.tcvdb.rpc.proto.Olama.UpdateRequest.class,
       responseType = com.tencent.tcvdb.rpc.proto.Olama.UpdateResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -360,7 +362,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvdb.rpc.proto.Olama.QueryResponse> getQueryMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "query",
+      fullMethodName = ApiPath.DOC_QUERY,
       requestType = com.tencent.tcvdb.rpc.proto.Olama.QueryRequest.class,
       responseType = com.tencent.tcvdb.rpc.proto.Olama.QueryResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -391,7 +393,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvdb.rpc.proto.Olama.SearchResponse> getSearchMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "search",
+      fullMethodName = ApiPath.DOC_SEARCH,
       requestType = com.tencent.tcvdb.rpc.proto.Olama.SearchRequest.class,
       responseType = com.tencent.tcvdb.rpc.proto.Olama.SearchResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -422,7 +424,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvdb.rpc.proto.Olama.DeleteResponse> getDeleMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "dele",
+      fullMethodName = ApiPath.DOC_DELETE,
       requestType = com.tencent.tcvdb.rpc.proto.Olama.DeleteRequest.class,
       responseType = com.tencent.tcvdb.rpc.proto.Olama.DeleteResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -515,7 +517,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvdb.rpc.proto.Olama.DatabaseResponse> getCreateDatabaseMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "createDatabase",
+      fullMethodName = ApiPath.DB_CREATE,
       requestType = com.tencent.tcvdb.rpc.proto.Olama.DatabaseRequest.class,
       responseType = com.tencent.tcvdb.rpc.proto.Olama.DatabaseResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -546,7 +548,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvdb.rpc.proto.Olama.DatabaseResponse> getDropDatabaseMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "dropDatabase",
+      fullMethodName = ApiPath.DB_DROP,
       requestType = com.tencent.tcvdb.rpc.proto.Olama.DatabaseRequest.class,
       responseType = com.tencent.tcvdb.rpc.proto.Olama.DatabaseResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -577,7 +579,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvdb.rpc.proto.Olama.DatabaseResponse> getListDatabasesMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "listDatabases",
+      fullMethodName = ApiPath.DB_LIST,
       requestType = com.tencent.tcvdb.rpc.proto.Olama.DatabaseRequest.class,
       responseType = com.tencent.tcvdb.rpc.proto.Olama.DatabaseResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)

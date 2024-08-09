@@ -33,10 +33,10 @@ import java.util.List;
  * VectorDB Database
  */
 public class Database {
-    private final Stub stub;
-    private final String databaseName;
+    protected  Stub stub;
+    protected  String databaseName;
     @JsonIgnore
-    private final ReadConsistencyEnum readConsistency;
+    protected  ReadConsistencyEnum readConsistency;
 
     public Database(Stub stub, String databaseName, ReadConsistencyEnum readConsistency) {
         this.stub = stub;

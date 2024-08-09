@@ -34,8 +34,11 @@ import java.util.List;
  */
 public class VectorDBClient {
 
-    private final Stub stub;
-    private final ReadConsistencyEnum readConsistency;
+    protected  Stub stub;
+    protected  ReadConsistencyEnum readConsistency;
+
+    public VectorDBClient() {
+    }
 
     public VectorDBClient(ConnectParam connectParam, ReadConsistencyEnum readConsistency) {
         this.stub = new HttpStub(connectParam);

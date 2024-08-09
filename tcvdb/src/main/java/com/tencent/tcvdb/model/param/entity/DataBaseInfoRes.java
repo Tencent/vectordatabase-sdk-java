@@ -16,6 +16,10 @@ public class DataBaseInfoRes extends BaseRes {
         super();
     }
 
+    public DataBaseInfoRes(int code, String msg, String warning) {
+        super(code, msg, warning);
+    }
+
     public List<String> getDatabases() {
         return databases;
     }

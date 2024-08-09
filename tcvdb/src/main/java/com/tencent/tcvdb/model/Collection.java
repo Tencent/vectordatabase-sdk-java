@@ -47,7 +47,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Collection {
     @JsonIgnore
-    private Stub stub;
+    protected Stub stub;
     protected String database;
     protected String collection;
     protected int replicaNum = 2;
@@ -59,7 +59,7 @@ public class Collection {
     protected ReadConsistencyEnum readConsistency;
     protected Long documentCount;
     protected IndexStatus indexStatus;
-    private List<String> alias;
+    protected List<String> alias;
 
     protected WordsEmbeddingParam wordsEmbedding;
 
@@ -81,6 +81,10 @@ public class Collection {
 
     public void setDatabase(String database) {
         this.database = database;
+    }
+
+    public void setCollection(String collection) {
+        this.collection = collection;
     }
 
     public String getCollection() {

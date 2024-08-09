@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DataBaseInfo {
     private String createTime;
+    private String databaseName;
 
     public String getCreateTime() {
         return createTime;
@@ -16,4 +17,11 @@ public class DataBaseInfo {
         this.createTime = createTime;
     }
 
+    public String getDatabaseName() {
+        return databaseName;
+    }
+
+    public void setDatabaseName(String databaseName) {
+        this.databaseName = databaseName;
+    }
 }

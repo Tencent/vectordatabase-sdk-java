@@ -67,6 +67,19 @@ message Document {
     bytes doc_info                         = 9;
     repeated SparseVecItem sparse_vector   = 10;
     string data_expr                       = 11; //  AI套件占用字段，内核不关注
+    ContextResults context_results         = 12;  // AI套件占用字段, 内核不关注
+}
+
+message ContextResults {
+    repeated string pre         = 1;
+    repeated string next        = 2;
+    SourceInfo source_info      = 3;
+}
+
+message SourceInfo {
+    string vdc_source_name      = 1;
+    string vdc_source_type      = 2;
+    string vdc_source_path      = 3;
 }
 
 message Field {

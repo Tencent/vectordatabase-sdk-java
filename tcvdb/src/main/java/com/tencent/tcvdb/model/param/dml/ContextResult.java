@@ -11,6 +11,15 @@ public class ContextResult {
     private List<String> next;
     private SourceInfo sourceInfo;
 
+    public ContextResult() {
+
+    }
+    public ContextResult(Builder builder) {
+        this.pre = builder.pre;
+        this.next = builder.next;
+        this.sourceInfo = builder.sourceInfo;
+    }
+
     public List<String> getPre() {
         return pre;
     }
@@ -33,5 +42,38 @@ public class ContextResult {
 
     public void setSourceInfo(SourceInfo sourceInfo) {
         this.sourceInfo = sourceInfo;
+    }
+
+    // 建造者模式
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+    public static class Builder {
+        private List<String> pre;
+        private List<String> next;
+        private SourceInfo sourceInfo;
+
+        public Builder() {
+
+        }
+
+        public Builder withPre(List<String> pre) {
+            this.pre = pre;
+            return this;
+        }
+
+        public Builder withNext(List<String> next) {
+            this.next = next;
+            return this;
+        }
+
+        public Builder withSourceInfo(SourceInfo sourceInfo) {
+            this.sourceInfo = sourceInfo;
+            return this;
+        }
+
+        public ContextResult build() {
+            return new ContextResult(this);
+        }
     }
 }

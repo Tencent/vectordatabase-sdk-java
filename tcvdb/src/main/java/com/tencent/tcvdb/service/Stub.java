@@ -4,10 +4,7 @@ import com.tencent.tcvdb.model.Collection;
 import com.tencent.tcvdb.model.Document;
 import com.tencent.tcvdb.model.param.entity.*;
 import com.tencent.tcvdb.service.param.*;
-import com.tencent.tcvdb.model.*;
 import com.tencent.tcvdb.model.param.collection.CreateCollectionParam;
-import com.tencent.tcvdb.model.param.entity.*;
-import com.tencent.tcvdb.service.param.*;
 import com.tencent.tcvdb.model.Database;
 
 import java.util.List;
@@ -49,8 +46,9 @@ public interface Stub {
      * create collection in database
      *
      * @param params create collection parameter
+     * @param ai
      */
-    void createCollection(CreateCollectionParam params);
+    void createCollection(CreateCollectionParam params, boolean ai);
 
     /**
      * list collections from database
@@ -74,9 +72,10 @@ public interface Stub {
      *
      * @param databaseName   database name
      * @param collectionName collection name
+     * @param ai
      * @return {@link AffectRes}
      */
-    AffectRes truncateCollection(String databaseName, String collectionName);
+    AffectRes truncateCollection(String databaseName, String collectionName, boolean ai);
 
     /**
      * drop collection
@@ -84,7 +83,7 @@ public interface Stub {
      * @param databaseName   database name
      * @param collectionName collection name
      */
-    void dropCollection(String databaseName, String collectionName);
+    void dropCollection(String databaseName, String collectionName, boolean ai);
 
     /**
      * set collection alias
@@ -108,39 +107,44 @@ public interface Stub {
      * upsert document
      *
      * @param param upsert parameter
+     * @param ai
      * @return {@link AffectRes}
      */
-    AffectRes upsertDocument(InsertParamInner param);
+    AffectRes upsertDocument(InsertParamInner param, boolean ai);
 
     /**
      * query document
      *
      * @param param query parameter
+     * @param b
      * @return {@link Document} {@link List}
      */
-    List<Document> queryDocument(QueryParamInner param);
+    List<Document> queryDocument(QueryParamInner param, boolean b);
 
     /**
      * search document from collection
      *
      * @param param search parameter
+     * @param ai
      * @return {@link SearchRes}
      */
-    SearchRes searchDocument(SearchParamInner param);
+    SearchRes searchDocument(SearchParamInner param, boolean ai);
 
     /**
      * delete document
      *
      * @param param delete parameter
+     * @param ai
      */
-    AffectRes deleteDocument(DeleteParamInner param);
+    AffectRes deleteDocument(DeleteParamInner param, boolean ai);
 
     /**
      * update documents
      *
      * @param param update parameter
+     * @param ai
      */
-    AffectRes updateDocument(UpdateParamInner param);
+    AffectRes updateDocument(UpdateParamInner param, boolean ai);
 
     /**
      * rebuild index

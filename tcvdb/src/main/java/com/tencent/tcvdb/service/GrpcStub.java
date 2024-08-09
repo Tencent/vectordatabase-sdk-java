@@ -12,12 +12,15 @@ import com.tencent.tcvdb.model.param.dml.*;
 import com.tencent.tcvdb.model.param.entity.*;
 import com.tencent.tcvdb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvdb.rpc.client.AuthorityInterceptor;
+import com.tencent.tcvdb.rpc.client.BackendServiceInterceptor;
 import com.tencent.tcvdb.rpc.proto.Olama;
 import com.tencent.tcvdb.rpc.proto.SearchEngineGrpc;
 import com.tencent.tcvdb.service.param.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.Metadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -32,6 +35,7 @@ public class GrpcStub implements Stub{
     private final int maxReceiveMessageSize = 100*1024*1024;
     private String authorization;
     private int timeout = 10;
+    private static final Logger logger = LoggerFactory.getLogger(GrpcStub.class.getName());
     public GrpcStub(ConnectParam param) {
         this.authorization = String.format("Bearer account=%s&api_key=%s",param.getUsername(), param.getKey());
         this.channel = ManagedChannelBuilder.forTarget(param.getUrl()).
@@ -47,7 +51,8 @@ public class GrpcStub implements Stub{
 
     @Override
     public void createDatabase(Database database) {
-        Olama.DatabaseResponse response = this.blockingStub.createDatabase(Olama.DatabaseRequest.newBuilder().
+        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(false));
+        Olama.DatabaseResponse response = searchEngineBlockingStub.createDatabase(Olama.DatabaseRequest.newBuilder().
                 setDatabase(database.getDatabaseName()).build());
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
@@ -58,8 +63,9 @@ public class GrpcStub implements Stub{
 
     @Override
     public void dropDatabase(Database database) {
+        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(false));
         Olama.DatabaseRequest request = Olama.DatabaseRequest.newBuilder().build();
-        Olama.DatabaseResponse response =  this.blockingStub.dropDatabase(request);
+        Olama.DatabaseResponse response =  searchEngineBlockingStub.dropDatabase(request);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
                     "VectorDBServer list Database error: not Successful, body code=%s, message=%s",
@@ -69,8 +75,10 @@ public class GrpcStub implements Stub{
 
     @Override
     public List<String> listDatabases() {
+        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(false));
+
         Olama.DatabaseRequest request = Olama.DatabaseRequest.newBuilder().build();
-        Olama.DatabaseResponse response =  this.blockingStub.listDatabases(request);
+        Olama.DatabaseResponse response = searchEngineBlockingStub.listDatabases(request);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
                     "VectorDBServer list Database error: not Successful, body code=%s, message=%s",
@@ -82,8 +90,10 @@ public class GrpcStub implements Stub{
 
     @Override
     public DataBaseInfoRes listDatabaseInfos() {
+        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(false));
+
         Olama.DatabaseRequest request = Olama.DatabaseRequest.newBuilder().build();
-        Olama.DatabaseResponse response =  this.blockingStub.listDatabases(request);
+        Olama.DatabaseResponse response =  searchEngineBlockingStub.listDatabases(request);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
                     "VectorDBServer list Database error: not Successful, body code=%s, message=%s",
@@ -104,7 +114,8 @@ public class GrpcStub implements Stub{
     }
 
     @Override
-    public void createCollection(CreateCollectionParam params) {
+    public void createCollection(CreateCollectionParam params, boolean ai) {
+        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(false));
         Olama.CreateCollectionRequest.Builder requestOrBuilder = Olama.CreateCollectionRequest.newBuilder()
                 .setShardNum(params.getShardNum())
                 .setReplicaNum(params.getReplicaNum())
@@ -163,7 +174,7 @@ public class GrpcStub implements Stub{
 
         }
 
-        Olama.CreateCollectionResponse response =  this.blockingStub.createCollection(requestOrBuilder.build());
+        Olama.CreateCollectionResponse response =  searchEngineBlockingStub.createCollection(requestOrBuilder.build());
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
                     "VectorDBServer error: not Successful, body code=%s, message=%s",
@@ -175,7 +186,8 @@ public class GrpcStub implements Stub{
     public List<Collection> listCollections(String databaseName) {
         Olama.ListCollectionsRequest request = Olama.ListCollectionsRequest.newBuilder().
                 setDatabase(databaseName).setTransfer(false).build();
-        Olama.ListCollectionsResponse response =  this.blockingStub.listCollections(request);
+        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(false));
+        Olama.ListCollectionsResponse response = searchEngineBlockingStub.listCollections(request);
         List<Collection> collections = new ArrayList<>();
         response.getCollectionsList().forEach(collection -> {
             Collection collectionRpc = convertRpcToCollection(collection);
@@ -187,7 +199,8 @@ public class GrpcStub implements Stub{
 
     @Override
     public Collection describeCollection(String databaseName, String collectionName) {
-        Olama.DescribeCollectionResponse describeCollectionResponse = blockingStub.describeCollection(Olama.DescribeCollectionRequest.newBuilder()
+        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(false));
+        Olama.DescribeCollectionResponse describeCollectionResponse = searchEngineBlockingStub.describeCollection(Olama.DescribeCollectionRequest.newBuilder()
                 .setDatabase(databaseName)
                 .setCollection(collectionName)
                 .build());
@@ -203,8 +216,9 @@ public class GrpcStub implements Stub{
     }
 
     @Override
-    public AffectRes truncateCollection(String databaseName, String collectionName) {
-        Olama.TruncateCollectionResponse truncateCollectionResponse = blockingStub.truncateCollection(Olama.TruncateCollectionRequest.newBuilder()
+    public AffectRes truncateCollection(String databaseName, String collectionName, boolean ai) {
+        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai));
+        Olama.TruncateCollectionResponse truncateCollectionResponse = searchEngineBlockingStub.truncateCollection(Olama.TruncateCollectionRequest.newBuilder()
                 .setDatabase(databaseName)
                 .setCollection(collectionName)
                 .build());
@@ -221,8 +235,9 @@ public class GrpcStub implements Stub{
     }
 
     @Override
-    public void dropCollection(String databaseName, String collectionName) {
-        Olama.DropCollectionResponse dropCollectionResponse = blockingStub.dropCollection(Olama.DropCollectionRequest.newBuilder().
+    public void dropCollection(String databaseName, String collectionName, boolean ai) {
+        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai));
+        Olama.DropCollectionResponse dropCollectionResponse = searchEngineBlockingStub.dropCollection(Olama.DropCollectionRequest.newBuilder().
                 setDatabase(databaseName).
                 setCollection(collectionName).build());
         if(dropCollectionResponse==null){
@@ -238,7 +253,8 @@ public class GrpcStub implements Stub{
 
     @Override
     public AffectRes setAlias(String databaseName, String collectionName, String aliasName) {
-        Olama.UpdateAliasResponse setAliasResponse = blockingStub.setAlias(Olama.AddAliasRequest.newBuilder().setDatabase(databaseName)
+        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(false));
+        Olama.UpdateAliasResponse setAliasResponse = searchEngineBlockingStub.setAlias(Olama.AddAliasRequest.newBuilder().setDatabase(databaseName)
                 .setCollection(collectionName)
                 .setAlias(aliasName).build());
         if(setAliasResponse==null){
@@ -256,7 +272,8 @@ public class GrpcStub implements Stub{
 
     @Override
     public AffectRes deleteAlias(String databaseName, String aliasName) {
-        Olama.UpdateAliasResponse deleteResponse = blockingStub.deleteAlias(Olama.RemoveAliasRequest.newBuilder().
+        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(false));
+        Olama.UpdateAliasResponse deleteResponse = searchEngineBlockingStub.deleteAlias(Olama.RemoveAliasRequest.newBuilder().
                 setDatabase(databaseName).setAlias(aliasName).build());
         if(deleteResponse==null){
             throw new VectorDBException("VectorDBServer error: dropCollection not response");
@@ -272,7 +289,7 @@ public class GrpcStub implements Stub{
     }
 
     @Override
-    public AffectRes upsertDocument(InsertParamInner param) {
+    public AffectRes upsertDocument(InsertParamInner param, boolean ai) {
         Olama.UpsertRequest.Builder builder = Olama.UpsertRequest.newBuilder()
                 .setDatabase(param.getDatabase()).setCollection(param.getCollection());
         if (param.getBuildIndex()==null){
@@ -284,7 +301,8 @@ public class GrpcStub implements Stub{
             Olama.Document doc= convertDocument2OlamaDoc(document);
             builder.addDocuments(doc);
         }
-        Olama.UpsertResponse response = this.blockingStub.upsert(builder.build());
+        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai));
+        Olama.UpsertResponse response = searchEngineBlockingStub.upsert(builder.build());
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
                     "VectorDBServer upsert data error: not Successful, code=%s, message=%s",
@@ -294,7 +312,7 @@ public class GrpcStub implements Stub{
     }
 
     @Override
-    public List<Document> queryDocument(QueryParamInner param) {
+    public List<Document> queryDocument(QueryParamInner param, boolean ai) {
         Olama.QueryRequest.Builder queryBuilder = Olama.QueryRequest.newBuilder().
                 setDatabase(param.getDatabase()).setCollection(param.getCollection()).setReadConsistency(ReadConsistencyEnum.EVENTUAL_CONSISTENCY.getReadConsistency());
         QueryParam queryParam = param.getQuery();
@@ -314,7 +332,8 @@ public class GrpcStub implements Stub{
         }
 
         queryBuilder.setQuery(queryCondBuilder.build());
-        Olama.QueryResponse queryResponse = blockingStub.query(queryBuilder.build());
+        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai));
+        Olama.QueryResponse queryResponse = searchEngineBlockingStub.query(queryBuilder.build());
         if(queryResponse==null){
             throw new VectorDBException("VectorDBServer error: query not response");
         }
@@ -333,7 +352,7 @@ public class GrpcStub implements Stub{
     }
 
     @Override
-    public SearchRes searchDocument(SearchParamInner param) {
+    public SearchRes searchDocument(SearchParamInner param, boolean ai) {
         Olama.SearchRequest.Builder builder = Olama.SearchRequest.newBuilder().setDatabase(param.getDatabase()).
                 setCollection(param.getCollection()).
                 setReadConsistency(ReadConsistencyEnum.EVENTUAL_CONSISTENCY.getReadConsistency());
@@ -386,7 +405,8 @@ public class GrpcStub implements Stub{
         }
 
         builder.setSearch(searchConBuilder.build());
-        Olama.SearchResponse searchResponse = blockingStub.search(builder.build());
+        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai));
+        Olama.SearchResponse searchResponse = searchEngineBlockingStub.search(builder.build());
         if(searchResponse==null){
             throw new VectorDBException("VectorDBServer error: search not response");
         }
@@ -405,7 +425,7 @@ public class GrpcStub implements Stub{
     }
 
     @Override
-    public AffectRes deleteDocument(DeleteParamInner param) {
+    public AffectRes deleteDocument(DeleteParamInner param, boolean ai) {
         Olama.QueryCond.Builder queryCondBuilder = Olama.QueryCond.newBuilder();
         DeleteParam paramQuery = param.getQuery();
         if(!paramQuery.getDocumentIds().isEmpty()){
@@ -414,7 +434,8 @@ public class GrpcStub implements Stub{
         if (!paramQuery.getFilter().isEmpty()){
             queryCondBuilder.setFilter(paramQuery.getFilter());
         }
-        Olama.DeleteResponse deleteResponse = blockingStub.dele(Olama.DeleteRequest.newBuilder()
+        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai));
+        Olama.DeleteResponse deleteResponse = searchEngineBlockingStub.dele(Olama.DeleteRequest.newBuilder()
                 .setDatabase(param.getDatabase())
                 .setCollection(param.getCollection())
                 .setQuery(queryCondBuilder.build())
@@ -432,7 +453,7 @@ public class GrpcStub implements Stub{
     }
 
     @Override
-    public AffectRes updateDocument(UpdateParamInner param) {
+    public AffectRes updateDocument(UpdateParamInner param, boolean ai) {
         Olama.QueryCond.Builder queryCondBuilder = Olama.QueryCond.newBuilder();
         UpdateParam paramQuery = param.getQuery();
         if(!paramQuery.getDocumentIds().isEmpty()){
@@ -441,7 +462,8 @@ public class GrpcStub implements Stub{
         if (!paramQuery.getFilter().isEmpty()){
             queryCondBuilder.setFilter(paramQuery.getFilter());
         }
-        Olama.UpdateResponse updateResponse = blockingStub.update(Olama.UpdateRequest.newBuilder()
+        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai));
+        Olama.UpdateResponse updateResponse = searchEngineBlockingStub.update(Olama.UpdateRequest.newBuilder()
                 .setDatabase(param.getDatabase())
                 .setCollection(param.getCollection())
                 .setQuery(queryCondBuilder.build())
@@ -462,7 +484,8 @@ public class GrpcStub implements Stub{
 
     @Override
     public BaseRes rebuildIndex(RebuildIndexParamInner param) {
-        Olama.RebuildIndexResponse rebuildIndexResponse = blockingStub.rebuildIndex(Olama.RebuildIndexRequest.newBuilder()
+        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(false));
+        Olama.RebuildIndexResponse rebuildIndexResponse = searchEngineBlockingStub.rebuildIndex(Olama.RebuildIndexRequest.newBuilder()
                 .setDatabase(param.getDatabase())
                 .setCollection(param.getCollection())
                 .setThrottle(param.getThrottle())

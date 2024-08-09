@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 public class HttpStub implements Stub {
     private final ConnectParam connectParam;
     private final OkHttpClient client;
-    private final Headers headers;
+    private final Headers.Builder headersBuilder;
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static final Logger logger = LoggerFactory.getLogger(HttpStub.class.getName());
 
@@ -42,8 +42,8 @@ public class HttpStub implements Stub {
         this.connectParam = connectParam;
         String authorization = String.format("Bearer account=%s&api_key=%s",
                 connectParam.getUsername(), connectParam.getKey());
-        this.headers = new Headers.Builder()
-                .add("Authorization", authorization).build();
+        this.headersBuilder = new Headers.Builder()
+                .add("Authorization", authorization);
         logger.debug("header: {}", authorization);
         this.client = new OkHttpClient.Builder()
                 .connectTimeout(2, TimeUnit.SECONDS)
@@ -56,19 +56,19 @@ public class HttpStub implements Stub {
     @Override
     public void createDatabase(Database database) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DB_CREATE);
-        this.post(url, database.toString());
+        this.post(url, database.toString(), false);
     }
 
     @Override
     public void dropDatabase(Database database) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DB_DROP);
-        this.post(url, database.toString());
+        this.post(url, database.toString(), false);
     }
 
     @Override
     public List<String> listDatabases() {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DB_LIST);
-        JsonNode jsonNode = this.get(url);
+        JsonNode jsonNode = this.get(url, false);
         JsonNode dbsJson = jsonNode.get("databases");
         if (dbsJson == null) {
             return new ArrayList<>();
@@ -80,7 +80,7 @@ public class HttpStub implements Stub {
     @Override
     public DataBaseInfoRes listDatabaseInfos() {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DB_LIST);
-        JsonNode jsonNode = this.get(url);
+        JsonNode jsonNode = this.get(url, false);
         JsonNode dbsJson = jsonNode.get("info");
         if (dbsJson == null) {
             return new DataBaseInfoRes();
@@ -90,15 +90,15 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public void createCollection(CreateCollectionParam param) {
+    public void createCollection(CreateCollectionParam param, boolean ai) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_CREATE);
-        this.post(url, param.toString());
+        this.post(url, param.toString(), ai);
     }
 
     @Override
-    public List<com.tencent.tcvdb.model.Collection> listCollections(String databaseName) {
+    public List<Collection> listCollections(String databaseName) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_LIST);
-        JsonNode jsonNode = this.post(url, String.format("{\"database\":\"%s\"}", databaseName));
+        JsonNode jsonNode = this.post(url, String.format("{\"database\":\"%s\"}", databaseName), true);
         JsonNode closJson = jsonNode.get("collections");
         if (closJson == null) {
             return new ArrayList<>();
@@ -113,7 +113,7 @@ public class HttpStub implements Stub {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_DESCRIBE);
         String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
                 databaseName, collectionName);
-        JsonNode jsonNode = this.post(url, body);
+        JsonNode jsonNode = this.post(url, body, true);
         JsonNode dbsJson = jsonNode.get("collection");
         if (dbsJson == null) {
             return null;
@@ -122,20 +122,20 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public AffectRes truncateCollection(String databaseName, String collectionName) {
+    public AffectRes truncateCollection(String databaseName, String collectionName, boolean ai) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_FLUSH);
         String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
                 databaseName, collectionName);
-        JsonNode jsonNode = this.post(url, body);
+        JsonNode jsonNode = this.post(url, body, ai);
         return JsonUtils.jsonNodeToObject(jsonNode, AffectRes.class);
     }
 
     @Override
-    public void dropCollection(String databaseName, String collectionName) {
+    public void dropCollection(String databaseName, String collectionName, boolean ai) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_DROP);
         String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
                 databaseName, collectionName);
-        this.post(url, body);
+        this.post(url, body, ai);
     }
 
     @Override
@@ -143,7 +143,7 @@ public class HttpStub implements Stub {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.SET_COL_ALIAS);
         String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\",\"alias\":\"%s\"}",
                 databaseName, collectionName, aliasName);
-        JsonNode jsonNode = this.post(url, body);
+        JsonNode jsonNode = this.post(url, body, false);
         return JsonUtils.jsonNodeToObject(jsonNode, AffectRes.class);
     }
 
@@ -152,21 +152,21 @@ public class HttpStub implements Stub {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DELETE_COL_ALIAS);
         String body = String.format("{\"database\":\"%s\",\"alias\":\"%s\"}",
                 databaseName, aliasName);
-        JsonNode jsonNode = this.post(url, body);
+        JsonNode jsonNode = this.post(url, body, false);
         return JsonUtils.jsonNodeToObject(jsonNode, AffectRes.class);
     }
 
     @Override
-    public AffectRes upsertDocument(InsertParamInner param) {
+    public AffectRes upsertDocument(InsertParamInner param, boolean ai) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_UPSERT);
-        JsonNode jsonNode = this.post(url, param.toString());
+        JsonNode jsonNode = this.post(url, param.toString(), ai);
         return JsonUtils.jsonNodeToObject(jsonNode, AffectRes.class);
     }
 
     @Override
-    public List<Document> queryDocument(QueryParamInner param) {
+    public List<Document> queryDocument(QueryParamInner param, boolean ai) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_QUERY);
-        JsonNode jsonNode = this.post(url, param.toString());
+        JsonNode jsonNode = this.post(url, param.toString(), ai);
         JsonNode docsNode = jsonNode.get("documents");
         List<Document> dosc = new ArrayList<>();
         if (docsNode == null) {
@@ -183,9 +183,9 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public SearchRes searchDocument(SearchParamInner param) {
+    public SearchRes searchDocument(SearchParamInner param, boolean ai) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_SEARCH);
-        JsonNode jsonNode = this.post(url, param.toString());
+        JsonNode jsonNode = this.post(url, param.toString(), ai);
         JsonNode multiDocsNode = jsonNode.get("documents");
         int code = 0;
         if (jsonNode.get("code") != null) {
@@ -221,29 +221,29 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public AffectRes deleteDocument(DeleteParamInner param) {
+    public AffectRes deleteDocument(DeleteParamInner param, boolean ai) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_DELETE);
-        JsonNode jsonNode = this.post(url, param.toString());
+        JsonNode jsonNode = this.post(url, param.toString(), ai);
         return JsonUtils.jsonNodeToObject(jsonNode, AffectRes.class);
     }
 
-    public AffectRes updateDocument(UpdateParamInner param) {
+    public AffectRes updateDocument(UpdateParamInner param, boolean ai) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_UPDATE);
-        JsonNode jsonNode = this.post(url, param.toString());
+        JsonNode jsonNode = this.post(url, param.toString(), ai);
         return JsonUtils.jsonNodeToObject(jsonNode, AffectRes.class);
     }
 
     @Override
     public BaseRes rebuildIndex(RebuildIndexParamInner param) {
         String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.REBUILD_INDEX);
-        JsonNode jsonNode = this.post(url, param.toString());
+        JsonNode jsonNode = this.post(url, param.toString(), false);
         return JsonUtils.jsonNodeToObject(jsonNode, BaseRes.class);
     }
 
-    private JsonNode get(String url) {
+    private JsonNode get(String url, boolean ai) {
         Request request = new Request.Builder()
                 .url(url)
-                .headers(this.headers)
+                .headers(get_headers(ai))
                 .build();
         try (Response response = client.newCall(request).execute()) {
             return parseResponse(response);
@@ -252,12 +252,12 @@ public class HttpStub implements Stub {
         }
     }
 
-    private JsonNode post(String url, String json) {
+    private JsonNode post(String url, String json, boolean ai) {
         logger.debug("Query {}, body={}", url, json);
         RequestBody body = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
                 .url(url)
-                .headers(this.headers)
+                .headers(get_headers(ai))
                 .post(body)
                 .build();
         try (Response response = client.newCall(request).execute()) {
@@ -267,6 +267,16 @@ public class HttpStub implements Stub {
             throw new VectorDBException(String.format(
                     "VectorDBServer IOException: %s", ex.getMessage()));
         }
+    }
+
+    private Headers get_headers(boolean ai) {
+        String backend = "vdb";
+        if (ai){
+            backend = "ai";
+        }
+        this.headersBuilder.add("backend-service", backend);
+        logger.debug("Backend: {}", backend);
+        return headersBuilder.build();
     }
 
     private JsonNode parseResponse(Response response) throws IOException {

@@ -166,28 +166,48 @@ public class Collection {
     public AffectRes upsert(InsertParam param) throws VectorDBException {
         InsertParamInner insertParam = new InsertParamInner(
                 database, collection, param);
-        return this.stub.upsertDocument(insertParam);
+        boolean ai = false;
+        if(this.getWordsEmbedding()!=null || param.getDocuments().get(0).getVector().get(0) instanceof String){
+            ai = true;
+        }
+        return this.stub.upsertDocument(insertParam, ai);
     }
 
     public List<Document> query(QueryParam param) throws VectorDBException {
         return this.stub.queryDocument(
-                new QueryParamInner(database, collection, param, this.readConsistency));
+                new QueryParamInner(database, collection, param, this.readConsistency), false);
     }
 
     public SearchRes search(SearchParam param) throws VectorDBException {
+        boolean ai = false;
+        if(this.getWordsEmbedding()!=null){
+            ai = true;
+        }else if(param.getAnn()!=null && !param.getAnn().isEmpty() && param.getAnn().get(0).getData()!=null
+                && !param.getAnn().get(0).getData().isEmpty()
+                && param.getAnn().get(0).getData().get(0) instanceof String){
+            ai = true;
+        }
         return this.stub.searchDocument(new SearchParamInner(
-                database, collection, param, this.readConsistency));
+                database, collection, param, this.readConsistency), ai);
     }
 
 
     public AffectRes delete(DeleteParam param) throws VectorDBException {
+        boolean ai = false;
+        if(this.getWordsEmbedding()!=null){
+            ai = true;
+        }
         return this.stub.deleteDocument(
-                new DeleteParamInner(database, collection, param));
+                new DeleteParamInner(database, collection, param), ai);
     }
 
     public AffectRes update(UpdateParam param, Document document) throws VectorDBException {
+        boolean ai = false;
+        if(this.getWordsEmbedding()!=null || (!document.getVector().isEmpty() && document.getVector().get(0) instanceof String)){
+            ai = true;
+        }
         return this.stub.updateDocument(
-                new UpdateParamInner(database, collection, param, document));
+                new UpdateParamInner(database, collection, param, document), ai);
     }
 
     public BaseRes rebuildIndex(RebuildIndexParam rebuildIndexParam) {

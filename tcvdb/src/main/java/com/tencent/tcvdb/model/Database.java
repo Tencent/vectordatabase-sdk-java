@@ -55,7 +55,11 @@ public class Database {
     public Collection createCollection(CreateCollectionParam param) throws VectorDBException {
         param.setDatabase(databaseName);
         param.setReadConsistency(readConsistency);
-        stub.createCollection(param);
+        boolean ai = false;
+        if(param.getWordsEmbedding()!=null){
+            ai = true;
+        }
+        stub.createCollection(param, ai);
         param.setStub(this.stub);
         return param;
     }
@@ -70,9 +74,9 @@ public class Database {
     }
 
     public AffectRes truncateCollections(String collectionName) {
-        return stub.truncateCollection(this.databaseName, collectionName);
+        boolean ai = checkCollection(collectionName);
+        return stub.truncateCollection(this.databaseName, collectionName, ai);
     }
-
     public Collection describeCollection(String collectionName) {
         Collection collection = stub.describeCollection(this.databaseName, collectionName);
         collection.setStub(stub);
@@ -81,7 +85,7 @@ public class Database {
     }
 
     public void dropCollection(String collectionName) {
-        stub.dropCollection(this.databaseName, collectionName);
+        stub.dropCollection(this.databaseName, collectionName, checkCollection(collectionName));
     }
 
     public AffectRes setAlias(String collectionName, String aliasName) {
@@ -94,6 +98,15 @@ public class Database {
 
     public Collection collection(String collectionName) {
         return describeCollection(collectionName);
+    }
+
+
+    private boolean checkCollection(String collectionName) {
+        Collection collectionTmp = collection(collectionName);
+        if (collectionTmp.getWordsEmbedding()!=null){
+            return true;
+        }
+        return false;
     }
 
     @Override

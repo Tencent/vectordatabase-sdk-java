@@ -203,7 +203,7 @@ public class Collection {
 
     public AffectRes update(UpdateParam param, Document document) throws VectorDBException {
         boolean ai = false;
-        if(this.getWordsEmbedding()!=null || (!document.getVector().isEmpty() && document.getVector().get(0) instanceof String)){
+        if(this.getWordsEmbedding()!=null || (document.getVector()!=null && !document.getVector().isEmpty() && document.getVector().get(0) instanceof String)){
             ai = true;
         }
         return this.stub.updateDocument(

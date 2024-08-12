@@ -16,9 +16,7 @@ import com.tencent.tcvdb.rpc.client.BackendServiceInterceptor;
 import com.tencent.tcvdb.rpc.proto.Olama;
 import com.tencent.tcvdb.rpc.proto.SearchEngineGrpc;
 import com.tencent.tcvdb.service.param.*;
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
-import io.grpc.Metadata;
+import io.grpc.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +36,7 @@ public class GrpcStub implements Stub{
     private static final Logger logger = LoggerFactory.getLogger(GrpcStub.class.getName());
     public GrpcStub(ConnectParam param) {
         this.authorization = String.format("Bearer account=%s&api_key=%s",param.getUsername(), param.getKey());
+
         this.channel = ManagedChannelBuilder.forTarget(param.getUrl()).
                 intercept(new AuthorityInterceptor(this.authorization)).
                 usePlaintext().build();

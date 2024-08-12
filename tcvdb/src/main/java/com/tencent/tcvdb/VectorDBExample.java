@@ -327,14 +327,14 @@ public class VectorDBExample {
 
         return CreateCollectionParam.newBuilder()
                 .withName(collName)
-                .withShardNum(1) //deprecated method, instead by withPartition
+                .withShardNum(2) //deprecated method, instead by withPartition
 //                .withPartition(Partition
 //                        .newBuilder()
 //                        .withPartitionBy("bookName")
 //                        .withPartitionNum(1)
 //                        .withPartitionType(PartitionTypeEnum.HASH)
 //                        .build())
-                .withReplicaNum(0)
+                .withReplicaNum(2)
                 .withDescription("test collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", 3, IndexType.HNSW,

@@ -7,6 +7,7 @@ import com.tencent.tcvdb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvdb.model.param.database.ConnectParam;
 import com.tencent.tcvdb.model.param.entity.AffectRes;
 import com.tencent.tcvdb.model.param.enums.ReadConsistencyEnum;
+import com.tencent.tcvdb.rpc.client.RPCClient;
 
 import java.util.List;
 
@@ -21,8 +22,8 @@ public class CommonService {
      * @return {@link ConnectParam}
      */
     private static ConnectParam initConnectParam() {
-        String vdbURL = "http://9.135.180.240:9500";
-        String vdbKey = "YuCLYKgun8xotvQN4IbYyYD14lm2bprBGUC42IYk";
+        String vdbURL = "9.135.180.240:9500";
+        String vdbKey = "";
         System.out.println("\tvdb_url: " + vdbURL);
         System.out.println("\tvdb_key: " + vdbKey);
         return ConnectParam.newBuilder()
@@ -39,7 +40,7 @@ public class CommonService {
      * @return {@link VectorDBClient}
      */
     public static VectorDBClient initClient() {
-        return new VectorDBClient(initConnectParam(), ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
+        return new RPCClient(initConnectParam(), ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
     }
 
     /**

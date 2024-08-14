@@ -9,8 +9,8 @@ import com.tencent.tcvdb.service.GrpcStub;
 
 import java.util.List;
 
-public class RPCClient extends VectorDBClient {
-    public RPCClient(ConnectParam connectParam, ReadConsistencyEnum readConsistency) {
+public class RPCVectorDBClient extends VectorDBClient {
+    public RPCVectorDBClient(ConnectParam connectParam, ReadConsistencyEnum readConsistency) {
         super();
         this.stub = new GrpcStub(connectParam);
         this.readConsistency = readConsistency;

@@ -55,19 +55,19 @@ public class HttpStub implements Stub {
 
     @Override
     public void createDatabase(Database database) {
-        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DB_CREATE);
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DB_CREATE);
         this.post(url, database.toString(), false);
     }
 
     @Override
     public void dropDatabase(Database database) {
-        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DB_DROP);
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DB_DROP);
         this.post(url, database.toString(), false);
     }
 
     @Override
     public List<String> listDatabases() {
-        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DB_LIST);
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DB_LIST);
         JsonNode jsonNode = this.get(url, false);
         JsonNode dbsJson = jsonNode.get("databases");
         if (dbsJson == null) {
@@ -79,7 +79,7 @@ public class HttpStub implements Stub {
 
     @Override
     public DataBaseInfoRes listDatabaseInfos() {
-        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DB_LIST);
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DB_LIST);
         JsonNode jsonNode = this.get(url, false);
         JsonNode dbsJson = jsonNode.get("info");
         if (dbsJson == null) {
@@ -91,13 +91,13 @@ public class HttpStub implements Stub {
 
     @Override
     public void createCollection(CreateCollectionParam param, boolean ai) {
-        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_CREATE);
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.COL_CREATE);
         this.post(url, param.toString(), ai);
     }
 
     @Override
     public List<Collection> listCollections(String databaseName) {
-        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_LIST);
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.COL_LIST);
         JsonNode jsonNode = this.post(url, String.format("{\"database\":\"%s\"}", databaseName), true);
         JsonNode closJson = jsonNode.get("collections");
         if (closJson == null) {
@@ -110,7 +110,7 @@ public class HttpStub implements Stub {
 
     @Override
     public com.tencent.tcvdb.model.Collection describeCollection(String databaseName, String collectionName) {
-        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_DESCRIBE);
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.COL_DESCRIBE);
         String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
                 databaseName, collectionName);
         JsonNode jsonNode = this.post(url, body, true);
@@ -123,7 +123,7 @@ public class HttpStub implements Stub {
 
     @Override
     public AffectRes truncateCollection(String databaseName, String collectionName, boolean ai) {
-        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_FLUSH);
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.COL_FLUSH);
         String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
                 databaseName, collectionName);
         JsonNode jsonNode = this.post(url, body, ai);
@@ -132,7 +132,7 @@ public class HttpStub implements Stub {
 
     @Override
     public void dropCollection(String databaseName, String collectionName, boolean ai) {
-        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.COL_DROP);
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.COL_DROP);
         String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
                 databaseName, collectionName);
         this.post(url, body, ai);
@@ -140,7 +140,7 @@ public class HttpStub implements Stub {
 
     @Override
     public AffectRes setAlias(String databaseName, String collectionName, String aliasName) {
-        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.SET_COL_ALIAS);
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.SET_COL_ALIAS);
         String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\",\"alias\":\"%s\"}",
                 databaseName, collectionName, aliasName);
         JsonNode jsonNode = this.post(url, body, false);
@@ -149,7 +149,7 @@ public class HttpStub implements Stub {
 
     @Override
     public AffectRes deleteAlias(String databaseName, String aliasName) {
-        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DELETE_COL_ALIAS);
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DELETE_COL_ALIAS);
         String body = String.format("{\"database\":\"%s\",\"alias\":\"%s\"}",
                 databaseName, aliasName);
         JsonNode jsonNode = this.post(url, body, false);
@@ -158,14 +158,14 @@ public class HttpStub implements Stub {
 
     @Override
     public AffectRes upsertDocument(InsertParamInner param, boolean ai) {
-        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_UPSERT);
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DOC_UPSERT);
         JsonNode jsonNode = this.post(url, param.toString(), ai);
         return JsonUtils.jsonNodeToObject(jsonNode, AffectRes.class);
     }
 
     @Override
     public List<Document> queryDocument(QueryParamInner param, boolean ai) {
-        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_QUERY);
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DOC_QUERY);
         JsonNode jsonNode = this.post(url, param.toString(), ai);
         JsonNode docsNode = jsonNode.get("documents");
         List<Document> dosc = new ArrayList<>();
@@ -184,7 +184,7 @@ public class HttpStub implements Stub {
 
     @Override
     public SearchRes searchDocument(SearchParamInner param, boolean ai) {
-        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_SEARCH);
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DOC_SEARCH);
         JsonNode jsonNode = this.post(url, param.toString(), ai);
         JsonNode multiDocsNode = jsonNode.get("documents");
         int code = 0;
@@ -222,20 +222,20 @@ public class HttpStub implements Stub {
 
     @Override
     public AffectRes deleteDocument(DeleteParamInner param, boolean ai) {
-        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_DELETE);
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DOC_DELETE);
         JsonNode jsonNode = this.post(url, param.toString(), ai);
         return JsonUtils.jsonNodeToObject(jsonNode, AffectRes.class);
     }
 
     public AffectRes updateDocument(UpdateParamInner param, boolean ai) {
-        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.DOC_UPDATE);
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DOC_UPDATE);
         JsonNode jsonNode = this.post(url, param.toString(), ai);
         return JsonUtils.jsonNodeToObject(jsonNode, AffectRes.class);
     }
 
     @Override
     public BaseRes rebuildIndex(RebuildIndexParamInner param) {
-        String url = String.format("%s%s", this.connectParam.getUrl(), ApiPath.REBUILD_INDEX);
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.REBUILD_INDEX);
         JsonNode jsonNode = this.post(url, param.toString(), false);
         return JsonUtils.jsonNodeToObject(jsonNode, BaseRes.class);
     }

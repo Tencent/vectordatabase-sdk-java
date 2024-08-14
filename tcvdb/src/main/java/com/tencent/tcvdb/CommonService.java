@@ -22,7 +22,7 @@ public class CommonService {
      * @return {@link ConnectParam}
      */
     private static ConnectParam initConnectParam() {
-        String vdbURL = "21.0.177.204:9500";
+        String vdbURL = "http://21.0.177.204:9500";
         String vdbKey = "l9WgJcIXsm408C5Wl5PJ7dlLlkFr3DkqeUdNWcOa";
         System.out.println("\tvdb_url: " + vdbURL);
         System.out.println("\tvdb_key: " + vdbKey);
@@ -40,7 +40,7 @@ public class CommonService {
      * @return {@link VectorDBClient}
      */
     public static VectorDBClient initClient() {
-        return new RPCClient(initConnectParam(), ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
+        return new VectorDBClient(initConnectParam(), ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
     }
 
     /**

@@ -40,7 +40,7 @@ import java.util.List;
  */
 public class VectorDBExample {
 
-    private static final String DBNAME = "book";
+    private static final String DBNAME = "book_1";
     private static final String COLL_NAME = "book_segments";
     private static final String COLL_NAME_ALIAS = "collection_alias";
 

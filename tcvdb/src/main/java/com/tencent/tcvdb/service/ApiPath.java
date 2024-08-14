@@ -14,7 +14,7 @@ public class ApiPath {
     public final static String SET_COL_ALIAS = "/v2/alias/set";
     public final static String DELETE_COL_ALIAS = "/v2/alias/delete";
     public final static String COL_DESCRIBE = "/v2/collection/describe";
-    public final static String DOC_UPSERT = "/v2/document/upsert";
+    public final static String DOC_UPSERT = "v2/document/upsert";
     public final static String DOC_QUERY = "/v2/document/query";
     public final static String DOC_SEARCH = "/v2/document/search";
     public final static String DOC_DELETE = "/v2/document/delete";

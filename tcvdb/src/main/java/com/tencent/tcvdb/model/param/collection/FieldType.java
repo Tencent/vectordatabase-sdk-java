@@ -54,5 +54,13 @@ public enum FieldType {
         return value;
     }
 
-
+    // 根据value获取对应的枚举常量
+    public static FieldType fromValue(String value) {
+        for (FieldType fieldType : FieldType.values()) {
+            if (fieldType.getValue().equals(value)) {
+                return fieldType;
+            }
+        }
+        return null; // 或者抛出一个异常，如果value不合法
+    }
 }

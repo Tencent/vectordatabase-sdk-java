@@ -21,7 +21,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvdb.rpc.proto.Olama.UpdateAliasResponse> getSetAliasMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "setAlias",
+      fullMethodName = ApiPath.SET_COL_ALIAS,
       requestType = com.tencent.tcvdb.rpc.proto.Olama.AddAliasRequest.class,
       responseType = com.tencent.tcvdb.rpc.proto.Olama.UpdateAliasResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -34,13 +34,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getSetAliasMethod = getSetAliasMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvdb.rpc.proto.Olama.AddAliasRequest, com.tencent.tcvdb.rpc.proto.Olama.UpdateAliasResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "setAlias"))
+              .setFullMethodName(ApiPath.SET_COL_ALIAS)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.AddAliasRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.UpdateAliasResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("setAlias"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.SET_COL_ALIAS))
               .build();
         }
       }
@@ -83,7 +83,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvdb.rpc.proto.Olama.UpdateAliasResponse> getDeleteAliasMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "deleteAlias",
+      fullMethodName = ApiPath.DELETE_COL_ALIAS,
       requestType = com.tencent.tcvdb.rpc.proto.Olama.RemoveAliasRequest.class,
       responseType = com.tencent.tcvdb.rpc.proto.Olama.UpdateAliasResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -96,13 +96,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getDeleteAliasMethod = getDeleteAliasMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvdb.rpc.proto.Olama.RemoveAliasRequest, com.tencent.tcvdb.rpc.proto.Olama.UpdateAliasResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "deleteAlias"))
+              .setFullMethodName(ApiPath.DELETE_COL_ALIAS)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.RemoveAliasRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.UpdateAliasResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("deleteAlias"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.DELETE_COL_ALIAS))
               .build();
         }
       }
@@ -127,13 +127,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getCreateCollectionMethod = getCreateCollectionMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvdb.rpc.proto.Olama.CreateCollectionRequest, com.tencent.tcvdb.rpc.proto.Olama.CreateCollectionResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "createCollection"))
+              .setFullMethodName(ApiPath.COL_CREATE)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.CreateCollectionRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.CreateCollectionResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("createCollection"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.COL_CREATE))
               .build();
         }
       }
@@ -158,13 +158,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getDropCollectionMethod = getDropCollectionMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvdb.rpc.proto.Olama.DropCollectionRequest, com.tencent.tcvdb.rpc.proto.Olama.DropCollectionResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "dropCollection"))
+              .setFullMethodName(ApiPath.COL_DROP)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.DropCollectionRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.DropCollectionResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("dropCollection"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.COL_DROP))
               .build();
         }
       }
@@ -189,13 +189,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getTruncateCollectionMethod = getTruncateCollectionMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvdb.rpc.proto.Olama.TruncateCollectionRequest, com.tencent.tcvdb.rpc.proto.Olama.TruncateCollectionResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "truncateCollection"))
+              .setFullMethodName(ApiPath.COL_FLUSH)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.TruncateCollectionRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.TruncateCollectionResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("truncateCollection"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.COL_FLUSH))
               .build();
         }
       }
@@ -220,13 +220,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getDescribeCollectionMethod = getDescribeCollectionMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvdb.rpc.proto.Olama.DescribeCollectionRequest, com.tencent.tcvdb.rpc.proto.Olama.DescribeCollectionResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "describeCollection"))
+              .setFullMethodName(ApiPath.COL_DESCRIBE)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.DescribeCollectionRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.DescribeCollectionResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("describeCollection"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.COL_DESCRIBE))
               .build();
         }
       }
@@ -251,13 +251,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getListCollectionsMethod = getListCollectionsMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvdb.rpc.proto.Olama.ListCollectionsRequest, com.tencent.tcvdb.rpc.proto.Olama.ListCollectionsResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "listCollections"))
+              .setFullMethodName(ApiPath.COL_LIST)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.ListCollectionsRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.ListCollectionsResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("listCollections"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.COL_LIST))
               .build();
         }
       }
@@ -282,13 +282,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getRebuildIndexMethod = getRebuildIndexMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvdb.rpc.proto.Olama.RebuildIndexRequest, com.tencent.tcvdb.rpc.proto.Olama.RebuildIndexResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "rebuildIndex"))
+              .setFullMethodName(ApiPath.REBUILD_INDEX)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.RebuildIndexRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.RebuildIndexResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("rebuildIndex"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.REBUILD_INDEX))
               .build();
         }
       }
@@ -313,13 +313,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getUpsertMethod = getUpsertMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvdb.rpc.proto.Olama.UpsertRequest, com.tencent.tcvdb.rpc.proto.Olama.UpsertResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "upsert"))
+              .setFullMethodName(ApiPath.DOC_UPSERT)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.UpsertRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.UpsertResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("upsert"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.DOC_UPSERT))
               .build();
         }
       }
@@ -344,13 +344,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getUpdateMethod = getUpdateMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvdb.rpc.proto.Olama.UpdateRequest, com.tencent.tcvdb.rpc.proto.Olama.UpdateResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "update"))
+              .setFullMethodName(ApiPath.DOC_UPDATE)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.UpdateRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.UpdateResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("update"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.DOC_UPDATE))
               .build();
         }
       }
@@ -375,13 +375,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getQueryMethod = getQueryMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvdb.rpc.proto.Olama.QueryRequest, com.tencent.tcvdb.rpc.proto.Olama.QueryResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "query"))
+              .setFullMethodName(ApiPath.DOC_QUERY)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.QueryRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.QueryResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("query"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.DOC_QUERY))
               .build();
         }
       }
@@ -406,13 +406,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getSearchMethod = getSearchMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvdb.rpc.proto.Olama.SearchRequest, com.tencent.tcvdb.rpc.proto.Olama.SearchResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "search"))
+              .setFullMethodName(ApiPath.DOC_SEARCH)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.SearchRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.SearchResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("search"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.DOC_SEARCH))
               .build();
         }
       }
@@ -437,13 +437,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getDeleMethod = getDeleMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvdb.rpc.proto.Olama.DeleteRequest, com.tencent.tcvdb.rpc.proto.Olama.DeleteResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "dele"))
+              .setFullMethodName(ApiPath.DOC_DELETE)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.DeleteRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.DeleteResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("dele"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.DOC_DELETE))
               .build();
         }
       }
@@ -530,13 +530,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getCreateDatabaseMethod = getCreateDatabaseMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvdb.rpc.proto.Olama.DatabaseRequest, com.tencent.tcvdb.rpc.proto.Olama.DatabaseResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "createDatabase"))
+              .setFullMethodName(ApiPath.DB_CREATE)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.DatabaseRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.DatabaseResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("createDatabase"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.DB_CREATE))
               .build();
         }
       }
@@ -561,13 +561,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getDropDatabaseMethod = getDropDatabaseMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvdb.rpc.proto.Olama.DatabaseRequest, com.tencent.tcvdb.rpc.proto.Olama.DatabaseResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "dropDatabase"))
+              .setFullMethodName(ApiPath.DB_DROP)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.DatabaseRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.DatabaseResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("dropDatabase"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.DB_DROP))
               .build();
         }
       }
@@ -592,13 +592,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getListDatabasesMethod = getListDatabasesMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvdb.rpc.proto.Olama.DatabaseRequest, com.tencent.tcvdb.rpc.proto.Olama.DatabaseResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "listDatabases"))
+              .setFullMethodName(ApiPath.DB_LIST)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.DatabaseRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvdb.rpc.proto.Olama.DatabaseResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("listDatabases"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.DB_LIST))
               .build();
         }
       }

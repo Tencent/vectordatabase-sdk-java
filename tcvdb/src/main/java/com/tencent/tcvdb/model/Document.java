@@ -69,11 +69,8 @@ public class Document {
         return docKeyValue;
     }
 
-    public List<Object> getVector() {
-        if (vector instanceof List) {
-            return Collections.unmodifiableList((List<?>) vector);
-        }
-        return null;
+    public Object getVector() {
+        return vector;
     }
 
     public void setId(String id) {

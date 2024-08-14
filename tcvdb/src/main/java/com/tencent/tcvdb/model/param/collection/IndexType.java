@@ -75,4 +75,15 @@ public enum IndexType {
     public String getValue() {
         return value;
     }
+
+
+    // 根据value获取对应的枚举常量
+    public static IndexType fromValue(String value) {
+        for (IndexType indexType : IndexType.values()) {
+            if (indexType.getValue().equals(value)) {
+                return indexType;
+            }
+        }
+        return null; // 或者抛出一个异常，如果value不合法
+    }
 }

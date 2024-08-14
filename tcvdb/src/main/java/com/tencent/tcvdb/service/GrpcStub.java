@@ -20,6 +20,7 @@ import io.grpc.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -63,11 +64,11 @@ public class GrpcStub implements Stub{
     @Override
     public void dropDatabase(Database database) {
         SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(false));
-        Olama.DatabaseRequest request = Olama.DatabaseRequest.newBuilder().build();
+        Olama.DatabaseRequest request = Olama.DatabaseRequest.newBuilder().setDatabase(database.getDatabaseName()).build();
         Olama.DatabaseResponse response =  searchEngineBlockingStub.dropDatabase(request);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
-                    "VectorDBServer list Database error: not Successful, body code=%s, message=%s",
+                    "VectorDBServer drop Database error: not Successful, body code=%s, message=%s",
                     response.getCode(), response.getMsg()));
         }
     }
@@ -120,8 +121,10 @@ public class GrpcStub implements Stub{
                 .setReplicaNum(params.getReplicaNum())
                 .setCollection(params.getCollection())
                 .setDatabase(params.getDatabase())
-                .setDescription(params.getDescription())
-                .addAllAliasList(params.getAlias());
+                .setDescription(params.getDescription());
+        if (params.getAlias()!=null){
+            requestOrBuilder.addAllAliasList(params.getAlias());
+        }
         if (params.getWordsEmbedding()!=null){
             requestOrBuilder.setWordsEmbedding(Olama.CreateCollectionRequest.WordsEmbedding.newBuilder()
                     .setAllowEmpty(params.getWordsEmbedding().getAllowEmpty())
@@ -137,7 +140,7 @@ public class GrpcStub implements Stub{
                         .setIndexType(index.getIndexType().getValue());
                 if(index.isVectorField()){
                     indexBuilder.setDimension(index.getDimension());
-                    indexBuilder.setMetricType(indexBuilder.getMetricType());
+                    indexBuilder.setMetricType(index.getMetricType().getValue());
                     if(index.getParams()!=null){
                         switch (index.getIndexType()) {
                             case HNSW:
@@ -164,8 +167,8 @@ public class GrpcStub implements Stub{
                         }
                     }
                 }
-                if(index.getFieldElementType()!=null){
-                    indexBuilder.setFieldElementType(index.getFieldElementType().getValue());
+                if(index.getFieldType()==FieldType.Array){
+                    indexBuilder.setFieldElementType(FieldElementType.String.getValue());
                 }
 
                 requestOrBuilder.putIndexes(index.getFieldName(), indexBuilder.build());
@@ -174,6 +177,9 @@ public class GrpcStub implements Stub{
         }
 
         Olama.CreateCollectionResponse response =  searchEngineBlockingStub.createCollection(requestOrBuilder.build());
+        if(response==null){
+            throw new VectorDBException("VectorDBServer error: CreateCollectionResponse not response");
+        }
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
                     "VectorDBServer error: not Successful, body code=%s, message=%s",
@@ -320,13 +326,13 @@ public class GrpcStub implements Stub{
         }
         Olama.QueryCond.Builder queryCondBuilder = Olama.QueryCond.newBuilder().setRetrieveVector(queryParam.isRetrieveVector())
                 .setLimit(queryParam.getLimit()).setOffset(queryParam.getOffset());
-        if(!queryParam.getDocumentIds().isEmpty()){
+        if(queryParam.getDocumentIds()!=null){
             queryCondBuilder.addAllDocumentIds(queryParam.getDocumentIds());
         }
-        if(!queryParam.getOutputFields().isEmpty()){
+        if(queryParam.getOutputFields()!=null){
             queryCondBuilder.addAllOutputFields(queryParam.getOutputFields());
         }
-        if (!queryParam.getFilter().isEmpty()){
+        if (queryParam.getFilter()!=null){
             queryCondBuilder.setFilter(queryParam.getFilter());
         }
 
@@ -358,10 +364,10 @@ public class GrpcStub implements Stub{
         SearchParam searchParam = param.getSearch();
         Olama.SearchCond.Builder searchConBuilder = Olama.SearchCond.newBuilder()
                 .setRetrieveVector(searchParam.isRetrieveVector()).setLimit(searchParam.getLimit());
-        if (!searchParam.getOutputFields().isEmpty()){
+        if (searchParam.getOutputFields()!=null){
             searchConBuilder.addAllOutputfields(searchParam.getOutputFields());
         }
-        if (!searchParam.getFilter().isEmpty()){
+        if (searchParam.getFilter()!=null){
             searchConBuilder.setFilter(searchParam.getFilter());
         }
         if (searchParam.getAnn()!=null && !searchParam.getAnn().isEmpty()){
@@ -369,23 +375,29 @@ public class GrpcStub implements Stub{
                     .map(annOption -> {
                         Olama.AnnData.Builder annBuilder = Olama.AnnData.newBuilder()
                                 .setFieldName(annOption.getFieldName());
-                        if (!annOption.getDocumentIds().isEmpty()){
+                        if (annOption.getDocumentIds()!=null){
                             annBuilder.addAllDocumentIds(annOption.getDocumentIds());
                         }
-                        if (!annOption.getData().isEmpty()){
+                        if (annOption.getData()!=null){
                             if (annOption.getData().get(0) instanceof String){
                                 annBuilder.addAllDataExpr(annOption.getData().stream().map(item->(String)item).collect(Collectors.toList()));
                             }if (annOption.getData().get(0) instanceof List){
                                 annBuilder.addAllData(annOption.getData().stream()
-                                        .map(item-> Olama.VectorArray.newBuilder().addAllVector((List<Float>)item).build())
+                                        .map(item-> Olama.VectorArray.newBuilder().addAllVector(((List<Object>)item).
+                                                stream().map(ele->Float.parseFloat(ele.toString())).collect(Collectors.toList())).build())
                                         .collect(Collectors.toList()));
                             }
                         }
                         if (annOption.getParams()!=null){
-                            GeneralParams generalParams = (GeneralParams) annOption.getParams();
-                            annBuilder.setParams(Olama.SearchParams.newBuilder().setEf(generalParams.getEf())
-                                    .setNprobe(generalParams.getNProbe())
-                                    .setRadius((float) generalParams.getRadius()).build());
+                            if (annOption.getParams() instanceof GeneralParams){
+                                GeneralParams params = (GeneralParams) annOption.getParams();
+                                annBuilder.setParams(Olama.SearchParams.newBuilder().setEf(params.getEf())
+                                        .setNprobe(params.getNProbe())
+                                        .setRadius((float) params.getRadius()).build());
+                            }else if (annOption.getParams() instanceof HNSWSearchParams){
+                                HNSWSearchParams params = (HNSWSearchParams) annOption.getParams();
+                                annBuilder.setParams(Olama.SearchParams.newBuilder().setEf(params.getEf()).build());
+                            }
                         }
                         return annBuilder.build();
                     }).collect(Collectors.toList()));
@@ -506,7 +518,7 @@ public class GrpcStub implements Stub{
         Collection collectionInner = new Collection();
         collectionInner.setDatabase(collection.getDatabase());
         collectionInner.setCollection(collection.getCollection());
-        if(collection.getWordsEmbedding()!=null && collectionInner.getWordsEmbedding().getFieldName()!=null){
+        if(collection.getWordsEmbedding()!=null && !collection.getWordsEmbedding().getFieldName().isEmpty()){
             collectionInner.setWordsEmbedding(new WordsEmbeddingParam(collection.getWordsEmbedding().getAllowEmpty(), collection.getWordsEmbedding().getFieldName(),
                     collection.getWordsEmbedding().getEmptyInputRerank()));
         }
@@ -516,13 +528,13 @@ public class GrpcStub implements Stub{
         collectionInner.setShardNum(collection.getShardNum());
         collectionInner.setReplicaNum(collection.getReplicaNum());
         collectionInner.setIndexStatus(new Collection.IndexStatus(collection.getIndexStatus().getStatus(), collection.getIndexStatus().getStartTime()));
-        collection.getIndexesMap().entrySet().forEach(entry->{
+        collectionInner.setIndexes(collection.getIndexesMap().entrySet().stream().map(entry->{
             IndexField indexField = new IndexField();
             indexField.setFieldName(entry.getValue().getFieldName());
-            indexField.setFieldType(FieldType.valueOf(entry.getValue().getFieldType()));
-            indexField.setIndexType(IndexType.valueOf(entry.getValue().getIndexType()));
+            indexField.setFieldType(FieldType.fromValue(entry.getValue().getFieldType()));
+            indexField.setIndexType(IndexType.fromValue(entry.getValue().getIndexType()));
             if (indexField.isVectorField()){
-                indexField.setMetricType(MetricType.valueOf(entry.getValue().getMetricType()));
+                indexField.setMetricType(MetricType.fromValue(entry.getValue().getMetricType()));
                 indexField.setDimension(entry.getValue().getDimension());
                 if(entry.getValue().hasParams()){
                     switch (indexField.getIndexType()) {
@@ -543,25 +555,26 @@ public class GrpcStub implements Stub{
                 }
             }
             if(indexField.getFieldType()== FieldType.Array){
-                indexField.setFieldElementType(FieldElementType.valueOf(entry.getValue().getFieldElementType()));
+                indexField.setFieldElementType(FieldElementType.fromValue(entry.getValue().getFieldElementType()));
             }
-        });
+            return indexField;
+        }).collect(Collectors.toList()));
         return collectionInner;
     }
 
     private static Olama.Document convertDocument2OlamaDoc(Document document) {
         Olama.Document.Builder docBuilder = Olama.Document.newBuilder();
-        if (!document.getId().isEmpty()){
+        if (document.getId()!=null){
             docBuilder.setId(document.getId());
         }
-        if (!document.getVector().isEmpty()){
-            if(document.getVector().get(0) instanceof Number){
-                docBuilder.addAllVector(document.getVector().stream().map(vecEle -> (Float)vecEle).collect(Collectors.toList()));
-            } else if (document.getVector().get(0) instanceof String) {
-                docBuilder.setDataExpr((String) document.getVector().get(0));
+        if (document.getVector()!=null){
+            if(document.getVector() instanceof List){
+                docBuilder.addAllVector(((List<Double>)document.getVector()).stream().map(vecEle -> Float.parseFloat(vecEle.toString())).collect(Collectors.toList()));
+            } else if (document.getVector() instanceof String) {
+                docBuilder.setDataExpr((String) document.getVector());
             }
         }
-        if(!document.getSparseVector().isEmpty()){
+        if(document.getSparseVector()!=null && document.getSparseVector().size()>0){
             docBuilder.addAllSparseVector(document.getSparseVector().stream()
                     .map(pair->Olama.SparseVecItem.newBuilder().setTermId(pair.getKey()).setScore(pair.getValue().floatValue()).build())
                     .collect(Collectors.toList()));
@@ -569,9 +582,11 @@ public class GrpcStub implements Stub{
         document.getDocFields().forEach(docField -> {
             Olama.Field.Builder fieldBuilder = Olama.Field.newBuilder();
             if (docField.getValue() instanceof Integer || docField.getValue() instanceof Long) {
-                fieldBuilder.setValU64((Long) docField.getValue());
+                fieldBuilder.setValU64(Long.parseLong(docField.getValue().toString()));
             } else if (docField.getValue() instanceof Double || docField.getValue() instanceof Float) {
-                fieldBuilder.setValDouble((Double) docField.getValue());
+                fieldBuilder.setValDouble(Double.parseDouble(docField.getValue().toString()));
+            }else if(docField.getValue() instanceof String){
+                fieldBuilder.setValStr(ByteString.copyFromUtf8(docField.getValue().toString()));
             }
             if (docField.getValue() instanceof List) {
                 fieldBuilder.setValStrArr(Olama.Field.StringArray.newBuilder().addAllStrArr(
@@ -592,20 +607,22 @@ public class GrpcStub implements Stub{
             builder.withSparseVectorList(document.getSparseVectorList().stream().
                     map(sparseVecItem -> Arrays.asList(sparseVecItem.getTermId(), sparseVecItem.getScore())).collect(Collectors.toList()));
         }
-        if(!document.getFieldsMap().isEmpty()){
+        if(document.getFieldsMap()!=null){
             for (Map.Entry<String, Olama.Field> stringFieldEntry : document.getFieldsMap().entrySet()) {
                 if (stringFieldEntry.getValue().hasValDouble()){
-                    builder.addDocField(new DocField(stringFieldEntry.getKey(), Double.parseDouble(stringFieldEntry.getValue().toString())));
+                    builder.addDocField(new DocField(stringFieldEntry.getKey(), stringFieldEntry.getValue().getValDouble()));
                 }
                 if (stringFieldEntry.getValue().hasValU64()){
-                    builder.addDocField(new DocField(stringFieldEntry.getKey(), Long.parseLong(stringFieldEntry.getValue().toString())));
+                    builder.addDocField(new DocField(stringFieldEntry.getKey(), stringFieldEntry.getValue().getValU64()));
                 }
                 if (stringFieldEntry.getValue().hasValStr()){
-                    builder.addDocField(new DocField(stringFieldEntry.getKey(), stringFieldEntry.getValue().toString()));
+                    builder.addDocField(new DocField(stringFieldEntry.getKey(), new String(stringFieldEntry.getValue().toByteArray(), StandardCharsets.UTF_8)));
                 }
                 if (stringFieldEntry.getValue().hasValStrArr()){
                     builder.addDocField(new DocField(stringFieldEntry.getKey(),
-                            stringFieldEntry.getValue().getValStrArr().getStrArrList().stream().map(ByteString::toString).collect(Collectors.toList())));
+                            stringFieldEntry.getValue().getValStrArr().getStrArrList().stream().map(ele->
+                                new String(stringFieldEntry.getValue().toByteArray(), StandardCharsets.UTF_8)
+                            ).collect(Collectors.toList())));
                 }
             }
         }

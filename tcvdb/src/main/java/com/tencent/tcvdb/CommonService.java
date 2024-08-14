@@ -22,8 +22,8 @@ public class CommonService {
      * @return {@link ConnectParam}
      */
     private static ConnectParam initConnectParam() {
-        String vdbURL = "9.135.180.240:9500";
-        String vdbKey = "";
+        String vdbURL = "21.0.177.204:9500";
+        String vdbKey = "l9WgJcIXsm408C5Wl5PJ7dlLlkFr3DkqeUdNWcOa";
         System.out.println("\tvdb_url: " + vdbURL);
         System.out.println("\tvdb_key: " + vdbKey);
         return ConnectParam.newBuilder()
@@ -75,7 +75,7 @@ public class CommonService {
         for (String s : database) {
             System.out.println("\tres: " + s);
         }
-//        Database db = client.database(DBNAME);
+//        Database db = client.database(databaseName);
 
         // 3. 创建 collection
         System.out.println("---------------------- createCollection ----------------------");

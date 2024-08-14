@@ -167,7 +167,7 @@ public class Collection {
         InsertParamInner insertParam = new InsertParamInner(
                 database, collection, param);
         boolean ai = false;
-        if(this.getWordsEmbedding()!=null || param.getDocuments().get(0).getVector().get(0) instanceof String){
+        if(this.getWordsEmbedding()!=null ||(param.getDocuments().get(0).getVector()!=null && param.getDocuments().get(0).getVector() instanceof String)){
             ai = true;
         }
         return this.stub.upsertDocument(insertParam, ai);
@@ -203,7 +203,7 @@ public class Collection {
 
     public AffectRes update(UpdateParam param, Document document) throws VectorDBException {
         boolean ai = false;
-        if(this.getWordsEmbedding()!=null || (document.getVector()!=null && !document.getVector().isEmpty() && document.getVector().get(0) instanceof String)){
+        if(this.getWordsEmbedding()!=null || (document.getVector()!=null && document.getVector() instanceof String)){
             ai = true;
         }
         return this.stub.updateDocument(

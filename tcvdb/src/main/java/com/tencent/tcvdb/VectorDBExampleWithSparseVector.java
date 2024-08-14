@@ -192,10 +192,12 @@ public class VectorDBExampleWithSparseVector {
                                 .withData(encoder.encodeQueries(Arrays.asList("正大光明，忠良善果弥深")))
                         .build()))
                 // 指定 Top K 的 K 值
-                .withRerank(new WeightRerankOption(Arrays.asList("vector","sparse_vector"), Arrays.asList(0.9, 0.1)))
+                .withRerank(new WeightRerankOption(Arrays.asList("vector","sparse_vector"), Arrays.asList(0.9f, 0.1f)))
                 .withLimit(2)
                 // 过滤获取到结果
                 .withFilter(filterParam)
+//                .withRetrieveVector(true)
+                .withOutputFields(Arrays.asList("sparse_vector"))
                 .build();
         List<List<Document>> siDocs = collection.search(searchByIdParam).getDocuments();
         int i = 0;
@@ -342,8 +344,8 @@ public class VectorDBExampleWithSparseVector {
     private static CreateCollectionParam initCreateEmbeddingCollectionParam(String collName) {
         return CreateCollectionParam.newBuilder()
                 .withName(collName)
-                .withShardNum(1)
-                .withReplicaNum(0)
+                .withShardNum(2)
+                .withReplicaNum(2)
                 .withDescription("test sparse collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", BGE_BASE_ZH.getDimension(), IndexType.HNSW,

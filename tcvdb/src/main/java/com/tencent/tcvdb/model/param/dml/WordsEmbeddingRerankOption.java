@@ -6,9 +6,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class WordsEmbeddingRerankOption extends RerankOption{
     private Boolean enable;
-    private Double expectRecallMultiples;
+    private Integer expectRecallMultiples;
 
-    public WordsEmbeddingRerankOption(Boolean enable, Double expectRecallMultiples) {
+    public WordsEmbeddingRerankOption(Boolean enable, Integer expectRecallMultiples) {
         super("wordsEmbedding");
         this.enable = enable;
         this.expectRecallMultiples = expectRecallMultiples;
@@ -22,11 +22,11 @@ public class WordsEmbeddingRerankOption extends RerankOption{
         this.enable = enable;
     }
 
-    public Double getExpectRecallMultiples() {
+    public Integer getExpectRecallMultiples() {
         return expectRecallMultiples;
     }
 
-    public void setExpectRecallMultiples(Double expectRecallMultiples) {
+    public void setExpectRecallMultiples(Integer expectRecallMultiples) {
         this.expectRecallMultiples = expectRecallMultiples;
     }
 
@@ -36,12 +36,12 @@ public class WordsEmbeddingRerankOption extends RerankOption{
     // 建造者模式
     public static class Builder{
         private Boolean enable;
-        private Double expectRecallMultiples;
+        private Integer expectRecallMultiples;
         public Builder withEnable(Boolean enable){
             this.enable = enable;
             return this;
         }
-        public Builder withExpectRecallMultiples(Double expectRecallMultiples){
+        public Builder withExpectRecallMultiples(Integer expectRecallMultiples){
             this.expectRecallMultiples = expectRecallMultiples;
             return this;
         }

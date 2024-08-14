@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class GrpcStub implements Stub{
     private ManagedChannel channel;
@@ -170,7 +171,9 @@ public class GrpcStub implements Stub{
                 if(index.getFieldType()==FieldType.Array){
                     indexBuilder.setFieldElementType(FieldElementType.String.getValue());
                 }
-
+                if(index.getFieldType() == FieldType.SparseVector){
+                    indexBuilder.setMetricType(index.getMetricType().getValue());
+                }
                 requestOrBuilder.putIndexes(index.getFieldName(), indexBuilder.build());
             }
 
@@ -408,13 +411,32 @@ public class GrpcStub implements Stub{
                 matchOption.getData().forEach(sparseVectors->{
                     sparseBuilder.addData(Olama.SparseVectorArray.newBuilder().addAllSpVector(sparseVectors.stream()
                             .map(vectors-> Olama.SparseVecItem.newBuilder().setTermId((Long) vectors.get(0)).
-                                    setScore((float)vectors.get(1)).build()).collect(Collectors.toList())).build());
+                                    setScore((Float.parseFloat(vectors.get(1).toString()))).
+                                            build()).collect(Collectors.toList())).build());
                 });
-                sparseBuilder.setLimit(matchOption.getLimit());
+                if(matchOption.getLimit()!=null){
+                    sparseBuilder.setLimit(matchOption.getLimit());
+                }
                 return sparseBuilder.build();
             }).collect(Collectors.toList()));
         }
-
+        if (searchParam.getRerank()!=null){
+            Olama.RerankParams.Builder rerankBuilder = Olama.RerankParams.newBuilder()
+                    .setMethod(searchParam.getRerank().getMethod());
+            if (searchParam.getRerank() instanceof WeightRerankOption){
+                WeightRerankOption weightRerankOption = (WeightRerankOption)searchParam.getRerank();
+                rerankBuilder.putAllWeights(IntStream.range(0, weightRerankOption.getFieldList().size())
+                        .boxed()
+                        .collect(Collectors.toMap(weightRerankOption.getFieldList()::get, weightRerankOption.getWeight()::get)));
+            }else if (searchParam.getRerank() instanceof WordsEmbeddingRerankOption){
+                WordsEmbeddingRerankOption wordsEmbeddingRerankOption = (WordsEmbeddingRerankOption)searchParam.getRerank();
+                rerankBuilder.setExpectRecallMultiples(wordsEmbeddingRerankOption.getExpectRecallMultiples());
+            }else if (searchParam.getRerank() instanceof RRFRerankOption){
+                RRFRerankOption rrfRerankOption = (RRFRerankOption)searchParam.getRerank();
+                rerankBuilder.setRrfK(rrfRerankOption.getRrfK());
+            }
+            searchConBuilder.setRerankParams(rerankBuilder.build());
+        }
         builder.setSearch(searchConBuilder.build());
         SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai));
         Olama.SearchResponse searchResponse = searchEngineBlockingStub.search(builder.build());
@@ -598,8 +620,7 @@ public class GrpcStub implements Stub{
     }
 
     private static Document convertDocument(Olama.Document document) {
-        Document.Builder builder =  Document.newBuilder().withId(document.getId()).
-                withScore((double) document.getScore());
+        Document.Builder builder =  Document.newBuilder().withId(document.getId());
         if (document.getVectorCount()>0){
             builder.withVectorByList(Collections.singletonList(document.getVectorList()));
         }
@@ -616,12 +637,12 @@ public class GrpcStub implements Stub{
                     builder.addDocField(new DocField(stringFieldEntry.getKey(), stringFieldEntry.getValue().getValU64()));
                 }
                 if (stringFieldEntry.getValue().hasValStr()){
-                    builder.addDocField(new DocField(stringFieldEntry.getKey(), new String(stringFieldEntry.getValue().toByteArray(), StandardCharsets.UTF_8)));
+                    builder.addDocField(new DocField(stringFieldEntry.getKey(), stringFieldEntry.getValue().getValStr().toString(StandardCharsets.UTF_8)));
                 }
                 if (stringFieldEntry.getValue().hasValStrArr()){
                     builder.addDocField(new DocField(stringFieldEntry.getKey(),
                             stringFieldEntry.getValue().getValStrArr().getStrArrList().stream().map(ele->
-                                new String(stringFieldEntry.getValue().toByteArray(), StandardCharsets.UTF_8)
+                                ele.toString(StandardCharsets.UTF_8)
                             ).collect(Collectors.toList())));
                 }
             }

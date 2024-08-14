@@ -8,8 +8,8 @@ import java.util.List;
 public class WeightRerankOption extends RerankOption{
 
     private List<String> fieldList;
-    private List<Double> weight;
-    public WeightRerankOption(List<String> fieldList, List<Double> weight) {
+    private List<Float> weight;
+    public WeightRerankOption(List<String> fieldList, List<Float> weight) {
         super("weighted");
         this.fieldList = fieldList;
         this.weight = weight;
@@ -23,11 +23,11 @@ public class WeightRerankOption extends RerankOption{
         this.fieldList = fieldList;
     }
 
-    public List<Double> getWeight() {
+    public List<Float> getWeight() {
         return weight;
     }
 
-    public void setWeight(List<Double> weight) {
+    public void setWeight(List<Float> weight) {
         this.weight = weight;
     }
 
@@ -38,12 +38,12 @@ public class WeightRerankOption extends RerankOption{
     }
     public static class Builder {
         private List<String> fieldList;
-        private List<Double> weight;
+        private List<Float> weight;
         public Builder withFieldList(List<String> fieldList) {
             this.fieldList = fieldList;
             return this;
         }
-        public Builder withWeight(List<Double> weight) {
+        public Builder withWeight(List<Float> weight) {
             this.weight = weight;
             return this;
         }

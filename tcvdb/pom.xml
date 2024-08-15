@@ -52,7 +52,7 @@
             <artifactId>tcvdb_text</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>/data/home/yihaoan/tcvdb_text-1.0.0-SNAPSHOT.jar</systemPath>
+            <systemPath>/Users/anyihao/.m2/repository/com/tencent/tcvdb/tcvdb_text/1.0.0-SNAPSHOT/tcvdb_text-1.0.0-SNAPSHOT.jar</systemPath>
         </dependency>
         <!-- grpc-netty -->
         <dependency>

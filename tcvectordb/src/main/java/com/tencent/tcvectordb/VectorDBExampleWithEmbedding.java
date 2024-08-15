@@ -32,6 +32,7 @@ import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.SearchRes;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
+import com.tencent.tcvectordb.rpc.client.RPCVectorDBClient;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,7 +53,7 @@ public class VectorDBExampleWithEmbedding {
     public static void example() throws InterruptedException {
         // 创建VectorDB Client
         ConnectParam connectParam = initConnectParam();
-        VectorDBClient client = new VectorDBClient(connectParam, ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
+        VectorDBClient client = new RPCVectorDBClient(connectParam, ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
 
         // 测试前清理环境
         System.out.println("---------------------- clear before test ----------------------");
@@ -75,9 +76,9 @@ public class VectorDBExampleWithEmbedding {
         System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
         System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
         return ConnectParam.newBuilder()
-                .withUrl(System.getProperty("vdb_url"))
+                .withUrl("http://21.0.179.98:8100")
                 .withUsername("root")
-                .withKey(System.getProperty("vdb_key"))
+                .withKey("4ewdu8whi0wUTMPpRRIaK8K9EAHb4BA8OS8Twd9W")
                 .withTimeout(30)
                 .build();
     }

@@ -230,6 +230,17 @@ public class Collection{
             return startTime;
         }
 
+        public IndexStatus() {
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public void setStartTime(Date startTime) {
+            this.startTime = startTime;
+        }
+
         public IndexStatus(String status, String startTime) {
             this.status = status;
             if (!startTime.isEmpty()){

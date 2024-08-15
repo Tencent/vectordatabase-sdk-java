@@ -32,6 +32,7 @@ import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
+import com.tencent.tcvectordb.rpc.client.RPCVectorDBClient;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class VectorDBExample {
     public static void example() throws InterruptedException {
         // 创建 VectorDB Client
         ConnectParam connectParam = initConnectParam();
-        VectorDBClient client = new VectorDBClient(connectParam, ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
+        VectorDBClient client = new RPCVectorDBClient(connectParam, ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
 
         // 测试前清理环境
         System.out.println("---------------------- clear before test ----------------------");
@@ -73,9 +74,9 @@ public class VectorDBExample {
         System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
         System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
         return ConnectParam.newBuilder()
-                .withUrl(System.getProperty("vdb_url"))
+                .withUrl("http://21.0.179.98:8100")
                 .withUsername("root")
-                .withKey(System.getProperty("vdb_key"))
+                .withKey("4ewdu8whi0wUTMPpRRIaK8K9EAHb4BA8OS8Twd9W")
                 .withTimeout(30)
                 .build();
     }
@@ -404,7 +405,7 @@ public class VectorDBExample {
         return CreateCollectionParam.newBuilder()
                 .withName(collName)
                 .withShardNum(1)
-                .withReplicaNum(0)
+                .withReplicaNum(1)
                 .withDescription("test collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", 3, IndexType.HNSW,

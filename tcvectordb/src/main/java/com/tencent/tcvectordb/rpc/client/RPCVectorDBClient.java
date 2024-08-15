@@ -14,7 +14,7 @@ import java.util.List;
 
 public class RPCVectorDBClient extends VectorDBClient {
 
-    public RPCVectorDBClient(ConnectParam connectParam, ReadConsistencyEnum readConsistency) throws MalformedURLException {
+    public RPCVectorDBClient(ConnectParam connectParam, ReadConsistencyEnum readConsistency) {
         super();
         this.stub = new GrpcStub(connectParam);
         this.readConsistency = readConsistency;

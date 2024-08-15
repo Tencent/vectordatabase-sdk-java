@@ -38,7 +38,7 @@ public class GrpcStub extends HttpStub{
     private String authorization;
     private int timeout = 10;
     private static final Logger logger = LoggerFactory.getLogger(GrpcStub.class.getName());
-    public GrpcStub(ConnectParam param) throws MalformedURLException {
+    public GrpcStub(ConnectParam param){
         super(param);
         this.authorization = String.format("Bearer account=%s&api_key=%s",param.getUsername(), param.getKey());
 
@@ -53,12 +53,17 @@ public class GrpcStub extends HttpStub{
         this.timeout = timeout;
     }
 
-    private String getAddress(String url) throws MalformedURLException {
-        URL _url = new URL(url);
+    private String getAddress(String url){
+        URL _url = null;
+        try {
+            _url = new URL(url);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
         if (_url.getPort()<=0){
             url = url + ":80";
         }
-        return url.replaceFirst("http://", "");
+        return url.replaceFirst("http://", "").replaceFirst("https://", "");
     }
 
 
@@ -161,7 +166,7 @@ public class GrpcStub extends HttpStub{
         if (params.getEmbedding()!=null){
             requestOrBuilder.setEmbeddingParams(Olama.EmbeddingParams.newBuilder()
                             .setField(params.getEmbedding().getField())
-                            .setModelName(params.getEmbedding().getModelName())
+                            .setModelName(params.getEmbedding().getModel().getModelName())
                             .setVectorField(params.getEmbedding().getVectorField())
                     .build());
         }
@@ -406,9 +411,12 @@ public class GrpcStub extends HttpStub{
             searchConBuilder.setFilter(searchParam.getFilter());
         }
         if (searchParam instanceof SearchByVectorParam){
-            searchConBuilder.addAllVectors(((SearchByVectorParam)searchParam).getVectors().stream().
-                    map(ele-> Olama.VectorArray.newBuilder().addVector(Float.parseFloat(ele.toString())).build())
-                    .collect(Collectors.toList()));
+            ((SearchByVectorParam)searchParam).getVectors().forEach(vector->{
+                Olama.VectorArray.Builder vectorArrayBuilder =  Olama.VectorArray.newBuilder();
+                vector.forEach(ele->vectorArrayBuilder.addVector(Float.parseFloat(ele.toString())));
+                searchConBuilder.addVectors(vectorArrayBuilder.build());
+            });
+
         }
         if (searchParam instanceof SearchByIdParam){
             searchConBuilder.addAllDocumentIds(((SearchByIdParam)searchParam).getDocumentIds());

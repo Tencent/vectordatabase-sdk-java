@@ -38,6 +38,8 @@ import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.Stub;
 import com.tencent.tcvectordb.service.param.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -119,6 +121,42 @@ public class Collection{
         this.readConsistency = readConsistency;
     }
 
+    public void setCollection(String collection) {
+        this.collection = collection;
+    }
+
+    public void setReplicaNum(int replicaNum) {
+        this.replicaNum = replicaNum;
+    }
+
+    public void setShardNum(int shardNum) {
+        this.shardNum = shardNum;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setIndexes(List<IndexField> indexes) {
+        this.indexes = indexes;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public void setDocumentCount(long documentCount) {
+        this.documentCount = documentCount;
+    }
+
+    public void setIndexStatus(IndexStatus indexStatus) {
+        this.indexStatus = indexStatus;
+    }
+
+    public void setAlias(List<String> alias) {
+        this.alias = alias;
+    }
+
     public Embedding getEmbedding() {
         return embedding;
     }
@@ -190,6 +228,22 @@ public class Collection{
 
         public Date getStartTime() {
             return startTime;
+        }
+
+        public IndexStatus(String status, String startTime) {
+            this.status = status;
+            if (!startTime.isEmpty()){
+                String formatPattern = "yyyy-MM-dd HH:mm:ss";
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat(formatPattern);
+                try {
+                    Date date = dateFormat.parse(startTime);
+                    this.startTime = date;
+                    System.out.println("Parsed Date: " + date);
+                } catch (ParseException e) {
+                    System.err.println("Failed to parse date: " + e.getMessage());
+                }
+            }
         }
 
         @Override

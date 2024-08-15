@@ -21,4 +21,9 @@ public class AffectRes extends BaseRes {
                 ", msg='" + msg + '\'' +
                 '}';
     }
+
+    public AffectRes(int code, String msg, String warning, long affectedCount) {
+        super(code, msg, warning);
+        this.affectedCount = affectedCount;
+    }
 }

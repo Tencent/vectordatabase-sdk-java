@@ -37,7 +37,7 @@ public class VectorDBClient {
     protected  Stub stub;
     protected  ReadConsistencyEnum readConsistency;
 
-    public VectorDBClient() {
+    protected VectorDBClient() {
     }
 
     public VectorDBClient(ConnectParam connectParam, ReadConsistencyEnum readConsistency) {

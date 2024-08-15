@@ -238,15 +238,17 @@ public class Collection {
 
         public IndexStatus(String status, String startTime) {
             this.status = status;
-            String formatPattern = "yyyy-MM-dd HH:mm:ss";
+            if (!startTime.isEmpty()){
+                String formatPattern = "yyyy-MM-dd HH:mm:ss";
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat(formatPattern);
-            try {
-                Date date = dateFormat.parse(startTime);
-                this.startTime = date;
-                System.out.println("Parsed Date: " + date);
-            } catch (ParseException e) {
-                System.err.println("Failed to parse date: " + e.getMessage());
+                SimpleDateFormat dateFormat = new SimpleDateFormat(formatPattern);
+                try {
+                    Date date = dateFormat.parse(startTime);
+                    this.startTime = date;
+                    System.out.println("Parsed Date: " + date);
+                } catch (ParseException e) {
+                    System.err.println("Failed to parse date: " + e.getMessage());
+                }
             }
 
         }

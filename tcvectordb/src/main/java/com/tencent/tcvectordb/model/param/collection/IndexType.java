@@ -73,4 +73,13 @@ public enum IndexType {
     public String getValue() {
         return value;
     }
+
+    public static IndexType fromValue(String value) {
+        for (IndexType indexType : IndexType.values()) {
+            if (indexType.getValue().equals(value)) {
+                return indexType;
+            }
+        }
+        return null; // 或者抛出一个异常，如果value不合法
+    }
 }

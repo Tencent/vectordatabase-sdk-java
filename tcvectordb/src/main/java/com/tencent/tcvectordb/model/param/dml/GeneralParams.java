@@ -14,6 +14,18 @@ public class GeneralParams implements Params {
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     private double Radius;
 
+    public int getEf() {
+        return ef;
+    }
+
+    public int getNProbe() {
+        return NProbe;
+    }
+
+    public double getRadius() {
+        return Radius;
+    }
+
     private GeneralParams(Builder builder) {
         this.ef = builder.ef;
         this.NProbe = builder.NProbe;

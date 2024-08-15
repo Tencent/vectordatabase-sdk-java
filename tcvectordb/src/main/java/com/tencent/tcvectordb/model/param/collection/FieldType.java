@@ -52,5 +52,12 @@ public enum FieldType {
         return value;
     }
 
-
+    public static FieldType fromValue(String value) {
+        for (FieldType fieldType : FieldType.values()) {
+            if (fieldType.getValue().equals(value)) {
+                return fieldType;
+            }
+        }
+        return null; // 或者抛出一个异常，如果value不合法
+    }
 }

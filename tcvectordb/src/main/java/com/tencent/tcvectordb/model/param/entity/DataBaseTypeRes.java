@@ -6,6 +6,11 @@ public class DataBaseTypeRes extends BaseRes{
     @JsonProperty(value = "database")
     private DataBaseType databaseType;
 
+    public DataBaseTypeRes(int code, String msg, String warning, DataBaseType databaseType) {
+        super(code, msg, warning);
+        this.databaseType = databaseType;
+    }
+
     public DataBaseTypeRes() {
         super();
     }

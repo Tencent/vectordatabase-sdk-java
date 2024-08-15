@@ -46,4 +46,13 @@ public enum MetricType {
     public String getValue() {
         return value;
     }
+
+    public static MetricType fromValue(String value) {
+        for (MetricType metricType : MetricType.values()) {
+            if (metricType.getValue().equals(value)) {
+                return metricType;
+            }
+        }
+        return null; // 或者抛出一个异常，如果value不合法
+    }
 }

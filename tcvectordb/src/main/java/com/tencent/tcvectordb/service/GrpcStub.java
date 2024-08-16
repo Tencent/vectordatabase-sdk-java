@@ -226,7 +226,7 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public void createCollectionView(CreateCollectionViewParam params) {
-        return;
+        super.createCollectionView(params);
     }
 
     @Override

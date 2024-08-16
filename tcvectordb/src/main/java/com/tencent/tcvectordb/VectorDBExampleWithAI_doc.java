@@ -57,7 +57,7 @@ public class VectorDBExampleWithAI_doc {
         VectorDBClient client = CommonService.initClient();
 
         // 清理环境
-        CommonService.anySafe(() -> client.dropDatabase(DBNAME));
+        CommonService.anySafe(() -> client.dropAIDatabase(DBNAME));
         createAiDatabaseAndCollectionView(client);
         Map<String, Object> metaDataMap = new HashMap<>();
         metaDataMap.put("author", "Tencent");

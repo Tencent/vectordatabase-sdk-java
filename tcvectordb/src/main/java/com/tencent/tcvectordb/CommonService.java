@@ -1,13 +1,13 @@
-package com.tencent.tcvdb;
+package com.tencent.tcvectordb;
 
-import com.tencent.tcvdb.client.VectorDBClient;
-import com.tencent.tcvdb.model.Collection;
-import com.tencent.tcvdb.model.Database;
-import com.tencent.tcvdb.model.param.collection.CreateCollectionParam;
-import com.tencent.tcvdb.model.param.database.ConnectParam;
-import com.tencent.tcvdb.model.param.entity.AffectRes;
-import com.tencent.tcvdb.model.param.enums.ReadConsistencyEnum;
-import com.tencent.tcvdb.rpc.client.RPCVectorDBClient;
+import com.tencent.tcvectordb.client.VectorDBClient;
+import com.tencent.tcvectordb.model.Collection;
+import com.tencent.tcvectordb.model.Database;
+import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
+import com.tencent.tcvectordb.model.param.database.ConnectParam;
+import com.tencent.tcvectordb.model.param.entity.AffectRes;
+import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
+import com.tencent.tcvectordb.rpc.client.RPCVectorDBClient;
 
 import java.util.List;
 

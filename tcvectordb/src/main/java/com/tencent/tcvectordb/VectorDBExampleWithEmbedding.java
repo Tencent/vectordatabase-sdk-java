@@ -50,14 +50,14 @@ public class VectorDBExampleWithEmbedding {
     private static final String COLL_NAME = "book_segments_2";
     private static final String COLL_NAME_ALIAS = "collection_alias_2";
 
-    public static void example() throws InterruptedException {
+    public static void main(String[] args) throws Exception {
         // 创建VectorDB Client
-        ConnectParam connectParam = initConnectParam();
-        VectorDBClient client = new RPCVectorDBClient(connectParam, ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
 
-        // 测试前清理环境
-        System.out.println("---------------------- clear before test ----------------------");
-        anySafe(() -> clear(client));
+        // 创建 VectorDB Client
+        VectorDBClient client = CommonService.initClient();
+
+        // 清理环境
+        CommonService.anySafe(() -> client.dropDatabase(DBNAME));
         createDatabaseAndCollection(client);
         upsertData(client);
         queryData(client);

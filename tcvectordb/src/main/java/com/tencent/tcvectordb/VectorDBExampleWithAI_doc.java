@@ -50,14 +50,14 @@ public class VectorDBExampleWithAI_doc {
     private static final String COLL_NAME = "coll-ai-files";
     private static final String COLL_NAME_ALIAS = "alias-coll-ai-files";
 
-    public static void example() throws Exception {
+    public static void main(String[] args) throws Exception {
         // 创建VectorDB Client
-        ConnectParam connectParam = initConnectParam();
-        VectorDBClient client = new VectorDBClient(connectParam, ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
 
-        // 测试前清理环境
-        System.out.println("---------------------- clear before test ----------------------");
-        anySafe(() -> clear(client));
+            // 创建 VectorDB Client
+        VectorDBClient client = CommonService.initClient();
+
+        // 清理环境
+        CommonService.anySafe(() -> client.dropDatabase(DBNAME));
         createAiDatabaseAndCollectionView(client);
         Map<String, Object> metaDataMap = new HashMap<>();
         metaDataMap.put("author", "Tencent");

@@ -48,14 +48,12 @@ public class VectorDBExample {
     private static final String COLL_NAME = "book_segments_9";
     private static final String COLL_NAME_ALIAS = "collection_alias_1";
 
-    public static void example() throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException {
         // 创建 VectorDB Client
-        ConnectParam connectParam = initConnectParam();
-        VectorDBClient client = new RPCVectorDBClient(connectParam, ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
+        VectorDBClient client = CommonService.initClient();
 
-        // 测试前清理环境
-        System.out.println("---------------------- clear before test ----------------------");
-        anySafe(() -> clear(client));
+        // 清理环境
+        CommonService.anySafe(() -> client.dropDatabase(DBNAME));
         createDatabaseAndCollection(client);
         upsertData(client);
         queryData(client);

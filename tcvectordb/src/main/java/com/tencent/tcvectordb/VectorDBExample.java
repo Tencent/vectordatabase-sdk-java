@@ -20,9 +20,6 @@
 
 package com.tencent.tcvectordb;
 
-
-import com.google.common.collect.Maps;
-import com.google.gson.JsonObject;
 import com.tencent.tcvectordb.client.VectorDBClient;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.Collection;
@@ -34,10 +31,9 @@ import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.utils.JsonUtils;
+import org.json.JSONObject;
 
 import java.util.*;
-
-import org.json.JSONObject;
 /**
  * VectorDB Java SDK usage example
  */
@@ -149,9 +145,13 @@ public class VectorDBExample {
     private static void upsertData(VectorDBClient client) throws InterruptedException {
         Database database = client.database(DBNAME);
         Collection collection = database.describeCollection(COLL_NAME);
+//        List<JSONObject> documentData = Arrays.asList(
+//                new JSONObject("{\"id\":\"0013\",\"vector\":[0.2123, 0.21, 0.213],\"bookName\":\"三国演义\",\"author\":\"吴承恩\",\"page\":21,\"segment\":\"富贵功名，前缘分定，为人切莫欺心。\"}"),
+//                new JSONObject("{\"id\":\"0014\",\"vector\":[0.2123, 0.21, 0.213],\"bookName\":\"三国演义\",\"author\":\"吴承恩\",\"page\":21,\"segment\":\"富贵功名，前缘分定，为人切莫欺心。\"}")
+//        );
         List<Document> documentList = new ArrayList<>(Arrays.asList(
                 Document.newBuilder()
-                        .withId("0001")
+                        .withId("0007")
                         .withVector(Arrays.asList(0.2123, 0.21, 0.213))
                         .addDocField(new DocField("bookName", "西游记"))
                         .addDocField(new DocField("author", "吴承恩"))
@@ -160,7 +160,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("array_test", Arrays.asList("1","2","3")))
                         .build(),
                 Document.newBuilder()
-                        .withId("0002")
+                        .withId("0008")
                         .withVector(Arrays.asList(0.2123, 0.22, 0.213))
                         .addDocField(new DocField("bookName", "西游记"))
                         .addDocField(new DocField("author", "吴承恩"))
@@ -170,7 +170,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("array_test", Arrays.asList("4","5","6")))
                         .build(),
                 Document.newBuilder()
-                        .withId("0003")
+                        .withId("0009")
                         .withVector(Arrays.asList(0.2123, 0.23, 0.213))
                         .addDocField(new DocField("bookName", "三国演义"))
                         .addDocField(new DocField("author", "罗贯中"))
@@ -179,7 +179,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("array_test", Arrays.asList("7","8","9")))
                         .build(),
                 Document.newBuilder()
-                        .withId("0004")
+                        .withId("00010")
                         .withVector(Arrays.asList(0.2123, 0.24, 0.213))
                         .addDocField(new DocField("bookName", "三国演义"))
                         .addDocField(new DocField("author", "罗贯中"))
@@ -197,8 +197,10 @@ public class VectorDBExample {
                                 "布大惊，与陈宫商议。宫曰：“闻刘玄德新领徐州，可往投之。"))
                         .build()));
         System.out.println("---------------------- upsert ----------------------");
-        InsertParam insertParam = InsertParam.newBuilder().addAllDocument(documentList).build();
+        InsertParam insertParam = InsertParam.newBuilder().withDocuments(documentList).build();
+//        InsertParam insertParam = InsertParam.newBuilder().withDocumentsData(documentData).build();
         collection.upsert(insertParam);
+//        client.upsert(DBNAME,COLL_NAME, insertParam);
 
         // notice：upsert 操作可用会有延迟
         Thread.sleep(1000 * 5);
@@ -214,7 +216,7 @@ public class VectorDBExample {
                 .and(Filter.exclude("array_test", Arrays.asList("7")));
         List<String> outputFields = Arrays.asList("id", "bookName");
         QueryParam queryParam = QueryParam.newBuilder()
-                .withDocumentIds(documentIds)
+//                .withDocumentIds(documentIds)
                 // 使用 filter 过滤数据
                 .withFilter(filterParam)
                 // limit 限制返回行数，1 到 16384 之间

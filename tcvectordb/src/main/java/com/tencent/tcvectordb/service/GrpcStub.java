@@ -18,6 +18,7 @@ import com.tencent.tcvectordb.rpc.proto.Olama;
 import com.tencent.tcvectordb.rpc.proto.SearchEngineGrpc;
 import com.tencent.tcvectordb.service.param.*;
 import io.grpc.*;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -684,7 +685,7 @@ public class GrpcStub extends HttpStub{
             if (key.equals("id")){
                 docBuilder.setId(document.get(key).toString());
             }else if (key.equals("vector")){
-                docBuilder.addAllVector(((List<Double>)document.get(key)).stream().map(vecEle -> Float.parseFloat(vecEle.toString())).collect(Collectors.toList()));
+                docBuilder.addAllVector((((JSONArray)document.get(key)).toList()).stream().map(vecEle -> Float.parseFloat(vecEle.toString())).collect(Collectors.toList()));
             }else {
                 Olama.Field.Builder fieldBuilder = Olama.Field.newBuilder();
                 if (document.get(key) instanceof Integer || document.get(key) instanceof Long) {
@@ -693,6 +694,8 @@ public class GrpcStub extends HttpStub{
                     fieldBuilder.setValDouble(Double.parseDouble(document.get(key).toString()));
                 } else if (document.get(key) instanceof String) {
                     fieldBuilder.setValStr(ByteString.copyFromUtf8(document.get(key).toString()));
+                }else if(document.get(key) instanceof JSONArray){
+                    fieldBuilder.setValStrArr(Olama.Field.StringArray.newBuilder().addAllStrArr(((JSONArray)document.get(key)).toList().stream().map(ele-> ByteString.copyFromUtf8((String)ele)).collect(Collectors.toList())));
                 }
                 docBuilder.putFields(key, fieldBuilder.build());
             }

@@ -95,15 +95,4 @@ public class InsertParamInner {
         node.set("documents", docsNode);
         return node.toString();
     }
-
-    public static void main(String[] args) throws InterruptedException {
-        List<JSONObject> documentList = Arrays.asList(
-                new JSONObject("{\"id\": 1, \"vector\": [0.2123, 0.21, 0.213], \"bookName\": \"西游记\"}"),
-                new JSONObject("{\"id\": 2, \"vector\": [0.2123, 0.22, 0.213], \"bookName\": \"西游记11\"}"),
-                new JSONObject("{\"id\": 3, \"vector\": [0.2123, 0.23, 0.213], \"bookName\": \"三国演义\"}"),
-                new JSONObject("{\"id\": 4, \"vector\": [0.2123, 0.24, 0.213], \"bookName\": \"三国演义11\"}")
-                );
-        InsertParamInner param = new InsertParamInner("test", "test", InsertParam.newBuilder().withAllDocumentsData(documentList).withBuildIndex(true).build());
-        System.out.println(param.toString());
-    }
 }

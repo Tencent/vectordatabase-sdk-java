@@ -66,6 +66,7 @@ public class InsertParam {
 
         public Builder() {
             this.documents = new ArrayList<>();
+            this.documentsData = new ArrayList<>();
         }
 
         public Builder withBuildIndex(boolean buildIndex) {
@@ -88,8 +89,13 @@ public class InsertParam {
             return this;
         }
 
-        public Builder withAllDocumentsData(List<JSONObject> documentsData) {
+        public Builder withDocumentsData(List<JSONObject> documentsData) {
             this.documentsData = documentsData;
+            return this;
+        }
+
+        public Builder addDocument(JSONObject document) {
+            this.documentsData.add(document);
             return this;
         }
 

@@ -1,4 +1,4 @@
-package com.tencent.tcvectordb.rpc.client;
+package com.tencent.tcvectordb.rpc.Interceptor;
 
 import io.grpc.*;
 

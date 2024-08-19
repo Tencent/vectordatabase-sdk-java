@@ -23,6 +23,7 @@ package com.tencent.tcvectordb.model.param.dml;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.model.Document;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,10 +35,12 @@ import java.util.List;
 public class InsertParam {
     private boolean buildIndex;
     private List<Document> documents;
+    private List<JSONObject> documentsData;
 
     private InsertParam(Builder builder) {
         this.documents = builder.documents;
         this.buildIndex = builder.buildIndex;
+        this.documentsData = builder.documentsData;
     }
 
     public boolean isBuildIndex() {
@@ -48,6 +51,9 @@ public class InsertParam {
         return documents;
     }
 
+    public List<JSONObject> getDocumentsData() {
+        return documentsData;
+    }
     public static Builder newBuilder() {
         return new Builder();
     }
@@ -55,6 +61,8 @@ public class InsertParam {
     public static class Builder {
         private boolean buildIndex = true;
         private List<Document> documents;
+
+        private List<JSONObject> documentsData;
 
         public Builder() {
             this.documents = new ArrayList<>();
@@ -80,8 +88,14 @@ public class InsertParam {
             return this;
         }
 
+        public Builder withAllDocumentsData(List<JSONObject> documentsData) {
+            this.documentsData = documentsData;
+            return this;
+        }
+
+
         public InsertParam build() {
-            if (this.documents.isEmpty()) {
+            if (this.documents.isEmpty() && this.documentsData.isEmpty()){
                 throw new ParamException("InsertParam error: documents is empty");
             }
             return new InsertParam(this);

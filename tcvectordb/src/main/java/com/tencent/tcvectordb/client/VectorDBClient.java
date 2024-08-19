@@ -23,12 +23,16 @@ package com.tencent.tcvectordb.client;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.AIDatabase;
 import com.tencent.tcvectordb.model.Database;
+import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
+import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
+import com.tencent.tcvectordb.model.param.entity.SearchRes;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.HttpStub;
 import com.tencent.tcvectordb.service.Stub;
+import com.tencent.tcvectordb.service.param.*;
 
 import java.util.List;
 
@@ -93,5 +97,41 @@ public class VectorDBClient {
 
     public AIDatabase aiDatabase(String databaseName){
         return new AIDatabase(this.stub, databaseName, this.readConsistency);
+    }
+
+    public AffectRes upsert(String database, String collection, InsertParam param) throws VectorDBException {
+        InsertParamInner insertParam = new InsertParamInner(
+                database, collection, param);
+        return this.stub.upsertDocument(insertParam);
+    }
+
+    public List<Document> query(String database, String collection, QueryParam param) throws VectorDBException {
+        return this.stub.queryDocument(
+                new QueryParamInner(database, collection, param, this.readConsistency));
+    }
+
+    public List<List<Document>> search(String database, String collection, SearchByVectorParam param) throws VectorDBException {
+        return this.stub.searchDocument(new SearchParamInner(
+                database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE).getDocuments();
+    }
+
+    public List<List<Document>> searchById(String database, String collection, SearchByIdParam param) throws VectorDBException {
+        return this.stub.searchDocument(new SearchParamInner(
+                database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE).getDocuments();
+    }
+
+    public SearchRes searchByEmbeddingItems(String database, String collection, SearchByEmbeddingItemsParam param) throws VectorDBException {
+        return this.stub.searchDocument(new SearchParamInner(
+                database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE);
+    }
+
+    public AffectRes delete(String database, String collection, DeleteParam param) throws VectorDBException {
+        return this.stub.deleteDocument(
+                new DeleteParamInner(database, collection, param));
+    }
+
+    public AffectRes update(String database, String collection, UpdateParam param, Document document) throws VectorDBException {
+        return this.stub.updateDocument(
+                new UpdateParamInner(database, collection, param, document));
     }
 }

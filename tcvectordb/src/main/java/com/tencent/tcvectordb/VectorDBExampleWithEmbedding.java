@@ -31,8 +31,6 @@ import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.SearchRes;
-import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
-import com.tencent.tcvectordb.rpc.client.RPCVectorDBClient;
 
 import java.util.ArrayList;
 import java.util.Arrays;

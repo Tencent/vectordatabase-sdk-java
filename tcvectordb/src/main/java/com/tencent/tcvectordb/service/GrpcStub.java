@@ -13,11 +13,12 @@ import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
-import com.tencent.tcvectordb.rpc.client.AuthorityInterceptor;
+import com.tencent.tcvectordb.rpc.Interceptor.AuthorityInterceptor;
 import com.tencent.tcvectordb.rpc.proto.Olama;
 import com.tencent.tcvectordb.rpc.proto.SearchEngineGrpc;
 import com.tencent.tcvectordb.service.param.*;
 import io.grpc.*;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -341,9 +342,17 @@ public class GrpcStub extends HttpStub{
         }else {
             builder.setBuildIndex(param.getBuildIndex());
         }
-        for (Document document : param.getDocuments()) {
-            Olama.Document doc= convertDocument2OlamaDoc(document);
-            builder.addDocuments(doc);
+
+        if (!param.getDocuments().isEmpty()){
+            for (Document document : param.getDocuments()) {
+                Olama.Document doc= convertDocument2OlamaDoc(document);
+                builder.addDocuments(doc);
+            }
+        }else if (!param.getDocumentsData().isEmpty()){
+            for (JSONObject document : param.getDocumentsData()) {
+                Olama.Document doc= convertDocumentJSON2OlamaDoc(document);
+                builder.addDocuments(doc);
+            }
         }
 
         Olama.UpsertResponse response = this.blockingStub.upsert(builder.build());
@@ -665,6 +674,28 @@ public class GrpcStub extends HttpStub{
                         ((List<?>) docField.getValue()).stream().map(ele-> ByteString.copyFromUtf8((String)ele)).collect(Collectors.toList())));
             }
             docBuilder.putFields(docField.getName(), fieldBuilder.build());
+        });
+        return docBuilder.build();
+    }
+
+    private Olama.Document convertDocumentJSON2OlamaDoc(JSONObject document) {
+        Olama.Document.Builder docBuilder = Olama.Document.newBuilder();
+        document.keySet().forEach(key->{
+            if (key.equals("id")){
+                docBuilder.setId(document.get(key).toString());
+            }else if (key.equals("vector")){
+                docBuilder.addAllVector(((List<Double>)document.get(key)).stream().map(vecEle -> Float.parseFloat(vecEle.toString())).collect(Collectors.toList()));
+            }else {
+                Olama.Field.Builder fieldBuilder = Olama.Field.newBuilder();
+                if (document.get(key) instanceof Integer || document.get(key) instanceof Long) {
+                    fieldBuilder.setValU64(Long.parseLong(document.get(key).toString()));
+                } else if (document.get(key) instanceof Double || document.get(key) instanceof Float) {
+                    fieldBuilder.setValDouble(Double.parseDouble(document.get(key).toString()));
+                } else if (document.get(key) instanceof String) {
+                    fieldBuilder.setValStr(ByteString.copyFromUtf8(document.get(key).toString()));
+                }
+                docBuilder.putFields(key, fieldBuilder.build());
+            }
         });
         return docBuilder.build();
     }

@@ -21,6 +21,8 @@
 package com.tencent.tcvectordb;
 
 
+import com.google.common.collect.Maps;
+import com.google.gson.JsonObject;
 import com.tencent.tcvectordb.client.VectorDBClient;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.Collection;
@@ -31,14 +33,11 @@ import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
-import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
-import com.tencent.tcvectordb.rpc.client.RPCVectorDBClient;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
+import org.json.JSONObject;
 /**
  * VectorDB Java SDK usage example
  */
@@ -49,7 +48,11 @@ public class VectorDBExample {
     private static final String COLL_NAME_ALIAS = "collection_alias_1";
 
     public static void main(String[] args) throws InterruptedException {
-        // 创建 VectorDB Client
+
+
+        System.out.println("---------------------- upsert ----------------------");
+
+//         创建 VectorDB Client
         VectorDBClient client = CommonService.initClient();
 
         // 清理环境

@@ -33,6 +33,7 @@ import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.HttpStub;
 import com.tencent.tcvectordb.service.Stub;
 import com.tencent.tcvectordb.service.param.*;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -131,6 +132,11 @@ public class VectorDBClient {
     }
 
     public AffectRes update(String database, String collection, UpdateParam param, Document document) throws VectorDBException {
+        return this.stub.updateDocument(
+                new UpdateParamInner(database, collection, param, document));
+    }
+
+    public AffectRes update(String database, String collection, UpdateParam param, JSONObject document) throws VectorDBException {
         return this.stub.updateDocument(
                 new UpdateParamInner(database, collection, param, document));
     }

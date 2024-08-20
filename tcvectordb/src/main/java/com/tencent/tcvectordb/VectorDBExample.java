@@ -20,6 +20,7 @@
 
 package com.tencent.tcvectordb;
 
+import com.google.common.collect.Maps;
 import com.tencent.tcvectordb.client.VectorDBClient;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.Collection;
@@ -151,7 +152,7 @@ public class VectorDBExample {
 //        );
         List<Document> documentList = new ArrayList<>(Arrays.asList(
                 Document.newBuilder()
-                        .withId("0007")
+                        .withId("0001")
                         .withVector(Arrays.asList(0.2123, 0.21, 0.213))
                         .addDocField(new DocField("bookName", "西游记"))
                         .addDocField(new DocField("author", "吴承恩"))
@@ -160,7 +161,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("array_test", Arrays.asList("1","2","3")))
                         .build(),
                 Document.newBuilder()
-                        .withId("0008")
+                        .withId("0002")
                         .withVector(Arrays.asList(0.2123, 0.22, 0.213))
                         .addDocField(new DocField("bookName", "西游记"))
                         .addDocField(new DocField("author", "吴承恩"))
@@ -170,7 +171,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("array_test", Arrays.asList("4","5","6")))
                         .build(),
                 Document.newBuilder()
-                        .withId("0009")
+                        .withId("0003")
                         .withVector(Arrays.asList(0.2123, 0.23, 0.213))
                         .addDocField(new DocField("bookName", "三国演义"))
                         .addDocField(new DocField("author", "罗贯中"))
@@ -179,7 +180,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("array_test", Arrays.asList("7","8","9")))
                         .build(),
                 Document.newBuilder()
-                        .withId("00010")
+                        .withId("0004")
                         .withVector(Arrays.asList(0.2123, 0.24, 0.213))
                         .addDocField(new DocField("bookName", "三国演义"))
                         .addDocField(new DocField("author", "罗贯中"))
@@ -216,7 +217,7 @@ public class VectorDBExample {
                 .and(Filter.exclude("array_test", Arrays.asList("7")));
         List<String> outputFields = Arrays.asList("id", "bookName");
         QueryParam queryParam = QueryParam.newBuilder()
-//                .withDocumentIds(documentIds)
+                .withDocumentIds(documentIds)
                 // 使用 filter 过滤数据
                 .withFilter(filterParam)
                 // limit 限制返回行数，1 到 16384 之间
@@ -302,6 +303,7 @@ public class VectorDBExample {
                 .addAllDocumentId(documentIds)
                 .withFilter(filterParam)
                 .build();
+//        JSONObject data = new JSONObject("{\"page\":100, \"extend\":\"extendContent_1\",\"array_test\":[\"extendContent\",\"extendContent1\"]}");
         Document updateDoc = Document
                 .newBuilder()
                 .addDocField(new DocField("page", 100))
@@ -341,11 +343,11 @@ public class VectorDBExample {
         // query
         System.out.println("----------------------  query ----------------------");
         documentIds = Arrays.asList("0001", "0002", "0003", "0004", "0005");
-        List<String> outputFields = Arrays.asList("id", "bookName", "page", "extend");
+//        List<String> outputFields = Arrays.asList("id", "bookName", "page", "extend");
         QueryParam queryParam = QueryParam.newBuilder()
                 .withDocumentIds(documentIds)
                 // 使用 filter 过滤数据
-                .withOutputFields(outputFields)
+//                .withOutputFields(outputFields)
                 // 是否返回 vector 数据
                 .withRetrieveVector(false)
                 .build();

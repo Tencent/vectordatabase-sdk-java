@@ -37,6 +37,7 @@ import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.Stub;
 import com.tencent.tcvectordb.service.param.*;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -197,6 +198,11 @@ public class Collection{
     }
 
     public AffectRes update(UpdateParam param, Document document) throws VectorDBException {
+        return this.stub.updateDocument(
+                new UpdateParamInner(database, collection, param, document));
+    }
+
+    public AffectRes update(UpdateParam param, JSONObject document) throws VectorDBException {
         return this.stub.updateDocument(
                 new UpdateParamInner(database, collection, param, document));
     }

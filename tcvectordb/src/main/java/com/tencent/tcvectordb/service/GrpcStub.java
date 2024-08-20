@@ -497,12 +497,23 @@ public class GrpcStub extends HttpStub{
         if (!paramQuery.getFilter().isEmpty()){
             queryCondBuilder.setFilter(paramQuery.getFilter());
         }
-        Olama.UpdateResponse updateResponse = this.blockingStub.update(Olama.UpdateRequest.newBuilder()
-                .setDatabase(param.getDatabase())
-                .setCollection(param.getCollection())
-                .setQuery(queryCondBuilder.build())
-                .setUpdate(convertDocument2OlamaDoc(param.getUpdate()))
-                .build());
+        Olama.UpdateResponse updateResponse=null;
+        if (param.getUpdate()!=null){
+            updateResponse = this.blockingStub.update(Olama.UpdateRequest.newBuilder()
+                    .setDatabase(param.getDatabase())
+                    .setCollection(param.getCollection())
+                    .setQuery(queryCondBuilder.build())
+                    .setUpdate(convertDocument2OlamaDoc(param.getUpdate()))
+                    .build());
+        } else if (param.getUpdateData()!=null) {
+            updateResponse = this.blockingStub.update(Olama.UpdateRequest.newBuilder()
+                    .setDatabase(param.getDatabase())
+                    .setCollection(param.getCollection())
+                    .setQuery(queryCondBuilder.build())
+                    .setUpdate(convertDocumentJSON2OlamaDoc(param.getUpdateData()))
+                    .build());
+        }
+
         if(updateResponse==null){
             throw new VectorDBException("VectorDBServer error: update not response");
         }

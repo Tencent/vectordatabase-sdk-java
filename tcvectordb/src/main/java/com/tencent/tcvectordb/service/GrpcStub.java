@@ -34,7 +34,6 @@ public class GrpcStub extends HttpStub{
     private ManagedChannel channel;
     private SearchEngineGrpc.SearchEngineBlockingStub blockingStub;
 
-    private Map<String, String> headers;
     private final int maxSendMessageSize = 100*1024*1024;
     private final int maxReceiveMessageSize = 100*1024*1024;
     private String authorization;
@@ -47,8 +46,6 @@ public class GrpcStub extends HttpStub{
         this.channel = ManagedChannelBuilder.forTarget(this.getAddress(param.getUrl())).
                 intercept(new AuthorityInterceptor(this.authorization)).
                 usePlaintext().build();
-        Metadata headers = new Metadata();
-        headers.put(Metadata.Key.of("authorization", Metadata.ASCII_STRING_MARSHALLER), this.authorization);
         this.blockingStub = SearchEngineGrpc.newBlockingStub(this.channel);
         this.blockingStub.withMaxInboundMessageSize(maxReceiveMessageSize);
         this.blockingStub.withMaxOutboundMessageSize(maxSendMessageSize);

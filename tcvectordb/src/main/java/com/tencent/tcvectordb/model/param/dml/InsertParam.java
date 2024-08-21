@@ -34,39 +34,31 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class InsertParam {
     private boolean buildIndex;
-    private List<Document> documents;
-    private List<JSONObject> documentsData;
+    private List<Object> documents;
 
     private InsertParam(Builder builder) {
         this.documents = builder.documents;
         this.buildIndex = builder.buildIndex;
-        this.documentsData = builder.documentsData;
     }
 
     public boolean isBuildIndex() {
         return buildIndex;
     }
 
-    public List<Document> getDocuments() {
+    public List<Object> getDocuments() {
         return documents;
     }
 
-    public List<JSONObject> getDocumentsData() {
-        return documentsData;
-    }
     public static Builder newBuilder() {
         return new Builder();
     }
 
     public static class Builder {
         private boolean buildIndex = true;
-        private List<Document> documents;
-
-        private List<JSONObject> documentsData;
+        private List<Object> documents;
 
         public Builder() {
             this.documents = new ArrayList<>();
-            this.documentsData = new ArrayList<>();
         }
 
         public Builder withBuildIndex(boolean buildIndex) {
@@ -74,34 +66,24 @@ public class InsertParam {
             return this;
         }
 
-        public Builder withDocuments(List<Document> documents) {
+        public Builder withDocuments(List<Object> documents) {
             this.documents = documents;
             return this;
         }
 
-        public Builder addDocument(Document document) {
+        public Builder addDocument(Object document) {
             this.documents.add(document);
             return this;
         }
 
-        public Builder addAllDocument(List<Document> documentList) {
+        public Builder addAllDocument(List<Object> documentList) {
             this.documents.addAll(documentList);
-            return this;
-        }
-
-        public Builder withDocumentsData(List<JSONObject> documentsData) {
-            this.documentsData = documentsData;
-            return this;
-        }
-
-        public Builder addDocument(JSONObject document) {
-            this.documentsData.add(document);
             return this;
         }
 
 
         public InsertParam build() {
-            if (this.documents.isEmpty() && this.documentsData.isEmpty()){
+            if (this.documents.isEmpty()){
                 throw new ParamException("InsertParam error: documents is empty");
             }
             return new InsertParam(this);

@@ -342,17 +342,18 @@ public class GrpcStub extends HttpStub{
         }
 
         if (!param.getDocuments().isEmpty()){
-            for (Document document : param.getDocuments()) {
-                Olama.Document doc= convertDocument2OlamaDoc(document);
-                builder.addDocuments(doc);
-            }
-        }else if (!param.getDocumentsData().isEmpty()){
-            for (JSONObject document : param.getDocumentsData()) {
-                Olama.Document doc= convertDocumentJSON2OlamaDoc(document);
-                builder.addDocuments(doc);
+            for (Object document : param.getDocuments()) {
+                if (document instanceof Document){
+                    Olama.Document doc= convertDocument2OlamaDoc((Document) document);
+                    builder.addDocuments(doc);
+                }else if (document instanceof JSONObject){
+                    Olama.Document doc= convertDocumentJSON2OlamaDoc((JSONObject) document);
+                    builder.addDocuments(doc);
+
+                }
+
             }
         }
-
         Olama.UpsertResponse response = this.blockingStub.upsert(builder.build());
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(

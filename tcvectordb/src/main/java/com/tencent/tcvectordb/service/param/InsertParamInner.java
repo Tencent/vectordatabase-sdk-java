@@ -22,9 +22,7 @@ import java.util.List;
 public class InsertParamInner {
     private String database;
     private String collection;
-    private List<Document> documents;
-
-    private List<JSONObject> documentsData;
+    private List<Object> documents;
     private Boolean buildIndex;
 
     public InsertParamInner(String database, String collection, InsertParam param) {
@@ -32,7 +30,6 @@ public class InsertParamInner {
         this.collection = collection;
         this.documents = param.getDocuments();
         this.buildIndex = param.isBuildIndex();
-        this.documentsData = param.getDocumentsData();
     }
 
     public String getDatabase() {
@@ -43,7 +40,7 @@ public class InsertParamInner {
         return collection;
     }
 
-    public List<Document> getDocuments() {
+    public List<Object> getDocuments() {
         return documents;
     }
 
@@ -55,13 +52,6 @@ public class InsertParamInner {
         this.buildIndex = buildIndex;
     }
 
-    public List<JSONObject> getDocumentsData() {
-        return documentsData;
-    }
-
-    public void setDocumentsData(List<JSONObject> documentsData) {
-        this.documentsData = documentsData;
-    }
 
     @Override
     public String toString() {
@@ -81,17 +71,6 @@ public class InsertParamInner {
                 }
             });
         }
-        if (documents.isEmpty() && !documentsData.isEmpty()) {
-            documentsData.forEach(doc -> {
-                try {
-                    docsNode.add(mapper.readTree(doc.toString()));
-                } catch (JsonProcessingException e) {
-                    throw new ParamException(String.format(
-                            "Create document param error: %s", e));
-                }
-            });
-        }
-
         node.set("documents", docsNode);
         return node.toString();
     }

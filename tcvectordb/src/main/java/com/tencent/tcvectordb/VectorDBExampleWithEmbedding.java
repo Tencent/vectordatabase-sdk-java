@@ -34,6 +34,7 @@ import com.tencent.tcvectordb.model.param.entity.SearchRes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -193,7 +194,7 @@ public class VectorDBExampleWithEmbedding {
                         .build()));
         System.out.println("---------------------- upsert ----------------------");
         InsertParam insertParam = InsertParam.newBuilder()
-                .addAllDocument(documentList)
+                .addAllDocument(Collections.singletonList(documentList))
                 .withBuildIndex(true)
                 .build();
         collection.upsert(insertParam);

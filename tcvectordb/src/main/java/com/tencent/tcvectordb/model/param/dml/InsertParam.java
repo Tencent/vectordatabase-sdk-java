@@ -26,6 +26,7 @@ import com.tencent.tcvectordb.model.Document;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -66,8 +67,8 @@ public class InsertParam {
             return this;
         }
 
-        public Builder withDocuments(List<Object> documents) {
-            this.documents = documents;
+        public Builder withDocuments(List<?> documents) {
+            this.documents = Collections.unmodifiableList(documents);
             return this;
         }
 

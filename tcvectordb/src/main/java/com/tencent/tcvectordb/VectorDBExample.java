@@ -146,7 +146,7 @@ public class VectorDBExample {
     private static void upsertData(VectorDBClient client) throws InterruptedException {
         Database database = client.database(DBNAME);
         Collection collection = database.describeCollection(COLL_NAME);
-//        List<JSONObject> documentData = Arrays.asList(
+//        List<JSONObject> documentList = Arrays.asList(
 //                new JSONObject("{\"id\":\"0013\",\"vector\":[0.2123, 0.21, 0.213],\"bookName\":\"三国演义\",\"author\":\"吴承恩\",\"page\":21,\"segment\":\"富贵功名，前缘分定，为人切莫欺心。\"}"),
 //                new JSONObject("{\"id\":\"0014\",\"vector\":[0.2123, 0.21, 0.213],\"bookName\":\"三国演义\",\"author\":\"吴承恩\",\"page\":21,\"segment\":\"富贵功名，前缘分定，为人切莫欺心。\"}")
 //        );
@@ -198,7 +198,7 @@ public class VectorDBExample {
                                 "布大惊，与陈宫商议。宫曰：“闻刘玄德新领徐州，可往投之。"))
                         .build()));
         System.out.println("---------------------- upsert ----------------------");
-        InsertParam insertParam = InsertParam.newBuilder().withDocuments(Collections.singletonList(documentList)).build();
+        InsertParam insertParam = InsertParam.newBuilder().withDocuments(documentList).build();
 //        InsertParam insertParam = InsertParam.newBuilder().withDocumentsData(documentData).build();
         collection.upsert(insertParam);
 //        client.upsert(DBNAME,COLL_NAME, insertParam);

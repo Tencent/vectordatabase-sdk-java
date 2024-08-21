@@ -20,7 +20,6 @@
 
 package com.tencent.tcvectordb;
 
-import com.google.common.collect.Maps;
 import com.tencent.tcvectordb.client.VectorDBClient;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.Collection;
@@ -32,7 +31,6 @@ import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.utils.JsonUtils;
-import org.json.JSONObject;
 
 import java.util.*;
 /**

@@ -77,7 +77,7 @@ public class InsertParam {
             return this;
         }
 
-        public Builder addAllDocument(List<Object> documentList) {
+        public Builder addAllDocument(List<?> documentList) {
             this.documents.addAll(documentList);
             return this;
         }

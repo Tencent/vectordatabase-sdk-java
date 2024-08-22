@@ -350,8 +350,10 @@ public class GrpcStub extends HttpStub{
                     Olama.Document doc= convertDocumentJSON2OlamaDoc((JSONObject) document);
                     builder.addDocuments(doc);
 
+                }else {
+                    throw new VectorDBException("upsert failed, because of incorrect documents type, " +
+                            "which must be []Document or []JSONObject");
                 }
-
             }
         }
         Olama.UpsertResponse response = this.blockingStub.upsert(builder.build());

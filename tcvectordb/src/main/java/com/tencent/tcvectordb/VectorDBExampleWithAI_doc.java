@@ -51,9 +51,7 @@ public class VectorDBExampleWithAI_doc {
     private static final String COLL_NAME_ALIAS = "alias-coll-ai-files";
 
     public static void main(String[] args) throws Exception {
-        // 创建VectorDB Client
-
-            // 创建 VectorDB Client
+        // 创建 VectorDB Client
         VectorDBClient client = CommonService.initClient();
 
         // 清理环境

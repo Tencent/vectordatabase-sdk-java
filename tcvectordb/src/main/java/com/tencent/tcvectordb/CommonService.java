@@ -40,6 +40,9 @@ public class CommonService {
      * @return {@link VectorDBClient}
      */
     public static VectorDBClient initClient() {
+        // 创建http客户端
+        // return new VectorDBClient(initConnectParam(), ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
+        // 创建rpc客户端
         return new RPCVectorDBClient(initConnectParam(), ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
     }
 

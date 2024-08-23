@@ -22,8 +22,8 @@ public class CommonService {
      * @return {@link ConnectParam}
      */
     private static ConnectParam initConnectParam() {
-        String vdbURL = "http://21.0.179.98:8100";
-        String vdbKey = "4ewdu8whi0wUTMPpRRIaK8K9EAHb4BA8OS8Twd9W";
+        String vdbURL = "http://21.0.83.2:8100";
+        String vdbKey = "wlWH8XYESkhJ7uOvAR4FGM1tVhgt70WJtNoB9tEl";
         System.out.println("\tvdb_url: " + vdbURL);
         System.out.println("\tvdb_key: " + vdbKey);
         return ConnectParam.newBuilder()

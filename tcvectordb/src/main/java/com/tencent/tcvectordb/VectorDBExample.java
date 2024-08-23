@@ -44,9 +44,6 @@ public class VectorDBExample {
 
     public static void main(String[] args) throws InterruptedException {
 
-
-        System.out.println("---------------------- upsert ----------------------");
-
 //         创建 VectorDB Client
         VectorDBClient client = CommonService.initClient();
 
@@ -60,36 +57,6 @@ public class VectorDBExample {
         testFilter();
     }
 
-
-    /**
-     * init connect parameter
-     *
-     * @return {@link ConnectParam}
-     */
-    private static ConnectParam initConnectParam() {
-        System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
-        System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
-        return ConnectParam.newBuilder()
-                .withUrl("http://21.0.179.98:8100")
-                .withUsername("root")
-                .withKey("4ewdu8whi0wUTMPpRRIaK8K9EAHb4BA8OS8Twd9W")
-                .withTimeout(30)
-                .build();
-    }
-
-    /**
-     * 执行 {@link Runnable} 捕获所有异常
-     *
-     * @param runnable {@link Runnable}
-     */
-    private static void anySafe(Runnable runnable) {
-        try {
-            runnable.run();
-        } catch (VectorDBException e) {
-            System.err.println(e);
-            e.printStackTrace();
-        }
-    }
 
     private static void createDatabaseAndCollection(VectorDBClient client) {
         // 1. 创建数据库

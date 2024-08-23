@@ -12,7 +12,6 @@ import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
-import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.rpc.Interceptor.AuthorityInterceptor;
 import com.tencent.tcvectordb.rpc.proto.Olama;
 import com.tencent.tcvectordb.rpc.proto.SearchEngineGrpc;
@@ -368,7 +367,8 @@ public class GrpcStub extends HttpStub{
     @Override
     public List<Document> queryDocument(QueryParamInner param) {
         Olama.QueryRequest.Builder queryBuilder = Olama.QueryRequest.newBuilder().
-                setDatabase(param.getDatabase()).setCollection(param.getCollection()).setReadConsistency(ReadConsistencyEnum.EVENTUAL_CONSISTENCY.getReadConsistency());
+                setDatabase(param.getDatabase()).setCollection(param.getCollection())
+                .setReadConsistency(param.getReadConsistency().getReadConsistency());
         QueryParam queryParam = param.getQuery();
         if (queryParam==null){
             throw new VectorDBException("VectorDBServer error: query param is null");
@@ -410,7 +410,7 @@ public class GrpcStub extends HttpStub{
         }
         Olama.SearchRequest.Builder builder = Olama.SearchRequest.newBuilder().setDatabase(param.getDatabase()).
                 setCollection(param.getCollection()).
-                setReadConsistency(ReadConsistencyEnum.EVENTUAL_CONSISTENCY.getReadConsistency());
+                setReadConsistency(param.getReadConsistency().getReadConsistency());
         SearchParam searchParam = param.getSearch();
         Olama.SearchCond.Builder searchConBuilder = Olama.SearchCond.newBuilder()
                 .setRetrieveVector(searchParam.isRetrieveVector()).setLimit(searchParam.getLimit());

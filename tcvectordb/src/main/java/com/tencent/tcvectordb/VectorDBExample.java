@@ -197,8 +197,12 @@ public class VectorDBExample {
                         .build()));
         System.out.println("---------------------- upsert ----------------------");
         InsertParam insertParam = InsertParam.newBuilder().withDocuments(documentList).build();
+
+//        documentList 是JSONObject列表或者document列表
 //        InsertParam insertParam = InsertParam.newBuilder().withDocumentsData(documentData).build();
+
         collection.upsert(insertParam);
+//        可以直接使用client进行操作
 //        client.upsert(DBNAME,COLL_NAME, insertParam);
 
         // notice：upsert 操作可用会有延迟

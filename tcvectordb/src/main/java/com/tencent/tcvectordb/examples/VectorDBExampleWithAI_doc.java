@@ -18,10 +18,9 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.tencent.tcvectordb;
+package com.tencent.tcvectordb.examples;
 
 import com.tencent.tcvectordb.client.VectorDBClient;
-import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.AIDatabase;
 import com.tencent.tcvectordb.model.CollectionView;
 import com.tencent.tcvectordb.model.DocumentSet;
@@ -29,11 +28,9 @@ import com.tencent.tcvectordb.model.param.collection.FieldType;
 import com.tencent.tcvectordb.model.param.collection.FilterIndex;
 import com.tencent.tcvectordb.model.param.collection.IndexType;
 import com.tencent.tcvectordb.model.param.collectionView.*;
-import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.SearchContentInfo;
-import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.Arrays;

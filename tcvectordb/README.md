@@ -36,4 +36,4 @@ You can use **Apache Maven** or **Gradle**/**Grails** to download the SDK.
 
 ### Examples
 
-Please refer to [examples](./examples) folder for Java SDK examples.
+Please refer to [examples](./src/com/tencent/tcvectordb/examples) folder for Java SDK examples.

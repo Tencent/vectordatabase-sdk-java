@@ -1,0 +1,139 @@
+package com.tencent.tcvectordb.model.param.dml;
+
+import java.util.Collections;
+import java.util.List;
+
+public class HybridSearchParam {
+    private List<AnnOption> ann;
+    private List<MatchOption> match;
+    private String filter;
+    private List<String> outputFields;
+    private boolean retrieveVector;
+    private Integer limit;
+    private RerankOption rerank;
+
+    public HybridSearchParam(Builder builder) {
+        this.ann = builder.ann;
+        if (builder.filter != null) {
+            this.filter = builder.filter.getCond();
+        }
+        if (builder.outputFields != null && !builder.outputFields.isEmpty()) {
+            this.outputFields = Collections.unmodifiableList(builder.outputFields);
+        }
+        this.retrieveVector = builder.retrieveVector;
+        this.limit = builder.limit;
+        this.rerank = builder.rerank;
+        this.match = builder.match;
+    }
+
+    public List<AnnOption> getAnn() {
+        return ann;
+    }
+
+    public String getFilter() {
+        return filter;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
+    }
+
+    public List<String> getOutputFields() {
+        return outputFields;
+    }
+
+    public void setOutputFields(List<String> outputFields) {
+        this.outputFields = outputFields;
+    }
+
+    public boolean isRetrieveVector() {
+        return retrieveVector;
+    }
+
+    public void setRetrieveVector(boolean retrieveVector) {
+        this.retrieveVector = retrieveVector;
+    }
+
+    public int getLimit() {
+        return limit;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
+    public RerankOption getRerank() {
+        return rerank;
+    }
+
+    public void setRerank(RerankOption rerank) {
+        this.rerank = rerank;
+    }
+
+    public void setAnn(List<AnnOption> ann) {
+        this.ann = ann;
+    }
+
+    public List<MatchOption> getMatch() {
+        return match;
+    }
+
+    public void setMatch(List<MatchOption> match) {
+        this.match = match;
+    }
+
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+    public static final class Builder{
+        private List<AnnOption> ann;
+        private Filter filter;
+        private List<String> outputFields;
+        private boolean retrieveVector;
+        private int limit = 10;
+        private RerankOption rerank;
+        private List<MatchOption> match;
+
+
+        protected Builder() {
+        }
+
+        public Builder withAnn(List<AnnOption> ann) {
+            this.ann = ann;
+            return this;
+        }
+
+        public Builder withMatch(List<MatchOption> match) {
+            this.match = match;
+            return this;
+        }
+
+        public Builder withFilter(Filter filter) {
+            this.filter = filter;
+            return this;
+        }
+
+        public Builder withOutputFields(List<String> outputFields) {
+            this.outputFields = outputFields;
+            return this;
+        }
+        public Builder withRetrieveVector(boolean retrieveVector) {
+            this.retrieveVector = retrieveVector;
+            return this;
+        }
+        public Builder withRerank(RerankOption rerank) {
+            this.rerank = rerank;
+            return this;
+        }
+
+        public Builder withLimit(Integer limit) {
+            this.limit = limit;
+            return this;
+        }
+
+        public HybridSearchParam build() {
+            return new HybridSearchParam(this);
+        }
+    }
+}

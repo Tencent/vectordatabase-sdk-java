@@ -27,6 +27,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class GrpcStub extends HttpStub{
@@ -45,10 +46,13 @@ public class GrpcStub extends HttpStub{
         this.channel = ManagedChannelBuilder.forTarget(this.getAddress(param.getUrl())).
                 intercept(new AuthorityInterceptor(this.authorization)).
                 usePlaintext().build();
-        this.blockingStub = SearchEngineGrpc.newBlockingStub(this.channel);
+        if (param.getTimeout() > 0) {
+            this.timeout = param.getTimeout();
+        }
+        this.blockingStub = SearchEngineGrpc.newBlockingStub(this.channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS);
         this.blockingStub.withMaxInboundMessageSize(maxReceiveMessageSize);
         this.blockingStub.withMaxOutboundMessageSize(maxSendMessageSize);
-        this.timeout = timeout;
+
     }
 
     private String getAddress(String url){

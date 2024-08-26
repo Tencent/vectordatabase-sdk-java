@@ -18,10 +18,9 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.tencent.tcvectordb;
+package com.tencent.tcvectordb.examples;
 
 import com.tencent.tcvectordb.client.VectorDBClient;
-import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.AIDatabase;
 import com.tencent.tcvectordb.model.CollectionView;
 import com.tencent.tcvectordb.model.DocumentSet;
@@ -29,11 +28,9 @@ import com.tencent.tcvectordb.model.param.collection.FieldType;
 import com.tencent.tcvectordb.model.param.collection.FilterIndex;
 import com.tencent.tcvectordb.model.param.collection.IndexType;
 import com.tencent.tcvectordb.model.param.collectionView.*;
-import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.SearchContentInfo;
-import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.Arrays;
@@ -51,6 +48,7 @@ public class VectorDBExampleWithAI_doc {
     private static final String COLL_NAME_ALIAS = "alias-coll-ai-files";
 
     public static void main(String[] args) throws Exception {
+
         // 创建 VectorDB Client
         VectorDBClient client = CommonService.initClient();
 
@@ -60,7 +58,7 @@ public class VectorDBExampleWithAI_doc {
         Map<String, Object> metaDataMap = new HashMap<>();
         metaDataMap.put("author", "Tencent");
         metaDataMap.put("tags", Arrays.asList("Embedding", "向量", "AI"));
-        loadAndSplitText(client, "/data/home/yihaoan/腾讯云向量数据库.md", "腾讯云向量数据库.md", metaDataMap);
+        loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.md", metaDataMap);
         // support markdown, pdf, pptx, docx document
         // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pdf", metaDataMap);
         // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pptx", metaDataMap);
@@ -73,37 +71,6 @@ public class VectorDBExampleWithAI_doc {
         GetFile(client, "腾讯云向量数据库.md");
         updateAndDelete(client);
         deleteAndDrop(client);
-    }
-
-
-    /**
-     * init connect parameter
-     *
-     * @return {@link ConnectParam}
-     */
-    private static ConnectParam initConnectParam() {
-        System.out.println("\tvdb_url: " + System.getProperty("vdb_url"));
-        System.out.println("\tvdb_key: " + System.getProperty("vdb_key"));
-        return ConnectParam.newBuilder()
-                .withUrl("http://21.0.179.98:8100")
-                .withUsername("root")
-                .withKey("4ewdu8whi0wUTMPpRRIaK8K9EAHb4BA8OS8Twd9W")
-                .withTimeout(30)
-                .build();
-    }
-
-    /**
-     * 执行 {@link Runnable} 捕获所有异常
-     *
-     * @param runnable {@link Runnable}
-     */
-    private static void anySafe(Runnable runnable) {
-        try {
-            runnable.run();
-        } catch (VectorDBException e) {
-            System.err.println(e);
-            e.printStackTrace();
-        }
     }
 
     private static void createAiDatabaseAndCollectionView(VectorDBClient client) throws InterruptedException {

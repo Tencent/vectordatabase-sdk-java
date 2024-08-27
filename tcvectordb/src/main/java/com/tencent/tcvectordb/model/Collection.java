@@ -192,6 +192,11 @@ public class Collection{
                 database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE);
     }
 
+    public SearchRes hybridSearch(HybridSearchParam param) throws VectorDBException {
+        return this.stub.hybridSearchDocument(new HybridSearchParamInner(
+                database, collection, param, this.readConsistency));
+    }
+
     public AffectRes delete(DeleteParam param) throws VectorDBException {
         return this.stub.deleteDocument(
                 new DeleteParamInner(database, collection, param));

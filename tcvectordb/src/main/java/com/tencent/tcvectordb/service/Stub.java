@@ -113,6 +113,12 @@ public interface Stub {
      */
     SearchRes searchDocument(SearchParamInner param, DataBaseTypeEnum dbType);
 
+
+    /**
+     * hybrid search document
+     */
+    SearchRes hybridSearchDocument(HybridSearchParamInner param);
+
     /**
      * delete document
      */

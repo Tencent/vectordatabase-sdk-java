@@ -41,7 +41,7 @@ import java.util.*;
 public class Document {
     private String id;
     private Object vector;
-    private List<Pair<Long,Double>> sparseVector;
+    private List<Pair<Long,Float>> sparseVector;
     private Double score;
     private String doc;
     private List<DocField> docFields;
@@ -91,6 +91,15 @@ public class Document {
         this.docFields = docFields;
     }
 
+
+    public List<Pair<Long, Float>> getSparseVector() {
+        return sparseVector;
+    }
+
+    public void setSparseVector(List<Pair<Long, Float>> sparseVector) {
+        this.sparseVector = sparseVector;
+    }
+
     public Object getObject(String key) {
         if (Objects.isNull(docFields) || docFields.isEmpty()) {
             return null;
@@ -99,6 +108,8 @@ public class Document {
 
         return docKeyValue.get(key);
     }
+
+
 
     private void ensureDocKeyValue() {
         if (Objects.isNull(docKeyValue)) {
@@ -177,7 +188,7 @@ public class Document {
     public static class Builder {
         private String id;
         private Object vector;
-        private List<Pair<Long,Double>> sparseVector;
+        private List<Pair<Long,Float>> sparseVector;
         private Double score;
         private String doc;
         private List<DocField> docFields;
@@ -191,7 +202,7 @@ public class Document {
             return this;
         }
 
-        public Builder withVectorByList(List<Double> vector) {
+        public Builder withVectorByList(List<?> vector) {
             this.vector = vector;
             return this;
         }
@@ -211,18 +222,18 @@ public class Document {
             return this;
         }
 
-        public Builder withSparseVector(List<Pair<Long,Double>> sparseVector) {
+        public Builder withSparseVector(List<Pair<Long,Float>> sparseVector) {
             this.sparseVector = sparseVector;
             return this;
         }
 
         public Builder withSparseVectorList(List<Object> sparseVectors) {
-            List<Pair<Long, Double>> sparseVectorTmp = new ArrayList<>();
+            List<Pair<Long, Float>> sparseVectorTmp = new ArrayList<>();
             sparseVectors.forEach(sparseVector -> {
                 if (sparseVector instanceof List) {
                     List<Object> sparseVectorList = (List<Object>) sparseVector;
                     sparseVectorTmp.add(Pair.of(Long.valueOf(sparseVectorList.get(0).toString()),
-                            Double.valueOf(sparseVectorList.get(1).toString())));
+                            Float.valueOf(sparseVectorList.get(1).toString())));
                 }
             });
             this.sparseVector = sparseVectorTmp;

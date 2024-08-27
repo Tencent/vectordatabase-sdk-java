@@ -1,6 +1,7 @@
 package com.tencent.tcvectordb.rpc.proto;
 
 import com.tencent.tcvectordb.service.ApiPath;
+import org.checkerframework.checker.units.qual.A;
 
 import static io.grpc.MethodDescriptor.generateFullMethodName;
 
@@ -40,7 +41,7 @@ public final class SearchEngineGrpc {
                   com.tencent.tcvectordb.rpc.proto.Olama.AddAliasRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvectordb.rpc.proto.Olama.UpdateAliasResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.SET_COL_ALIAS))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("setAlias"))
               .build();
         }
       }
@@ -420,6 +421,37 @@ public final class SearchEngineGrpc {
     return getSearchMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse> getHybridSearchMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = ApiPath.DOC_HYBRID_SEARCH,
+      requestType = com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest.class,
+      responseType = com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse> getHybridSearchMethod() {
+    io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest, com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse> getHybridSearchMethod;
+    if ((getHybridSearchMethod = SearchEngineGrpc.getHybridSearchMethod) == null) {
+      synchronized (SearchEngineGrpc.class) {
+        if ((getHybridSearchMethod = SearchEngineGrpc.getHybridSearchMethod) == null) {
+          SearchEngineGrpc.getHybridSearchMethod = getHybridSearchMethod =
+              io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest, com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(ApiPath.DOC_HYBRID_SEARCH)
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.DOC_HYBRID_SEARCH))
+              .build();
+        }
+      }
+    }
+    return getHybridSearchMethod;
+  }
+
   private static volatile io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.DeleteRequest,
       com.tencent.tcvectordb.rpc.proto.Olama.DeleteResponse> getDeleMethod;
 
@@ -637,6 +669,37 @@ public final class SearchEngineGrpc {
     return getDescribeDatabaseMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.GetVersionRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.GetVersionResponse> getGetVersionMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "get_version",
+      requestType = com.tencent.tcvectordb.rpc.proto.Olama.GetVersionRequest.class,
+      responseType = com.tencent.tcvectordb.rpc.proto.Olama.GetVersionResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.GetVersionRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.GetVersionResponse> getGetVersionMethod() {
+    io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.GetVersionRequest, com.tencent.tcvectordb.rpc.proto.Olama.GetVersionResponse> getGetVersionMethod;
+    if ((getGetVersionMethod = SearchEngineGrpc.getGetVersionMethod) == null) {
+      synchronized (SearchEngineGrpc.class) {
+        if ((getGetVersionMethod = SearchEngineGrpc.getGetVersionMethod) == null) {
+          SearchEngineGrpc.getGetVersionMethod = getGetVersionMethod =
+              io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.GetVersionRequest, com.tencent.tcvectordb.rpc.proto.Olama.GetVersionResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "get_version"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.GetVersionRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.GetVersionResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("get_version"))
+              .build();
+        }
+      }
+    }
+    return getGetVersionMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -817,6 +880,16 @@ public final class SearchEngineGrpc {
 
     /**
      * <pre>
+     * 混合搜索
+     * </pre>
+     */
+    default void hybridSearch(com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getHybridSearchMethod(), responseObserver);
+    }
+
+    /**
+     * <pre>
      * 删除向量
      * </pre>
      */
@@ -883,6 +956,16 @@ public final class SearchEngineGrpc {
     default void describeDatabase(com.tencent.tcvectordb.rpc.proto.Olama.DescribeDatabaseRequest request,
         io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.DescribeDatabaseResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getDescribeDatabaseMethod(), responseObserver);
+    }
+
+    /**
+     * <pre>
+     * 获取版本（api升级兼容性考虑）
+     * </pre>
+     */
+    default void getVersion(com.tencent.tcvectordb.rpc.proto.Olama.GetVersionRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.GetVersionResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetVersionMethod(), responseObserver);
     }
   }
 
@@ -1058,6 +1141,17 @@ public final class SearchEngineGrpc {
 
     /**
      * <pre>
+     * 混合搜索
+     * </pre>
+     */
+    public void hybridSearch(com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getHybridSearchMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     * <pre>
      * 删除向量
      * </pre>
      */
@@ -1131,6 +1225,17 @@ public final class SearchEngineGrpc {
         io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.DescribeDatabaseResponse> responseObserver) {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getDescribeDatabaseMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     * <pre>
+     * 获取版本（api升级兼容性考虑）
+     * </pre>
+     */
+    public void getVersion(com.tencent.tcvectordb.rpc.proto.Olama.GetVersionRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.GetVersionResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getGetVersionMethod(), getCallOptions()), request, responseObserver);
     }
   }
 
@@ -1282,6 +1387,16 @@ public final class SearchEngineGrpc {
 
     /**
      * <pre>
+     * 混合搜索
+     * </pre>
+     */
+    public com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse hybridSearch(com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getHybridSearchMethod(), getCallOptions(), request);
+    }
+
+    /**
+     * <pre>
      * 删除向量
      * </pre>
      */
@@ -1348,6 +1463,16 @@ public final class SearchEngineGrpc {
     public com.tencent.tcvectordb.rpc.proto.Olama.DescribeDatabaseResponse describeDatabase(com.tencent.tcvectordb.rpc.proto.Olama.DescribeDatabaseRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getDescribeDatabaseMethod(), getCallOptions(), request);
+    }
+
+    /**
+     * <pre>
+     * 获取版本（api升级兼容性考虑）
+     * </pre>
+     */
+    public com.tencent.tcvectordb.rpc.proto.Olama.GetVersionResponse getVersion(com.tencent.tcvectordb.rpc.proto.Olama.GetVersionRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getGetVersionMethod(), getCallOptions(), request);
     }
   }
 
@@ -1512,6 +1637,17 @@ public final class SearchEngineGrpc {
 
     /**
      * <pre>
+     * 混合搜索
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse> hybridSearch(
+        com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getHybridSearchMethod(), getCallOptions()), request);
+    }
+
+    /**
+     * <pre>
      * 删除向量
      * </pre>
      */
@@ -1586,6 +1722,17 @@ public final class SearchEngineGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getDescribeDatabaseMethod(), getCallOptions()), request);
     }
+
+    /**
+     * <pre>
+     * 获取版本（api升级兼容性考虑）
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.tencent.tcvectordb.rpc.proto.Olama.GetVersionResponse> getVersion(
+        com.tencent.tcvectordb.rpc.proto.Olama.GetVersionRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getGetVersionMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_SET_ALIAS = 0;
@@ -1601,13 +1748,15 @@ public final class SearchEngineGrpc {
   private static final int METHODID_UPDATE = 10;
   private static final int METHODID_QUERY = 11;
   private static final int METHODID_SEARCH = 12;
-  private static final int METHODID_DELE = 13;
-  private static final int METHODID_RANGE_SEARCH = 14;
-  private static final int METHODID_SORT = 15;
-  private static final int METHODID_CREATE_DATABASE = 16;
-  private static final int METHODID_DROP_DATABASE = 17;
-  private static final int METHODID_LIST_DATABASES = 18;
-  private static final int METHODID_DESCRIBE_DATABASE = 19;
+  private static final int METHODID_HYBRID_SEARCH = 13;
+  private static final int METHODID_DELE = 14;
+  private static final int METHODID_RANGE_SEARCH = 15;
+  private static final int METHODID_SORT = 16;
+  private static final int METHODID_CREATE_DATABASE = 17;
+  private static final int METHODID_DROP_DATABASE = 18;
+  private static final int METHODID_LIST_DATABASES = 19;
+  private static final int METHODID_DESCRIBE_DATABASE = 20;
+  private static final int METHODID_GET_VERSION = 21;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -1678,6 +1827,10 @@ public final class SearchEngineGrpc {
           serviceImpl.search((com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest) request,
               (io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse>) responseObserver);
           break;
+        case METHODID_HYBRID_SEARCH:
+          serviceImpl.hybridSearch((com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest) request,
+              (io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse>) responseObserver);
+          break;
         case METHODID_DELE:
           serviceImpl.dele((com.tencent.tcvectordb.rpc.proto.Olama.DeleteRequest) request,
               (io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.DeleteResponse>) responseObserver);
@@ -1705,6 +1858,10 @@ public final class SearchEngineGrpc {
         case METHODID_DESCRIBE_DATABASE:
           serviceImpl.describeDatabase((com.tencent.tcvectordb.rpc.proto.Olama.DescribeDatabaseRequest) request,
               (io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.DescribeDatabaseResponse>) responseObserver);
+          break;
+        case METHODID_GET_VERSION:
+          serviceImpl.getVersion((com.tencent.tcvectordb.rpc.proto.Olama.GetVersionRequest) request,
+              (io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.GetVersionResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -1816,6 +1973,13 @@ public final class SearchEngineGrpc {
               com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse>(
                 service, METHODID_SEARCH)))
         .addMethod(
+          getHybridSearchMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest,
+              com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse>(
+                service, METHODID_HYBRID_SEARCH)))
+        .addMethod(
           getDeleMethod(),
           io.grpc.stub.ServerCalls.asyncUnaryCall(
             new MethodHandlers<
@@ -1864,6 +2028,13 @@ public final class SearchEngineGrpc {
               com.tencent.tcvectordb.rpc.proto.Olama.DescribeDatabaseRequest,
               com.tencent.tcvectordb.rpc.proto.Olama.DescribeDatabaseResponse>(
                 service, METHODID_DESCRIBE_DATABASE)))
+        .addMethod(
+          getGetVersionMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.tencent.tcvectordb.rpc.proto.Olama.GetVersionRequest,
+              com.tencent.tcvectordb.rpc.proto.Olama.GetVersionResponse>(
+                service, METHODID_GET_VERSION)))
         .build();
   }
 
@@ -1925,6 +2096,7 @@ public final class SearchEngineGrpc {
               .addMethod(getUpdateMethod())
               .addMethod(getQueryMethod())
               .addMethod(getSearchMethod())
+              .addMethod(getHybridSearchMethod())
               .addMethod(getDeleMethod())
               .addMethod(getRangeSearchMethod())
               .addMethod(getSortMethod())
@@ -1932,6 +2104,7 @@ public final class SearchEngineGrpc {
               .addMethod(getDropDatabaseMethod())
               .addMethod(getListDatabasesMethod())
               .addMethod(getDescribeDatabaseMethod())
+              .addMethod(getGetVersionMethod())
               .build();
         }
       }

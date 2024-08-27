@@ -10,7 +10,7 @@ public class HybridSearchParam {
     private List<String> outputFields;
     private boolean retrieveVector;
     private Integer limit;
-    private RerankOption rerank;
+    private RerankParam rerank;
 
     public HybridSearchParam(Builder builder) {
         this.ann = builder.ann;
@@ -62,11 +62,11 @@ public class HybridSearchParam {
         this.limit = limit;
     }
 
-    public RerankOption getRerank() {
+    public RerankParam getRerank() {
         return rerank;
     }
 
-    public void setRerank(RerankOption rerank) {
+    public void setRerank(RerankParam rerank) {
         this.rerank = rerank;
     }
 
@@ -92,7 +92,7 @@ public class HybridSearchParam {
         private List<String> outputFields;
         private boolean retrieveVector;
         private int limit = 10;
-        private RerankOption rerank;
+        private RerankParam rerank;
         private List<MatchOption> match;
 
 
@@ -122,7 +122,7 @@ public class HybridSearchParam {
             this.retrieveVector = retrieveVector;
             return this;
         }
-        public Builder withRerank(RerankOption rerank) {
+        public Builder withRerank(RerankParam rerank) {
             this.rerank = rerank;
             return this;
         }

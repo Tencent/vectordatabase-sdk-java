@@ -293,6 +293,47 @@ public class HttpStub implements Stub {
     }
 
     @Override
+    public SearchRes hybridSearchDocument(HybridSearchParamInner param) {
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DOC_HYBRID_SEARCH);
+        JsonNode jsonNode = this.post(url, param.toString());
+        JsonNode multiDocsNode = jsonNode.get("documents");
+        int code = 0;
+        if (jsonNode.get("code") != null) {
+            code = jsonNode.get("code").asInt();
+        }
+        String msg = "";
+        if (jsonNode.get("msg") != null) {
+            msg = jsonNode.get("msg").asText();
+        }
+        String warning = "";
+        if (jsonNode.get("warning") != null) {
+            warning = jsonNode.get("warning").asText();
+        }
+        if (multiDocsNode == null) {
+            return new SearchRes(code, msg, warning, Collections.emptyList());
+        }
+        try {
+            List<List<Document>> multiDosc = new ArrayList<>();
+            Iterator<JsonNode> multiIter = multiDocsNode.elements();
+            while (multiIter.hasNext()) {
+                JsonNode docNode = multiIter.next();
+                Iterator<JsonNode> iter = docNode.elements();
+                List<Document> docs = new ArrayList<>();
+                while (iter.hasNext()) {
+                    JsonNode node = iter.next();
+                    Document doc = node2Doc(node);
+                    docs.add(doc);
+                }
+                multiDosc.add(docs);
+            }
+            return new SearchRes(code, msg, warning, multiDosc);
+        } catch (JsonProcessingException ex) {
+            throw new VectorDBException(String.format("VectorDBServer response " +
+                    "from hybrid search error: can't parse documents=%s", multiDocsNode));
+        }
+    }
+
+    @Override
     public AffectRes deleteDocument(DeleteParamInner param) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DOC_DELETE);
         JsonNode jsonNode = this.post(url, param.toString());
@@ -716,7 +757,9 @@ public class HttpStub implements Stub {
                 builder.withId(ele.asText());
             } else if (StringUtils.equals("vector", name)) {
                 List<Double> vector = JsonUtils.parseObject(ele.toString(), List.class);
-                builder.withVector(vector);
+                builder.withVectorByList(vector);
+            }else if (StringUtils.equals("sparse_vector", name)) {
+                builder.withSparseVectorList(JsonUtils.parseObject(ele.toString(), List.class));
             } else if (StringUtils.equals("doc", name)) {
                 builder.withDoc(ele.asText());
             } else if (StringUtils.equals("score", name)) {

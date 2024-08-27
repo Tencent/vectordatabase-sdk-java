@@ -12,11 +12,14 @@ import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
+import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.rpc.Interceptor.AuthorityInterceptor;
+import com.tencent.tcvectordb.rpc.Interceptor.BackendServiceInterceptor;
 import com.tencent.tcvectordb.rpc.proto.Olama;
 import com.tencent.tcvectordb.rpc.proto.SearchEngineGrpc;
 import com.tencent.tcvectordb.service.param.*;
 import io.grpc.*;
+import org.apache.commons.lang3.tuple.Pair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -29,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class GrpcStub extends HttpStub{
     private ManagedChannel channel;
@@ -478,6 +482,101 @@ public class GrpcStub extends HttpStub{
     }
 
     @Override
+    public SearchRes hybridSearchDocument(HybridSearchParamInner param) {
+        boolean ai = false;
+        Olama.SearchRequest.Builder builder = Olama.SearchRequest.newBuilder().setDatabase(param.getDatabase()).
+                setCollection(param.getCollection()).
+                setReadConsistency(param.getReadConsistency().getReadConsistency());
+        HybridSearchParam searchParam = param.getSearch();
+        Olama.SearchCond.Builder searchConBuilder = Olama.SearchCond.newBuilder()
+                .setRetrieveVector(searchParam.isRetrieveVector()).setLimit(searchParam.getLimit());
+        if (searchParam.getOutputFields()!=null){
+            searchConBuilder.addAllOutputfields(searchParam.getOutputFields());
+        }
+        if (searchParam.getFilter()!=null){
+            searchConBuilder.setFilter(searchParam.getFilter());
+        }
+        if (searchParam.getAnn()!=null && !searchParam.getAnn().isEmpty()){
+            searchConBuilder.addAllAnn(searchParam.getAnn().stream()
+                    .map(annOption -> {
+                        Olama.AnnData.Builder annBuilder = Olama.AnnData.newBuilder()
+                                .setFieldName(annOption.getFieldName());
+                        if (annOption.getDocumentIds()!=null){
+                            annBuilder.addAllDocumentIds(annOption.getDocumentIds());
+                        }
+                        if (annOption.getData()!=null){
+                            if (annOption.getData().get(0) instanceof String){
+                                annBuilder.addAllDataExpr(annOption.getData().stream().map(item->(String)item).collect(Collectors.toList()));
+                            }if (annOption.getData().get(0) instanceof List){
+                                annBuilder.addAllData(annOption.getData().stream()
+                                        .map(item-> Olama.VectorArray.newBuilder().addAllVector(((List<Object>)item).
+                                                stream().map(ele->Float.parseFloat(ele.toString())).collect(Collectors.toList())).build())
+                                        .collect(Collectors.toList()));
+                            }
+                        }
+                        if (annOption.getParams()!=null){
+                            if (annOption.getParams() instanceof GeneralParams){
+                                GeneralParams params = (GeneralParams) annOption.getParams();
+                                annBuilder.setParams(Olama.SearchParams.newBuilder().setEf(params.getEf())
+                                        .setNprobe(params.getNProbe())
+                                        .setRadius((float) params.getRadius()).build());
+                            }else if (annOption.getParams() instanceof HNSWSearchParams){
+                                HNSWSearchParams params = (HNSWSearchParams) annOption.getParams();
+                                annBuilder.setParams(Olama.SearchParams.newBuilder().setEf(params.getEf()).build());
+                            }
+                        }
+                        return annBuilder.build();
+                    }).collect(Collectors.toList()));
+        }
+        if (searchParam.getMatch()!=null && !searchParam.getMatch().isEmpty()){
+            searchConBuilder.addAllSparse(searchParam.getMatch().stream().map(matchOption -> {
+                Olama.SparseData.Builder sparseBuilder = Olama.SparseData.newBuilder().setFieldName(matchOption.getFieldName());
+                matchOption.getData().forEach(sparseVectors->{
+                    sparseBuilder.addData(Olama.SparseVectorArray.newBuilder().addAllSpVector(sparseVectors.stream()
+                            .map(vectors-> Olama.SparseVecItem.newBuilder().setTermId((Long) vectors.get(0)).
+                                    setScore((Float.parseFloat(vectors.get(1).toString()))).
+                                    build()).collect(Collectors.toList())).build());
+                });
+                if(matchOption.getLimit()!=null){
+                    sparseBuilder.setLimit(matchOption.getLimit());
+                }
+                return sparseBuilder.build();
+            }).collect(Collectors.toList()));
+        }
+        if (searchParam.getRerank()!=null){
+            Olama.RerankParams.Builder rerankBuilder = Olama.RerankParams.newBuilder()
+                    .setMethod(searchParam.getRerank().getMethod());
+            if (searchParam.getRerank() instanceof WeightRerankParam){
+                WeightRerankParam weightRerankParam = (WeightRerankParam)searchParam.getRerank();
+                rerankBuilder.putAllWeights(IntStream.range(0, weightRerankParam.getFieldList().size())
+                        .boxed()
+                        .collect(Collectors.toMap(weightRerankParam.getFieldList()::get, weightRerankParam.getWeight()::get)));
+            }else if (searchParam.getRerank() instanceof RRFRerankParam){
+                RRFRerankParam rrfRerankParam = (RRFRerankParam)searchParam.getRerank();
+                rerankBuilder.setRrfK(rrfRerankParam.getRrfK());
+            }
+            searchConBuilder.setRerankParams(rerankBuilder.build());
+        }
+        builder.setSearch(searchConBuilder.build());
+        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai));
+        Olama.SearchResponse searchResponse = searchEngineBlockingStub.search(builder.build());
+        if(searchResponse==null){
+            throw new VectorDBException("VectorDBServer error: search not response");
+        }
+        if (searchResponse.getCode()!=0){
+            throw new VectorDBException(String.format(
+                    "VectorDBServer error: search not Success, body code=%s, message=%s",
+                    searchResponse.getCode(), searchResponse.getMsg()));
+        }
+        List<List<Document>> documentsList = new ArrayList<>();
+        for (Olama.SearchResult searchResult : searchResponse.getResultsList()) {
+            documentsList.add(searchResult.getDocumentsList().stream().map(GrpcStub::convertDocument)
+                    .collect(Collectors.toList()));
+        }
+        return new SearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), documentsList);
+    }
+
+    @Override
     public AffectRes deleteDocument(DeleteParamInner param) {
         Olama.QueryCond.Builder queryCondBuilder = Olama.QueryCond.newBuilder();
         DeleteParam paramQuery = param.getQuery();
@@ -683,7 +782,16 @@ public class GrpcStub extends HttpStub{
             docBuilder.setId(document.getId());
         }
         if (document.getVector()!=null){
-            docBuilder.addAllVector((document.getVector()).stream().map(vecEle -> vecEle.floatValue()).collect(Collectors.toList()));
+            if (document.getVector() instanceof List){
+                docBuilder.addAllVector(((List)document.getVector()));
+            }else if (document.getVector() instanceof String){
+                docBuilder.setDataExpr((String)document.getVector());
+            }
+        }
+        if (document.getSparseVector()!=null){
+            docBuilder.addAllSparseVector(document.getSparseVector().stream()
+                    .map(pair->Olama.SparseVecItem.newBuilder().setTermId(pair.getKey()).setScore(pair.getValue().floatValue()).build())
+                    .collect(Collectors.toList()));
         }
         document.getDocFields().forEach(docField -> {
             Olama.Field.Builder fieldBuilder = Olama.Field.newBuilder();
@@ -710,7 +818,12 @@ public class GrpcStub extends HttpStub{
                 docBuilder.setId(document.get(key).toString());
             }else if (key.equals("vector")){
                 docBuilder.addAllVector((((JSONArray)document.get(key)).toList()).stream().map(vecEle -> Float.parseFloat(vecEle.toString())).collect(Collectors.toList()));
-            }else {
+            } else if (key.equals("sparse_vector")) {
+                List<Object> sparseVectors = ((List)document.get("sparse_vector"));
+                docBuilder.addAllSparseVector(sparseVectors.stream().map(pair->
+                             Olama.SparseVecItem.newBuilder().setTermId((Long) ((List<Object>)pair).get(0))
+                                    .setScore((Float) ((List<Object>)pair).get(1)).build()).collect(Collectors.toList()));
+            } else {
                 Olama.Field.Builder fieldBuilder = Olama.Field.newBuilder();
                 if (document.get(key) instanceof Integer || document.get(key) instanceof Long) {
                     fieldBuilder.setValU64(Long.parseLong(document.get(key).toString()));
@@ -733,7 +846,11 @@ public class GrpcStub extends HttpStub{
             builder.withScore(Double.valueOf(document.getScore()));
         }
         if (document.getVectorCount()>0){
-            builder.withVector(document.getVectorList().stream().map(ele->ele.doubleValue()).collect(Collectors.toList()));
+            builder.withVectorByList(document.getVectorList());
+        }
+        if (document.getSparseVectorCount()>0){
+            builder.withSparseVector(document.getSparseVectorList().stream().map(sparseVecItem->
+                    Pair.of(sparseVecItem.getTermId(),sparseVecItem.getScore())).collect(Collectors.toList()));
         }
         if(document.getFieldsMap()!=null){
             for (Map.Entry<String, Olama.Field> stringFieldEntry : document.getFieldsMap().entrySet()) {

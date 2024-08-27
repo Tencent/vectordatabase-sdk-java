@@ -559,7 +559,7 @@ public class GrpcStub extends HttpStub{
         }
         builder.setSearch(searchConBuilder.build());
         SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai));
-        Olama.SearchResponse searchResponse = searchEngineBlockingStub.search(builder.build());
+        Olama.SearchResponse searchResponse = searchEngineBlockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).search(builder.build());
         if(searchResponse==null){
             throw new VectorDBException("VectorDBServer error: search not response");
         }

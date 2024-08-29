@@ -61,11 +61,11 @@ public class MatchOption {
             return this;
         }
 
-        public Builder withData(List<List<Pair<Long, Double>>> data){
+        public Builder withData(List<List<Pair<Long, Float>>> data){
             List<List<List<Object>>> sparseData = new ArrayList<>();
-            for (List<Pair<Long, Double>> dataItem : data){
+            for (List<Pair<Long, Float>> dataItem : data){
                 List<List<Object>> pairsList = new ArrayList<>();
-                for (Pair<Long, Double> dataItemItem : dataItem){
+                for (Pair<Long, Float> dataItemItem : dataItem){
                     List<Object> pairTmp = new ArrayList<>();
                     pairTmp.add(dataItemItem.getLeft());
                     pairTmp.add(dataItemItem.getRight());

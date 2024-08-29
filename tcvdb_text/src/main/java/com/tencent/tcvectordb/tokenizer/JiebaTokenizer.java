@@ -6,6 +6,7 @@ import com.tencent.tcvectordb.hash.BaseHash;
 import com.tencent.tcvectordb.hash.Mm3BaseHash;
 
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -26,6 +27,14 @@ public class JiebaTokenizer extends BaseTokenizer{
         this.hash = new Mm3BaseHash();
         this.segmenter = new JiebaSegmenter();
         this.stopWords = StopWords.getStopWordsFromFile("data/stopwords.txt");
+    }
+
+    public JiebaTokenizer(String dictFilePath){
+        super();
+        this.hash = new Mm3BaseHash();
+        this.segmenter = new JiebaSegmenter();
+        this.stopWords = StopWords.getStopWordsFromFile("data/stopwords.txt");
+        WordDictionary.getInstance().loadUserDict(Paths.get(dictFilePath));
     }
 
     public void setDict(String dicFile) {
@@ -74,10 +83,13 @@ public class JiebaTokenizer extends BaseTokenizer{
         this.stopWords = stopWords;
         this.lowerCase = lowerCase;
         this.dictFilePath = dictFilePath;
+        this.loadDict(dictFilePath);
     }
 
     @Override
     public void loadDict(String dictFile) {
+//        WordDictionary.getInstance().freqs.clear();
+//        WordDictionary.getInstance().loadDict();
         WordDictionary.getInstance().loadUserDict(Paths.get(dictFile));
     }
 

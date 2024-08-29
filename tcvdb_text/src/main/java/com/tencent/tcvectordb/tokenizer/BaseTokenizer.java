@@ -27,6 +27,14 @@ public abstract class BaseTokenizer {
     public BaseTokenizer() {
     }
 
+    public Boolean getEnableStopWords() {
+        return enableStopWords;
+    }
+
+    public void setEnableStopWords(Boolean enableStopWords) {
+        this.enableStopWords = enableStopWords;
+    }
+
     public abstract List<String> tokenize(String text);
     public abstract List<Long> encode(String text);
     public abstract String decode(List<Integer> tokens);

@@ -18,8 +18,7 @@ public class ApiPath {
     public final static String DOC_UPSERT = "document/upsert";
     public final static String DOC_QUERY = "document/query";
     public final static String DOC_SEARCH = "document/search";
-
-    public final static String DOC_HYBRID_SEARCH = "document/hybrid_search";
+    public final static String DOC_HYBRID_SEARCH = "document/hybridSearch";
     public final static String DOC_DELETE = "document/delete";
     public final static String DOC_UPDATE = "document/update";
     public final static String REBUILD_INDEX = "index/rebuild";

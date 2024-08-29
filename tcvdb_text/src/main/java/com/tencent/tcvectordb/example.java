@@ -8,8 +8,8 @@ import java.util.Arrays;
 
 public class example {
     public static void main(String[] args) {
-//        userDict();
-        quickStart();
+        userDict();
+//        quickStart();
 //        fitStart();
     }
     public static void quickStart() {
@@ -29,6 +29,7 @@ public class example {
     }
     public static void userDict(){
         JiebaTokenizer tokenizer = new JiebaTokenizer();
+        tokenizer.setEnableStopWords(true);
         String projectPath = example.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 
         // 创建一个 File 对象来表示工程路径
@@ -37,9 +38,15 @@ public class example {
         // 获取工程路径的绝对路径
         String projectAbsolutePath = projectDirectory.getAbsolutePath();
         String path = projectAbsolutePath.replace("target/classes", "") +
-                "src/main/resources/data/userdict_example.txt";
+                "src/main/resources/data/user_dict/userdict_example.txt";
         System.out.println(tokenizer.tokenize("腾讯云向量数据库（Tencent Cloud VectorDB）是一款全托管的自研企业级分布式数据库服务，专用于存储、索引、检索、管理由深度神经网络或其他机器学习模型生成的大量多维嵌入向量。"));
         tokenizer.loadDict(path);
         System.out.println(tokenizer.tokenize("腾讯云向量数据库（Tencent Cloud VectorDB）是一款全托管的自研企业级分布式数据库服务，专用于存储、索引、检索、管理由深度神经网络或其他机器学习模型生成的大量多维嵌入向量。"));
+
+        path = projectAbsolutePath.replace("target/classes", "") +
+                "src/main/resources/data/user_dict/user_dict_1.txt";
+        tokenizer.loadDict(path);
+        System.out.println(tokenizer.tokenize("腾讯云向量数据库（Tencent Cloud VectorDB）是一款全托管的自研企业级分布式数据库服务，专用于存储、索引、检索、管理由深度神经网络或其他机器学习模型生成的大量多维嵌入向量。"));
+
     }
 }

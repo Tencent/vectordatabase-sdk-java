@@ -116,7 +116,7 @@ public class VectorDBExample {
         List<Document> documentList = new ArrayList<>(Arrays.asList(
                 Document.newBuilder()
                         .withId("0001")
-                        .withVector(Arrays.asList(0.2123, 0.21, 0.213))
+                        .withVectorByList(Arrays.asList(0.2123, 0.21, 0.213))
                         .addDocField(new DocField("bookName", "西游记"))
                         .addDocField(new DocField("author", "吴承恩"))
                         .addDocField(new DocField("page", 21))
@@ -125,7 +125,7 @@ public class VectorDBExample {
                         .build(),
                 Document.newBuilder()
                         .withId("0002")
-                        .withVector(Arrays.asList(0.2123, 0.22, 0.213))
+                        .withVectorByList(Arrays.asList(0.2123, 0.22, 0.213))
                         .addDocField(new DocField("bookName", "西游记"))
                         .addDocField(new DocField("author", "吴承恩"))
                         .addDocField(new DocField("page", 22))
@@ -135,7 +135,7 @@ public class VectorDBExample {
                         .build(),
                 Document.newBuilder()
                         .withId("0003")
-                        .withVector(Arrays.asList(0.2123, 0.23, 0.213))
+                        .withVectorByList(Arrays.asList(0.2123, 0.23, 0.213))
                         .addDocField(new DocField("bookName", "三国演义"))
                         .addDocField(new DocField("author", "罗贯中"))
                         .addDocField(new DocField("page", 23))
@@ -144,7 +144,7 @@ public class VectorDBExample {
                         .build(),
                 Document.newBuilder()
                         .withId("0004")
-                        .withVector(Arrays.asList(0.2123, 0.24, 0.213))
+                        .withVectorByList(Arrays.asList(0.2123, 0.24, 0.213))
                         .addDocField(new DocField("bookName", "三国演义"))
                         .addDocField(new DocField("author", "罗贯中"))
                         .addDocField(new DocField("page", 24))
@@ -153,7 +153,7 @@ public class VectorDBExample {
                         .build(),
                 Document.newBuilder()
                         .withId("0005")
-                        .withVector(Arrays.asList(0.2123, 0.25, 0.213))
+                        .withVectorByList(Arrays.asList(0.2123, 0.25, 0.213))
                         .addDocField(new DocField("bookName", "三国演义"))
                         .addDocField(new DocField("author", "罗贯中"))
                         .addDocField(new DocField("page", 25))
@@ -403,7 +403,7 @@ public class VectorDBExample {
         System.out.println("\tres: " + Filter.in("key", Arrays.asList(1, 2, 3)));
         System.out.println(Document.newBuilder()
                 .withId("0003")
-                .withVector(Arrays.asList(0.2123, 0.23, 0.213))
+                .withVectorByList(Arrays.asList(0.2123, 0.23, 0.213))
                 .addDocField(new DocField("bookName", "三国演义"))
                 .addDocField(new DocField("author", "罗贯中"))
                 .addDocField(new DocField("page", 23))

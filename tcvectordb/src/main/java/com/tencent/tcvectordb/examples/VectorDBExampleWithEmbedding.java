@@ -243,7 +243,7 @@ public class VectorDBExampleWithEmbedding {
                 .build();
         List<Document> allRes = collection.query(queryParam);
         SearchByVectorParam searchByVectorParam = SearchByVectorParam.newBuilder()
-                .withVectors(allRes.stream().map(Document::getVector).collect(Collectors.toList()))
+                .withVectors(allRes.stream().map(ele->(List)ele.getVector()).collect(Collectors.toList()))
                 // 若使用 HNSW 索引，则需要指定参数ef，ef越大，召回率越高，但也会影响检索速度
                 .withParams(new HNSWSearchParams(100))
                 // 指定 Top K 的 K 值

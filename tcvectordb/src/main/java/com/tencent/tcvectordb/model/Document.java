@@ -222,6 +222,11 @@ public class Document {
             return this;
         }
 
+        public Builder withVectorByText(String embeddingText) {
+            this.vector = embeddingText;
+            return this;
+        }
+
         public Builder withSparseVector(List<Pair<Long,Float>> sparseVector) {
             this.sparseVector = sparseVector;
             return this;

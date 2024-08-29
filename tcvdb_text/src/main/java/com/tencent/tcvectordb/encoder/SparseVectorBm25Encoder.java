@@ -168,7 +168,6 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
                     this.tokenFreq.put(token, tokenFreq.get(token));
                 }
             }
-
         }
 
     }

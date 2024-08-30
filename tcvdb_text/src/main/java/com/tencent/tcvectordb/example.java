@@ -8,8 +8,8 @@ import java.util.Arrays;
 
 public class example {
     public static void main(String[] args) {
-        userDict();
-//        quickStart();
+//        userDict();
+        quickStart();
 //        fitStart();
     }
     public static void quickStart() {

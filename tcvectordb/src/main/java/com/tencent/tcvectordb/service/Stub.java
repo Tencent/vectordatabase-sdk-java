@@ -101,12 +101,12 @@ public interface Stub {
     /**
      * upsert document
      */
-    AffectRes upsertDocument(InsertParamInner param);
+    AffectRes upsertDocument(InsertParamInner param, boolean ai);
 
     /**
      * query document
      */
-    List<Document> queryDocument(QueryParamInner param);
+    List<Document> queryDocument(QueryParamInner param, boolean ai);
 
     /**
      * search document
@@ -117,7 +117,7 @@ public interface Stub {
     /**
      * hybrid search document
      */
-    SearchRes hybridSearchDocument(HybridSearchParamInner param);
+    SearchRes hybridSearchDocument(HybridSearchParamInner param, boolean ai);
 
     /**
      * delete document
@@ -127,7 +127,7 @@ public interface Stub {
     /**
      * delete document
      */
-    AffectRes updateDocument(UpdateParamInner param);
+    AffectRes updateDocument(UpdateParamInner param, boolean ai);
 
     /**
      * rebuild index

@@ -242,8 +242,13 @@ public class VectorDBExampleWithEmbedding {
                 .withRetrieveVector(true)
                 .build();
         List<Document> allRes = collection.query(queryParam);
+        List<List<Double>> vectors = new ArrayList<>();
+        for (Document document : allRes) {
+            List<Double> vector = (List<Double>) document.getVector();
+            vectors.add(vector);
+        }
         SearchByVectorParam searchByVectorParam = SearchByVectorParam.newBuilder()
-                .withVectors(allRes.stream().map(ele->(List)ele.getVector()).collect(Collectors.toList()))
+                .withVectors(vectors)
                 // 若使用 HNSW 索引，则需要指定参数ef，ef越大，召回率越高，但也会影响检索速度
                 .withParams(new HNSWSearchParams(100))
                 // 指定 Top K 的 K 值
@@ -414,7 +419,7 @@ public class VectorDBExampleWithEmbedding {
         return CreateCollectionParam.newBuilder()
                 .withName(collName)
                 .withShardNum(1)
-                .withReplicaNum(1)
+                .withReplicaNum(0)
                 .withDescription("test embedding collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", BGE_BASE_ZH.getDimension(), IndexType.HNSW,

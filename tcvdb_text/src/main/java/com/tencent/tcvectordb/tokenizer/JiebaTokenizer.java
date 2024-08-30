@@ -1,5 +1,6 @@
 package com.tencent.tcvectordb.tokenizer;
 
+import com.google.common.collect.Lists;
 import com.huaban.analysis.jieba.JiebaSegmenter;
 import com.huaban.analysis.jieba.WordDictionary;
 import com.tencent.tcvectordb.hash.BaseHash;
@@ -9,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class JiebaTokenizer extends BaseTokenizer{
 
@@ -47,7 +49,7 @@ public class JiebaTokenizer extends BaseTokenizer{
     @Override
     public List<String> tokenize(String sentence) {
         if(sentence.isEmpty()){
-            return List.of();
+            return Lists.newArrayList();
         }
         if (this.lowerCase!=null && this.lowerCase){
             sentence = sentence.toLowerCase();
@@ -62,7 +64,7 @@ public class JiebaTokenizer extends BaseTokenizer{
                 return false;
             }
             return true;
-        }).toList();
+        }).collect(Collectors.toList());
 
 
         return words;
@@ -70,7 +72,7 @@ public class JiebaTokenizer extends BaseTokenizer{
 
     @Override
     public List<Long> encode(String text) {
-        return this.tokenize(text).stream().map(word -> this.hash.hash(word)).toList();
+        return this.tokenize(text).stream().map(word -> this.hash.hash(word)).collect(Collectors.toList());
     }
 
     @Override

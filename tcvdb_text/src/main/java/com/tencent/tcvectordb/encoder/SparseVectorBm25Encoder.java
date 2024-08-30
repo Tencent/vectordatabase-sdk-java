@@ -7,9 +7,13 @@ import com.tencent.tcvectordb.tokenizer.JiebaTokenizer;
 
 import com.tencent.tcvectordb.util.JsonUtils;
 import org.apache.commons.lang3.tuple.Pair;
+
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SparseVectorBm25Encoder implements BaseSparseEncoder{
@@ -83,7 +87,7 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
                 tokenFreq.put(token, 1);
             }
         }
-        return tokenFreq.entrySet().stream().map(token->Pair.of(token.getKey(), token.getValue())).toList();
+        return tokenFreq.entrySet().stream().map(token->Pair.of(token.getKey(), token.getValue())).collect(Collectors.toList());
     }
 
     @Override
@@ -119,9 +123,9 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
         for (String text : texts) {
             List<Pair<Long, Integer>> tokensPairs = this.getTokenTF(text);
             List<Integer> df = tokensPairs.stream().
-                    map(key->this.tokenFreq.getOrDefault(key.getKey().toString(), 1)).toList();
+                    map(key->this.tokenFreq.getOrDefault(key.getKey().toString(), 1)).collect(Collectors.toList());
 
-            List<Double> idfs = df.stream().map(idf->Math.log((this.docCount +1) / (idf + 0.5))).toList();
+            List<Double> idfs = df.stream().map(idf->Math.log((this.docCount +1) / (idf + 0.5))).collect(Collectors.toList());
             Double idfSum = idfs.stream().reduce(0.0, Double::sum);
             List<Pair<Long, Float>> sparseVector = new ArrayList<>();
             for (int i = 0; i < tokensPairs.size(); i++) {
@@ -181,9 +185,16 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
     public void setParams(String paramsFile) {
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(paramsFile);
         try {
-            String fileContent = new String(inputStream.readAllBytes());
+            StringBuilder fileContent = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
-            Bm25Parameter bm25Parameter =  JsonUtils.parseObject(fileContent, Bm25Parameter.class);
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // 处理读取到的每一行内容
+                fileContent.append(line);
+            }
+
+            Bm25Parameter bm25Parameter =  JsonUtils.parseObject(fileContent.toString(), Bm25Parameter.class);
             this.tokenFreq = bm25Parameter.getTokenFreq();
             this.docCount = bm25Parameter.getDocCount();
             this.averageDocLength = bm25Parameter.getAverageDocLength();

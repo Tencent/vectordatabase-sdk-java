@@ -168,7 +168,7 @@ public class VectorDBExampleWithSparseVector {
         collection.upsert(insertParam);
 
         // notice：upsert操作可用会有延迟
-        Thread.sleep(1000 * 5);
+        Thread.sleep(1000 * 3);
     }
 
     private static void queryData(VectorDBClient client) {
@@ -367,8 +367,8 @@ public class VectorDBExampleWithSparseVector {
     private static CreateCollectionParam initCreateEmbeddingCollectionParam(String collName) {
         return CreateCollectionParam.newBuilder()
                 .withName(collName)
-                .withShardNum(2)
-                .withReplicaNum(2)
+                .withShardNum(1)
+                .withReplicaNum(0)
                 .withDescription("test sparse collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", BGE_BASE_ZH.getDimension(), IndexType.HNSW,

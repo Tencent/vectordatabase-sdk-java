@@ -12,7 +12,6 @@ import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
-import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.rpc.Interceptor.AuthorityInterceptor;
 import com.tencent.tcvectordb.rpc.Interceptor.BackendServiceInterceptor;
 import com.tencent.tcvectordb.rpc.proto.Olama;
@@ -75,7 +74,8 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public void createDatabase(Database database) {
-        Olama.DatabaseResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).
+        Olama.DatabaseResponse response = this.blockingStub.withInterceptors(new BackendServiceInterceptor(false))
+                .withDeadlineAfter(this.timeout, TimeUnit.SECONDS).
                 createDatabase(Olama.DatabaseRequest.newBuilder().
                 setDatabase(database.getDatabaseName()).build());
         if (response.getCode()!=0){
@@ -89,7 +89,7 @@ public class GrpcStub extends HttpStub{
     public void dropDatabase(Database database) {
 
         Olama.DatabaseRequest request = Olama.DatabaseRequest.newBuilder().setDatabase(database.getDatabaseName()).build();
-        Olama.DatabaseResponse response =  this.blockingStub.
+        Olama.DatabaseResponse response =  this.blockingStub.withInterceptors(new BackendServiceInterceptor(false)).
                 withDeadlineAfter(this.timeout, TimeUnit.SECONDS).dropDatabase(request);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
@@ -105,7 +105,9 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public DataBaseTypeRes describeDatabase(Database database) {
-        Olama.DescribeDatabaseResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).describeDatabase(Olama.DescribeDatabaseRequest.newBuilder().setDatabase(database.getDatabaseName()).build());
+        Olama.DescribeDatabaseResponse response = this.blockingStub.withInterceptors(new BackendServiceInterceptor(false))
+                .withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
+                .describeDatabase(Olama.DescribeDatabaseRequest.newBuilder().setDatabase(database.getDatabaseName()).build());
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
                     "VectorDBServer describeDatabase error: not Successful, body code=%s, message=%s",
@@ -212,6 +214,9 @@ public class GrpcStub extends HttpStub{
                                 break;
                         }
                     }
+                }
+                if(index.getFieldType() == FieldType.SparseVector){
+                    indexBuilder.setMetricType(index.getMetricType().getValue());
                 }
                 if(index.getFieldType()==FieldType.Array){
                     indexBuilder.setFieldElementType(FieldElementType.String.getValue());
@@ -348,7 +353,7 @@ public class GrpcStub extends HttpStub{
     }
 
     @Override
-    public AffectRes upsertDocument(InsertParamInner param) {
+    public AffectRes upsertDocument(InsertParamInner param, boolean ai) {
         Olama.UpsertRequest.Builder builder = Olama.UpsertRequest.newBuilder()
                 .setDatabase(param.getDatabase()).setCollection(param.getCollection());
         if (param.getBuildIndex()==null){
@@ -372,7 +377,8 @@ public class GrpcStub extends HttpStub{
                 }
             }
         }
-        Olama.UpsertResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).upsert(builder.build());
+        Olama.UpsertResponse response = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai))
+                .withDeadlineAfter(this.timeout, TimeUnit.SECONDS).upsert(builder.build());
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
                     "VectorDBServer upsert data error: not Successful, code=%s, message=%s",
@@ -382,7 +388,7 @@ public class GrpcStub extends HttpStub{
     }
 
     @Override
-    public List<Document> queryDocument(QueryParamInner param) {
+    public List<Document> queryDocument(QueryParamInner param, boolean ai) {
         Olama.QueryRequest.Builder queryBuilder = Olama.QueryRequest.newBuilder().
                 setDatabase(param.getDatabase()).setCollection(param.getCollection())
                 .setReadConsistency(param.getReadConsistency().getReadConsistency());
@@ -403,7 +409,7 @@ public class GrpcStub extends HttpStub{
         }
 
         queryBuilder.setQuery(queryCondBuilder.build());
-        Olama.QueryResponse queryResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).query(queryBuilder.build());
+        Olama.QueryResponse queryResponse = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai)).withDeadlineAfter(this.timeout, TimeUnit.SECONDS).query(queryBuilder.build());
         if(queryResponse==null){
             throw new VectorDBException("VectorDBServer error: query not response");
         }
@@ -440,7 +446,7 @@ public class GrpcStub extends HttpStub{
         if (searchParam instanceof SearchByVectorParam){
             ((SearchByVectorParam)searchParam).getVectors().forEach(vector->{
                 Olama.VectorArray.Builder vectorArrayBuilder =  Olama.VectorArray.newBuilder();
-                vector.forEach(ele->vectorArrayBuilder.addVector(ele.floatValue()));
+                vector.forEach(ele->vectorArrayBuilder.addVector(Float.valueOf(ele.toString())));
                 searchConBuilder.addVectors(vectorArrayBuilder.build());
             });
 
@@ -482,8 +488,7 @@ public class GrpcStub extends HttpStub{
     }
 
     @Override
-    public SearchRes hybridSearchDocument(HybridSearchParamInner param) {
-        boolean ai = false;
+    public SearchRes hybridSearchDocument(HybridSearchParamInner param, boolean ai) {
         Olama.SearchRequest.Builder builder = Olama.SearchRequest.newBuilder().setDatabase(param.getDatabase()).
                 setCollection(param.getCollection()).
                 setReadConsistency(param.getReadConsistency().getReadConsistency());
@@ -603,7 +608,7 @@ public class GrpcStub extends HttpStub{
     }
 
     @Override
-    public AffectRes updateDocument(UpdateParamInner param) {
+    public AffectRes updateDocument(UpdateParamInner param, boolean ai) {
         Olama.QueryCond.Builder queryCondBuilder = Olama.QueryCond.newBuilder();
         UpdateParam paramQuery = param.getQuery();
         if(!paramQuery.getDocumentIds().isEmpty()){
@@ -612,16 +617,17 @@ public class GrpcStub extends HttpStub{
         if (!paramQuery.getFilter().isEmpty()){
             queryCondBuilder.setFilter(paramQuery.getFilter());
         }
+        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai));
         Olama.UpdateResponse updateResponse=null;
         if (param.getUpdate()!=null){
-            updateResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).update(Olama.UpdateRequest.newBuilder()
+            updateResponse = searchEngineBlockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).update(Olama.UpdateRequest.newBuilder()
                     .setDatabase(param.getDatabase())
                     .setCollection(param.getCollection())
                     .setQuery(queryCondBuilder.build())
                     .setUpdate(convertDocument2OlamaDoc(param.getUpdate()))
                     .build());
         } else if (param.getUpdateData()!=null) {
-            updateResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).update(Olama.UpdateRequest.newBuilder()
+            updateResponse = searchEngineBlockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).update(Olama.UpdateRequest.newBuilder()
                     .setDatabase(param.getDatabase())
                     .setCollection(param.getCollection())
                     .setQuery(queryCondBuilder.build())
@@ -783,7 +789,7 @@ public class GrpcStub extends HttpStub{
         }
         if (document.getVector()!=null){
             if (document.getVector() instanceof List){
-                docBuilder.addAllVector(((List)document.getVector()));
+                docBuilder.addAllVector(((List<Double>)document.getVector()).stream().map(ele->ele.floatValue()).collect(Collectors.toList()));
             }else if (document.getVector() instanceof String){
                 docBuilder.setDataExpr((String)document.getVector());
             }
@@ -846,7 +852,7 @@ public class GrpcStub extends HttpStub{
             builder.withScore(Double.valueOf(document.getScore()));
         }
         if (document.getVectorCount()>0){
-            builder.withVectorByList(document.getVectorList());
+            builder.withVectorByList(document.getVectorList().stream().map(ele->ele.doubleValue()).collect(Collectors.toList()));
         }
         if (document.getSparseVectorCount()>0){
             builder.withSparseVector(document.getSparseVectorList().stream().map(sparseVecItem->

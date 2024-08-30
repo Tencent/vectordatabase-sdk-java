@@ -1,6 +1,9 @@
 package com.tencent.tcvectordb.service;
 
 import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.MessageOrBuilder;
+import com.google.protobuf.util.JsonFormat;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.*;
 import com.tencent.tcvectordb.model.Collection;
@@ -225,6 +228,7 @@ public class GrpcStub extends HttpStub{
             }
 
         }
+        log(ApiPath.COL_CREATE, requestOrBuilder);
 
         Olama.CreateCollectionResponse response =  this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
                 .createCollection(requestOrBuilder.build());
@@ -377,6 +381,7 @@ public class GrpcStub extends HttpStub{
                 }
             }
         }
+        log(ApiPath.DOC_UPSERT, builder);
         Olama.UpsertResponse response = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai))
                 .withDeadlineAfter(this.timeout, TimeUnit.SECONDS).upsert(builder.build());
         if (response.getCode()!=0){
@@ -470,6 +475,7 @@ public class GrpcStub extends HttpStub{
             }
         }
         builder.setSearch(searchConBuilder.build());
+        log(ApiPath.DOC_SEARCH, builder);
         Olama.SearchResponse searchResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).search(builder.build());
         if(searchResponse==null){
             throw new VectorDBException("VectorDBServer error: search not response");
@@ -562,9 +568,11 @@ public class GrpcStub extends HttpStub{
             }
             searchConBuilder.setRerankParams(rerankBuilder.build());
         }
-        builder.setSearch(searchConBuilder.build());
+        builder.setSearch(searchConBuilder);
+        log(ApiPath.DOC_HYBRID_SEARCH, builder);
         SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai));
         Olama.SearchResponse searchResponse = searchEngineBlockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).hybridSearch(builder.build());
+
         if(searchResponse==null){
             throw new VectorDBException("VectorDBServer error: search not response");
         }
@@ -579,6 +587,14 @@ public class GrpcStub extends HttpStub{
                     .collect(Collectors.toList()));
         }
         return new SearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), documentsList);
+    }
+
+    private static void log(String url, MessageOrBuilder messageOrBuilder) {
+        try {
+            logger.debug("Query {}, body={}", url, JsonFormat.printer().print(messageOrBuilder));
+        } catch (InvalidProtocolBufferException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -852,7 +868,7 @@ public class GrpcStub extends HttpStub{
             builder.withScore(Double.valueOf(document.getScore()));
         }
         if (document.getVectorCount()>0){
-            builder.withVectorByList(document.getVectorList().stream().map(ele->ele.doubleValue()).collect(Collectors.toList()));
+            builder.withVector(document.getVectorList().stream().map(ele->ele.doubleValue()).collect(Collectors.toList()));
         }
         if (document.getSparseVectorCount()>0){
             builder.withSparseVector(document.getSparseVectorList().stream().map(sparseVecItem->

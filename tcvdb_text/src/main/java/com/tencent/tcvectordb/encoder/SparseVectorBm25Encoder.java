@@ -53,6 +53,15 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
         this.averageDocLength = averageDocLength;
     }
 
+    public Boolean getEnableStopWords() {
+        return enableStopWords;
+    }
+
+    public void setEnableStopWords(Boolean enableStopWords) {
+        this.enableStopWords = enableStopWords;
+        this.tokenizer.setEnableStopWords(enableStopWords);
+    }
+
     public static SparseVectorBm25Encoder getBm25Encoder(String language) {
         String path;
         if (language.equals("zh")){

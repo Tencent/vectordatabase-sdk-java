@@ -202,7 +202,7 @@ public class Document {
             return this;
         }
 
-        public Builder withVectorByList(List<?> vector) {
+        public Builder withVector(List<Double> vector) {
             this.vector = vector;
             return this;
         }

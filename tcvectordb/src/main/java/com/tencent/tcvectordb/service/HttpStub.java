@@ -767,7 +767,7 @@ public class HttpStub implements Stub {
                 builder.withId(ele.asText());
             } else if (StringUtils.equals("vector", name)) {
                 List<Double> vector = JsonUtils.parseObject(ele.toString(), List.class);
-                builder.withVectorByList(vector);
+                builder.withVector(vector);
             }else if (StringUtils.equals("sparse_vector", name)) {
                 builder.withSparseVectorList(JsonUtils.parseObject(ele.toString(), List.class));
             } else if (StringUtils.equals("doc", name)) {

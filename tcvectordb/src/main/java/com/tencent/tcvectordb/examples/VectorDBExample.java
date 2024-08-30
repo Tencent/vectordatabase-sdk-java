@@ -48,11 +48,11 @@ public class VectorDBExample {
         // 清理环境
         CommonService.anySafe(() -> client.dropDatabase(DBNAME));
         createDatabaseAndCollection(client);
-        upsertData(client);
-        queryData(client);
-        updateAndDelete(client);
-        deleteAndDrop(client);
-        testFilter();
+//        upsertData(client);
+//        queryData(client);
+//        updateAndDelete(client);
+//        deleteAndDrop(client);
+//        testFilter();
     }
 
 
@@ -82,26 +82,26 @@ public class VectorDBExample {
             System.out.println("\tres: " + col.toString());
         }
 
-        // 5. 设置 collection 别名
-        System.out.println("---------------------- setAlias ----------------------");
-        AffectRes affectRes = db.setAlias(COLL_NAME, COLL_NAME_ALIAS);
-        System.out.println("\tres: " + affectRes.toString());
-
-
-        // 6. describe collection
-        System.out.println("---------------------- describeCollection ----------------------");
-        Collection descCollRes = db.describeCollection(COLL_NAME);
-        System.out.println("\tres: " + descCollRes.toString());
-
-        // 7. delete alias
-        System.out.println("---------------------- deleteAlias ----------------------");
-        AffectRes affectRes1 = db.deleteAlias(COLL_NAME_ALIAS);
-        System.out.println("\tres: " + affectRes1);
-
-        // 8. describe collection
-        System.out.println("---------------------- describeCollection ----------------------");
-        Collection descCollRes1 = db.describeCollection(COLL_NAME);
-        System.out.println("\tres: " + descCollRes1.toString());
+//        // 5. 设置 collection 别名
+//        System.out.println("---------------------- setAlias ----------------------");
+//        AffectRes affectRes = db.setAlias(COLL_NAME, COLL_NAME_ALIAS);
+//        System.out.println("\tres: " + affectRes.toString());
+//
+//
+//        // 6. describe collection
+//        System.out.println("---------------------- describeCollection ----------------------");
+//        Collection descCollRes = db.describeCollection(COLL_NAME);
+//        System.out.println("\tres: " + descCollRes.toString());
+//
+//        // 7. delete alias
+//        System.out.println("---------------------- deleteAlias ----------------------");
+//        AffectRes affectRes1 = db.deleteAlias(COLL_NAME_ALIAS);
+//        System.out.println("\tres: " + affectRes1);
+//
+//        // 8. describe collection
+//        System.out.println("---------------------- describeCollection ----------------------");
+//        Collection descCollRes1 = db.describeCollection(COLL_NAME);
+//        System.out.println("\tres: " + descCollRes1.toString());
 
     }
 
@@ -380,11 +380,10 @@ public class VectorDBExample {
                 .withReplicaNum(1)
                 .withDescription("test collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
-                .addField(new VectorIndex("vector", 3, IndexType.HNSW,
+                .addField(new VectorIndex("vector", 8, IndexType.HNSW,
                         MetricType.COSINE, new HNSWParams(16, 200)))
-                .addField(new FilterIndex("bookName", FieldType.String, IndexType.FILTER))
-                .addField(new FilterIndex("author", FieldType.String, IndexType.FILTER))
-                .addField(new FilterIndex("array_test", FieldType.Array, IndexType.FILTER))
+                .addField(new FilterIndex("random", FieldType.Uint64, IndexType.FILTER))
+                .addField(new FilterIndex("field_str", FieldType.String, IndexType.FILTER))
                 .build();
     }
 

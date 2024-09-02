@@ -475,9 +475,9 @@ message SearchCond {
     repeated string embeddingItems    = 8;  // 使用字符串检索
     bool range                        = 9;  // 是否开启range搜索
     repeated AnnData ann              = 10; // ann检索
-    repeated SparseData sparse        = 12; // 稀疏向量检索
-    RerankParams rerank_params        = 13; // rerank参数
-    bool retrieveSparseVector         = 14; // 目前用户不传，仅用于内部
+    repeated SparseData sparse        = 11; // 稀疏向量检索
+    RerankParams rerank_params        = 12; // rerank参数
+    bool retrieveSparseVector         = 13; // 目前用户不传，仅用于内部
 }
 
 message SearchRequest {

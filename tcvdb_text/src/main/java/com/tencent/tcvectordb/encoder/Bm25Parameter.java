@@ -31,13 +31,11 @@ package com.tencent.tcvectordb.encoder;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
 
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Data
 public class Bm25Parameter {
     private Double k1;
     private Double b;
@@ -54,4 +52,67 @@ public class Bm25Parameter {
     @JsonProperty("dict_file")
     private String  dictFile;
 
+    public Double getK1() {
+        return k1;
+    }
+
+    public void setK1(Double k1) {
+        this.k1 = k1;
+    }
+
+    public Double getB() {
+        return b;
+    }
+
+    public void setB(Double b) {
+        this.b = b;
+    }
+
+    public Map<String, Integer> getTokenFreq() {
+        return tokenFreq;
+    }
+
+    public void setTokenFreq(Map<String, Integer> tokenFreq) {
+        this.tokenFreq = tokenFreq;
+    }
+
+    public Integer getDocCount() {
+        return docCount;
+    }
+
+    public void setDocCount(Integer docCount) {
+        this.docCount = docCount;
+    }
+
+    public Double getAverageDocLength() {
+        return averageDocLength;
+    }
+
+    public void setAverageDocLength(Double averageDocLength) {
+        this.averageDocLength = averageDocLength;
+    }
+
+    public Boolean getStopWords() {
+        return stopWords;
+    }
+
+    public void setStopWords(Boolean stopWords) {
+        this.stopWords = stopWords;
+    }
+
+    public Boolean getLowerCase() {
+        return lowerCase;
+    }
+
+    public void setLowerCase(Boolean lowerCase) {
+        this.lowerCase = lowerCase;
+    }
+
+    public String getDictFile() {
+        return dictFile;
+    }
+
+    public void setDictFile(String dictFile) {
+        this.dictFile = dictFile;
+    }
 }

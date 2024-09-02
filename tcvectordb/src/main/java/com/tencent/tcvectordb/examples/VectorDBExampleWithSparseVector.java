@@ -49,17 +49,17 @@ public class VectorDBExampleWithSparseVector {
 
     public static void main(String[] args) throws InterruptedException {
         // 创建VectorDB Client
-        VectorDBClient client = CommonService.initClient();
-
-        // 清理环境
-        CommonService.anySafe(() -> client.dropDatabase(DBNAME));
-
-        // 测试
-        createDatabaseAndCollection(client);
-        upsertData(client);
-        queryData(client);
-        updateAndDelete(client);
-        deleteAndDrop(client);
+//        VectorDBClient client = CommonService.initClient();
+//
+//        // 清理环境
+//        CommonService.anySafe(() -> client.dropDatabase(DBNAME));
+//
+//        // 测试
+//        createDatabaseAndCollection(client);
+//        upsertData(client);
+//        queryData(client);
+//        updateAndDelete(client);
+//        deleteAndDrop(client);
         testFilter();
     }
 
@@ -422,7 +422,7 @@ public class VectorDBExampleWithSparseVector {
                 .andNot("an=\"andNot\"")
                 .getCond());
         System.out.println("\tres: " + Filter.in("key", Arrays.asList("v1", "v2", "v3")));
-        System.out.println("\tres: " + Filter.in("key", Arrays.asList(1, 2, 3)));
+        System.out.println("\tres: " + Filter.notIn("key", Arrays.asList(1, 2, 3)));
     }
 
 

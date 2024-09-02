@@ -8,10 +8,7 @@ import com.tencent.tcvectordb.tokenizer.JiebaTokenizer;
 import com.tencent.tcvectordb.util.JsonUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,6 +16,7 @@ import java.util.stream.Collectors;
 public class SparseVectorBm25Encoder implements BaseSparseEncoder{
     @JsonIgnore
     private BaseTokenizer tokenizer;
+
     private Double b;
     private Double k1;
 
@@ -31,6 +29,34 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
         this.tokenizer = new JiebaTokenizer();
         this.b = 0.75;
         this.k1 = 1.2;
+    }
+
+    public BaseTokenizer getTokenizer() {
+        return tokenizer;
+    }
+
+    public void setTokenizer(BaseTokenizer tokenizer) {
+        this.tokenizer = tokenizer;
+    }
+
+    public Double getB() {
+        return b;
+    }
+
+    public Double getK1() {
+        return k1;
+    }
+
+    public Map<String, Integer> getTokenFreq() {
+        return tokenFreq;
+    }
+
+    public Integer getDocCount() {
+        return docCount;
+    }
+
+    public Double getAverageDocLength() {
+        return averageDocLength;
     }
 
     public void setB(Double b) {
@@ -186,8 +212,15 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
     }
 
     @Override
-    public Bm25Parameter downloadParams(String paramsFilePath) {
-        return null;
+    public void downloadParams(String paramsFilePath) {
+        try {
+            FileWriter writer = new FileWriter("example.json");
+//            System.out.println(JsonUtils.toJsonString(this));
+            writer.write(JsonUtils.toJsonString(this));
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

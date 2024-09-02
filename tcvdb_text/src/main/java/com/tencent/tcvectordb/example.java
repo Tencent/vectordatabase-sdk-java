@@ -15,6 +15,7 @@ public class example {
     public static void quickStart() {
         SparseVectorBm25Encoder encoder = SparseVectorBm25Encoder.getBm25Encoder("zh");
         System.out.println(encoder.encodeQueries(Arrays.asList("什么是腾讯云向量数据库？", "腾讯云向量数据库有什么优势？", "腾讯云向量数据库能做些什么？")));
+        encoder.downloadParams("example.json");
     }
 
     public static void fitStart() {

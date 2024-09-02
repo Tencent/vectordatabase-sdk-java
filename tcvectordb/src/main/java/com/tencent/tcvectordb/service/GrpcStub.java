@@ -42,11 +42,13 @@ import com.tencent.tcvectordb.rpc.proto.SearchEngineGrpc;
 import com.tencent.tcvectordb.service.param.*;
 import io.grpc.*;
 import org.apache.commons.lang3.tuple.Pair;
+import org.bouncycastle.util.Strings;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -579,9 +581,11 @@ public class GrpcStub extends HttpStub{
                     .setMethod(searchParam.getRerank().getMethod());
             if (searchParam.getRerank() instanceof WeightRerankParam){
                 WeightRerankParam weightRerankParam = (WeightRerankParam)searchParam.getRerank();
-                rerankBuilder.putAllWeights(IntStream.range(0, weightRerankParam.getFieldList().size())
-                        .boxed()
-                        .collect(Collectors.toMap(weightRerankParam.getFieldList()::get, weightRerankParam.getWeight()::get)));
+                Map<String, Float> weightMap = new HashMap<>();
+                for (int i = 0; i < weightRerankParam.getFieldList().size(); i++) {
+                    weightMap.put(weightRerankParam.getFieldList().get(i), weightRerankParam.getWeight().get(i));
+                }
+                rerankBuilder.putAllWeights(weightMap);
             }else if (searchParam.getRerank() instanceof RRFRerankParam){
                 RRFRerankParam rrfRerankParam = (RRFRerankParam)searchParam.getRerank();
                 rerankBuilder.setRrfK(rrfRerankParam.getRrfK());

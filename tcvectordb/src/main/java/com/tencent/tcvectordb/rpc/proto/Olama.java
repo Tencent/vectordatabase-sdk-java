@@ -60337,7 +60337,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
      * 稀疏向量检索
      * </pre>
      *
-     * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+     * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
      */
     java.util.List<com.tencent.tcvectordb.rpc.proto.Olama.SparseData> 
         getSparseList();
@@ -60346,7 +60346,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
      * 稀疏向量检索
      * </pre>
      *
-     * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+     * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
      */
     com.tencent.tcvectordb.rpc.proto.Olama.SparseData getSparse(int index);
     /**
@@ -60354,7 +60354,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
      * 稀疏向量检索
      * </pre>
      *
-     * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+     * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
      */
     int getSparseCount();
     /**
@@ -60362,7 +60362,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
      * 稀疏向量检索
      * </pre>
      *
-     * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+     * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
      */
     java.util.List<? extends com.tencent.tcvectordb.rpc.proto.Olama.SparseDataOrBuilder> 
         getSparseOrBuilderList();
@@ -60371,7 +60371,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
      * 稀疏向量检索
      * </pre>
      *
-     * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+     * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
      */
     com.tencent.tcvectordb.rpc.proto.Olama.SparseDataOrBuilder getSparseOrBuilder(
         int index);
@@ -60381,7 +60381,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
      * rerank参数
      * </pre>
      *
-     * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 13;</code>
+     * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 12;</code>
      * @return Whether the rerankParams field is set.
      */
     boolean hasRerankParams();
@@ -60390,7 +60390,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
      * rerank参数
      * </pre>
      *
-     * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 13;</code>
+     * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 12;</code>
      * @return The rerankParams.
      */
     com.tencent.tcvectordb.rpc.proto.Olama.RerankParams getRerankParams();
@@ -60399,7 +60399,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
      * rerank参数
      * </pre>
      *
-     * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 13;</code>
+     * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 12;</code>
      */
     com.tencent.tcvectordb.rpc.proto.Olama.RerankParamsOrBuilder getRerankParamsOrBuilder();
 
@@ -60408,7 +60408,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
      * 目前用户不传，仅用于内部
      * </pre>
      *
-     * <code>bool retrieveSparseVector = 14;</code>
+     * <code>bool retrieveSparseVector = 13;</code>
      * @return The retrieveSparseVector.
      */
     boolean getRetrieveSparseVector();
@@ -60858,7 +60858,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
       return ann_.get(index);
     }
 
-    public static final int SPARSE_FIELD_NUMBER = 12;
+    public static final int SPARSE_FIELD_NUMBER = 11;
     @SuppressWarnings("serial")
     private java.util.List<com.tencent.tcvectordb.rpc.proto.Olama.SparseData> sparse_;
     /**
@@ -60866,7 +60866,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
      * 稀疏向量检索
      * </pre>
      *
-     * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+     * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
      */
     @java.lang.Override
     public java.util.List<com.tencent.tcvectordb.rpc.proto.Olama.SparseData> getSparseList() {
@@ -60877,7 +60877,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
      * 稀疏向量检索
      * </pre>
      *
-     * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+     * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
      */
     @java.lang.Override
     public java.util.List<? extends com.tencent.tcvectordb.rpc.proto.Olama.SparseDataOrBuilder> 
@@ -60889,7 +60889,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
      * 稀疏向量检索
      * </pre>
      *
-     * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+     * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
      */
     @java.lang.Override
     public int getSparseCount() {
@@ -60900,7 +60900,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
      * 稀疏向量检索
      * </pre>
      *
-     * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+     * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
      */
     @java.lang.Override
     public com.tencent.tcvectordb.rpc.proto.Olama.SparseData getSparse(int index) {
@@ -60911,7 +60911,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
      * 稀疏向量检索
      * </pre>
      *
-     * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+     * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
      */
     @java.lang.Override
     public com.tencent.tcvectordb.rpc.proto.Olama.SparseDataOrBuilder getSparseOrBuilder(
@@ -60919,14 +60919,14 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
       return sparse_.get(index);
     }
 
-    public static final int RERANK_PARAMS_FIELD_NUMBER = 13;
+    public static final int RERANK_PARAMS_FIELD_NUMBER = 12;
     private com.tencent.tcvectordb.rpc.proto.Olama.RerankParams rerankParams_;
     /**
      * <pre>
      * rerank参数
      * </pre>
      *
-     * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 13;</code>
+     * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 12;</code>
      * @return Whether the rerankParams field is set.
      */
     @java.lang.Override
@@ -60938,7 +60938,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
      * rerank参数
      * </pre>
      *
-     * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 13;</code>
+     * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 12;</code>
      * @return The rerankParams.
      */
     @java.lang.Override
@@ -60950,21 +60950,21 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
      * rerank参数
      * </pre>
      *
-     * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 13;</code>
+     * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 12;</code>
      */
     @java.lang.Override
     public com.tencent.tcvectordb.rpc.proto.Olama.RerankParamsOrBuilder getRerankParamsOrBuilder() {
       return rerankParams_ == null ? com.tencent.tcvectordb.rpc.proto.Olama.RerankParams.getDefaultInstance() : rerankParams_;
     }
 
-    public static final int RETRIEVESPARSEVECTOR_FIELD_NUMBER = 14;
+    public static final int RETRIEVESPARSEVECTOR_FIELD_NUMBER = 13;
     private boolean retrieveSparseVector_ = false;
     /**
      * <pre>
      * 目前用户不传，仅用于内部
      * </pre>
      *
-     * <code>bool retrieveSparseVector = 14;</code>
+     * <code>bool retrieveSparseVector = 13;</code>
      * @return The retrieveSparseVector.
      */
     @java.lang.Override
@@ -61017,13 +61017,13 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
         output.writeMessage(10, ann_.get(i));
       }
       for (int i = 0; i < sparse_.size(); i++) {
-        output.writeMessage(12, sparse_.get(i));
+        output.writeMessage(11, sparse_.get(i));
       }
       if (((bitField0_ & 0x00000002) != 0)) {
-        output.writeMessage(13, getRerankParams());
+        output.writeMessage(12, getRerankParams());
       }
       if (retrieveSparseVector_ != false) {
-        output.writeBool(14, retrieveSparseVector_);
+        output.writeBool(13, retrieveSparseVector_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -61087,15 +61087,15 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
       }
       for (int i = 0; i < sparse_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(12, sparse_.get(i));
+          .computeMessageSize(11, sparse_.get(i));
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(13, getRerankParams());
+          .computeMessageSize(12, getRerankParams());
       }
       if (retrieveSparseVector_ != false) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(14, retrieveSparseVector_);
+          .computeBoolSize(13, retrieveSparseVector_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -61762,7 +61762,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
                 }
                 break;
               } // case 82
-              case 98: {
+              case 90: {
                 com.tencent.tcvectordb.rpc.proto.Olama.SparseData m =
                     input.readMessage(
                         com.tencent.tcvectordb.rpc.proto.Olama.SparseData.parser(),
@@ -61774,19 +61774,19 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
                   sparseBuilder_.addMessage(m);
                 }
                 break;
-              } // case 98
-              case 106: {
+              } // case 90
+              case 98: {
                 input.readMessage(
                     getRerankParamsFieldBuilder().getBuilder(),
                     extensionRegistry);
                 bitField0_ |= 0x00000800;
                 break;
-              } // case 106
-              case 112: {
+              } // case 98
+              case 104: {
                 retrieveSparseVector_ = input.readBool();
                 bitField0_ |= 0x00001000;
                 break;
-              } // case 112
+              } // case 104
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -63231,7 +63231,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * 稀疏向量检索
        * </pre>
        *
-       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
        */
       public java.util.List<com.tencent.tcvectordb.rpc.proto.Olama.SparseData> getSparseList() {
         if (sparseBuilder_ == null) {
@@ -63245,7 +63245,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * 稀疏向量检索
        * </pre>
        *
-       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
        */
       public int getSparseCount() {
         if (sparseBuilder_ == null) {
@@ -63259,7 +63259,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * 稀疏向量检索
        * </pre>
        *
-       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
        */
       public com.tencent.tcvectordb.rpc.proto.Olama.SparseData getSparse(int index) {
         if (sparseBuilder_ == null) {
@@ -63273,7 +63273,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * 稀疏向量检索
        * </pre>
        *
-       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
        */
       public Builder setSparse(
           int index, com.tencent.tcvectordb.rpc.proto.Olama.SparseData value) {
@@ -63294,7 +63294,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * 稀疏向量检索
        * </pre>
        *
-       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
        */
       public Builder setSparse(
           int index, com.tencent.tcvectordb.rpc.proto.Olama.SparseData.Builder builderForValue) {
@@ -63312,7 +63312,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * 稀疏向量检索
        * </pre>
        *
-       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
        */
       public Builder addSparse(com.tencent.tcvectordb.rpc.proto.Olama.SparseData value) {
         if (sparseBuilder_ == null) {
@@ -63332,7 +63332,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * 稀疏向量检索
        * </pre>
        *
-       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
        */
       public Builder addSparse(
           int index, com.tencent.tcvectordb.rpc.proto.Olama.SparseData value) {
@@ -63353,7 +63353,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * 稀疏向量检索
        * </pre>
        *
-       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
        */
       public Builder addSparse(
           com.tencent.tcvectordb.rpc.proto.Olama.SparseData.Builder builderForValue) {
@@ -63371,7 +63371,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * 稀疏向量检索
        * </pre>
        *
-       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
        */
       public Builder addSparse(
           int index, com.tencent.tcvectordb.rpc.proto.Olama.SparseData.Builder builderForValue) {
@@ -63389,7 +63389,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * 稀疏向量检索
        * </pre>
        *
-       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
        */
       public Builder addAllSparse(
           java.lang.Iterable<? extends com.tencent.tcvectordb.rpc.proto.Olama.SparseData> values) {
@@ -63408,7 +63408,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * 稀疏向量检索
        * </pre>
        *
-       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
        */
       public Builder clearSparse() {
         if (sparseBuilder_ == null) {
@@ -63425,7 +63425,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * 稀疏向量检索
        * </pre>
        *
-       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
        */
       public Builder removeSparse(int index) {
         if (sparseBuilder_ == null) {
@@ -63442,7 +63442,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * 稀疏向量检索
        * </pre>
        *
-       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
        */
       public com.tencent.tcvectordb.rpc.proto.Olama.SparseData.Builder getSparseBuilder(
           int index) {
@@ -63453,7 +63453,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * 稀疏向量检索
        * </pre>
        *
-       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
        */
       public com.tencent.tcvectordb.rpc.proto.Olama.SparseDataOrBuilder getSparseOrBuilder(
           int index) {
@@ -63467,7 +63467,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * 稀疏向量检索
        * </pre>
        *
-       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
        */
       public java.util.List<? extends com.tencent.tcvectordb.rpc.proto.Olama.SparseDataOrBuilder> 
            getSparseOrBuilderList() {
@@ -63482,7 +63482,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * 稀疏向量检索
        * </pre>
        *
-       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
        */
       public com.tencent.tcvectordb.rpc.proto.Olama.SparseData.Builder addSparseBuilder() {
         return getSparseFieldBuilder().addBuilder(
@@ -63493,7 +63493,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * 稀疏向量检索
        * </pre>
        *
-       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
        */
       public com.tencent.tcvectordb.rpc.proto.Olama.SparseData.Builder addSparseBuilder(
           int index) {
@@ -63505,7 +63505,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * 稀疏向量检索
        * </pre>
        *
-       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 12;</code>
+       * <code>repeated .com.tencent.tcvectordb.rpc.proto.SparseData sparse = 11;</code>
        */
       public java.util.List<com.tencent.tcvectordb.rpc.proto.Olama.SparseData.Builder> 
            getSparseBuilderList() {
@@ -63534,7 +63534,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * rerank参数
        * </pre>
        *
-       * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 13;</code>
+       * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 12;</code>
        * @return Whether the rerankParams field is set.
        */
       public boolean hasRerankParams() {
@@ -63545,7 +63545,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * rerank参数
        * </pre>
        *
-       * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 13;</code>
+       * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 12;</code>
        * @return The rerankParams.
        */
       public com.tencent.tcvectordb.rpc.proto.Olama.RerankParams getRerankParams() {
@@ -63560,7 +63560,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * rerank参数
        * </pre>
        *
-       * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 13;</code>
+       * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 12;</code>
        */
       public Builder setRerankParams(com.tencent.tcvectordb.rpc.proto.Olama.RerankParams value) {
         if (rerankParamsBuilder_ == null) {
@@ -63580,7 +63580,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * rerank参数
        * </pre>
        *
-       * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 13;</code>
+       * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 12;</code>
        */
       public Builder setRerankParams(
           com.tencent.tcvectordb.rpc.proto.Olama.RerankParams.Builder builderForValue) {
@@ -63598,7 +63598,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * rerank参数
        * </pre>
        *
-       * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 13;</code>
+       * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 12;</code>
        */
       public Builder mergeRerankParams(com.tencent.tcvectordb.rpc.proto.Olama.RerankParams value) {
         if (rerankParamsBuilder_ == null) {
@@ -63623,7 +63623,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * rerank参数
        * </pre>
        *
-       * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 13;</code>
+       * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 12;</code>
        */
       public Builder clearRerankParams() {
         bitField0_ = (bitField0_ & ~0x00000800);
@@ -63640,7 +63640,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * rerank参数
        * </pre>
        *
-       * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 13;</code>
+       * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 12;</code>
        */
       public com.tencent.tcvectordb.rpc.proto.Olama.RerankParams.Builder getRerankParamsBuilder() {
         bitField0_ |= 0x00000800;
@@ -63652,7 +63652,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * rerank参数
        * </pre>
        *
-       * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 13;</code>
+       * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 12;</code>
        */
       public com.tencent.tcvectordb.rpc.proto.Olama.RerankParamsOrBuilder getRerankParamsOrBuilder() {
         if (rerankParamsBuilder_ != null) {
@@ -63667,7 +63667,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * rerank参数
        * </pre>
        *
-       * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 13;</code>
+       * <code>.com.tencent.tcvectordb.rpc.proto.RerankParams rerank_params = 12;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           com.tencent.tcvectordb.rpc.proto.Olama.RerankParams, com.tencent.tcvectordb.rpc.proto.Olama.RerankParams.Builder, com.tencent.tcvectordb.rpc.proto.Olama.RerankParamsOrBuilder> 
@@ -63689,7 +63689,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * 目前用户不传，仅用于内部
        * </pre>
        *
-       * <code>bool retrieveSparseVector = 14;</code>
+       * <code>bool retrieveSparseVector = 13;</code>
        * @return The retrieveSparseVector.
        */
       @java.lang.Override
@@ -63701,7 +63701,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * 目前用户不传，仅用于内部
        * </pre>
        *
-       * <code>bool retrieveSparseVector = 14;</code>
+       * <code>bool retrieveSparseVector = 13;</code>
        * @param value The retrieveSparseVector to set.
        * @return This builder for chaining.
        */
@@ -63717,7 +63717,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        * 目前用户不传，仅用于内部
        * </pre>
        *
-       * <code>bool retrieveSparseVector = 14;</code>
+       * <code>bool retrieveSparseVector = 13;</code>
        * @return This builder for chaining.
        */
       public Builder clearRetrieveSparseVector() {
@@ -79164,11 +79164,11 @@ com.tencent.tcvectordb.rpc.proto.Olama.DatabaseItem defaultValue) {
       "limit\030\006 \001(\r\022\024\n\014outputfields\030\007 \003(\t\022\026\n\016emb" +
       "eddingItems\030\010 \003(\t\022\r\n\005range\030\t \001(\010\0226\n\003ann\030" +
       "\n \003(\0132).com.tencent.tcvectordb.rpc.proto" +
-      ".AnnData\022<\n\006sparse\030\014 \003(\0132,.com.tencent.t" +
+      ".AnnData\022<\n\006sparse\030\013 \003(\0132,.com.tencent.t" +
       "cvectordb.rpc.proto.SparseData\022E\n\rrerank" +
-      "_params\030\r \001(\0132..com.tencent.tcvectordb.r" +
+      "_params\030\014 \001(\0132..com.tencent.tcvectordb.r" +
       "pc.proto.RerankParams\022\034\n\024retrieveSparseV" +
-      "ector\030\016 \001(\010\"\214\001\n\rSearchRequest\022\020\n\010databas" +
+      "ector\030\r \001(\010\"\214\001\n\rSearchRequest\022\020\n\010databas" +
       "e\030\001 \001(\t\022\022\n\ncollection\030\002 \001(\t\022<\n\006search\030\003 " +
       "\001(\0132,.com.tencent.tcvectordb.rpc.proto.S" +
       "earchCond\022\027\n\017readConsistency\030\004 \001(\t\"4\n\rEx" +

@@ -2,6 +2,8 @@ package com.tencent.tcvectordb.model.param.dml;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -62,15 +64,15 @@ public class AnnOption {
         private List<String> documentIds;
 
         private Builder() {
+
         }
 
         public Builder withFieldName(String fieldName) {
             this.fieldName = fieldName;
             return this;
         }
-
-        public Builder withData(List<Object> data){
-            this.data = data;
+        public Builder withData(List<Double> vector){
+            this.data = Arrays.asList(vector);
             return this;
         }
 

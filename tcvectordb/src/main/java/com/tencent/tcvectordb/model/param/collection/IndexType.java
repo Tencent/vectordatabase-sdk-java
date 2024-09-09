@@ -56,6 +56,11 @@ public enum IndexType {
     IVF_SQ16("IVF_SQ16"),
 
     INVERTED("inverted"),
+
+    BIN_FLAT("BIN_FLAT"),
+
+    BIN_HNSW("BIN_HNSW"),
+
     /**
      * scalar index type: primaryKey
      */

@@ -41,6 +41,8 @@ public class CreateCollectionParam extends Collection {
         this.description = builder.description;
         this.indexes = builder.indexes;
         this.embedding = builder.embedding;
+        this.ttlConfig = builder.ttlConfig;
+        this.filterIndexConfig = builder.filterIndexConfig;
     }
 
     public static Builder newBuilder() {
@@ -55,6 +57,10 @@ public class CreateCollectionParam extends Collection {
 
         private Embedding embedding;
         private final List<IndexField> indexes;
+
+        private TTLConfig ttlConfig;
+
+        private FilterIndexConfig filterIndexConfig;
 
         private Builder() {
             this.indexes = new ArrayList<>();
@@ -87,6 +93,16 @@ public class CreateCollectionParam extends Collection {
 
         public Builder withEmbedding(Embedding embedding) {
             this.embedding = embedding;
+            return this;
+        }
+
+        public Builder withTtlConfig(TTLConfig ttlConfig) {
+            this.ttlConfig = ttlConfig;
+            return this;
+        }
+
+        public Builder withFilterIndexConfig(FilterIndexConfig filterIndexConfig) {
+            this.filterIndexConfig = filterIndexConfig;
             return this;
         }
 

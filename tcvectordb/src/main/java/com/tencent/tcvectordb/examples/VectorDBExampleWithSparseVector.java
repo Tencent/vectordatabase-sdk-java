@@ -49,17 +49,17 @@ public class VectorDBExampleWithSparseVector {
 
     public static void main(String[] args) throws InterruptedException {
         // 创建VectorDB Client
-//        VectorDBClient client = CommonService.initClient();
-//
-//        // 清理环境
-//        CommonService.anySafe(() -> client.dropDatabase(DBNAME));
-//
-//        // 测试
-//        createDatabaseAndCollection(client);
-//        upsertData(client);
-//        queryData(client);
-//        updateAndDelete(client);
-//        deleteAndDrop(client);
+        VectorDBClient client = CommonService.initClient();
+
+        // 清理环境
+        CommonService.anySafe(() -> client.dropDatabase(DBNAME));
+
+        // 测试
+        createDatabaseAndCollection(client);
+        upsertData(client);
+        queryData(client);
+        updateAndDelete(client);
+        deleteAndDrop(client);
         testFilter();
     }
 
@@ -241,17 +241,17 @@ public class VectorDBExampleWithSparseVector {
         SparseVectorBm25Encoder encoder = SparseVectorBm25Encoder.getBm25Encoder("zh");
         HybridSearchParam hybridSearchParam = HybridSearchParam.newBuilder()
                 .withAnn(Arrays.asList(AnnOption.newBuilder().withFieldName("vector")
-                        .withData(Arrays.asList(generateRandomVector(768)))
+                        .withData(generateRandomVector(768))
                         .build()))
                 .withMatch(Arrays.asList(MatchOption.newBuilder().withFieldName("sparse_vector")
                         .withData(encoder.encodeQueries(Arrays.asList("正大光明，忠良善果弥深")))
                         .build()))
-                // 指定 Top K 的 K 值
-                .withRerank(new WeightRerankParam(Arrays.asList("vector","sparse_vector"), Arrays.asList(0.9f, 0.1f)))
-                .withLimit(2)
+//                // 指定 Top K 的 K 值
+                .withRerank(new WeightRerankParam(Arrays.asList("vector","sparse_vector"), Arrays.asList(1.0f, 0.0f)))
+                .withLimit(10)
                 // 过滤获取到结果
                 .withFilter(filterParam)
-//                .withRetrieveVector(true)
+                .withRetrieveVector(true)
                 .withOutputFields(Arrays.asList("segment"))
                 .build();
         List<List<Document>> siDocs = collection.hybridSearch(hybridSearchParam).getDocuments();

@@ -41,14 +41,13 @@ import com.tencent.tcvectordb.rpc.proto.Olama;
 import com.tencent.tcvectordb.rpc.proto.SearchEngineGrpc;
 import com.tencent.tcvectordb.service.param.*;
 import io.grpc.*;
+import io.grpc.okhttp.OkHttpChannelBuilder;
 import org.apache.commons.lang3.tuple.Pair;
-import org.bouncycastle.util.Strings;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -56,7 +55,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class GrpcStub extends HttpStub{
     private ManagedChannel channel;
@@ -71,8 +69,10 @@ public class GrpcStub extends HttpStub{
         super(param);
         this.authorization = String.format("Bearer account=%s&api_key=%s",param.getUsername(), param.getKey());
 
-        this.channel = ManagedChannelBuilder.forTarget(this.getAddress(param.getUrl())).
+        this.channel = OkHttpChannelBuilder.forTarget(this.getAddress(param.getUrl())).
                 intercept(new AuthorityInterceptor(this.authorization)).
+                flowControlWindow(maxReceiveMessageSize).
+                maxInboundMessageSize(maxReceiveMessageSize).
                 usePlaintext().build();
         if (param.getTimeout() > 0) {
             this.timeout = param.getTimeout();

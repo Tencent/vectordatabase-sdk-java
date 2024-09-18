@@ -53,29 +53,62 @@ public class VectorDBClient {
     protected VectorDBClient() {
     }
 
+    /**
+     * create database
+     * @param databaseName database's name to create. The name of the database. A database name can only include
+     *         numbers, letters, and underscores, and must not begin with a letter, and length
+     *         must between 1 and 128.
+     * @return Database object
+     * @throws VectorDBException
+     */
     public Database createDatabase(String databaseName) throws VectorDBException {
         Database db = database(databaseName, readConsistency);
         stub.createDatabase(db);
         return db;
     }
 
+    /**
+     * drop database
+     * @param databaseName: database's name to drop
+     * @return
+     * @throws VectorDBException
+     */
     public Database dropDatabase(String databaseName) throws VectorDBException {
         Database db = database(databaseName, readConsistency);
         stub.dropDatabase(db);
         return db;
     }
 
+    /**
+     * create ai database
+     * @param databaseName ai database's name to create, The name of the database. A database name can only include
+     *         numbers, letters, and underscores, and must not begin with a letter, and length
+     *         must between 1 and 128
+     * @return
+     * @throws VectorDBException
+     */
     public AIDatabase createAIDatabase(String databaseName) throws VectorDBException {
         AIDatabase db = aiDatabase(databaseName);
         stub.createAIDatabase(db);
         return db;
     }
 
+    /**
+     * drop ai database
+     * @param databaseName: ai database's name to drop
+     * @return
+     * @throws VectorDBException
+     */
     public AffectRes dropAIDatabase(String databaseName) throws VectorDBException {
         AIDatabase db = aiDatabase(databaseName);
         return stub.dropAIDatabase(db);
     }
 
+    /**
+     * get database list
+     * @return the list of database name
+     * @throws VectorDBException
+     */
     public List<String> listDatabase() throws VectorDBException {
         return stub.listDatabases();
     }
@@ -100,6 +133,15 @@ public class VectorDBClient {
         return new AIDatabase(this.stub, databaseName, this.readConsistency);
     }
 
+    /**
+     *
+     * @param database: database name
+     * @param collection: collection name
+     * @param param: insert param
+     *
+     * @return
+     * @throws VectorDBException
+     */
     public AffectRes upsert(String database, String collection, InsertParam param) throws VectorDBException {
         boolean ai = false;
         if((param.getDocuments().get(0)!=null)){

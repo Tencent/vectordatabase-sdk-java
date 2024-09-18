@@ -314,7 +314,8 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
             this.averageDocLength = bm25Parameter.getAverageDocLength();
             this.b = bm25Parameter.getB();
             this.k1 = bm25Parameter.getK1();
-
+            this.enableStopWords = bm25Parameter.getStopWords();
+            this.tokenizer.setEnableStopWords(this.enableStopWords);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

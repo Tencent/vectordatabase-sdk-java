@@ -99,10 +99,13 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public void createDatabase(Database database) {
+        Olama.DatabaseRequest databaseRequest = Olama.DatabaseRequest.newBuilder().
+                setDatabase(database.getDatabaseName()).build();
+        logQuery(ApiPath.DB_CREATE, databaseRequest);
         Olama.DatabaseResponse response = this.blockingStub.withInterceptors(new BackendServiceInterceptor(false))
                 .withDeadlineAfter(this.timeout, TimeUnit.SECONDS).
-                createDatabase(Olama.DatabaseRequest.newBuilder().
-                setDatabase(database.getDatabaseName()).build());
+                createDatabase(databaseRequest);
+        logResponse(ApiPath.DB_CREATE, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
                     "VectorDBServer create Database error: not Successful, body code=%s, message=%s",
@@ -114,8 +117,10 @@ public class GrpcStub extends HttpStub{
     public void dropDatabase(Database database) {
 
         Olama.DatabaseRequest request = Olama.DatabaseRequest.newBuilder().setDatabase(database.getDatabaseName()).build();
+        logQuery(ApiPath.DB_DROP, request);
         Olama.DatabaseResponse response =  this.blockingStub.withInterceptors(new BackendServiceInterceptor(false)).
                 withDeadlineAfter(this.timeout, TimeUnit.SECONDS).dropDatabase(request);
+        logResponse(ApiPath.DB_DROP, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
                     "VectorDBServer drop Database error: not Successful, body code=%s, message=%s",
@@ -130,9 +135,12 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public DataBaseTypeRes describeDatabase(Database database) {
+        Olama.DescribeDatabaseRequest describeDatabaseRequest = Olama.DescribeDatabaseRequest.newBuilder().setDatabase(database.getDatabaseName()).build();
+        logQuery(ApiPath.DB_DESCRIBE, describeDatabaseRequest);
         Olama.DescribeDatabaseResponse response = this.blockingStub.withInterceptors(new BackendServiceInterceptor(false))
                 .withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
-                .describeDatabase(Olama.DescribeDatabaseRequest.newBuilder().setDatabase(database.getDatabaseName()).build());
+                .describeDatabase(describeDatabaseRequest);
+        logResponse(ApiPath.DB_DESCRIBE, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
                     "VectorDBServer describeDatabase error: not Successful, body code=%s, message=%s",
@@ -154,8 +162,11 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public List<String> listDatabases() {
+
         Olama.DatabaseRequest request = Olama.DatabaseRequest.newBuilder().build();
+        logQuery(ApiPath.DB_LIST, request);
         Olama.DatabaseResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).listDatabases(request);
+        logResponse(ApiPath.DB_LIST, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
                     "VectorDBServer list Database error: not Successful, body code=%s, message=%s",
@@ -168,7 +179,9 @@ public class GrpcStub extends HttpStub{
     public Map<String, DataBaseType> listDatabaseInfos() {
 
         Olama.DatabaseRequest request = Olama.DatabaseRequest.newBuilder().build();
+        logQuery(ApiPath.DB_LIST, request);
         Olama.DatabaseResponse response =  this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).listDatabases(request);
+        logResponse(ApiPath.DB_LIST, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
                     "VectorDBServer list Database error: not Successful, body code=%s, message=%s",
@@ -263,10 +276,11 @@ public class GrpcStub extends HttpStub{
             }
 
         }
-        log(ApiPath.COL_CREATE, requestOrBuilder);
+        logQuery(ApiPath.COL_CREATE, requestOrBuilder);
 
         Olama.CreateCollectionResponse response =  this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
                 .createCollection(requestOrBuilder.build());
+        logResponse(ApiPath.COL_CREATE, response);
         if(response==null){
             throw new VectorDBException("VectorDBServer error: CreateCollectionResponse not response");
         }
@@ -286,8 +300,10 @@ public class GrpcStub extends HttpStub{
     public List<Collection> listCollections(String databaseName) {
         Olama.ListCollectionsRequest request = Olama.ListCollectionsRequest.newBuilder().
                 setDatabase(databaseName).setTransfer(false).build();
+        logQuery(ApiPath.COL_LIST, request);
         Olama.ListCollectionsResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
                 .listCollections(request);
+        logResponse(ApiPath.COL_LIST, response);
         List<Collection> collections = new ArrayList<>();
         response.getCollectionsList().forEach(collection -> {
             Collection collectionRpc = convertRpcToCollection(collection);
@@ -299,11 +315,14 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public Collection describeCollection(String databaseName, String collectionName) {
-        Olama.DescribeCollectionResponse describeCollectionResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
-                .describeCollection(Olama.DescribeCollectionRequest.newBuilder()
+        Olama.DescribeCollectionRequest describeCollectionRequest = Olama.DescribeCollectionRequest.newBuilder()
                 .setDatabase(databaseName)
                 .setCollection(collectionName)
-                .build());
+                .build();
+        logQuery(ApiPath.COL_DESCRIBE, describeCollectionRequest);
+        Olama.DescribeCollectionResponse describeCollectionResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
+                .describeCollection(describeCollectionRequest);
+        logResponse(ApiPath.COL_DESCRIBE, describeCollectionResponse);
         if(describeCollectionResponse==null){
             throw new VectorDBException("VectorDBServer error: describeCollection not response");
         }
@@ -317,11 +336,14 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public AffectRes truncateCollection(String databaseName, String collectionName, DataBaseTypeEnum dbType) {
-        Olama.TruncateCollectionResponse truncateCollectionResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).
-                truncateCollection(Olama.TruncateCollectionRequest.newBuilder()
+        Olama.TruncateCollectionRequest truncateCollectionRequest = Olama.TruncateCollectionRequest.newBuilder()
                 .setDatabase(databaseName)
                 .setCollection(collectionName)
-                .build());
+                .build();
+        logQuery(ApiPath.COL_FLUSH, truncateCollectionRequest);
+        Olama.TruncateCollectionResponse truncateCollectionResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).
+                truncateCollection(truncateCollectionRequest);
+        logResponse(ApiPath.COL_FLUSH, truncateCollectionResponse);
         if (truncateCollectionResponse==null){
             throw new VectorDBException("VectorDBServer error: truncateCollectionResponse not response");
         }
@@ -341,10 +363,13 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public void dropCollection(String databaseName, String collectionName) {
-        Olama.DropCollectionResponse dropCollectionResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).
-                dropCollection(Olama.DropCollectionRequest.newBuilder().
+        Olama.DropCollectionRequest dropCollectionRequest = Olama.DropCollectionRequest.newBuilder().
                 setDatabase(databaseName).
-                setCollection(collectionName).build());
+                setCollection(collectionName).build();
+        logQuery(ApiPath.COL_DROP, dropCollectionRequest);
+        Olama.DropCollectionResponse dropCollectionResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).
+                dropCollection(dropCollectionRequest);
+        logResponse(ApiPath.COL_DROP, dropCollectionResponse);
         if(dropCollectionResponse==null){
             throw new VectorDBException("VectorDBServer error: dropCollection not response");
         }
@@ -357,10 +382,13 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public AffectRes setAlias(String databaseName, String collectionName, String aliasName) {
-        Olama.UpdateAliasResponse setAliasResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).
-                setAlias(Olama.AddAliasRequest.newBuilder().setDatabase(databaseName)
+        Olama.AddAliasRequest request = Olama.AddAliasRequest.newBuilder().setDatabase(databaseName)
                 .setCollection(collectionName)
-                .setAlias(aliasName).build());
+                .setAlias(aliasName).build();
+        logQuery(ApiPath.AI_ALIAS_SET, request);
+        Olama.UpdateAliasResponse setAliasResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).
+                setAlias(request);
+        logResponse(ApiPath.AI_ALIAS_SET, setAliasResponse);
         if(setAliasResponse==null){
             throw new VectorDBException("VectorDBServer error: dropCollection not response");
         }
@@ -376,9 +404,15 @@ public class GrpcStub extends HttpStub{
     @Override
     public AffectRes deleteAlias(String databaseName, String aliasName) {
 
+        Olama.RemoveAliasRequest.Builder requestBuilder = Olama.RemoveAliasRequest.newBuilder();
+        Olama.RemoveAliasRequest request = requestBuilder
+                .setDatabase(databaseName)
+                .setAlias(aliasName)
+                .build();
+        logQuery(ApiPath.AI_ALIAS_DELETE, request);
         Olama.UpdateAliasResponse deleteResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
-                .deleteAlias(Olama.RemoveAliasRequest.newBuilder().
-                setDatabase(databaseName).setAlias(aliasName).build());
+                .deleteAlias(request);
+        logQuery(ApiPath.AI_ALIAS_DELETE, request);
         if(deleteResponse==null){
             throw new VectorDBException("VectorDBServer error: dropCollection not response");
         }
@@ -416,9 +450,10 @@ public class GrpcStub extends HttpStub{
                 }
             }
         }
-        log(ApiPath.DOC_UPSERT, builder);
+        logQuery(ApiPath.DOC_UPSERT, builder);
         Olama.UpsertResponse response = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai))
                 .withDeadlineAfter(this.timeout, TimeUnit.SECONDS).upsert(builder.build());
+        logResponse(ApiPath.DOC_UPSERT, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
                     "VectorDBServer upsert data error: not Successful, code=%s, message=%s",
@@ -449,7 +484,9 @@ public class GrpcStub extends HttpStub{
         }
 
         queryBuilder.setQuery(queryCondBuilder.build());
+        logQuery(ApiPath.DOC_QUERY, queryBuilder);
         Olama.QueryResponse queryResponse = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai)).withDeadlineAfter(this.timeout, TimeUnit.SECONDS).query(queryBuilder.build());
+        logResponse(ApiPath.DOC_QUERY, queryResponse);
         if(queryResponse==null){
             throw new VectorDBException("VectorDBServer error: query not response");
         }
@@ -510,8 +547,9 @@ public class GrpcStub extends HttpStub{
             }
         }
         builder.setSearch(searchConBuilder.build());
-        log(ApiPath.DOC_SEARCH, builder);
+        logQuery(ApiPath.DOC_SEARCH, builder);
         Olama.SearchResponse searchResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).search(builder.build());
+        logResponse(ApiPath.DOC_SEARCH, searchResponse);
         if(searchResponse==null){
             throw new VectorDBException("VectorDBServer error: search not response");
         }
@@ -606,9 +644,10 @@ public class GrpcStub extends HttpStub{
             searchConBuilder.setRerankParams(rerankBuilder.build());
         }
         builder.setSearch(searchConBuilder);
-        log(ApiPath.DOC_HYBRID_SEARCH, builder);
+        logQuery(ApiPath.DOC_HYBRID_SEARCH, builder);
         SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai));
         Olama.SearchResponse searchResponse = searchEngineBlockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).hybridSearch(builder.build());
+        logResponse(ApiPath.DOC_HYBRID_SEARCH, searchResponse);
 
         if(searchResponse==null){
             throw new VectorDBException("VectorDBServer error: search not response");
@@ -626,9 +665,17 @@ public class GrpcStub extends HttpStub{
         return new SearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), documentsList);
     }
 
-    private static void log(String url, MessageOrBuilder messageOrBuilder) {
+    private static void logQuery(String url, MessageOrBuilder messageOrBuilder) {
         try {
-            logger.debug("Query {}, body={}", url, JsonFormat.printer().print(messageOrBuilder));
+            logger.debug("Query {}, request body={}", url, JsonFormat.printer().print(messageOrBuilder));
+        } catch (InvalidProtocolBufferException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void logResponse(String url, MessageOrBuilder messageOrBuilder) {
+        try {
+            logger.debug("Query {}, response={}", url, JsonFormat.printer().print(messageOrBuilder));
         } catch (InvalidProtocolBufferException e) {
             throw new RuntimeException(e);
         }
@@ -644,11 +691,14 @@ public class GrpcStub extends HttpStub{
         if (!paramQuery.getFilter().isEmpty()){
             queryCondBuilder.setFilter(paramQuery.getFilter());
         }
-        Olama.DeleteResponse deleteResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).dele(Olama.DeleteRequest.newBuilder()
+        Olama.DeleteRequest deleteRequest = Olama.DeleteRequest.newBuilder()
                 .setDatabase(param.getDatabase())
                 .setCollection(param.getCollection())
                 .setQuery(queryCondBuilder.build())
-                .build());
+                .build();
+        logQuery(ApiPath.DOC_DELETE, deleteRequest);
+        Olama.DeleteResponse deleteResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).dele(deleteRequest);
+        logResponse(ApiPath.DOC_DELETE, deleteResponse);
         if(deleteResponse==null){
             throw new VectorDBException("VectorDBServer error: deleteResponse not response");
         }
@@ -672,22 +722,23 @@ public class GrpcStub extends HttpStub{
         }
         SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai));
         Olama.UpdateResponse updateResponse=null;
+        Olama.UpdateRequest.Builder updateRequestBuilder = Olama.UpdateRequest.newBuilder();
         if (param.getUpdate()!=null){
-            updateResponse = searchEngineBlockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).update(Olama.UpdateRequest.newBuilder()
-                    .setDatabase(param.getDatabase())
+            updateRequestBuilder.setDatabase(param.getDatabase())
                     .setCollection(param.getCollection())
                     .setQuery(queryCondBuilder.build())
-                    .setUpdate(convertDocument2OlamaDoc(param.getUpdate()))
-                    .build());
-        } else if (param.getUpdateData()!=null) {
-            updateResponse = searchEngineBlockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).update(Olama.UpdateRequest.newBuilder()
-                    .setDatabase(param.getDatabase())
-                    .setCollection(param.getCollection())
-                    .setQuery(queryCondBuilder.build())
-                    .setUpdate(convertDocumentJSON2OlamaDoc(param.getUpdateData()))
-                    .build());
-        }
+                    .setUpdate(convertDocument2OlamaDoc(param.getUpdate()));
 
+        } else if (param.getUpdateData()!=null) {
+            updateRequestBuilder.setDatabase(param.getDatabase())
+                    .setCollection(param.getCollection())
+                    .setQuery(queryCondBuilder.build())
+                    .setUpdate(convertDocumentJSON2OlamaDoc(param.getUpdateData()));
+        }
+        logQuery(ApiPath.DOC_UPDATE, updateRequestBuilder.build());
+        updateResponse = searchEngineBlockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
+                .update(updateRequestBuilder.build());
+        logResponse(ApiPath.DOC_UPDATE, updateResponse);
         if(updateResponse==null){
             throw new VectorDBException("VectorDBServer error: update not response");
         }
@@ -701,12 +752,15 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public BaseRes rebuildIndex(RebuildIndexParamInner param) {
-        Olama.RebuildIndexResponse rebuildIndexResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).rebuildIndex(Olama.RebuildIndexRequest.newBuilder()
+        Olama.RebuildIndexRequest rebuildIndexRequest = Olama.RebuildIndexRequest.newBuilder()
                 .setDatabase(param.getDatabase())
                 .setCollection(param.getCollection())
                 .setThrottle(param.getThrottle())
                 .setDropBeforeRebuild(param.isDropBeforeRebuild())
-                .build());
+                .build();
+        logQuery(ApiPath.REBUILD_INDEX, rebuildIndexRequest);
+        Olama.RebuildIndexResponse rebuildIndexResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).rebuildIndex(rebuildIndexRequest);
+        logResponse(ApiPath.REBUILD_INDEX, rebuildIndexResponse);
         if(rebuildIndexResponse==null){
             throw new VectorDBException("VectorDBServer error: rebuildIndex not response");
         }

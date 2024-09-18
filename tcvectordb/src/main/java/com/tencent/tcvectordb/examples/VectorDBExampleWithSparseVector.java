@@ -79,7 +79,7 @@ public class VectorDBExampleWithSparseVector {
 
         // 3. 创建 collection
         System.out.println("---------------------- createCollection ----------------------");
-        CreateCollectionParam collectionParam = initCreateEmbeddingCollectionParam(COLL_NAME);
+        CreateCollectionParam collectionParam = initCreateCollectionParam(COLL_NAME);
         db.createCollection(collectionParam);
 
         // 4. 列出所有 collection
@@ -354,49 +354,20 @@ public class VectorDBExampleWithSparseVector {
      * 通过调用 addField 方法设计索引（不是设计 Collection 的结构）
      * <ol>
      *     <li>【重要的事】向量对应的文本字段不要建立索引，会浪费较大的内存，并且没有任何作用。</li>
-     *     <li>【必须的索引】：主键id、向量字段 vector 这两个字段目前是固定且必须的，参考下面的例子；</li>
+     *     <li>【必须的索引】：主键id、向量字段 vector、稀疏向量sparse_vector 这两个字段目前是固定且必须的，参考下面的例子；</li>
      *     <li>【其他索引】：检索时需作为条件查询的字段，比如要按书籍的作者进行过滤，这个时候author字段就需要建立索引，
      *     否则无法在查询的时候对 author 字段进行过滤，不需要过滤的字段无需加索引，会浪费内存；</li>
      *     <li>向量数据库支持动态 Schema，写入数据时可以写入任何字段，无需提前定义，类似MongoDB.</li>
      *     <li>例子中创建一个书籍片段的索引，例如书籍片段的信息包括 {id, vector, segment, bookName, author, page},
      *     id 为主键需要全局唯一，segment 为文本片段, vector 字段需要建立向量索引，假如我们在查询的时候要查询指定书籍
      *     名称的内容，这个时候需要对 bookName 建立索引，其他字段没有条件查询的需要，无需建立索引。/li>
-     *     <li>创建带 Embedding 的 collection 需要保证设置的 vector 索引的维度和 Embedding 所用模型生成向量维度一致，模型及维度关系
-     *     见下方表格
      *     </li>
      * </ol>
-     * <table border>
-     * <caption>模型列表</caption>
-     *     <tr>
-     *         <th>model</th>
-     *         <th>dimension</th>
-     *     </tr>
-     *     <tr>
-     *         <td>bge-base-zh</td>
-     *         <td>768</td>
-     *     </tr>
-     *     <tr>
-     *         <td>m3e-base</td>
-     *         <td>768</td>
-     *     </tr>
-     *     <tr>
-     *         <td>text2vec-large-chinese</td>
-     *         <td>1024</td>
-     *     </tr>
-     *     <tr>
-     *         <td>e5-large-v2</td>
-     *         <td>1024</td>
-     *     </tr>
-     *     <tr>
-     *         <td>multilingual-e5-base</td>
-     *         <td>768</td>
-     *     </tr>
-     * </table>
      *
      * @param collName
      * @return
      */
-    private static CreateCollectionParam initCreateEmbeddingCollectionParam(String collName) {
+    private static CreateCollectionParam initCreateCollectionParam(String collName) {
         return CreateCollectionParam.newBuilder()
                 .withName(collName)
                 .withShardNum(1)

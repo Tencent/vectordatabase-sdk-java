@@ -241,7 +241,7 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
     @Override
     public void downloadParams(String paramsFilePath) {
         try {
-            FileWriter writer = new FileWriter("example.json");
+            FileWriter writer = new FileWriter(paramsFilePath);
 //            System.out.println(JsonUtils.toJsonString(this));
             writer.write(JsonUtils.toJsonString(this));
             writer.close();

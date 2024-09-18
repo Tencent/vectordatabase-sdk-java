@@ -115,6 +115,11 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
         this.tokenizer.setEnableStopWords(enableStopWords);
     }
 
+    /**
+     * get a BM25Encoder with default OKAPI BM25 Model.
+     * @param language: model name. example: "zh" or "en"
+     * @return BM25Encoder with default OKAPI BM25 Model.
+     */
     public static SparseVectorBm25Encoder getBm25Encoder(String language) {
         String path;
         if (language.equals("zh")){
@@ -129,6 +134,10 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
         return sparseVectorBm25Encoder;
     }
 
+    /**
+     * get a BM25Encoder with default OKAPI BM25 Model.
+     * @return BM25Encoder with default OKAPI BM25 Model of zh.
+     */
     public static SparseVectorBm25Encoder getDefaultBm25Encoder() {
         return getBm25Encoder("zh");
     }
@@ -152,6 +161,20 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
         return tokenFreq.entrySet().stream().map(token->Pair.of(token.getKey(), token.getValue())).collect(Collectors.toList());
     }
 
+    /**
+     * Convert the given text into its corresponding sparse vector representation.
+     * Steps:
+     *  1、Tokenization: Use a tokenization tool, such as Jieba, that supports both Chinese and English languages.
+     *  2、Hashing: Convert the words obtained in step 1 into unique IDs, where each word corresponds to a unique ID.
+     *      For example, after hashing ["向量", "数据库"], we get [118762, 231429].
+     *  3、Calculate the relevance of each word to the document: Calculate the relevance of each word using methods
+     *      like calculating term frequency (tf) in BM25 or exploring approaches used by Pinecone. For example, after
+     *      calculating the relevance of ["向量", "数据库"], we get [0.7612, 0.9564].
+     *  4、Obtain the sparse vector: Based on the calculations from steps 2 and 3, we can obtain the sparse vector.
+     *      For example, after steps 2 and 3, we can get {118762: 0.7612, 231429: 0.9564}.
+     * @param texts: List<String> origin texts
+     * @return List<List<Pair<Long, Float>>>: sparse vectors of origin texts
+     */
     @Override
     public List<List<Pair<Long, Float>>> encodeTexts(List<String> texts) {
         if (texts == null || texts.isEmpty()) {
@@ -176,6 +199,18 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
         return sparseVectors;
     }
 
+    /**
+     * Convert the given query into its corresponding sparse vector representation.
+     * Steps:
+     *  1、Tokenization: Use a tokenization tool like Jieba that supports both Chinese and English languages.
+     *  2、Hashing: Convert the words obtained in step 1 into unique IDs, where each word corresponds to a unique ID.
+     *  3、Calculate the relevance of each word to the document: For each word, calculate its relevance to the query.
+     *      You can refer to the calculation of "idf" in BM25 or explore methods used by Pinecone.
+     *  4、Obtain the sparse vector.
+     *
+     * @param texts: List<String> query texts
+     * @return List<List<Pair<Long, Float>>>: sparse vectors of query texts
+     */
     @Override
     public List<List<Pair<Long, Float>>> encodeQueries(List<String> texts) {
         if (this.tokenFreq == null || this.docCount == null || this.averageDocLength == null) {
@@ -198,6 +233,12 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
         return sparseVectors;
     }
 
+    /**
+     * Based on the given text corpus, calculate and adjust parameters such as term frequency and document count
+     * (parameters used in step 3 of encode_texts and encode_queries).
+     *
+     * @param texts： List<String> text used to fit corpus
+     */
     @Override
     public void fitCorpus(List<String> texts) {
         if (texts == null || texts.isEmpty()) {
@@ -238,6 +279,10 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
 
     }
 
+    /**
+     * Download the parameters to the given path.
+     * @param paramsFilePath : String specific file path to download the parameters
+     */
     @Override
     public void downloadParams(String paramsFilePath) {
         try {
@@ -275,6 +320,10 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
         }
     }
 
+    /**
+     * Load the dictionary file used by the tokenizer.
+     * @param dictFile: the file path to load the dict
+     */
     @Override
     public void setDict(String dictFile) {
         this.tokenizer.loadDict(dictFile);

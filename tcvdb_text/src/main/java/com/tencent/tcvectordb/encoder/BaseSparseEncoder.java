@@ -33,11 +33,42 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.io.Serializable;
 import java.util.List;
 public interface BaseSparseEncoder extends Serializable {
+    /**
+     * Convert the given texts into its corresponding sparse vector representation.
+     * @param texts:the texts to be encoded
+     * @return List<List<Pair<Long, Float>>>: sparse vectors of each text
+     */
     public List<List<Pair<Long, Float>>> encodeTexts(List<String> texts);
+
+    /**
+     * Convert the given query texts into its corresponding sparse vector representation.
+     * @param texts: the query  texts to be encoded
+     * @return List<List<Pair<Long, Float>>>: sparse vectors of each query
+     */
     public List<List<Pair<Long, Float>>> encodeQueries(List<String> texts);
+
+    /**
+     * Based on the given text corpus, calculate and adjust parameters such as term frequency and document count.
+     * @param texts: the text to be fit and adjust parameters.
+     */
     public void fitCorpus(List<String> texts);
+
+    /**
+     * Download the params of the encoder model to the local file
+     * @param paramsFile: the file path to save the params
+     */
     public void downloadParams(String paramsFile);
+
+    /**
+     * Set the params of the encoder model
+     * @param paramsFile: the file path to load the params
+     */
     public void setParams(String paramsFile);
+
+    /**
+     * Load the dictionary file used by the tokenizer.
+     * @param dictFile: the file path to load the dict
+     */
     public void setDict(String dictFile);
 
 }

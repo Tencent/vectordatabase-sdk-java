@@ -1,5 +1,15 @@
 package com.tencent.tcvectordb.model.param.collection;
 
+
+/**
+ * init TTLConfig when create a collection.
+ * Param:
+ *     enable: true or false. Whether to enable TTL, true enable, false disable.
+ *     timeField(String): the field name of time.Specify the field name for storing timestamps,
+ *                        which must be a filter index of type uint64.
+ * Example:
+ *    TTLConfig ttlConfig = TTLConfig.newBuilder().WithEnable(true).WithTimeField("time").build();
+ */
 public class TTLConfig {
     private boolean enable;
     private String timeField;

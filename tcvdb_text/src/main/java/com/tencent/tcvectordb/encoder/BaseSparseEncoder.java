@@ -67,7 +67,7 @@ public interface BaseSparseEncoder extends Serializable {
 
     /**
      * Load the dictionary file used by the tokenizer.
-     * @param dictFile: the file path to load the dict
+     * @param dictFile: the file path to load the dict, txt format, words are separated by newline or space.
      */
     public void setDict(String dictFile);
 

@@ -322,7 +322,7 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
 
     /**
      * Load the dictionary file used by the tokenizer.
-     * @param dictFile: the file path to load the dict
+     * @param dictFile: the file path to load the dict, txt format, words are separated by newline or space.
      */
     @Override
     public void setDict(String dictFile) {

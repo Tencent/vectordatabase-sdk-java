@@ -35,7 +35,6 @@ import com.tencent.tcvectordb.hash.BaseHash;
 import com.tencent.tcvectordb.hash.Mm3BaseHash;
 
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -100,7 +99,9 @@ public class JiebaTokenizer extends BaseTokenizer{
 
     @Override
     public List<Long> encode(String text) {
-        return this.tokenize(text).stream().map(word -> this.hash.hash(word)).collect(Collectors.toList());
+        List<String> tokenize = this.tokenize(text);
+        System.out.println(tokenize);
+        return tokenize.stream().map(word -> this.hash.hash(word)).collect(Collectors.toList());
     }
 
     @Override
@@ -121,6 +122,11 @@ public class JiebaTokenizer extends BaseTokenizer{
 //        WordDictionary.getInstance().freqs.clear();
 //        WordDictionary.getInstance().loadDict();
         WordDictionary.getInstance().loadUserDict(Paths.get(dictFile));
+    }
+
+    @Override
+    public void setLowerCase(Boolean lowerCase) {
+        this.lowerCase = lowerCase;
     }
 
     //生成builder模式

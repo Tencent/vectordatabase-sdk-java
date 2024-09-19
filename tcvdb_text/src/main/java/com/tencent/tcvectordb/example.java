@@ -33,6 +33,7 @@ import com.tencent.tcvectordb.tokenizer.JiebaTokenizer;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 
 public class example {
     public static void main(String[] args) {
@@ -42,8 +43,12 @@ public class example {
     }
     public static void quickStart() {
         SparseVectorBm25Encoder encoder = SparseVectorBm25Encoder.getBm25Encoder("zh");
-        System.out.println(encoder.encodeQueries(Arrays.asList("什么是腾讯云向量数据库？", "腾讯云向量数据库有什么优势？", "腾讯云向量数据库能做些什么？")));
-        encoder.downloadParams("example.json");
+        List<String> texts = Arrays.asList("腾讯云向量数据库（Tencent Cloud VectorDB）是一款全托管的自研企业级分布式数据库服务，专用于存储、索引、检索、管理由深度神经网络或其他机器学习模型生成的大量多维嵌入向量。",
+                "作为专门为处理输入向量查询而设计的数据库，它支持多种索引类型和相似度计算方法，单索引支持10亿级向量规模，高达百万级 QPS 及毫秒级查询延迟。",
+                   "不仅能为大模型提供外部知识库，提高大模型回答的准确性，还可广泛应用于推荐系统、NLP 服务、计算机视觉、智能客服等 AI 领域。");
+        System.out.println("encode texts: "+ encoder.encodeTexts(texts));
+
+        System.out.println("encode multiple quires: "+ encoder.encodeQueries(Arrays.asList("什么是腾讯云向量数据库？", "腾讯云向量数据库有什么优势？", "腾讯云向量数据库能做些什么？")));
     }
 
     public static void fitStart() {

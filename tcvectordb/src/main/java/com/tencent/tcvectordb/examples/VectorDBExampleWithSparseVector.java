@@ -31,10 +31,7 @@ import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.encoder.SparseVectorBm25Encoder;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum.BGE_BASE_ZH;
 

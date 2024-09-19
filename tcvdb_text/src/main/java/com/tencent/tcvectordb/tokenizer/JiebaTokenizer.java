@@ -99,7 +99,9 @@ public class JiebaTokenizer extends BaseTokenizer{
 
     @Override
     public List<Long> encode(String text) {
-        return this.tokenize(text).stream().map(word -> this.hash.hash(word)).collect(Collectors.toList());
+        List<String> tokenize = this.tokenize(text);
+        System.out.println(tokenize);
+        return tokenize.stream().map(word -> this.hash.hash(word)).collect(Collectors.toList());
     }
 
     @Override

@@ -160,7 +160,7 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
 
     private List<Pair<Long, Integer>> getTokenTF(String text) {
         List<Long> tokens = this.tokenizer.encode(text);
-        Map<Long, Integer> tokenFreq = new HashMap<>();
+        Map<Long, Integer> tokenFreq = new LinkedHashMap<>();
         for (Long token : tokens) {
             if (tokenFreq.containsKey(token)) {
                 tokenFreq.put(token, tokenFreq.get(token) + 1);
@@ -168,7 +168,9 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
                 tokenFreq.put(token, 1);
             }
         }
-        return tokenFreq.entrySet().stream().map(token->Pair.of(token.getKey(), token.getValue())).collect(Collectors.toList());
+        List<Pair<Long, Integer>> result = new ArrayList<>();
+        tokenFreq.forEach((k, v) -> result.add(Pair.of(k, v)));
+        return result;
     }
 
     /**
@@ -201,7 +203,7 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
             List<Pair<Long, Float>> sparseVector = new ArrayList<>();
             for (Pair<Long, Integer> token : tokensPairs) {
                 Integer freq = token.getValue();
-                double score = (freq+0.0) / (this.k1*(1 - this.b + this.b * (tfSum / this.averageDocLength)) + freq);
+                double score = (freq+0.0) / (this.k1*(1.0 - this.b + this.b * (tfSum / this.averageDocLength)) + freq);
                 sparseVector.add(Pair.of(token.getKey(), (float)score));
             }
             sparseVectors.add(sparseVector);
@@ -305,6 +307,10 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
         }
     }
 
+    /**
+     * Load the parameters from the given file.
+     * @param paramsFile: the file path to load the parameters
+     */
     @Override
     public void setParams(String paramsFile) {
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(paramsFile);

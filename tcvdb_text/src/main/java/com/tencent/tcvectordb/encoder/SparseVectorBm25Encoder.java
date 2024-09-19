@@ -51,6 +51,7 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
     private Integer docCount;
     private Double averageDocLength;
     private Boolean enableStopWords;
+    private Boolean lowerCase;
 
     public SparseVectorBm25Encoder() {
         this.tokenizer = new JiebaTokenizer();
@@ -110,9 +111,18 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
         return enableStopWords;
     }
 
+    public Boolean getLowerCase() {
+        return lowerCase;
+    }
+
     public void setEnableStopWords(Boolean enableStopWords) {
         this.enableStopWords = enableStopWords;
         this.tokenizer.setEnableStopWords(enableStopWords);
+    }
+
+    public void setLowerCase(Boolean lowerCase) {
+        this.lowerCase = lowerCase;
+        this.tokenizer.setLowerCase(lowerCase);
     }
 
     /**
@@ -315,7 +325,8 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
             this.b = bm25Parameter.getB();
             this.k1 = bm25Parameter.getK1();
             this.enableStopWords = bm25Parameter.getStopWords();
-            this.tokenizer.setEnableStopWords(this.enableStopWords);
+            this.setEnableStopWords(this.enableStopWords);
+            this.setLowerCase(bm25Parameter.getLowerCase());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

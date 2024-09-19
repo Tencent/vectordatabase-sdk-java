@@ -76,11 +76,12 @@ public abstract class BaseTokenizer {
         return param;
     }
 
-    public void updateParameter(BaseHash hash, Set<String> stopWords, Boolean lowerCase, String dictFilePath){
+    public void updateParameter(BaseHash hash, Set<String> stopWords, Boolean enableStopWords, Boolean lowerCase, String dictFilePath){
         this.hash = hash;
         this.stopWords = stopWords;
         this.lowerCase = lowerCase;
         this.dictFilePath = dictFilePath;
+        this.enableStopWords = enableStopWords;
     }
 
     public boolean isStopWord(String word){
@@ -88,4 +89,6 @@ public abstract class BaseTokenizer {
         return stopWords.contains(word);
     }
     public abstract void loadDict(String dictFile);
+
+    public abstract  void setLowerCase(Boolean lowerCase);
 }

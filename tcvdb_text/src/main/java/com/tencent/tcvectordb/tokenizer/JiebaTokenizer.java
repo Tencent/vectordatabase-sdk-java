@@ -123,6 +123,11 @@ public class JiebaTokenizer extends BaseTokenizer{
         WordDictionary.getInstance().loadUserDict(Paths.get(dictFile));
     }
 
+    @Override
+    public void setLowerCase(Boolean lowerCase) {
+        this.lowerCase = lowerCase;
+    }
+
     //生成builder模式
     public static class Builder{
         private BaseHash hash;

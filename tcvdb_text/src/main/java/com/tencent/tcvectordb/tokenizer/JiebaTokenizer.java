@@ -35,7 +35,6 @@ import com.tencent.tcvectordb.hash.BaseHash;
 import com.tencent.tcvectordb.hash.Mm3BaseHash;
 
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

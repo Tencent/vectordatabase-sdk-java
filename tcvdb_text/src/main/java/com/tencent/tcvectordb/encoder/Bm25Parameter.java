@@ -93,6 +93,9 @@ public class Bm25Parameter {
     }
 
     public Boolean getStopWords() {
+        if(stopWords == null) {
+            return true;
+        }
         return stopWords;
     }
 

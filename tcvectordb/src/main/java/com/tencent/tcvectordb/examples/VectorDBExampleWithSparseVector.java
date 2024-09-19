@@ -246,8 +246,8 @@ public class VectorDBExampleWithSparseVector {
                 .withMatch(Arrays.asList(MatchOption.newBuilder().withFieldName("sparse_vector")
                         .withData(encoder.encodeQueries(Arrays.asList("正大光明，忠良善果弥深")))
                         .build()))
-//                // 指定 Top K 的 K 值
-                .withRerank(new WeightRerankParam(Arrays.asList("vector","sparse_vector"), Arrays.asList(1.0f, 0.0f)))
+                // 指定 Top K 的 K 值
+                .withRerank(new WeightRerankParam(Arrays.asList("vector","sparse_vector"), Arrays.asList(1, 1)))
                 .withLimit(10)
                 // 过滤获取到结果
                 .withFilter(filterParam)

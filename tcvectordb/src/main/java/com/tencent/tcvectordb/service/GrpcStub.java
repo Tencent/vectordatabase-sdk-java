@@ -621,7 +621,7 @@ public class GrpcStub extends HttpStub{
                 WeightRerankParam weightRerankParam = (WeightRerankParam)searchParam.getRerank();
                 Map<String, Float> weightMap = new HashMap<>();
                 for (int i = 0; i < weightRerankParam.getFieldList().size(); i++) {
-                    weightMap.put(weightRerankParam.getFieldList().get(i), weightRerankParam.getWeight().get(i));
+                    weightMap.put(weightRerankParam.getFieldList().get(i), weightRerankParam.getWeight().get(i).floatValue());
                 }
                 rerankBuilder.putAllWeights(weightMap);
             }else if (searchParam.getRerank() instanceof RRFRerankParam){

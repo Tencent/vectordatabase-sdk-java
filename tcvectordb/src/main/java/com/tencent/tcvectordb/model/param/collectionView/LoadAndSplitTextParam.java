@@ -1,6 +1,5 @@
 package com.tencent.tcvectordb.model.param.collectionView;
 
-import com.tencent.tcvectordb.model.DocumentSet;
 
 public class LoadAndSplitTextParam {
     private String localFilePath;

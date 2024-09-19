@@ -44,29 +44,62 @@ public class RPCVectorDBClient extends VectorDBClient {
         this.readConsistency = readConsistency;
     }
 
+    /**
+     * create database
+     * @param databaseName database's name to create. The name of the database. A database name can only include
+     *         numbers, letters, and underscores, and must not begin with a letter, and length
+     *         must between 1 and 128.
+     * @return Database object
+     * @throws VectorDBException
+     */
     public Database createDatabase(String databaseName) throws VectorDBException {
         Database db = database(databaseName, readConsistency);
         stub.createDatabase(db);
         return db;
     }
 
+    /**
+     * drop database
+     * @param databaseName: database's name to drop
+     * @return
+     * @throws VectorDBException
+     */
     public Database dropDatabase(String databaseName) throws VectorDBException {
         Database db = database(databaseName, readConsistency);
         stub.dropDatabase(db);
         return db;
     }
 
+    /**
+     * create ai database
+     * @param databaseName ai database's name to create, The name of the database. A database name can only include
+     *         numbers, letters, and underscores, and must not begin with a letter, and length
+     *         must between 1 and 128
+     * @return
+     * @throws VectorDBException
+     */
     public AIDatabase createAIDatabase(String databaseName) throws VectorDBException {
         AIDatabase db = aiDatabase(databaseName);
         stub.createAIDatabase(db);
         return db;
     }
 
+    /**
+     * drop ai database
+     * @param databaseName: ai database's name to drop
+     * @return
+     * @throws VectorDBException
+     */
     public AffectRes dropAIDatabase(String databaseName) throws VectorDBException {
         AIDatabase db = aiDatabase(databaseName);
         return stub.dropAIDatabase(db);
     }
 
+    /**
+     * get database list
+     * @return the list of database name
+     * @throws VectorDBException
+     */
     public List<String> listDatabase() throws VectorDBException {
         return stub.listDatabases();
     }
@@ -91,6 +124,15 @@ public class RPCVectorDBClient extends VectorDBClient {
         return new AIDatabase(this.stub, databaseName, this.readConsistency);
     }
 
+    /**
+     * upsert document
+     * @param database: database name
+     * @param collection: collection name
+     * @param param: insert param
+     *
+     * @return
+     * @throws VectorDBException
+     */
     public AffectRes upsert(String database, String collection, InsertParam param) throws VectorDBException {
         boolean ai = false;
         if((param.getDocuments().get(0)!=null)){
@@ -110,31 +152,81 @@ public class RPCVectorDBClient extends VectorDBClient {
         return this.stub.upsertDocument(insertParam, ai);
     }
 
+    /**
+     * query document
+     * @param database
+     * @param collection
+     * @param param
+     * @return
+     * @throws VectorDBException
+     */
     public List<Document> query(String database, String collection, QueryParam param) throws VectorDBException {
         return this.stub.queryDocument(
                 new QueryParamInner(database, collection, param, this.readConsistency), false);
     }
 
+    /**
+     * search document
+     * @param database
+     * @param collection
+     * @param param
+     * @return
+     * @throws VectorDBException
+     */
     public List<List<Document>> search(String database, String collection, SearchByVectorParam param) throws VectorDBException {
         return this.stub.searchDocument(new SearchParamInner(
                 database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE).getDocuments();
     }
 
+    /**
+     * search document by ID
+     * @param database
+     * @param collection
+     * @param param
+     * @return
+     * @throws VectorDBException
+     */
     public List<List<Document>> searchById(String database, String collection, SearchByIdParam param) throws VectorDBException {
         return this.stub.searchDocument(new SearchParamInner(
                 database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE).getDocuments();
     }
 
+
+    /**
+     * search document by embedding items
+     * @param database
+     * @param collection
+     * @param param
+     * @return
+     * @throws VectorDBException
+     */
     public SearchRes searchByEmbeddingItems(String database, String collection, SearchByEmbeddingItemsParam param) throws VectorDBException {
         return this.stub.searchDocument(new SearchParamInner(
                 database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE);
     }
 
+    /**
+     * delete document
+     * @param database
+     * @param collection
+     * @param param
+     * @return
+     * @throws VectorDBException
+     */
     public AffectRes delete(String database, String collection, DeleteParam param) throws VectorDBException {
         return this.stub.deleteDocument(
                 new DeleteParamInner(database, collection, param));
     }
 
+    /**
+     * update document use document object
+     * @param database
+     * @param collection
+     * @param param
+     * @param document
+     * @return
+     * @throws VectorDBException
+     */
     public AffectRes update(String database, String collection, UpdateParam param, Document document) throws VectorDBException {
         boolean ai = false;
         if (document.getVector() instanceof String){
@@ -144,6 +236,15 @@ public class RPCVectorDBClient extends VectorDBClient {
                 new UpdateParamInner(database, collection, param, document), ai);
     }
 
+    /**
+     * update document use json object
+     * @param database
+     * @param collection
+     * @param param
+     * @param document
+     * @return
+     * @throws VectorDBException
+     */
     public AffectRes update(String database, String collection, UpdateParam param, JSONObject document) throws VectorDBException {
         boolean ai = false;
         if (document.get("vector") instanceof String){
@@ -151,5 +252,24 @@ public class RPCVectorDBClient extends VectorDBClient {
         }
         return this.stub.updateDocument(
                 new UpdateParamInner(database, collection, param, document), ai);
+    }
+
+    /**
+     * sparse vector and vector hybrid search
+     * @param database
+     * @param collection
+     * @param param: HybridSearchParam
+     * @return
+     * @throws VectorDBException
+     */
+    public SearchRes hybridSearch(String database, String collection, HybridSearchParam param) throws VectorDBException {
+        boolean ai = false;
+        if(param.getAnn()!=null && !param.getAnn().isEmpty() && param.getAnn().get(0).getData()!=null
+                && !param.getAnn().get(0).getData().isEmpty()
+                && param.getAnn().get(0).getData().get(0) instanceof String){
+            ai = true;
+        }
+        return this.stub.hybridSearchDocument(new HybridSearchParamInner(
+                database, collection, param, this.readConsistency), ai);
     }
 }

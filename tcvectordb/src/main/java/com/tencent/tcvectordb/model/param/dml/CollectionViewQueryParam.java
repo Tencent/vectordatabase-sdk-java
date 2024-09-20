@@ -65,6 +65,11 @@ public class CollectionViewQueryParam extends CollectionViewConditionParam{
             this.filter = filter.getCond();
             return this;
         }
+
+        public Builder withFilter(String filter) {
+            this.filter = filter;
+            return this;
+        }
         public Builder withLimit(Integer limit) {
             this.limit = limit;
             return this;

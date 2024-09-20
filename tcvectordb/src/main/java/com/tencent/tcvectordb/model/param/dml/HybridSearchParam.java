@@ -15,7 +15,7 @@ public class HybridSearchParam {
     public HybridSearchParam(Builder builder) {
         this.ann = builder.ann;
         if (builder.filter != null) {
-            this.filter = builder.filter.getCond();
+            this.filter = builder.filter;
         }
         if (builder.outputFields != null && !builder.outputFields.isEmpty()) {
             this.outputFields = Collections.unmodifiableList(builder.outputFields);
@@ -88,7 +88,7 @@ public class HybridSearchParam {
 
     public static final class Builder{
         private List<AnnOption> ann;
-        private Filter filter;
+        private String filter;
         private List<String> outputFields;
         private boolean retrieveVector;
         private int limit = 10;
@@ -110,6 +110,11 @@ public class HybridSearchParam {
         }
 
         public Builder withFilter(Filter filter) {
+            this.filter = filter.getCond();
+            return this;
+        }
+
+        public Builder withFilter(String filter) {
             this.filter = filter;
             return this;
         }

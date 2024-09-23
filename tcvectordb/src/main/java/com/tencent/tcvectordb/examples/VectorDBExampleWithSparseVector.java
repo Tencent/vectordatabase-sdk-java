@@ -237,12 +237,12 @@ public class VectorDBExampleWithSparseVector {
         System.out.println("---------------------- hybridSearch ----------------------");
         SparseVectorBm25Encoder encoder = SparseVectorBm25Encoder.getBm25Encoder("zh");
         HybridSearchParam hybridSearchParam = HybridSearchParam.newBuilder()
-                .withAnn(Arrays.asList(AnnOption.newBuilder().withFieldName("vector")
+                .withAnn(AnnOption.newBuilder().withFieldName("vector")
                         .withData(generateRandomVector(768))
-                        .build()))
-                .withMatch(Arrays.asList(MatchOption.newBuilder().withFieldName("sparse_vector")
+                        .build())
+                .withMatch(MatchOption.newBuilder().withFieldName("sparse_vector")
                         .withData(encoder.encodeQueries(Arrays.asList("正大光明，忠良善果弥深")))
-                        .build()))
+                        .build())
                 // 指定 Top K 的 K 值
                 .withRerank(new WeightRerankParam(Arrays.asList("vector","sparse_vector"), Arrays.asList(1, 1)))
                 .withLimit(10)
@@ -251,7 +251,7 @@ public class VectorDBExampleWithSparseVector {
 //                .withRetrieveVector(true)
 //                .withOutputFields(Arrays.asList("segment"))
                 .build();
-        List<Object> siDocs = collection.hybridSearch(hybridSearchParam).getDocuments();
+        List<List<Document>> siDocs = collection.hybridSearch(hybridSearchParam).getDocumentsList();
         int i = 0;
         for (Object docs : siDocs) {
 //            System.out.println("\tres: " + (i++) + docs.toString());

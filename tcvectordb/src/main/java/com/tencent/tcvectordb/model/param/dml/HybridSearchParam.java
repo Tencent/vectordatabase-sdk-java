@@ -30,7 +30,7 @@ public class HybridSearchParam {
         this.limit = builder.limit;
         this.rerank = builder.rerank;
         this.match = builder.match;
-        this.isArrayParam = builder.isArrayParam;
+        this.isArrayParam = builder.isAnnArrayParam | builder.isMatchArrayParam;
     }
 
     public List<AnnOption> getAnn() {
@@ -105,29 +105,32 @@ public class HybridSearchParam {
         private RerankParam rerank;
         private List<MatchOption> match;
 
-        private Boolean isArrayParam = false;
+        private Boolean isAnnArrayParam = false;
+        private Boolean isMatchArrayParam = false;
 
         protected Builder() {
         }
 
         public Builder withAnn(List<AnnOption> ann) {
             this.ann = ann;
-            isArrayParam = true;
+            isAnnArrayParam = true;
             return this;
         }
 
         public Builder withMatch(List<MatchOption> match) {
             this.match = match;
-            isArrayParam = true;
+            isMatchArrayParam = true;
             return this;
         }
 
         public Builder withAnn(AnnOption ann) {
+            isAnnArrayParam = false;
             this.ann = Collections.singletonList(ann);
             return this;
         }
 
         public Builder withMatch(MatchOption match) {
+            isMatchArrayParam = false;
             this.match = Collections.singletonList(match);
             return this;
         }

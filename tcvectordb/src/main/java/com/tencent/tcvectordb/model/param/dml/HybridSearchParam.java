@@ -2,6 +2,7 @@ package com.tencent.tcvectordb.model.param.dml;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -109,6 +110,16 @@ public class HybridSearchParam {
 
         public Builder withMatch(List<MatchOption> match) {
             this.match = match;
+            return this;
+        }
+
+        public Builder withAnn(AnnOption ann) {
+            this.ann = Arrays.asList(ann);
+            return this;
+        }
+
+        public Builder withMatch(MatchOption match) {
+            this.match = Arrays.asList(match);
             return this;
         }
 

@@ -253,7 +253,7 @@ public class GrpcStub extends HttpStub{
                         }
                     }
                 }
-                if(index.getFieldType() == FieldType.SparseVector){
+                if(index.isSparseVectorField()){
                     indexBuilder.setMetricType(index.getMetricType().getValue());
                 }
                 if(index.getFieldType()==FieldType.Array){
@@ -867,6 +867,9 @@ public class GrpcStub extends HttpStub{
                     }
 
                 }
+            }
+            if (indexField.isSparseVectorField()){
+                indexField.setMetricType(MetricType.fromValue(entry.getValue().getMetricType()));
             }
             if(indexField.getFieldType()== FieldType.Array){
                 indexField.setFieldElementType(FieldElementType.fromValue(entry.getValue().getFieldElementType()));

@@ -48,6 +48,7 @@ import com.tencent.tcvectordb.utils.FileUtils;
 import com.tencent.tcvectordb.utils.JsonUtils;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.C;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -305,7 +306,7 @@ public class HttpStub implements Stub {
                 }
                 multiDosc.add(docs);
             }
-            return new SearchRes(code, msg, warning, multiDosc);
+            return new SearchRes(code, msg, warning, Collections.unmodifiableList(multiDosc));
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format("VectorDBServer response " +
                     "from search error: can't parse documents=%s", multiDocsNode));
@@ -313,7 +314,7 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public SearchRes hybridSearchDocument(HybridSearchParamInner param, boolean ai) {
+    public HybridSearchRes hybridSearchDocument(HybridSearchParamInner param, boolean ai) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DOC_HYBRID_SEARCH);
         JsonNode jsonNode = this.post(url, param.toString(), ai);
         JsonNode multiDocsNode = jsonNode.get("documents");
@@ -330,7 +331,7 @@ public class HttpStub implements Stub {
             warning = jsonNode.get("warning").asText();
         }
         if (multiDocsNode == null) {
-            return new SearchRes(code, msg, warning, Collections.emptyList());
+            return new HybridSearchRes(code, msg, warning, Collections.emptyList());
         }
         try {
             List<List<Document>> multiDosc = new ArrayList<>();
@@ -347,9 +348,9 @@ public class HttpStub implements Stub {
                 multiDosc.add(docs);
             }
             if (!param.getSearch().getIsArrayParam()){
-                return new SearchRes(code, msg, warning, multiDosc.get(0));
+                return new HybridSearchRes(code, msg, warning, Collections.unmodifiableList(multiDosc.get(0)));
             }
-            return new SearchRes(code, msg, warning, multiDosc);
+            return new HybridSearchRes(code, msg, warning, Collections.unmodifiableList(multiDosc));
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format("VectorDBServer response " +
                     "from hybrid search error: can't parse documents=%s", multiDocsNode));

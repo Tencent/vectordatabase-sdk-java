@@ -32,6 +32,7 @@ import com.tencent.tcvectordb.model.param.collection.IndexField;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.BaseRes;
+import com.tencent.tcvectordb.model.param.entity.HybridSearchRes;
 import com.tencent.tcvectordb.model.param.entity.SearchRes;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
@@ -206,7 +207,7 @@ public class Collection{
                 database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE);
     }
 
-    public SearchRes hybridSearch(HybridSearchParam param) throws VectorDBException {
+    public HybridSearchRes hybridSearch(HybridSearchParam param) throws VectorDBException {
         boolean ai = false;
         if(param.getAnn()!=null && !param.getAnn().isEmpty() && param.getAnn().get(0).getData()!=null
                 && !param.getAnn().get(0).getData().isEmpty()

@@ -136,7 +136,7 @@ public interface Stub {
     /**
      * hybrid search document
      */
-    SearchRes hybridSearchDocument(HybridSearchParamInner param, boolean ai);
+    HybridSearchRes hybridSearchDocument(HybridSearchParamInner param, boolean ai);
 
     /**
      * delete document

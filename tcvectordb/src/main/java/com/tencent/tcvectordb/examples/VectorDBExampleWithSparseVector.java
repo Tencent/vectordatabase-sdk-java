@@ -40,9 +40,9 @@ import static com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum.BGE_BA
  */
 public class VectorDBExampleWithSparseVector {
 
-    private static final String DBNAME = "book_4";
-    private static final String COLL_NAME = "book_segments_sparse_3";
-    private static final String COLL_NAME_ALIAS = "collection_alias_sparse_3";
+    private static final String DBNAME = "book_5";
+    private static final String COLL_NAME = "book_segments_sparse_4";
+    private static final String COLL_NAME_ALIAS = "collection_alias_sparse_4";
 
     public static void main(String[] args) throws InterruptedException {
         // 创建VectorDB Client
@@ -248,14 +248,14 @@ public class VectorDBExampleWithSparseVector {
                 .withLimit(10)
                 // 过滤获取到结果
                 .withFilter(filterParam)
-                .withRetrieveVector(true)
-                .withOutputFields(Arrays.asList("segment"))
+//                .withRetrieveVector(true)
+//                .withOutputFields(Arrays.asList("segment"))
                 .build();
-        List<List<Document>> siDocs = collection.hybridSearch(hybridSearchParam).getDocuments();
+        List<Object> siDocs = collection.hybridSearch(hybridSearchParam).getDocuments();
         int i = 0;
-        for (List<Document> docs : siDocs) {
-            System.out.println("\tres: " + i++);
-            for (Document doc : docs) {
+        for (Object docs : siDocs) {
+//            System.out.println("\tres: " + (i++) + docs.toString());
+            for (Document doc : (List<Document>)docs) {
                 System.out.println("\tres: " + doc.toString());
             }
         }
@@ -368,7 +368,7 @@ public class VectorDBExampleWithSparseVector {
         return CreateCollectionParam.newBuilder()
                 .withName(collName)
                 .withShardNum(1)
-                .withReplicaNum(0)
+                .withReplicaNum(1)
                 .withDescription("test sparse collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", BGE_BASE_ZH.getDimension(), IndexType.HNSW,

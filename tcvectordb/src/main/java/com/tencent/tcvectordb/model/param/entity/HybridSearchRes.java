@@ -4,14 +4,14 @@ import com.tencent.tcvectordb.model.Document;
 
 import java.util.List;
 
-public class SearchRes extends BaseRes {
-    private List<List<Document>> documents;
+public class HybridSearchRes extends BaseRes {
+    private List<Object> documents;
 
-    public List<List<Document>> getDocuments() {
+    public List<Object> getDocuments() {
         return documents;
     }
 
-    public SearchRes(int code, String msg, String warning, List<List<Document>> documents) {
+    public HybridSearchRes(int code, String msg, String warning, List<Object> documents) {
         super(code, msg, warning);
         this.documents = documents;
     }
@@ -19,7 +19,7 @@ public class SearchRes extends BaseRes {
 
     @Override
     public String toString() {
-        return "SearchByEmRes{" +
+        return "HybridSearchRes{" +
                 "documents=" + documents +
                 ", code=" + code +
                 ", msg='" + msg + '\'' +

@@ -554,7 +554,7 @@ public class GrpcStub extends HttpStub{
     }
 
     @Override
-    public SearchRes hybridSearchDocument(HybridSearchParamInner param, boolean ai) {
+    public HybridSearchRes hybridSearchDocument(HybridSearchParamInner param, boolean ai) {
         Olama.SearchRequest.Builder builder = Olama.SearchRequest.newBuilder().setDatabase(param.getDatabase()).
                 setCollection(param.getCollection()).
                 setReadConsistency(param.getReadConsistency().getReadConsistency());
@@ -649,12 +649,12 @@ public class GrpcStub extends HttpStub{
             List<Document> documents = searchResult.getDocumentsList().stream().map(GrpcStub::convertDocument)
                     .collect(Collectors.toList());
             if (!searchParam.getIsArrayParam()){
-                return new SearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), documents);
+                return new HybridSearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), Collections.unmodifiableList(documents));
             }else {
                 documentsList.add(documents);
             }
         }
-        return new SearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), documentsList);
+        return new HybridSearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), Collections.unmodifiableList(documentsList));
     }
 
     private static void logQuery(String url, MessageOrBuilder messageOrBuilder) {

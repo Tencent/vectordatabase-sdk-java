@@ -2,15 +2,20 @@ package com.tencent.tcvectordb.model.param.collectionView;
 
 import com.tencent.tcvectordb.model.DocumentSet;
 
+import java.io.InputStream;
+
 public class LoadAndSplitTextParam {
     private String localFilePath;
     private String documentSetName;
+
+    private InputStream fileInputStream;
     private SplitterPreprocessParams splitterProcess;
 
     public LoadAndSplitTextParam(Builder builder) {
         this.localFilePath = builder.localFilePath;
         this.documentSetName = builder.documentSetName;
         this.splitterProcess = builder.splitterProcess;
+        this.fileInputStream = builder.fileInputStream;
     }
 
     public String getLocalFilePath() {
@@ -37,6 +42,14 @@ public class LoadAndSplitTextParam {
         this.splitterProcess = splitterProcess;
     }
 
+    public InputStream getFileInputStream() {
+        return fileInputStream;
+    }
+
+    public void setFileInputStream(InputStream fileInputStream) {
+        this.fileInputStream = fileInputStream;
+    }
+
     public static Builder newBuilder() {
         return new Builder();
     }
@@ -44,6 +57,8 @@ public class LoadAndSplitTextParam {
         private String localFilePath;
         private String documentSetName;
         private SplitterPreprocessParams splitterProcess;
+
+        private InputStream fileInputStream;
 
         public Builder withLocalFilePath(String localFilePath){
             this.localFilePath = localFilePath;
@@ -57,6 +72,11 @@ public class LoadAndSplitTextParam {
 
         public Builder withSplitterProcess(SplitterPreprocessParams splitterProcess){
             this.splitterProcess = splitterProcess;
+            return this;
+        }
+
+        public Builder withFileInputStream(InputStream fileInputStream){
+            this.fileInputStream = fileInputStream;
             return this;
         }
 

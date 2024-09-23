@@ -462,17 +462,25 @@ public class HttpStub implements Stub {
 
     @Override
     public void upload(String databaseName, String collectionViewName, LoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
-        File file = new File(loadAndSplitTextParam.getLocalFilePath());
-        if (!file.exists() || !file.isFile()) {
-            throw new VectorDBException("file is not existed");
+        File file = null;
+        String fileName = "";
+        if (loadAndSplitTextParam.getLocalFilePath() == null){
+            file = new File(loadAndSplitTextParam.getLocalFilePath());
+            if (!file.exists() || !file.isFile()) {
+                throw new VectorDBException("file is not existed");
+            }
+
+            if (file.length() <= 0) {
+                throw new VectorDBException("file is empty");
+            }
+            fileName = file.getName();
+        }else if(loadAndSplitTextParam.getFileInputStream()!=null){
+            if (loadAndSplitTextParam.getDocumentSetName()!=null){
+                throw new VectorDBException("use input stream, documentSetName can not be null");
+            }
         }
 
-        if (file.length() <= 0) {
-            throw new VectorDBException("file is empty");
-        }
-
-
-        UploadUrlRes uploadUrlRes = getUploadUrl(databaseName, collectionViewName, loadAndSplitTextParam.getDocumentSetName(), file.getName());
+        UploadUrlRes uploadUrlRes = getUploadUrl(databaseName, collectionViewName, loadAndSplitTextParam.getDocumentSetName(), fileName);
 
         if (Code.isFailed(uploadUrlRes.getCode()) ||
                 uploadUrlRes.getCredentials() == null ||
@@ -486,7 +494,7 @@ public class HttpStub implements Stub {
         String filePath = loadAndSplitTextParam.getLocalFilePath();
         int maxLength = uploadUrlRes.getUploadCondition().getMaxSupportContentLength();
 
-        if (file.length() > maxLength) {
+        if (file !=null && file.length() > maxLength) {
             throw new ParamException(String.format("%s file is too large, max size is %d bytes", filePath, maxLength));
         }
 
@@ -497,7 +505,12 @@ public class HttpStub implements Stub {
                 uploadUrlRes.getCredentials().getTmpSecretKey(), uploadUrlRes.getCredentials().getToken());
         ClientConfig cosClientConfig = new ClientConfig(new Region(region));
         COSClient cosClient = new COSClient(cred, cosClientConfig);
-        PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, uploadPath, file);
+        PutObjectRequest putObjectRequest = null;
+        if (file!=null && file.exists()){
+            putObjectRequest = new PutObjectRequest(bucket, uploadPath, file);
+        }else if (loadAndSplitTextParam.getFileInputStream()!=null){
+            putObjectRequest = new PutObjectRequest(bucket, uploadPath, loadAndSplitTextParam.getFileInputStream(), null);
+        }
 
         ObjectMetadata metadata = new ObjectMetadata();
         String fileType = FileUtils.getFileType(file);

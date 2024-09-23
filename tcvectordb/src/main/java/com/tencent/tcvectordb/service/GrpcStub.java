@@ -646,8 +646,13 @@ public class GrpcStub extends HttpStub{
         }
         List<List<Document>> documentsList = new ArrayList<>();
         for (Olama.SearchResult searchResult : searchResponse.getResultsList()) {
-            documentsList.add(searchResult.getDocumentsList().stream().map(GrpcStub::convertDocument)
-                    .collect(Collectors.toList()));
+            List<Document> documents = searchResult.getDocumentsList().stream().map(GrpcStub::convertDocument)
+                    .collect(Collectors.toList());
+            if (!searchParam.getIsArrayParam()){
+                return new SearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), documents);
+            }else {
+                documentsList.add(documents);
+            }
         }
         return new SearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), documentsList);
     }

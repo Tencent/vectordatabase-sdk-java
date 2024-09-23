@@ -10,6 +10,8 @@ import java.util.List;
 public class HybridSearchParam {
     private List<AnnOption> ann;
     private List<MatchOption> match;
+
+    private Boolean isArrayParam;
     private String filter;
     private List<String> outputFields;
     private boolean retrieveVector;
@@ -28,6 +30,7 @@ public class HybridSearchParam {
         this.limit = builder.limit;
         this.rerank = builder.rerank;
         this.match = builder.match;
+        this.isArrayParam = builder.isArrayParam;
     }
 
     public List<AnnOption> getAnn() {
@@ -86,6 +89,9 @@ public class HybridSearchParam {
         this.match = match;
     }
 
+    public Boolean getIsArrayParam() {
+        return isArrayParam;
+    }
     public static Builder newBuilder() {
         return new Builder();
     }
@@ -99,27 +105,30 @@ public class HybridSearchParam {
         private RerankParam rerank;
         private List<MatchOption> match;
 
+        private Boolean isArrayParam = false;
 
         protected Builder() {
         }
 
         public Builder withAnn(List<AnnOption> ann) {
             this.ann = ann;
+            isArrayParam = true;
             return this;
         }
 
         public Builder withMatch(List<MatchOption> match) {
             this.match = match;
+            isArrayParam = true;
             return this;
         }
 
         public Builder withAnn(AnnOption ann) {
-            this.ann = Arrays.asList(ann);
+            this.ann = Collections.singletonList(ann);
             return this;
         }
 
         public Builder withMatch(MatchOption match) {
-            this.match = Arrays.asList(match);
+            this.match = Collections.singletonList(match);
             return this;
         }
 

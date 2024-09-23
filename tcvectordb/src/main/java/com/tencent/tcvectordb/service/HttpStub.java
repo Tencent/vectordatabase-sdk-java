@@ -346,6 +346,9 @@ public class HttpStub implements Stub {
                 }
                 multiDosc.add(docs);
             }
+            if (!param.getSearch().getIsArrayParam()){
+                return new SearchRes(code, msg, warning, multiDosc.get(0));
+            }
             return new SearchRes(code, msg, warning, multiDosc);
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format("VectorDBServer response " +

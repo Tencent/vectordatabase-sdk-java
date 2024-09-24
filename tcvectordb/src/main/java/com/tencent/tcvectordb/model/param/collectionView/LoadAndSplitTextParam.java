@@ -1,14 +1,25 @@
 package com.tencent.tcvectordb.model.param.collectionView;
 
-import com.tencent.tcvectordb.model.DocumentSet;
 
 import java.io.InputStream;
 
-public class LoadAndSplitTextParam {
-    private String localFilePath;
-    private String documentSetName;
 
+/**
+ * LoadAndSplitTextParam upload file param
+ */
+public class LoadAndSplitTextParam {
+    /**
+     * use local file path
+     */
+    private String localFilePath;
+    /**
+     * user input stream, when use this way,  documentSetName、inputStreamSize and fileType params must be specified
+     */
     private InputStream fileInputStream;
+    private String documentSetName;
+    private Long inputStreamSize;
+    private String fileType;
+
     private SplitterPreprocessParams splitterProcess;
 
     public LoadAndSplitTextParam(Builder builder) {
@@ -16,6 +27,24 @@ public class LoadAndSplitTextParam {
         this.documentSetName = builder.documentSetName;
         this.splitterProcess = builder.splitterProcess;
         this.fileInputStream = builder.fileInputStream;
+        this.fileType = builder.fileType;
+        this.inputStreamSize = builder.InputStreamSize;
+    }
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(FileType fileType) {
+        this.fileType = fileType.getValue();
+    }
+
+    public Long getInputStreamSize() {
+        return inputStreamSize;
+    }
+
+    public void setInputStreamSize(Long inputStreamSize) {
+        this.inputStreamSize = inputStreamSize;
     }
 
     public String getLocalFilePath() {
@@ -59,6 +88,8 @@ public class LoadAndSplitTextParam {
         private SplitterPreprocessParams splitterProcess;
 
         private InputStream fileInputStream;
+        private String fileType;
+        private Long InputStreamSize;
 
         public Builder withLocalFilePath(String localFilePath){
             this.localFilePath = localFilePath;
@@ -77,6 +108,17 @@ public class LoadAndSplitTextParam {
 
         public Builder withFileInputStream(InputStream fileInputStream){
             this.fileInputStream = fileInputStream;
+            return this;
+        }
+
+
+        public Builder withFileType(FileType fileType){
+            this.fileType = fileType.getValue();
+            return this;
+        }
+
+        public Builder withInputStreamDataSize(Long inputStreamDataSize){
+            this.InputStreamSize = inputStreamDataSize;
             return this;
         }
 

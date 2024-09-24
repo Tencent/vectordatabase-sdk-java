@@ -33,6 +33,9 @@ import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.SearchContentInfo;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +61,12 @@ public class VectorDBExampleWithAI_doc {
         Map<String, Object> metaDataMap = new HashMap<>();
         metaDataMap.put("author", "Tencent");
         metaDataMap.put("tags", Arrays.asList("Embedding", "向量", "AI"));
-        loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.md", metaDataMap);
+        // 使用输入流上传文档， 需指定输入流数据大小
+        File file = new File("/data/home/yihaoan/腾讯云向量数据库.md");
+        loadAndSplitTextUseInputStream(client, new FileInputStream("/data/home/yihaoan/腾讯云向量数据库.md"), file.length(), "腾讯云向量数据库", metaDataMap);
+
+        // 使用文件路径上传文档
+//         loadAndSplitText(client, "/data/home/yihaoan/腾讯云向量数据库.md", "腾讯云向量数据库", metaDataMap);
         // support markdown, pdf, pptx, docx document
         // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pdf", metaDataMap);
         // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pptx", metaDataMap);
@@ -68,7 +76,7 @@ public class VectorDBExampleWithAI_doc {
         Thread.sleep(1000 * 10);
 
         queryData(client);
-        GetFile(client, "腾讯云向量数据库.md");
+        GetFile(client, "腾讯云向量数据库");
         updateAndDelete(client);
         deleteAndDrop(client);
     }
@@ -131,6 +139,17 @@ public class VectorDBExampleWithAI_doc {
         collection.loadAndSplitText(param, metaDataMap);
     }
 
+    private static void loadAndSplitTextUseInputStream(VectorDBClient client, InputStream inputStream, Long inputStreamSize, String documentSetName, Map<String, Object> metaDataMap) throws Exception {
+        AIDatabase database = client.aiDatabase(DBNAME);
+        CollectionView collection = database.describeCollectionView(COLL_NAME);
+        LoadAndSplitTextParam param = LoadAndSplitTextParam.newBuilder()
+                .withFileInputStream(inputStream).withInputStreamDataSize(inputStreamSize)
+                .withDocumentSetName(documentSetName).withFileType(FileType.MD)
+                .withSplitterProcess(SplitterPreprocessParams.newBuilder().withAppendKeywordsToChunkEnum(true).Build())
+                .Build();
+        collection.loadAndSplitText(param, metaDataMap);
+    }
+
     private static void GetFile(VectorDBClient client, String fileName) {
         AIDatabase database = client.aiDatabase(DBNAME);
         CollectionView collection = database.describeCollectionView(COLL_NAME);
@@ -152,7 +171,7 @@ public class VectorDBExampleWithAI_doc {
                 withLimit(2).
                 withFilter(new Filter(Filter.in("author", Arrays.asList("Tencent", "tencent")))
                         .and(Filter.include("tags", Arrays.asList("AI", "Embedding")))).
-                withDocumentSetNames(Arrays.asList("腾讯云向量数据库.md"))
+                withDocumentSetNames(Arrays.asList("腾讯云向量数据库"))
 //                .withOutputFields(Arrays.asList("textPrefix", "author", "tags"))
                 .build();
         List<DocumentSet> qdos = collectionView.query(queryParam);
@@ -162,7 +181,7 @@ public class VectorDBExampleWithAI_doc {
 
         System.out.println("---------------------- get chunks ----------------------");
         System.out.println("get chunks res :");
-        System.out.println(JsonUtils.toJsonString(collectionView.getChunks(null, "腾讯云向量数据库.md", 60, 0)));
+        System.out.println(JsonUtils.toJsonString(collectionView.getChunks(null, "腾讯云向量数据库", 60, 0)));
 
         // search
         // 1. search 用于检索数据
@@ -180,7 +199,7 @@ public class VectorDBExampleWithAI_doc {
                 .withSearchContentOption(option)
                 .withFilter(new Filter(Filter.in("author", Arrays.asList("Tencent", "tencent")))
                         .and(Filter.include("tags", Arrays.asList("AI", "Embedding"))).getCond())
-                .withDocumentSetName(Arrays.asList("腾讯云向量数据库.md"))
+                .withDocumentSetName(Arrays.asList("腾讯云向量数据库"))
                 .build();
 //        System.out.println(qdos.get(0).search(searchByContentsParam).toString());
         List<SearchContentInfo> searchRes = collectionView.search(searchByContentsParam);
@@ -200,7 +219,7 @@ public class VectorDBExampleWithAI_doc {
         Filter filterParam = new Filter("author=\"Tencent\"");
         CollectionViewConditionParam updateParam = CollectionViewConditionParam
                 .newBuilder()
-                .withDocumentSetNames(Arrays.asList("腾讯云向量数据库.md"))
+                .withDocumentSetNames(Arrays.asList("腾讯云向量数据库"))
                 .withFilter(filterParam)
                 .build();
         Map<String, Object> updateFieldValues = new HashMap<>();
@@ -218,7 +237,7 @@ public class VectorDBExampleWithAI_doc {
         Filter filterParam1 = new Filter("author=\"tencent\"");
         CollectionViewConditionParam build = CollectionViewConditionParam
                 .newBuilder()
-                .withDocumentSetNames(Arrays.asList("腾讯云向量数据库.md"))
+                .withDocumentSetNames(Arrays.asList("腾讯云向量数据库"))
                 .withFilter(filterParam1)
                 .build();
         AffectRes affectRes = collectionView.deleteDocumentSets(build);

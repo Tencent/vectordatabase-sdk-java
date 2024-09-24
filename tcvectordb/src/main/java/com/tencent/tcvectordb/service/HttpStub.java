@@ -18,6 +18,7 @@ import com.tencent.tcvectordb.model.Collection;
 import com.tencent.tcvectordb.model.*;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.collectionView.CreateCollectionViewParam;
+import com.tencent.tcvectordb.model.param.collectionView.FileType;
 import com.tencent.tcvectordb.model.param.collectionView.LoadAndSplitTextParam;
 import com.tencent.tcvectordb.model.param.collectionView.SplitterPreprocessParams;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
@@ -462,17 +463,29 @@ public class HttpStub implements Stub {
 
     @Override
     public void upload(String databaseName, String collectionViewName, LoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
-        File file = new File(loadAndSplitTextParam.getLocalFilePath());
-        if (!file.exists() || !file.isFile()) {
-            throw new VectorDBException("file is not existed");
+        File file = null;
+        String fileName = "";
+        String fileType = "";
+        if (loadAndSplitTextParam.getLocalFilePath() != null){
+            file = new File(loadAndSplitTextParam.getLocalFilePath());
+            if (!file.exists() || !file.isFile()) {
+                throw new VectorDBException("file is not existed");
+            }
+
+            if (file.length() <= 0) {
+                throw new VectorDBException("file is empty");
+            }
+            fileName = file.getName();
+            fileType = FileUtils.getFileType(file);
+        }else if(loadAndSplitTextParam.getFileInputStream()!=null){
+            if (loadAndSplitTextParam.getDocumentSetName()==null || loadAndSplitTextParam.getFileType() ==null
+                    ||loadAndSplitTextParam.getInputStreamSize()==null){
+                throw new VectorDBException("use input stream, documentSetName、inputStreamSize and file type can not be null");
+            }
+            fileType = loadAndSplitTextParam.getFileType();
         }
 
-        if (file.length() <= 0) {
-            throw new VectorDBException("file is empty");
-        }
-
-
-        UploadUrlRes uploadUrlRes = getUploadUrl(databaseName, collectionViewName, loadAndSplitTextParam.getDocumentSetName(), file.getName());
+        UploadUrlRes uploadUrlRes = getUploadUrl(databaseName, collectionViewName, loadAndSplitTextParam.getDocumentSetName(), fileName);
 
         if (Code.isFailed(uploadUrlRes.getCode()) ||
                 uploadUrlRes.getCredentials() == null ||
@@ -486,7 +499,7 @@ public class HttpStub implements Stub {
         String filePath = loadAndSplitTextParam.getLocalFilePath();
         int maxLength = uploadUrlRes.getUploadCondition().getMaxSupportContentLength();
 
-        if (file.length() > maxLength) {
+        if (file !=null && file.length() > maxLength) {
             throw new ParamException(String.format("%s file is too large, max size is %d bytes", filePath, maxLength));
         }
 
@@ -497,17 +510,24 @@ public class HttpStub implements Stub {
                 uploadUrlRes.getCredentials().getTmpSecretKey(), uploadUrlRes.getCredentials().getToken());
         ClientConfig cosClientConfig = new ClientConfig(new Region(region));
         COSClient cosClient = new COSClient(cred, cosClientConfig);
-        PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, uploadPath, file);
-
+        PutObjectRequest putObjectRequest = null;
         ObjectMetadata metadata = new ObjectMetadata();
-        String fileType = FileUtils.getFileType(file);
 
-        if (!"md".equals(fileType) &&
+        if (file!=null && file.exists()){
+            putObjectRequest = new PutObjectRequest(bucket, uploadPath, file);
+        }else if (loadAndSplitTextParam.getFileInputStream()!=null){
+            metadata.setContentLength(loadAndSplitTextParam.getInputStreamSize());
+            putObjectRequest = new PutObjectRequest(bucket, uploadPath, loadAndSplitTextParam.getFileInputStream(), null);
+        }else {
+            throw new VectorDBException("file or inputStream not exist ");
+        }
+
+
+        if (! Arrays.asList(FileType.MD, FileType.WORD).contains(fileType) &&
                 Objects.nonNull(loadAndSplitTextParam.getSplitterProcess()) &&
                 StringUtils.isNotEmpty(loadAndSplitTextParam.getSplitterProcess().getChunkSplitter())) {
             logger.warn("only markdown files are allowed to use chunkSplitter");
         }
-
         metadata.addUserMetadata("fileType", fileType);
         metadata.addUserMetadata("id", uploadUrlRes.getDocumentSetId());
         if (metaDataMap == null || metaDataMap.isEmpty()) {
@@ -532,6 +552,7 @@ public class HttpStub implements Stub {
             throw new VectorDBException("cos header for param MetaData is too large, it can not be more than 2k");
         }
         putObjectRequest.withMetadata(metadata);
+
         putObjectRequest.withKey(uploadPath);
 
         PutObjectResult putObjectResult = cosClient.putObject(putObjectRequest);

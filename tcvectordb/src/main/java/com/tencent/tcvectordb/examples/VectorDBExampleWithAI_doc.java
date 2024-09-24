@@ -62,11 +62,11 @@ public class VectorDBExampleWithAI_doc {
         metaDataMap.put("author", "Tencent");
         metaDataMap.put("tags", Arrays.asList("Embedding", "向量", "AI"));
         // 使用输入流上传文档， 需指定输入流数据大小
-        File file = new File("/data/home/yihaoan/腾讯云向量数据库.md");
-        loadAndSplitTextUseInputStream(client, new FileInputStream("/data/home/yihaoan/腾讯云向量数据库.md"), file.length(), "腾讯云向量数据库", metaDataMap);
+        File file = new File(System.getProperty("file_path"));
+        loadAndSplitTextUseInputStream(client, new FileInputStream(System.getProperty("file_path")), file.length(), "腾讯云向量数据库.md", metaDataMap);
 
         // 使用文件路径上传文档
-//         loadAndSplitText(client, "/data/home/yihaoan/腾讯云向量数据库.md", "腾讯云向量数据库", metaDataMap);
+//         loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库", metaDataMap);
         // support markdown, pdf, pptx, docx document
         // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pdf", metaDataMap);
         // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pptx", metaDataMap);
@@ -76,7 +76,7 @@ public class VectorDBExampleWithAI_doc {
         Thread.sleep(1000 * 10);
 
         queryData(client);
-        GetFile(client, "腾讯云向量数据库");
+        GetFile(client, "腾讯云向量数据库.md");
         updateAndDelete(client);
         deleteAndDrop(client);
     }
@@ -171,7 +171,7 @@ public class VectorDBExampleWithAI_doc {
                 withLimit(2).
                 withFilter(new Filter(Filter.in("author", Arrays.asList("Tencent", "tencent")))
                         .and(Filter.include("tags", Arrays.asList("AI", "Embedding")))).
-                withDocumentSetNames(Arrays.asList("腾讯云向量数据库"))
+                withDocumentSetNames(Arrays.asList("腾讯云向量数据库.md"))
 //                .withOutputFields(Arrays.asList("textPrefix", "author", "tags"))
                 .build();
         List<DocumentSet> qdos = collectionView.query(queryParam);
@@ -181,7 +181,7 @@ public class VectorDBExampleWithAI_doc {
 
         System.out.println("---------------------- get chunks ----------------------");
         System.out.println("get chunks res :");
-        System.out.println(JsonUtils.toJsonString(collectionView.getChunks(null, "腾讯云向量数据库", 60, 0)));
+        System.out.println(JsonUtils.toJsonString(collectionView.getChunks(null, "腾讯云向量数据库.md", 60, 0)));
 
         // search
         // 1. search 用于检索数据
@@ -199,7 +199,7 @@ public class VectorDBExampleWithAI_doc {
                 .withSearchContentOption(option)
                 .withFilter(new Filter(Filter.in("author", Arrays.asList("Tencent", "tencent")))
                         .and(Filter.include("tags", Arrays.asList("AI", "Embedding"))).getCond())
-                .withDocumentSetName(Arrays.asList("腾讯云向量数据库"))
+                .withDocumentSetName(Arrays.asList("腾讯云向量数据库.md"))
                 .build();
 //        System.out.println(qdos.get(0).search(searchByContentsParam).toString());
         List<SearchContentInfo> searchRes = collectionView.search(searchByContentsParam);
@@ -219,7 +219,7 @@ public class VectorDBExampleWithAI_doc {
         Filter filterParam = new Filter("author=\"Tencent\"");
         CollectionViewConditionParam updateParam = CollectionViewConditionParam
                 .newBuilder()
-                .withDocumentSetNames(Arrays.asList("腾讯云向量数据库"))
+                .withDocumentSetNames(Arrays.asList("腾讯云向量数据库.md"))
                 .withFilter(filterParam)
                 .build();
         Map<String, Object> updateFieldValues = new HashMap<>();
@@ -237,7 +237,7 @@ public class VectorDBExampleWithAI_doc {
         Filter filterParam1 = new Filter("author=\"tencent\"");
         CollectionViewConditionParam build = CollectionViewConditionParam
                 .newBuilder()
-                .withDocumentSetNames(Arrays.asList("腾讯云向量数据库"))
+                .withDocumentSetNames(Arrays.asList("腾讯云向量数据库.md"))
                 .withFilter(filterParam1)
                 .build();
         AffectRes affectRes = collectionView.deleteDocumentSets(build);

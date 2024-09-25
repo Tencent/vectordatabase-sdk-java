@@ -26,10 +26,10 @@ package com.tencent.tcvectordb.model.param.collection;
 public class SparseVectorIndex extends IndexField {
 
 
-    public SparseVectorIndex(String fieldName) {
+    public SparseVectorIndex(String fieldName,  IndexType indexType, MetricType metricType) {
         setFieldName(fieldName);
         setFieldType(FieldType.SparseVector);
-        setIndexType(IndexType.INVERTED);
-        setMetricType(MetricType.IP);
+        setIndexType(indexType);
+        setMetricType(metricType);
     }
 }

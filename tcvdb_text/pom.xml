@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.tencent.tcvdb</groupId>
-    <artifactId>tcvdb_text</artifactId>
+    <artifactId>tcvdb-text</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
-    <name>tcvdb_text</name>
+    <name>tcvdb-text</name>
     <dependencies>
         <dependency>
             <groupId>net.jpountz.lz4</groupId>

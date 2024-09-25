@@ -19,7 +19,7 @@ You can use **Apache Maven** or **Gradle**/**Grails** to download the SDK.
        ```xml
         <dependency>
             <groupId>com.tencent.tcvdb</groupId>
-            <artifactId>tcvdb_text</artifactId>
+            <artifactId>tcvdb-text</artifactId>
             <version>1.0.0</version>
         </dependency>
        ```
@@ -27,7 +27,7 @@ You can use **Apache Maven** or **Gradle**/**Grails** to download the SDK.
    - Gradle/Grails
 
         ```gradle
-        compile 'com.tencent.tcvectordb:tcvdb_text:1.0.0'
+        compile 'com.tencent.tcvectordb:tcvdb-text:1.0.0'
         ```
 
 ### Examples

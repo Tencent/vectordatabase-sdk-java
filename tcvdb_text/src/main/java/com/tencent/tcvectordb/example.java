@@ -37,9 +37,9 @@ import java.util.List;
 
 public class example {
     public static void main(String[] args) {
-        userDict();
         quickStart();
         fitStart();
+        userDict();
     }
     public static void quickStart() {
         SparseVectorBm25Encoder encoder = SparseVectorBm25Encoder.getBm25Encoder("zh");

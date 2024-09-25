@@ -62,11 +62,11 @@ public class VectorDBExampleWithAI_doc {
         metaDataMap.put("author", "Tencent");
         metaDataMap.put("tags", Arrays.asList("Embedding", "向量", "AI"));
         // 使用输入流上传文档， 需指定输入流数据大小
-        File file = new File(System.getProperty("file_path"));
-        loadAndSplitTextUseInputStream(client, new FileInputStream(System.getProperty("file_path")), file.length(), "腾讯云向量数据库.md", metaDataMap);
+//        File file = new File(System.getProperty("file_path"));
+//        loadAndSplitTextUseInputStream(client, new FileInputStream(System.getProperty("file_path")), file.length(), "腾讯云向量数据库.md", metaDataMap);
 
         // 使用文件路径上传文档
-//         loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.md", metaDataMap);
+         loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.md", metaDataMap);
         // support markdown, pdf, pptx, docx document
         // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pdf", metaDataMap);
         // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pptx", metaDataMap);

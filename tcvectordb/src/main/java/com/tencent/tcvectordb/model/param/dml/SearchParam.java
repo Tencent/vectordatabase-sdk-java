@@ -40,7 +40,7 @@ public abstract class SearchParam {
     protected SearchParam(Builder<?> builder) {
         this.params = builder.params;
         if (builder.filter != null) {
-            this.filter = builder.filter.getCond();
+            this.filter = builder.filter;
         }
         if (builder.outputFields != null && !builder.outputFields.isEmpty()) {
             this.outputFields = Collections.unmodifiableList(builder.outputFields);
@@ -74,7 +74,7 @@ public abstract class SearchParam {
 
     protected static abstract class Builder<T extends Builder<T>> {
         protected Params params;
-        protected Filter filter;
+        protected String filter;
         protected List<String> outputFields;
         protected boolean retrieveVector = false;
         protected int limit = 10;
@@ -97,6 +97,13 @@ public abstract class SearchParam {
         }
 
         public T withFilter(Filter filter) {
+            if (filter != null) {
+                this.filter = filter.getCond();
+            }
+            return self();
+        }
+
+        public T withFilter(String filter) {
             this.filter = filter;
             return self();
         }

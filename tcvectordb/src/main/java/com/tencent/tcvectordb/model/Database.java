@@ -66,6 +66,20 @@ public class Database {
         return readConsistency;
     }
 
+    /***
+     * create collection
+     * @param param createCollectionParam: the parameters of the collection to be created
+     * @param param databaseName: the name of the database to be created
+     * @param param collection: the name of the collection to be created
+     * @param param replicaNum: the number of replicas
+     * @param param shardNum: the number of shards
+     * @param param description: the description of the collection
+     * @param param indexes: list of the index fields
+     * @param param embedding: Embedding class
+     *
+     * @return collection object
+     * @throws VectorDBException
+     */
     public Collection createCollection(CreateCollectionParam param) throws VectorDBException {
         param.setDatabase(databaseName);
         param.setReadConsistency(readConsistency);

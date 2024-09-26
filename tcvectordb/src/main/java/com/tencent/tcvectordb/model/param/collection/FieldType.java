@@ -39,7 +39,9 @@ public enum FieldType {
      */
     Vector("vector"),
 
-    Array("array");
+    Array("array"),
+
+    SparseVector("sparseVector");
 
     private final String value;
 

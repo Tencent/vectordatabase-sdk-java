@@ -116,6 +116,13 @@ public class SearchByContentsParam {
             return this;
         }
 
+        public Builder withFilter(Filter filter) {
+            if (filter != null){
+                this.filter = filter.getCond();
+            }
+            return this;
+        }
+
 
         public Builder withLimit(int limit) {
             this.limit = limit;

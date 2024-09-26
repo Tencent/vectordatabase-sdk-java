@@ -60,6 +60,11 @@ public class CollectionViewConditionParam {
             return this;
         }
 
+        public Builder withFilter(String filter) {
+            this.filter = filter;
+            return this;
+        }
+
         public CollectionViewConditionParam build(){
             return new CollectionViewConditionParam(this);
         }

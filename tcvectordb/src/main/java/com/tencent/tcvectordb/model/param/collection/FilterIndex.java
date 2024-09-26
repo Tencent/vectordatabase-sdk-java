@@ -30,4 +30,11 @@ public class FilterIndex extends IndexField {
         setFieldType(fieldType);
         setIndexType(indexType);
     }
+
+    public FilterIndex(String fieldName, FieldType fieldType, IndexType indexType, MetricType metricType) {
+        setFieldName(fieldName);
+        setFieldType(fieldType);
+        setIndexType(indexType);
+        setMetricType(metricType);
+    }
 }

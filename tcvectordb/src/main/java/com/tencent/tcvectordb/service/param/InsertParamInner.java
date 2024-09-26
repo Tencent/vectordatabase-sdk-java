@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.tencent.tcvdbtext.exception.ParamException;
+import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.model.param.dml.InsertParam;
 
 import java.util.List;

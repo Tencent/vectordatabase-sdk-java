@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.tencent.tcvectordb.model.DocField;
 import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.dml.CollectionViewConditionParam;
-import com.tencent.tcvectordb.model.param.dml.UpdateParam;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.Map;

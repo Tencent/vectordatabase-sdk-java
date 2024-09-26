@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.tencent.tcvdbtext.exception.ParamException;
+import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.model.param.collection.Embedding;
 import com.tencent.tcvectordb.model.param.collection.ParamsSerializer;
 import com.tencent.tcvectordb.serializer.EmbeddingDeserialize;

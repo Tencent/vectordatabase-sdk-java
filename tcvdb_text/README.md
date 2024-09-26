@@ -1,4 +1,4 @@
-# Tencent VectorDB Java SDK
+# Tencent VectorDB Sparse Encoder Java SDK
 
 Java SDK for [Tencent VectorDB Sparse Encoder](https://cloud.tencent.com/product/vdb).
 

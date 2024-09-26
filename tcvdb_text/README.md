@@ -18,7 +18,7 @@ You can use **Apache Maven** or **Gradle**/**Grails** to download the SDK.
 
        ```xml
         <dependency>
-            <groupId>com.tencent.tcvdb</groupId>
+            <groupId>com.tencent.tcvectordb</groupId>
             <artifactId>tcvdb-text</artifactId>
             <version>1.0.0</version>
         </dependency>
@@ -32,4 +32,4 @@ You can use **Apache Maven** or **Gradle**/**Grails** to download the SDK.
 
 ### Examples
 
-Please refer to [examples](./src/main/java/com/tencent/tcvectordb/example.java) folder for Java SDK examples.
+Please refer to [examples](src/main/java/com/tencent/tcvdbtext/example.java) folder for Java SDK examples.

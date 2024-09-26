@@ -4,7 +4,7 @@
 
     <groupId>com.tencent.tcvectordb</groupId>
     <artifactId>vectordatabase-sdk-java</artifactId>
-    <version>2.0.1</version>
+    <version>2.0.2</version>
     <packaging>jar</packaging>
 
     <name>vectordatabase-sdk-java</name>
@@ -100,7 +100,7 @@
             <version>20210307</version>
         </dependency>
         <dependency>
-            <groupId>com.tencent.tcvdb</groupId>
+            <groupId>com.tencent.tcvectordb</groupId>
             <artifactId>tcvdb-text</artifactId>
             <version>1.0.0</version>
         </dependency>

@@ -1,4 +1,4 @@
-package com.tencent.tcvectordb.util;
+package com.tencent.tcvdbtext.util;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.tencent.tcvectordb.exception.ParamException;
+import com.tencent.tcvdbtext.exception.ParamException;
 
 import java.text.SimpleDateFormat;
 

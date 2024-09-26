@@ -25,14 +25,14 @@
  *ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  *THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.tencent.tcvectordb.encoder;
+package com.tencent.tcvdbtext.encoder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.tencent.tcvectordb.tokenizer.BaseTokenizer;
-import com.tencent.tcvectordb.tokenizer.JiebaTokenizer;
+import com.tencent.tcvdbtext.tokenizer.BaseTokenizer;
+import com.tencent.tcvdbtext.tokenizer.JiebaTokenizer;
 
-import com.tencent.tcvectordb.util.JsonUtils;
+import com.tencent.tcvdbtext.util.JsonUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.*;

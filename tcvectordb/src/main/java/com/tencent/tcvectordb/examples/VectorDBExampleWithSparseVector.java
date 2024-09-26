@@ -28,7 +28,7 @@ import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
-import com.tencent.tcvectordb.encoder.SparseVectorBm25Encoder;
+import com.tencent.tcvdbtext.encoder.SparseVectorBm25Encoder;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;

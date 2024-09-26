@@ -26,13 +26,13 @@
  *THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.tencent.tcvectordb.tokenizer;
+package com.tencent.tcvdbtext.tokenizer;
 
 import com.google.common.collect.Lists;
 import com.huaban.analysis.jieba.JiebaSegmenter;
 import com.huaban.analysis.jieba.WordDictionary;
-import com.tencent.tcvectordb.hash.BaseHash;
-import com.tencent.tcvectordb.hash.Mm3BaseHash;
+import com.tencent.tcvdbtext.hash.BaseHash;
+import com.tencent.tcvdbtext.hash.Mm3BaseHash;
 
 import java.nio.file.Paths;
 import java.util.List;

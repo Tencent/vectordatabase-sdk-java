@@ -20,7 +20,7 @@
 
 package com.tencent.tcvectordb.model.param.database;
 
-import com.tencent.tcvectordb.exception.ParamException;
+import com.tencent.tcvdbtext.exception.ParamException;
 import org.apache.commons.lang3.StringUtils;
 
 /**

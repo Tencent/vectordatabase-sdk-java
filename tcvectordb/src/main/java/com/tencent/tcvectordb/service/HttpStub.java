@@ -32,7 +32,7 @@ import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.region.Region;
 import com.tencent.tcvectordb.enums.Code;
-import com.tencent.tcvectordb.exception.ParamException;
+import com.tencent.tcvdbtext.exception.ParamException;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.Collection;
 import com.tencent.tcvectordb.model.*;
@@ -49,7 +49,6 @@ import com.tencent.tcvectordb.utils.FileUtils;
 import com.tencent.tcvectordb.utils.JsonUtils;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
-import org.checkerframework.checker.units.qual.C;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

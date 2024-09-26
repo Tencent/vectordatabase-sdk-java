@@ -25,9 +25,9 @@
  *ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  *THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.tencent.tcvectordb.tokenizer;
+package com.tencent.tcvdbtext.tokenizer;
 
-import com.tencent.tcvectordb.hash.BaseHash;
+import com.tencent.tcvdbtext.hash.BaseHash;
 
 import java.util.HashMap;
 import java.util.List;

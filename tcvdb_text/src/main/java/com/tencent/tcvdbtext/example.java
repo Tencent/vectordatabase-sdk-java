@@ -26,10 +26,10 @@
  *THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.tencent.tcvectordb;
+package com.tencent.tcvdbtext;
 
-import com.tencent.tcvectordb.encoder.SparseVectorBm25Encoder;
-import com.tencent.tcvectordb.tokenizer.JiebaTokenizer;
+import com.tencent.tcvdbtext.encoder.SparseVectorBm25Encoder;
+import com.tencent.tcvdbtext.tokenizer.JiebaTokenizer;
 
 import java.io.File;
 import java.util.Arrays;

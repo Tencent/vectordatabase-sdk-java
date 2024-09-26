@@ -25,7 +25,7 @@
  *ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  *THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.tencent.tcvectordb.hash;
+package com.tencent.tcvdbtext.hash;
 
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;

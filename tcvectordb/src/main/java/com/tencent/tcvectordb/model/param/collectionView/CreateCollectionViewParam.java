@@ -21,7 +21,7 @@
 package com.tencent.tcvectordb.model.param.collectionView;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.tencent.tcvdbtext.exception.ParamException;
+import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.model.CollectionView;
 import com.tencent.tcvectordb.model.param.collection.IndexField;
 import org.apache.commons.lang3.StringUtils;

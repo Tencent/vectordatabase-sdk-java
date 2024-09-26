@@ -21,7 +21,7 @@
 package com.tencent.tcvectordb.model.param.dml;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.tencent.tcvdbtext.exception.ParamException;
+import com.tencent.tcvectordb.exception.ParamException;
 
 import java.util.ArrayList;
 import java.util.List;

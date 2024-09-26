@@ -32,6 +32,7 @@ import com.tencent.tcvectordb.model.param.collection.IndexField;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.BaseRes;
+import com.tencent.tcvectordb.model.param.entity.HybridSearchRes;
 import com.tencent.tcvectordb.model.param.entity.SearchRes;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
@@ -169,12 +170,26 @@ public class Collection{
     public AffectRes upsert(InsertParam param) throws VectorDBException {
         InsertParamInner insertParam = new InsertParamInner(
                 database, collection, param);
-        return this.stub.upsertDocument(insertParam);
+        boolean ai = false;
+        if((param.getDocuments().get(0)!=null)){
+            if (param.getDocuments().get(0) instanceof Document){
+                if (((Document)param.getDocuments().get(0)).getVector() instanceof String){
+                    ai = true;
+                }
+            }
+            if (param.getDocuments().get(0) instanceof JSONObject){
+                if (((JSONObject)param.getDocuments().get(0)).get("vector") instanceof String){
+                    ai = true;
+                }
+            }
+        }
+        return this.stub.upsertDocument(insertParam, ai);
     }
 
     public List<Document> query(QueryParam param) throws VectorDBException {
+        boolean ai = false;
         return this.stub.queryDocument(
-                new QueryParamInner(database, collection, param, this.readConsistency));
+                new QueryParamInner(database, collection, param, this.readConsistency), ai);
     }
 
     public List<List<Document>> search(SearchByVectorParam param) throws VectorDBException {
@@ -192,19 +207,38 @@ public class Collection{
                 database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE);
     }
 
+    public HybridSearchRes hybridSearch(HybridSearchParam param) throws VectorDBException {
+        boolean ai = false;
+        if(param.getAnn()!=null && !param.getAnn().isEmpty() && param.getAnn().get(0).getData()!=null
+                && !param.getAnn().get(0).getData().isEmpty()
+                && param.getAnn().get(0).getData().get(0) instanceof String){
+            ai = true;
+        }
+        return this.stub.hybridSearchDocument(new HybridSearchParamInner(
+                database, collection, param, this.readConsistency), ai);
+    }
+
     public AffectRes delete(DeleteParam param) throws VectorDBException {
         return this.stub.deleteDocument(
                 new DeleteParamInner(database, collection, param));
     }
 
     public AffectRes update(UpdateParam param, Document document) throws VectorDBException {
+        boolean ai = false;
+        if (document.getVector() instanceof String){
+            ai = true;
+        }
         return this.stub.updateDocument(
-                new UpdateParamInner(database, collection, param, document));
+                new UpdateParamInner(database, collection, param, document), ai);
     }
 
     public AffectRes update(UpdateParam param, JSONObject document) throws VectorDBException {
+        boolean ai = false;
+        if (document.get("vector") instanceof String){
+            ai = true;
+        }
         return this.stub.updateDocument(
-                new UpdateParamInner(database, collection, param, document));
+                new UpdateParamInner(database, collection, param, document), ai);
     }
 
     public BaseRes rebuildIndex(RebuildIndexParam rebuildIndexParam) {

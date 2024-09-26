@@ -16,6 +16,7 @@ public class SearchRes extends BaseRes {
         this.documents = documents;
     }
 
+
     @Override
     public String toString() {
         return "SearchByEmRes{" +

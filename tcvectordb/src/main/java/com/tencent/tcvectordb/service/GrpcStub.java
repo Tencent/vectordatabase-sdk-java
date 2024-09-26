@@ -1,6 +1,29 @@
+/*
+ * Copyright (C) 2023 Tencent Cloud.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the vectordb-sdk-java), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package com.tencent.tcvectordb.service;
 
 import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.MessageOrBuilder;
+import com.google.protobuf.util.JsonFormat;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.*;
 import com.tencent.tcvectordb.model.Collection;
@@ -13,10 +36,13 @@ import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
 import com.tencent.tcvectordb.rpc.Interceptor.AuthorityInterceptor;
+import com.tencent.tcvectordb.rpc.Interceptor.BackendServiceInterceptor;
 import com.tencent.tcvectordb.rpc.proto.Olama;
 import com.tencent.tcvectordb.rpc.proto.SearchEngineGrpc;
 import com.tencent.tcvectordb.service.param.*;
 import io.grpc.*;
+import io.grpc.okhttp.OkHttpChannelBuilder;
+import org.apache.commons.lang3.tuple.Pair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -43,8 +69,10 @@ public class GrpcStub extends HttpStub{
         super(param);
         this.authorization = String.format("Bearer account=%s&api_key=%s",param.getUsername(), param.getKey());
 
-        this.channel = ManagedChannelBuilder.forTarget(this.getAddress(param.getUrl())).
+        this.channel = OkHttpChannelBuilder.forTarget(this.getAddress(param.getUrl())).
                 intercept(new AuthorityInterceptor(this.authorization)).
+                flowControlWindow(maxReceiveMessageSize).
+                maxInboundMessageSize(maxReceiveMessageSize).
                 usePlaintext().build();
         if (param.getTimeout() > 0) {
             this.timeout = param.getTimeout();
@@ -71,9 +99,13 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public void createDatabase(Database database) {
-        Olama.DatabaseResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).
-                createDatabase(Olama.DatabaseRequest.newBuilder().
-                setDatabase(database.getDatabaseName()).build());
+        Olama.DatabaseRequest databaseRequest = Olama.DatabaseRequest.newBuilder().
+                setDatabase(database.getDatabaseName()).build();
+        logQuery(ApiPath.DB_CREATE, databaseRequest);
+        Olama.DatabaseResponse response = this.blockingStub.withInterceptors(new BackendServiceInterceptor(false))
+                .withDeadlineAfter(this.timeout, TimeUnit.SECONDS).
+                createDatabase(databaseRequest);
+        logResponse(ApiPath.DB_CREATE, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
                     "VectorDBServer create Database error: not Successful, body code=%s, message=%s",
@@ -85,8 +117,10 @@ public class GrpcStub extends HttpStub{
     public void dropDatabase(Database database) {
 
         Olama.DatabaseRequest request = Olama.DatabaseRequest.newBuilder().setDatabase(database.getDatabaseName()).build();
-        Olama.DatabaseResponse response =  this.blockingStub.
+        logQuery(ApiPath.DB_DROP, request);
+        Olama.DatabaseResponse response =  this.blockingStub.withInterceptors(new BackendServiceInterceptor(false)).
                 withDeadlineAfter(this.timeout, TimeUnit.SECONDS).dropDatabase(request);
+        logResponse(ApiPath.DB_DROP, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
                     "VectorDBServer drop Database error: not Successful, body code=%s, message=%s",
@@ -101,7 +135,12 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public DataBaseTypeRes describeDatabase(Database database) {
-        Olama.DescribeDatabaseResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).describeDatabase(Olama.DescribeDatabaseRequest.newBuilder().setDatabase(database.getDatabaseName()).build());
+        Olama.DescribeDatabaseRequest describeDatabaseRequest = Olama.DescribeDatabaseRequest.newBuilder().setDatabase(database.getDatabaseName()).build();
+        logQuery(ApiPath.DB_DESCRIBE, describeDatabaseRequest);
+        Olama.DescribeDatabaseResponse response = this.blockingStub.withInterceptors(new BackendServiceInterceptor(false))
+                .withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
+                .describeDatabase(describeDatabaseRequest);
+        logResponse(ApiPath.DB_DESCRIBE, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
                     "VectorDBServer describeDatabase error: not Successful, body code=%s, message=%s",
@@ -123,8 +162,11 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public List<String> listDatabases() {
+
         Olama.DatabaseRequest request = Olama.DatabaseRequest.newBuilder().build();
+        logQuery(ApiPath.DB_LIST, request);
         Olama.DatabaseResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).listDatabases(request);
+        logResponse(ApiPath.DB_LIST, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
                     "VectorDBServer list Database error: not Successful, body code=%s, message=%s",
@@ -137,7 +179,9 @@ public class GrpcStub extends HttpStub{
     public Map<String, DataBaseType> listDatabaseInfos() {
 
         Olama.DatabaseRequest request = Olama.DatabaseRequest.newBuilder().build();
+        logQuery(ApiPath.DB_LIST, request);
         Olama.DatabaseResponse response =  this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).listDatabases(request);
+        logResponse(ApiPath.DB_LIST, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
                     "VectorDBServer list Database error: not Successful, body code=%s, message=%s",
@@ -209,6 +253,9 @@ public class GrpcStub extends HttpStub{
                         }
                     }
                 }
+                if(index.isSparseVectorField()){
+                    indexBuilder.setMetricType(index.getMetricType().getValue());
+                }
                 if(index.getFieldType()==FieldType.Array){
                     indexBuilder.setFieldElementType(FieldElementType.String.getValue());
                 }
@@ -216,9 +263,11 @@ public class GrpcStub extends HttpStub{
             }
 
         }
+        logQuery(ApiPath.COL_CREATE, requestOrBuilder);
 
         Olama.CreateCollectionResponse response =  this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
                 .createCollection(requestOrBuilder.build());
+        logResponse(ApiPath.COL_CREATE, response);
         if(response==null){
             throw new VectorDBException("VectorDBServer error: CreateCollectionResponse not response");
         }
@@ -238,8 +287,10 @@ public class GrpcStub extends HttpStub{
     public List<Collection> listCollections(String databaseName) {
         Olama.ListCollectionsRequest request = Olama.ListCollectionsRequest.newBuilder().
                 setDatabase(databaseName).setTransfer(false).build();
+        logQuery(ApiPath.COL_LIST, request);
         Olama.ListCollectionsResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
                 .listCollections(request);
+        logResponse(ApiPath.COL_LIST, response);
         List<Collection> collections = new ArrayList<>();
         response.getCollectionsList().forEach(collection -> {
             Collection collectionRpc = convertRpcToCollection(collection);
@@ -251,11 +302,14 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public Collection describeCollection(String databaseName, String collectionName) {
-        Olama.DescribeCollectionResponse describeCollectionResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
-                .describeCollection(Olama.DescribeCollectionRequest.newBuilder()
+        Olama.DescribeCollectionRequest describeCollectionRequest = Olama.DescribeCollectionRequest.newBuilder()
                 .setDatabase(databaseName)
                 .setCollection(collectionName)
-                .build());
+                .build();
+        logQuery(ApiPath.COL_DESCRIBE, describeCollectionRequest);
+        Olama.DescribeCollectionResponse describeCollectionResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
+                .describeCollection(describeCollectionRequest);
+        logResponse(ApiPath.COL_DESCRIBE, describeCollectionResponse);
         if(describeCollectionResponse==null){
             throw new VectorDBException("VectorDBServer error: describeCollection not response");
         }
@@ -269,11 +323,14 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public AffectRes truncateCollection(String databaseName, String collectionName, DataBaseTypeEnum dbType) {
-        Olama.TruncateCollectionResponse truncateCollectionResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).
-                truncateCollection(Olama.TruncateCollectionRequest.newBuilder()
+        Olama.TruncateCollectionRequest truncateCollectionRequest = Olama.TruncateCollectionRequest.newBuilder()
                 .setDatabase(databaseName)
                 .setCollection(collectionName)
-                .build());
+                .build();
+        logQuery(ApiPath.COL_FLUSH, truncateCollectionRequest);
+        Olama.TruncateCollectionResponse truncateCollectionResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).
+                truncateCollection(truncateCollectionRequest);
+        logResponse(ApiPath.COL_FLUSH, truncateCollectionResponse);
         if (truncateCollectionResponse==null){
             throw new VectorDBException("VectorDBServer error: truncateCollectionResponse not response");
         }
@@ -293,10 +350,13 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public void dropCollection(String databaseName, String collectionName) {
-        Olama.DropCollectionResponse dropCollectionResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).
-                dropCollection(Olama.DropCollectionRequest.newBuilder().
+        Olama.DropCollectionRequest dropCollectionRequest = Olama.DropCollectionRequest.newBuilder().
                 setDatabase(databaseName).
-                setCollection(collectionName).build());
+                setCollection(collectionName).build();
+        logQuery(ApiPath.COL_DROP, dropCollectionRequest);
+        Olama.DropCollectionResponse dropCollectionResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).
+                dropCollection(dropCollectionRequest);
+        logResponse(ApiPath.COL_DROP, dropCollectionResponse);
         if(dropCollectionResponse==null){
             throw new VectorDBException("VectorDBServer error: dropCollection not response");
         }
@@ -309,10 +369,13 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public AffectRes setAlias(String databaseName, String collectionName, String aliasName) {
-        Olama.UpdateAliasResponse setAliasResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).
-                setAlias(Olama.AddAliasRequest.newBuilder().setDatabase(databaseName)
+        Olama.AddAliasRequest request = Olama.AddAliasRequest.newBuilder().setDatabase(databaseName)
                 .setCollection(collectionName)
-                .setAlias(aliasName).build());
+                .setAlias(aliasName).build();
+        logQuery(ApiPath.AI_ALIAS_SET, request);
+        Olama.UpdateAliasResponse setAliasResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).
+                setAlias(request);
+        logResponse(ApiPath.AI_ALIAS_SET, setAliasResponse);
         if(setAliasResponse==null){
             throw new VectorDBException("VectorDBServer error: dropCollection not response");
         }
@@ -328,9 +391,15 @@ public class GrpcStub extends HttpStub{
     @Override
     public AffectRes deleteAlias(String databaseName, String aliasName) {
 
+        Olama.RemoveAliasRequest.Builder requestBuilder = Olama.RemoveAliasRequest.newBuilder();
+        Olama.RemoveAliasRequest request = requestBuilder
+                .setDatabase(databaseName)
+                .setAlias(aliasName)
+                .build();
+        logQuery(ApiPath.AI_ALIAS_DELETE, request);
         Olama.UpdateAliasResponse deleteResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
-                .deleteAlias(Olama.RemoveAliasRequest.newBuilder().
-                setDatabase(databaseName).setAlias(aliasName).build());
+                .deleteAlias(request);
+        logQuery(ApiPath.AI_ALIAS_DELETE, request);
         if(deleteResponse==null){
             throw new VectorDBException("VectorDBServer error: dropCollection not response");
         }
@@ -344,7 +413,7 @@ public class GrpcStub extends HttpStub{
     }
 
     @Override
-    public AffectRes upsertDocument(InsertParamInner param) {
+    public AffectRes upsertDocument(InsertParamInner param, boolean ai) {
         Olama.UpsertRequest.Builder builder = Olama.UpsertRequest.newBuilder()
                 .setDatabase(param.getDatabase()).setCollection(param.getCollection());
         if (param.getBuildIndex()==null){
@@ -368,7 +437,10 @@ public class GrpcStub extends HttpStub{
                 }
             }
         }
-        Olama.UpsertResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).upsert(builder.build());
+        logQuery(ApiPath.DOC_UPSERT, builder);
+        Olama.UpsertResponse response = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai))
+                .withDeadlineAfter(this.timeout, TimeUnit.SECONDS).upsert(builder.build());
+        logResponse(ApiPath.DOC_UPSERT, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
                     "VectorDBServer upsert data error: not Successful, code=%s, message=%s",
@@ -378,7 +450,7 @@ public class GrpcStub extends HttpStub{
     }
 
     @Override
-    public List<Document> queryDocument(QueryParamInner param) {
+    public List<Document> queryDocument(QueryParamInner param, boolean ai) {
         Olama.QueryRequest.Builder queryBuilder = Olama.QueryRequest.newBuilder().
                 setDatabase(param.getDatabase()).setCollection(param.getCollection())
                 .setReadConsistency(param.getReadConsistency().getReadConsistency());
@@ -399,7 +471,9 @@ public class GrpcStub extends HttpStub{
         }
 
         queryBuilder.setQuery(queryCondBuilder.build());
-        Olama.QueryResponse queryResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).query(queryBuilder.build());
+        logQuery(ApiPath.DOC_QUERY, queryBuilder);
+        Olama.QueryResponse queryResponse = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai)).withDeadlineAfter(this.timeout, TimeUnit.SECONDS).query(queryBuilder.build());
+        logResponse(ApiPath.DOC_QUERY, queryResponse);
         if(queryResponse==null){
             throw new VectorDBException("VectorDBServer error: query not response");
         }
@@ -436,7 +510,7 @@ public class GrpcStub extends HttpStub{
         if (searchParam instanceof SearchByVectorParam){
             ((SearchByVectorParam)searchParam).getVectors().forEach(vector->{
                 Olama.VectorArray.Builder vectorArrayBuilder =  Olama.VectorArray.newBuilder();
-                vector.forEach(ele->vectorArrayBuilder.addVector(ele.floatValue()));
+                vector.forEach(ele->vectorArrayBuilder.addVector(Float.valueOf(ele.toString())));
                 searchConBuilder.addVectors(vectorArrayBuilder.build());
             });
 
@@ -460,7 +534,9 @@ public class GrpcStub extends HttpStub{
             }
         }
         builder.setSearch(searchConBuilder.build());
+        logQuery(ApiPath.DOC_SEARCH, builder);
         Olama.SearchResponse searchResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).search(builder.build());
+        logResponse(ApiPath.DOC_SEARCH, searchResponse);
         if(searchResponse==null){
             throw new VectorDBException("VectorDBServer error: search not response");
         }
@@ -478,6 +554,126 @@ public class GrpcStub extends HttpStub{
     }
 
     @Override
+    public HybridSearchRes hybridSearchDocument(HybridSearchParamInner param, boolean ai) {
+        Olama.SearchRequest.Builder builder = Olama.SearchRequest.newBuilder().setDatabase(param.getDatabase()).
+                setCollection(param.getCollection()).
+                setReadConsistency(param.getReadConsistency().getReadConsistency());
+        HybridSearchParam searchParam = param.getSearch();
+        Olama.SearchCond.Builder searchConBuilder = Olama.SearchCond.newBuilder()
+                .setRetrieveVector(searchParam.isRetrieveVector()).setLimit(searchParam.getLimit());
+        if (searchParam.getOutputFields()!=null){
+            searchConBuilder.addAllOutputfields(searchParam.getOutputFields());
+        }
+        if (searchParam.getFilter()!=null){
+            searchConBuilder.setFilter(searchParam.getFilter());
+        }
+        if (searchParam.getAnn()!=null && !searchParam.getAnn().isEmpty()){
+            searchConBuilder.addAllAnn(searchParam.getAnn().stream()
+                    .map(annOption -> {
+                        Olama.AnnData.Builder annBuilder = Olama.AnnData.newBuilder()
+                                .setFieldName(annOption.getFieldName());
+                        if (annOption.getDocumentIds()!=null){
+                            annBuilder.addAllDocumentIds(annOption.getDocumentIds());
+                        }
+                        if (annOption.getData()!=null){
+                            if (annOption.getData().get(0) instanceof String){
+                                annBuilder.addAllDataExpr(annOption.getData().stream().map(item->(String)item).collect(Collectors.toList()));
+                            }if (annOption.getData().get(0) instanceof List){
+                                annBuilder.addAllData(annOption.getData().stream()
+                                        .map(item-> Olama.VectorArray.newBuilder().addAllVector(((List<Object>)item).
+                                                stream().map(ele->Float.parseFloat(ele.toString())).collect(Collectors.toList())).build())
+                                        .collect(Collectors.toList()));
+                            }
+                        }
+                        if (annOption.getParams()!=null){
+                            if (annOption.getParams() instanceof GeneralParams){
+                                GeneralParams params = (GeneralParams) annOption.getParams();
+                                annBuilder.setParams(Olama.SearchParams.newBuilder().setEf(params.getEf())
+                                        .setNprobe(params.getNProbe())
+                                        .setRadius((float) params.getRadius()).build());
+                            }else if (annOption.getParams() instanceof HNSWSearchParams){
+                                HNSWSearchParams params = (HNSWSearchParams) annOption.getParams();
+                                annBuilder.setParams(Olama.SearchParams.newBuilder().setEf(params.getEf()).build());
+                            }
+                        }
+                        return annBuilder.build();
+                    }).collect(Collectors.toList()));
+        }
+        if (searchParam.getMatch()!=null && !searchParam.getMatch().isEmpty()){
+            searchConBuilder.addAllSparse(searchParam.getMatch().stream().map(matchOption -> {
+                Olama.SparseData.Builder sparseBuilder = Olama.SparseData.newBuilder().setFieldName(matchOption.getFieldName());
+                matchOption.getData().forEach(sparseVectors->{
+                    sparseBuilder.addData(Olama.SparseVectorArray.newBuilder().addAllSpVector(sparseVectors.stream()
+                            .map(vectors-> Olama.SparseVecItem.newBuilder().setTermId((Long) vectors.get(0)).
+                                    setScore((Float.parseFloat(vectors.get(1).toString()))).
+                                    build()).collect(Collectors.toList())).build());
+                });
+                if(matchOption.getLimit()!=null){
+                    sparseBuilder.setLimit(matchOption.getLimit());
+                }
+                return sparseBuilder.build();
+            }).collect(Collectors.toList()));
+        }
+        if (searchParam.getRerank()!=null){
+            Olama.RerankParams.Builder rerankBuilder = Olama.RerankParams.newBuilder()
+                    .setMethod(searchParam.getRerank().getMethod());
+            if (searchParam.getRerank() instanceof WeightRerankParam){
+                WeightRerankParam weightRerankParam = (WeightRerankParam)searchParam.getRerank();
+                Map<String, Float> weightMap = new HashMap<>();
+                for (int i = 0; i < weightRerankParam.getFieldList().size(); i++) {
+                    weightMap.put(weightRerankParam.getFieldList().get(i), weightRerankParam.getWeight().get(i).floatValue());
+                }
+                rerankBuilder.putAllWeights(weightMap);
+            }else if (searchParam.getRerank() instanceof RRFRerankParam){
+                RRFRerankParam rrfRerankParam = (RRFRerankParam)searchParam.getRerank();
+                rerankBuilder.setRrfK(rrfRerankParam.getRrfK());
+            }
+            searchConBuilder.setRerankParams(rerankBuilder.build());
+        }
+        builder.setSearch(searchConBuilder);
+        logQuery(ApiPath.DOC_HYBRID_SEARCH, builder);
+        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai));
+        Olama.SearchResponse searchResponse = searchEngineBlockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).hybridSearch(builder.build());
+        logResponse(ApiPath.DOC_HYBRID_SEARCH, searchResponse);
+
+        if(searchResponse==null){
+            throw new VectorDBException("VectorDBServer error: search not response");
+        }
+        if (searchResponse.getCode()!=0){
+            throw new VectorDBException(String.format(
+                    "VectorDBServer error: search not Success, body code=%s, message=%s",
+                    searchResponse.getCode(), searchResponse.getMsg()));
+        }
+        List<List<Document>> documentsList = new ArrayList<>();
+        for (Olama.SearchResult searchResult : searchResponse.getResultsList()) {
+            List<Document> documents = searchResult.getDocumentsList().stream().map(GrpcStub::convertDocument)
+                    .collect(Collectors.toList());
+            if (!searchParam.getIsArrayParam()){
+                return new HybridSearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), Collections.unmodifiableList(documents));
+            }else {
+                documentsList.add(documents);
+            }
+        }
+        return new HybridSearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), Collections.unmodifiableList(documentsList));
+    }
+
+    private static void logQuery(String url, MessageOrBuilder messageOrBuilder) {
+        try {
+            logger.debug("Query {}, request body={}", url, JsonFormat.printer().print(messageOrBuilder));
+        } catch (InvalidProtocolBufferException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void logResponse(String url, MessageOrBuilder messageOrBuilder) {
+        try {
+            logger.debug("Query {}, response={}", url, JsonFormat.printer().print(messageOrBuilder));
+        } catch (InvalidProtocolBufferException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public AffectRes deleteDocument(DeleteParamInner param) {
         Olama.QueryCond.Builder queryCondBuilder = Olama.QueryCond.newBuilder();
         DeleteParam paramQuery = param.getQuery();
@@ -487,11 +683,14 @@ public class GrpcStub extends HttpStub{
         if (!paramQuery.getFilter().isEmpty()){
             queryCondBuilder.setFilter(paramQuery.getFilter());
         }
-        Olama.DeleteResponse deleteResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).dele(Olama.DeleteRequest.newBuilder()
+        Olama.DeleteRequest deleteRequest = Olama.DeleteRequest.newBuilder()
                 .setDatabase(param.getDatabase())
                 .setCollection(param.getCollection())
                 .setQuery(queryCondBuilder.build())
-                .build());
+                .build();
+        logQuery(ApiPath.DOC_DELETE, deleteRequest);
+        Olama.DeleteResponse deleteResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).dele(deleteRequest);
+        logResponse(ApiPath.DOC_DELETE, deleteResponse);
         if(deleteResponse==null){
             throw new VectorDBException("VectorDBServer error: deleteResponse not response");
         }
@@ -504,7 +703,7 @@ public class GrpcStub extends HttpStub{
     }
 
     @Override
-    public AffectRes updateDocument(UpdateParamInner param) {
+    public AffectRes updateDocument(UpdateParamInner param, boolean ai) {
         Olama.QueryCond.Builder queryCondBuilder = Olama.QueryCond.newBuilder();
         UpdateParam paramQuery = param.getQuery();
         if(!paramQuery.getDocumentIds().isEmpty()){
@@ -513,23 +712,25 @@ public class GrpcStub extends HttpStub{
         if (!paramQuery.getFilter().isEmpty()){
             queryCondBuilder.setFilter(paramQuery.getFilter());
         }
+        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai));
         Olama.UpdateResponse updateResponse=null;
+        Olama.UpdateRequest.Builder updateRequestBuilder = Olama.UpdateRequest.newBuilder();
         if (param.getUpdate()!=null){
-            updateResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).update(Olama.UpdateRequest.newBuilder()
-                    .setDatabase(param.getDatabase())
+            updateRequestBuilder.setDatabase(param.getDatabase())
                     .setCollection(param.getCollection())
                     .setQuery(queryCondBuilder.build())
-                    .setUpdate(convertDocument2OlamaDoc(param.getUpdate()))
-                    .build());
-        } else if (param.getUpdateData()!=null) {
-            updateResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).update(Olama.UpdateRequest.newBuilder()
-                    .setDatabase(param.getDatabase())
-                    .setCollection(param.getCollection())
-                    .setQuery(queryCondBuilder.build())
-                    .setUpdate(convertDocumentJSON2OlamaDoc(param.getUpdateData()))
-                    .build());
-        }
+                    .setUpdate(convertDocument2OlamaDoc(param.getUpdate()));
 
+        } else if (param.getUpdateData()!=null) {
+            updateRequestBuilder.setDatabase(param.getDatabase())
+                    .setCollection(param.getCollection())
+                    .setQuery(queryCondBuilder.build())
+                    .setUpdate(convertDocumentJSON2OlamaDoc(param.getUpdateData()));
+        }
+        logQuery(ApiPath.DOC_UPDATE, updateRequestBuilder.build());
+        updateResponse = searchEngineBlockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
+                .update(updateRequestBuilder.build());
+        logResponse(ApiPath.DOC_UPDATE, updateResponse);
         if(updateResponse==null){
             throw new VectorDBException("VectorDBServer error: update not response");
         }
@@ -543,12 +744,15 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public BaseRes rebuildIndex(RebuildIndexParamInner param) {
-        Olama.RebuildIndexResponse rebuildIndexResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).rebuildIndex(Olama.RebuildIndexRequest.newBuilder()
+        Olama.RebuildIndexRequest rebuildIndexRequest = Olama.RebuildIndexRequest.newBuilder()
                 .setDatabase(param.getDatabase())
                 .setCollection(param.getCollection())
                 .setThrottle(param.getThrottle())
                 .setDropBeforeRebuild(param.isDropBeforeRebuild())
-                .build());
+                .build();
+        logQuery(ApiPath.REBUILD_INDEX, rebuildIndexRequest);
+        Olama.RebuildIndexResponse rebuildIndexResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).rebuildIndex(rebuildIndexRequest);
+        logResponse(ApiPath.REBUILD_INDEX, rebuildIndexResponse);
         if(rebuildIndexResponse==null){
             throw new VectorDBException("VectorDBServer error: rebuildIndex not response");
         }
@@ -669,6 +873,9 @@ public class GrpcStub extends HttpStub{
 
                 }
             }
+            if (indexField.isSparseVectorField()){
+                indexField.setMetricType(MetricType.fromValue(entry.getValue().getMetricType()));
+            }
             if(indexField.getFieldType()== FieldType.Array){
                 indexField.setFieldElementType(FieldElementType.fromValue(entry.getValue().getFieldElementType()));
             }
@@ -683,7 +890,16 @@ public class GrpcStub extends HttpStub{
             docBuilder.setId(document.getId());
         }
         if (document.getVector()!=null){
-            docBuilder.addAllVector((document.getVector()).stream().map(vecEle -> vecEle.floatValue()).collect(Collectors.toList()));
+            if (document.getVector() instanceof List){
+                docBuilder.addAllVector(((List<Double>)document.getVector()).stream().map(ele->ele.floatValue()).collect(Collectors.toList()));
+            }else if (document.getVector() instanceof String){
+                docBuilder.setDataExpr((String)document.getVector());
+            }
+        }
+        if (document.getSparseVector()!=null){
+            docBuilder.addAllSparseVector(document.getSparseVector().stream()
+                    .map(pair->Olama.SparseVecItem.newBuilder().setTermId(pair.getKey()).setScore(pair.getValue().floatValue()).build())
+                    .collect(Collectors.toList()));
         }
         document.getDocFields().forEach(docField -> {
             Olama.Field.Builder fieldBuilder = Olama.Field.newBuilder();
@@ -710,7 +926,12 @@ public class GrpcStub extends HttpStub{
                 docBuilder.setId(document.get(key).toString());
             }else if (key.equals("vector")){
                 docBuilder.addAllVector((((JSONArray)document.get(key)).toList()).stream().map(vecEle -> Float.parseFloat(vecEle.toString())).collect(Collectors.toList()));
-            }else {
+            } else if (key.equals("sparse_vector")) {
+                List<Object> sparseVectors = ((List)document.get("sparse_vector"));
+                docBuilder.addAllSparseVector(sparseVectors.stream().map(pair->
+                             Olama.SparseVecItem.newBuilder().setTermId((Long) ((List<Object>)pair).get(0))
+                                    .setScore((Float) ((List<Object>)pair).get(1)).build()).collect(Collectors.toList()));
+            } else {
                 Olama.Field.Builder fieldBuilder = Olama.Field.newBuilder();
                 if (document.get(key) instanceof Integer || document.get(key) instanceof Long) {
                     fieldBuilder.setValU64(Long.parseLong(document.get(key).toString()));
@@ -734,6 +955,10 @@ public class GrpcStub extends HttpStub{
         }
         if (document.getVectorCount()>0){
             builder.withVector(document.getVectorList().stream().map(ele->ele.doubleValue()).collect(Collectors.toList()));
+        }
+        if (document.getSparseVectorCount()>0){
+            builder.withSparseVector(document.getSparseVectorList().stream().map(sparseVecItem->
+                    Pair.of(sparseVecItem.getTermId(),sparseVecItem.getScore())).collect(Collectors.toList()));
         }
         if(document.getFieldsMap()!=null){
             for (Map.Entry<String, Olama.Field> stringFieldEntry : document.getFieldsMap().entrySet()) {

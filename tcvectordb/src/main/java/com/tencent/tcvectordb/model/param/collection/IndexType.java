@@ -54,6 +54,8 @@ public enum IndexType {
      *
      */
     IVF_SQ16("IVF_SQ16"),
+
+    INVERTED("inverted"),
     /**
      * scalar index type: primaryKey
      */

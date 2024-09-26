@@ -377,7 +377,7 @@ public class VectorDBExample {
         return CreateCollectionParam.newBuilder()
                 .withName(collName)
                 .withShardNum(1)
-                .withReplicaNum(1)
+                .withReplicaNum(0)
                 .withDescription("test collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", 3, IndexType.HNSW,

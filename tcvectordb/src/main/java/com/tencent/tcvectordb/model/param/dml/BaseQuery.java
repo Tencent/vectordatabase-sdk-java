@@ -10,7 +10,7 @@ public abstract class BaseQuery {
 
     public BaseQuery(Builder<?> builder) {
         if (builder.filter != null) {
-            this.filter = builder.filter.getCond();
+            this.filter = builder.filter;
         }
         this.documentIds = builder.documentIds;
     }
@@ -24,7 +24,7 @@ public abstract class BaseQuery {
     }
 
     public static abstract class Builder<T extends Builder<T>> {
-        protected Filter filter;
+        protected String filter;
         protected List<String> documentIds;
 
         protected Builder() {
@@ -35,6 +35,11 @@ public abstract class BaseQuery {
 
 
         public T withFilter(Filter filter) {
+            this.filter = filter.getCond();
+            return self();
+        }
+
+        public T withFilter(String filter) {
             this.filter = filter;
             return self();
         }

@@ -27,8 +27,10 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.tencent.tcvectordb.model.param.collection.FieldType;
+import com.tencent.tcvectordb.utils.ConvertUtils;
 import com.tencent.tcvectordb.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
 
@@ -38,7 +40,8 @@ import java.util.*;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Document {
     private String id;
-    private List<Double> vector;
+    private Object vector;
+    private List<Pair<Long,Float>> sparseVector;
     private Double score;
     private String doc;
     private List<DocField> docFields;
@@ -64,18 +67,15 @@ public class Document {
         return docKeyValue;
     }
 
-    public List<Double> getVector() {
-        if (vector==null || vector.isEmpty()){
-            return Collections.EMPTY_LIST;
-        }
-        return Collections.unmodifiableList(vector);
+    public Object getVector() {
+        return vector;
     }
 
     public void setId(String id) {
         this.id = id;
     }
 
-    public void setVector(List<Double> vector) {
+    public void setVector(Object vector) {
         this.vector = vector;
     }
 
@@ -91,6 +91,15 @@ public class Document {
         this.docFields = docFields;
     }
 
+
+    public List<Pair<Long, Float>> getSparseVector() {
+        return sparseVector;
+    }
+
+    public void setSparseVector(List<Pair<Long, Float>> sparseVector) {
+        this.sparseVector = sparseVector;
+    }
+
     public Object getObject(String key) {
         if (Objects.isNull(docFields) || docFields.isEmpty()) {
             return null;
@@ -99,6 +108,8 @@ public class Document {
 
         return docKeyValue.get(key);
     }
+
+
 
     private void ensureDocKeyValue() {
         if (Objects.isNull(docKeyValue)) {
@@ -115,10 +126,25 @@ public class Document {
         if (StringUtils.isNotBlank(id)) {
             node.put("id", id);
         }
-        if (vector != null && !vector.isEmpty()) {
-            ArrayNode vectorNode = JsonNodeFactory.instance.arrayNode();
-            vector.forEach(vectorNode::add);
-            node.set("vector", vectorNode);
+        if (vector != null) {
+            if(vector instanceof List){
+                ArrayNode vectorNode = JsonNodeFactory.instance.arrayNode();
+                ((List<?>) vector).forEach(ele->{
+                    if (ele instanceof Double) {
+                        vectorNode.add(((Double) ele).doubleValue());
+                    }
+                    if (ele instanceof String) {
+                        vectorNode.add(ele.toString());
+                    }
+                });
+                node.set("vector", vectorNode);
+            }
+            if (vector instanceof String){
+                node.put("vector", vector.toString());
+            }
+        }
+        if (sparseVector != null && !sparseVector.isEmpty()) {
+            node.put("sparse_vector", JsonUtils.toJsonNode(ConvertUtils.convertPairToList(sparseVector)));
         }
         if (score != null) {
             node.put("score", score);
@@ -152,6 +178,7 @@ public class Document {
         this.doc = builder.doc;
         this.score = builder.score;
         this.docFields = builder.docFields;
+        this.sparseVector = builder.sparseVector;
     }
 
     public static Builder newBuilder() {
@@ -160,8 +187,8 @@ public class Document {
 
     public static class Builder {
         private String id;
-        private List<Double> vector;
-
+        private Object vector;
+        private List<Pair<Long,Float>> sparseVector;
         private Double score;
         private String doc;
         private List<DocField> docFields;
@@ -180,6 +207,11 @@ public class Document {
             return this;
         }
 
+        public Builder withVectorByEmbeddingText(String embeddingText) {
+            this.vector = embeddingText;
+            return this;
+        }
+
         public Builder withDoc(String doc) {
             this.doc = doc;
             return this;
@@ -187,6 +219,29 @@ public class Document {
 
         public Builder withScore(Double score) {
             this.score = score;
+            return this;
+        }
+
+        public Builder withVectorByText(String embeddingText) {
+            this.vector = embeddingText;
+            return this;
+        }
+
+        public Builder withSparseVector(List<Pair<Long,Float>> sparseVector) {
+            this.sparseVector = sparseVector;
+            return this;
+        }
+
+        public Builder withSparseVectorList(List<Object> sparseVectors) {
+            List<Pair<Long, Float>> sparseVectorTmp = new ArrayList<>();
+            sparseVectors.forEach(sparseVector -> {
+                if (sparseVector instanceof List) {
+                    List<Object> sparseVectorList = (List<Object>) sparseVector;
+                    sparseVectorTmp.add(Pair.of(Long.valueOf(sparseVectorList.get(0).toString()),
+                            Float.valueOf(sparseVectorList.get(1).toString())));
+                }
+            });
+            this.sparseVector = sparseVectorTmp;
             return this;
         }
 

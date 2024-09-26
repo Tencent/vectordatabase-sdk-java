@@ -1,3 +1,23 @@
+/*
+ * Copyright (C) 2023 Tencent Cloud.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the vectordb-sdk-java), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package com.tencent.tcvectordb.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -45,7 +65,7 @@ import java.util.concurrent.TimeUnit;
 public class HttpStub implements Stub {
     private final ConnectParam connectParam;
     private final OkHttpClient client;
-    private final Headers headers;
+    private final Headers.Builder headersBuilder;
     private final ObjectMapper mapper = new ObjectMapper();
     private static final MediaType JSON =
             MediaType.parse("application/json; charset=utf-8");
@@ -56,8 +76,8 @@ public class HttpStub implements Stub {
         this.connectParam = connectParam;
         String authorization = String.format("Bearer account=%s&api_key=%s",
                 connectParam.getUsername(), connectParam.getKey());
-        this.headers = new Headers.Builder()
-                .add("Authorization", authorization).build();
+        this.headersBuilder = new Headers.Builder()
+                .add("Authorization", authorization);
         logger.debug("header: {}", authorization);
         this.client = new OkHttpClient.Builder()
                 .connectTimeout(this.connectParam.getConnectTimeout(), TimeUnit.SECONDS)
@@ -70,19 +90,19 @@ public class HttpStub implements Stub {
     @Override
     public void createDatabase(Database database) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DB_CREATE);
-        this.post(url, database.toString());
+        this.post(url, database.toString(), false);
     }
 
     @Override
     public void dropDatabase(Database database) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DB_DROP);
-        this.post(url, database.toString());
+        this.post(url, database.toString(), false);
     }
 
     @Override
     public AffectRes createAIDatabase(AIDatabase aiDatabase) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_DB_CREATE);
-        JsonNode jsonNode = this.post(url, aiDatabase.toString());
+        JsonNode jsonNode = this.post(url, aiDatabase.toString(), false);
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
@@ -91,21 +111,21 @@ public class HttpStub implements Stub {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DB_DESCRIBE);
         String body = String.format("{\"database\":\"%s\"}",
                 database.getDatabaseName());
-        JsonNode jsonNode = this.post(url, body);
+        JsonNode jsonNode = this.post(url, body, false);
         return JsonUtils.parseObject(jsonNode.toString(), DataBaseTypeRes.class);
     }
 
     @Override
     public AffectRes dropAIDatabase(AIDatabase aiDatabase) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_DB_DROP);
-        JsonNode jsonNode = this.post(url, aiDatabase.toString());
+        JsonNode jsonNode = this.post(url, aiDatabase.toString(), false);
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
     @Override
     public List<String> listDatabases() {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DB_LIST);
-        JsonNode jsonNode = this.get(url);
+        JsonNode jsonNode = this.get(url, false);
         JsonNode dbsJson = jsonNode.get("databases");
         if (dbsJson == null) {
             return new ArrayList<>();
@@ -122,7 +142,7 @@ public class HttpStub implements Stub {
     @Override
     public Map<String, DataBaseType> listDatabaseInfos() {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DB_LIST);
-        JsonNode jsonNode = this.get(url);
+        JsonNode jsonNode = this.get(url, false);
         JsonNode dbsJson = jsonNode.get("info");
         if (dbsJson == null) {
             return new HashMap<>();
@@ -139,19 +159,19 @@ public class HttpStub implements Stub {
     @Override
     public void createCollection(CreateCollectionParam param) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.COL_CREATE);
-        this.post(url, param.toString());
+        this.post(url, param.toString(), false);
     }
 
     @Override
     public void createCollectionView(CreateCollectionViewParam params) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_COL_CREATE);
-        this.post(url, params.toString());
+        this.post(url, params.toString(), true);
     }
 
     @Override
     public List<Collection> listCollections(String databaseName) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.COL_LIST);
-        JsonNode jsonNode = this.post(url, String.format("{\"database\":\"%s\"}", databaseName));
+        JsonNode jsonNode = this.post(url, String.format("{\"database\":\"%s\"}", databaseName), false);
         JsonNode closJson = jsonNode.get("collections");
         if (closJson == null) {
             return new ArrayList<>();
@@ -166,7 +186,7 @@ public class HttpStub implements Stub {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.COL_DESCRIBE);
         String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
                 databaseName, collectionName);
-        JsonNode jsonNode = this.post(url, body);
+        JsonNode jsonNode = this.post(url, body, false);
         JsonNode dbsJson = jsonNode.get("collection");
         if (dbsJson == null) {
             return null;
@@ -180,7 +200,7 @@ public class HttpStub implements Stub {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.COL_FLUSH);
         String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
                 databaseName, collectionName);
-        JsonNode jsonNode = this.post(url, body);
+        JsonNode jsonNode = this.post(url, body, false);
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
@@ -189,7 +209,7 @@ public class HttpStub implements Stub {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_COL_FLUSH);
         String body = String.format("{\"database\":\"%s\",\"collectionView\":\"%s\"}",
                 databaseName, collectionName);
-        JsonNode jsonNode = this.post(url, body);
+        JsonNode jsonNode = this.post(url, body, true);
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
@@ -198,7 +218,7 @@ public class HttpStub implements Stub {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.COL_DROP);
         String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\"}",
                 databaseName, collectionName);
-        this.post(url, body);
+        this.post(url, body, false);
     }
 
     @Override
@@ -206,7 +226,7 @@ public class HttpStub implements Stub {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.SET_COL_ALIAS);
         String body = String.format("{\"database\":\"%s\",\"collection\":\"%s\",\"alias\":\"%s\"}",
                 databaseName, collectionName, aliasName);
-        JsonNode jsonNode = this.post(url, body);
+        JsonNode jsonNode = this.post(url, body, false);
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
@@ -215,21 +235,21 @@ public class HttpStub implements Stub {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DELETE_COL_ALIAS);
         String body = String.format("{\"database\":\"%s\",\"alias\":\"%s\"}",
                 databaseName, aliasName);
-        JsonNode jsonNode = this.post(url, body);
+        JsonNode jsonNode = this.post(url, body, false);
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
     @Override
-    public AffectRes upsertDocument(InsertParamInner param) {
+    public AffectRes upsertDocument(InsertParamInner param, boolean ai) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DOC_UPSERT);
-        JsonNode jsonNode = this.post(url, param.toString());
+        JsonNode jsonNode = this.post(url, param.toString(), ai);
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
     @Override
-    public List<Document> queryDocument(QueryParamInner param) {
+    public List<Document> queryDocument(QueryParamInner param, boolean ai) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DOC_QUERY);
-        JsonNode jsonNode = this.post(url, param.toString());
+        JsonNode jsonNode = this.post(url, param.toString(), ai);
         JsonNode docsNode = jsonNode.get("documents");
         List<Document> dosc = new ArrayList<>();
         if (docsNode == null) {
@@ -255,7 +275,7 @@ public class HttpStub implements Stub {
         if (DataBaseTypeEnum.isAIDataBase(dbType)) {
             url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_SEARCH);
         }
-        JsonNode jsonNode = this.post(url, param.toString());
+        JsonNode jsonNode = this.post(url, param.toString(), false);
         JsonNode multiDocsNode = jsonNode.get("documents");
         int code = 0;
         if (jsonNode.get("code") != null) {
@@ -286,7 +306,7 @@ public class HttpStub implements Stub {
                 }
                 multiDosc.add(docs);
             }
-            return new SearchRes(code, msg, warning, multiDosc);
+            return new SearchRes(code, msg, warning, Collections.unmodifiableList(multiDosc));
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format("VectorDBServer response " +
                     "from search error: can't parse documents=%s", multiDocsNode));
@@ -294,29 +314,73 @@ public class HttpStub implements Stub {
     }
 
     @Override
+    public HybridSearchRes hybridSearchDocument(HybridSearchParamInner param, boolean ai) {
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DOC_HYBRID_SEARCH);
+        JsonNode jsonNode = this.post(url, param.toString(), ai);
+        JsonNode multiDocsNode = jsonNode.get("documents");
+        int code = 0;
+        if (jsonNode.get("code") != null) {
+            code = jsonNode.get("code").asInt();
+        }
+        String msg = "";
+        if (jsonNode.get("msg") != null) {
+            msg = jsonNode.get("msg").asText();
+        }
+        String warning = "";
+        if (jsonNode.get("warning") != null) {
+            warning = jsonNode.get("warning").asText();
+        }
+        if (multiDocsNode == null) {
+            return new HybridSearchRes(code, msg, warning, Collections.emptyList());
+        }
+        try {
+            List<List<Document>> multiDosc = new ArrayList<>();
+            Iterator<JsonNode> multiIter = multiDocsNode.elements();
+            while (multiIter.hasNext()) {
+                JsonNode docNode = multiIter.next();
+                Iterator<JsonNode> iter = docNode.elements();
+                List<Document> docs = new ArrayList<>();
+                while (iter.hasNext()) {
+                    JsonNode node = iter.next();
+                    Document doc = node2Doc(node);
+                    docs.add(doc);
+                }
+                multiDosc.add(docs);
+            }
+            if (!param.getSearch().getIsArrayParam()){
+                return new HybridSearchRes(code, msg, warning, Collections.unmodifiableList(multiDosc.get(0)));
+            }
+            return new HybridSearchRes(code, msg, warning, Collections.unmodifiableList(multiDosc));
+        } catch (JsonProcessingException ex) {
+            throw new VectorDBException(String.format("VectorDBServer response " +
+                    "from hybrid search error: can't parse documents=%s", multiDocsNode));
+        }
+    }
+
+    @Override
     public AffectRes deleteDocument(DeleteParamInner param) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DOC_DELETE);
-        JsonNode jsonNode = this.post(url, param.toString());
+        JsonNode jsonNode = this.post(url, param.toString(), false);
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
-    public AffectRes updateDocument(UpdateParamInner param) {
+    public AffectRes updateDocument(UpdateParamInner param, boolean ai) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DOC_UPDATE);
-        JsonNode jsonNode = this.post(url, param.toString());
+        JsonNode jsonNode = this.post(url, param.toString(), ai);
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
     @Override
     public BaseRes rebuildIndex(RebuildIndexParamInner param) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.REBUILD_INDEX);
-        JsonNode jsonNode = this.post(url, param.toString());
+        JsonNode jsonNode = this.post(url, param.toString(), false);
         return JsonUtils.parseObject(jsonNode.toString(), BaseRes.class);
     }
 
     @Override
     public BaseRes rebuildAIIndex(RebuildIndexParamInner param) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_REBUILD_INDEX);
-        JsonNode jsonNode = this.post(url, param.toString());
+        JsonNode jsonNode = this.post(url, param.toString(), true);
         return JsonUtils.parseObject(jsonNode.toString(), BaseRes.class);
     }
 
@@ -325,7 +389,7 @@ public class HttpStub implements Stub {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_ALIAS_SET);
         String body = String.format("{\"database\":\"%s\",\"collectionView\":\"%s\",\"alias\":\"%s\"}",
                 databaseName, collectionName, aliasName);
-        JsonNode jsonNode = this.post(url, body);
+        JsonNode jsonNode = this.post(url, body, true);
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
@@ -334,14 +398,14 @@ public class HttpStub implements Stub {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_ALIAS_DELETE);
         String body = String.format("{\"database\":\"%s\",\"alias\":\"%s\"}",
                 databaseName, aliasName);
-        JsonNode jsonNode = this.post(url, body);
+        JsonNode jsonNode = this.post(url, body, true);
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
     @Override
     public List<CollectionView> listCollectionView(String databaseName) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_COL_LIST);
-        JsonNode jsonNode = this.post(url, String.format("{\"database\":\"%s\"}", databaseName));
+        JsonNode jsonNode = this.post(url, String.format("{\"database\":\"%s\"}", databaseName), true);
         JsonNode closJson = jsonNode.get("collectionViews");
         if (closJson == null) {
             return new ArrayList<>();
@@ -355,7 +419,7 @@ public class HttpStub implements Stub {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_COL_DESCRIBE);
         String body = String.format("{\"database\":\"%s\",\"collectionView\":\"%s\"}",
                 databaseName, collectionName);
-        JsonNode jsonNode = this.post(url, body);
+        JsonNode jsonNode = this.post(url, body, true);
         JsonNode dbsJson = jsonNode.get("collectionView");
         if (dbsJson == null) {
             return null;
@@ -369,14 +433,14 @@ public class HttpStub implements Stub {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_COL_DROP);
         String body = String.format("{\"database\":\"%s\",\"collectionView\":\"%s\"}",
                 databaseName, collectionName);
-        JsonNode jsonNode = this.post(url, body);
+        JsonNode jsonNode = this.post(url, body, true);
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
     @Override
     public List<DocumentSet> queryAIDocument(CollectionViewQueryParamInner queryParamInner) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_QUERY);
-        JsonNode jsonNode = this.post(url, queryParamInner.toString());
+        JsonNode jsonNode = this.post(url, queryParamInner.toString(), true);
         JsonNode docsNode = jsonNode.get("documentSets");
         List<DocumentSet> dosc = new ArrayList<>();
         if (docsNode == null) {
@@ -399,14 +463,14 @@ public class HttpStub implements Stub {
     @Override
     public AffectRes deleteAIDocument(CollectionViewDeleteParamInner deleteParamInner) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_DELETE);
-        JsonNode jsonNode = this.post(url, deleteParamInner.toString());
+        JsonNode jsonNode = this.post(url, deleteParamInner.toString(), true);
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
     @Override
     public SearchContentRes searchAIDocument(SearchDocParamInner searchDocParamInner) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_SEARCH);
-        JsonNode jsonNode = this.post(url, searchDocParamInner.toString());
+        JsonNode jsonNode = this.post(url, searchDocParamInner.toString(), true);
         JsonNode multiDocsNode = jsonNode.get("documents");
         int code = 0;
         if (jsonNode.get("code") != null) {
@@ -441,7 +505,7 @@ public class HttpStub implements Stub {
     @Override
     public AffectRes updateAIDocument(CollectionViewUpdateParamInner updateParamInner) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_UPDATE);
-        JsonNode jsonNode = this.post(url, updateParamInner.toString());
+        JsonNode jsonNode = this.post(url, updateParamInner.toString(), true);
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
@@ -456,7 +520,7 @@ public class HttpStub implements Stub {
             params.put("documentSetName", fileName);
         }
         String body = JsonUtils.toJsonString(params);
-        JsonNode jsonNode = this.post(url, body);
+        JsonNode jsonNode = this.post(url, body, true);
         return JsonUtils.collectionDeserializer(jsonNode.toString(), new TypeReference<UploadUrlRes>() {
         });
     }
@@ -567,7 +631,7 @@ public class HttpStub implements Stub {
         String body = String.format("{\"database\":\"%s\",\"collectionView\":\"%s\",\"documentSetName\":\"%s\"," +
                         "\"documentSetId\":\"%s\"}",
                 databaseName, collectionName, documentSetName, documentSetId);
-        JsonNode jsonNode = this.post(url, body);
+        JsonNode jsonNode = this.post(url, body, true);
         int code = 0;
         if (jsonNode.get("code") != null) {
             code = jsonNode.get("code").asInt();
@@ -619,16 +683,16 @@ public class HttpStub implements Stub {
             params.put("offset", offset);
         }
         String body = JsonUtils.toJsonString(params);
-        JsonNode jsonNode = this.post(url, body);
+        JsonNode jsonNode = this.post(url, body, true);
         return JsonUtils.collectionDeserializer(jsonNode.toString(), new TypeReference<GetChunksRes>() {
         });
     }
 
 
-    private JsonNode get(String url) {
+    private JsonNode get(String url, boolean ai) {
         Request request = new Request.Builder()
                 .url(url)
-                .headers(this.headers)
+                .headers(get_headers(ai))
                 .build();
         try (Response response = client.newCall(request).execute()) {
             return parseResponse(response);
@@ -637,12 +701,12 @@ public class HttpStub implements Stub {
         }
     }
 
-    private JsonNode post(String url, String json) {
+    private JsonNode post(String url, String json, boolean ai) {
         logger.debug("Query {}, body={}", url, json);
         RequestBody body = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
                 .url(url)
-                .headers(this.headers)
+                .headers(get_headers(ai))
                 .post(body)
                 .build();
         try (Response response = client.newCall(request).execute()) {
@@ -652,6 +716,16 @@ public class HttpStub implements Stub {
             throw new VectorDBException(String.format(
                     "VectorDBServer IOException: %s", ex.getMessage()));
         }
+    }
+
+    private Headers get_headers(boolean ai) {
+        String backend = "vdb";
+        if (ai){
+            backend = "ai";
+        }
+        this.headersBuilder.add("backend-service", backend);
+        logger.debug("Backend: {}", backend);
+        return headersBuilder.build();
     }
 
     private JsonNode parseResponse(Response response) throws IOException {
@@ -738,6 +812,8 @@ public class HttpStub implements Stub {
             } else if (StringUtils.equals("vector", name)) {
                 List<Double> vector = JsonUtils.parseObject(ele.toString(), List.class);
                 builder.withVector(vector);
+            }else if (StringUtils.equals("sparse_vector", name)) {
+                builder.withSparseVectorList(JsonUtils.parseObject(ele.toString(), List.class));
             } else if (StringUtils.equals("doc", name)) {
                 builder.withDoc(ele.asText());
             } else if (StringUtils.equals("score", name)) {

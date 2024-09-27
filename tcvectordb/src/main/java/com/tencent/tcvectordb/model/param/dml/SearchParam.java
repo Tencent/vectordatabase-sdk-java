@@ -119,10 +119,5 @@ public abstract class SearchParam {
             this.limit = limit;
             return self();
         }
-
-        public T withRadius(Float radius) {
-            this.radius = radius;
-            return self();
-        }
     }
 }

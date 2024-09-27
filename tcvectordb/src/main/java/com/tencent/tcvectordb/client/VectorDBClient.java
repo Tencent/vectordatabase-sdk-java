@@ -22,8 +22,10 @@ package com.tencent.tcvectordb.client;
 
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.AIDatabase;
+import com.tencent.tcvectordb.model.Collection;
 import com.tencent.tcvectordb.model.Database;
 import com.tencent.tcvectordb.model.Document;
+import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
@@ -35,7 +37,6 @@ import com.tencent.tcvectordb.service.HttpStub;
 import com.tencent.tcvectordb.service.Stub;
 import com.tencent.tcvectordb.service.param.*;
 import org.json.JSONObject;
-
 import java.util.List;
 
 /**
@@ -64,6 +65,24 @@ public class VectorDBClient {
      */
     public Database createDatabase(String databaseName) throws VectorDBException {
         Database db = database(databaseName, readConsistency);
+        stub.createDatabase(db);
+        return db;
+    }
+
+    /**
+     * create database if not existed
+     * @param databaseName database's name to create. The name of the database. A database name can only include
+     *         numbers, letters, and underscores, and must not begin with a letter, and length
+     *         must between 1 and 128.
+     * @return Database object
+     * @throws VectorDBException
+     */
+    public Database createDatabaseIfNotExists(String databaseName) throws VectorDBException {
+        Database db = database(databaseName, readConsistency);
+        List<String> databaseNames = stub.listDatabases();
+        if (databaseNames.contains(databaseName)){
+            return new Database(stub, databaseName, this.readConsistency);
+        }
         stub.createDatabase(db);
         return db;
     }
@@ -132,6 +151,36 @@ public class VectorDBClient {
 
     public AIDatabase aiDatabase(String databaseName){
         return new AIDatabase(this.stub, databaseName, this.readConsistency);
+    }
+
+
+    /**
+     * exists collection, true if collection exists else false
+     * @param databaseName
+     * @param collection
+     * @return boolean
+     * @throws VectorDBException
+     */
+    public Boolean ExistsCollection(String databaseName, String collection) throws VectorDBException {
+        return stub.listCollections(databaseName).stream().anyMatch(c -> c.getCollection().equals(collection));
+    }
+
+    /**
+     * create collection if not existed
+     * @param databaseName
+     * @param param
+     * @return boolean
+     * @throws VectorDBException
+     */
+    public Collection CreateCollectionIfNotExists(String databaseName, CreateCollectionParam param) throws VectorDBException {
+        List<Collection> collections = stub.listCollections(databaseName);
+        if (!collections.stream().anyMatch(c -> c.getCollection().equals(param.getCollection()))){
+            stub.createCollection(param);
+        }
+        param.setDatabase(databaseName);
+        param.setReadConsistency(readConsistency);
+        param.setStub(this.stub);
+        return param;
     }
 
     /**

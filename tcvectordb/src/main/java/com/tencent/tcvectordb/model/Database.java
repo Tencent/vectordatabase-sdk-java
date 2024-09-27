@@ -88,6 +88,31 @@ public class Database {
         return param;
     }
 
+    /***
+     * create collection if not exists
+     * @param param createCollectionParam: the parameters of the collection to be created
+     * @param param databaseName: the name of the database to be created
+     * @param param collection: the name of the collection to be created
+     * @param param replicaNum: the number of replicas
+     * @param param shardNum: the number of shards
+     * @param param description: the description of the collection
+     * @param param indexes: list of the index fields
+     * @param param embedding: Embedding class
+     *
+     * @return collection object
+     * @throws VectorDBException
+     */
+    public Collection createCollectionIfNotExists(CreateCollectionParam param) throws VectorDBException {
+        List<Collection> collections = stub.listCollections(this.databaseName);
+        if (!collections.stream().anyMatch(c -> c.getCollection().equals(param.getCollection()))){
+            stub.createCollection(param);
+        }
+        param.setDatabase(databaseName);
+        param.setReadConsistency(readConsistency);
+        param.setStub(this.stub);
+        return param;
+    }
+
     public List<Collection> listCollections() throws VectorDBException {
         List<Collection> collections = stub.listCollections(this.databaseName);
         collections.forEach(c -> {
@@ -95,6 +120,10 @@ public class Database {
             c.setReadConsistency(readConsistency);
         });
         return collections;
+    }
+
+    public Boolean ExistsCollection(String collection) throws VectorDBException {
+        return stub.listCollections(this.databaseName).stream().anyMatch(c -> c.getCollection().equals(collection));
     }
 
     public AffectRes truncateCollections(String collectionName) {

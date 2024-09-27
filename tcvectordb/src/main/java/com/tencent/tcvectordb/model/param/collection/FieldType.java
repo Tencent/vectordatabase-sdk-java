@@ -46,12 +46,7 @@ public enum FieldType {
     /**
      * sparse vector
      */
-    SparseVector("sparseVector"),
-
-    /**
-     * binary vector
-     */
-    BinaryVector("binary_vector");
+    SparseVector("sparseVector");
 
     private final String value;
 

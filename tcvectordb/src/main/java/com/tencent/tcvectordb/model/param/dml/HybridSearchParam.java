@@ -1,11 +1,17 @@
 package com.tencent.tcvectordb.model.param.dml;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class HybridSearchParam {
     private List<AnnOption> ann;
     private List<MatchOption> match;
+
+    private Boolean isArrayParam;
     private String filter;
     private List<String> outputFields;
     private boolean retrieveVector;
@@ -15,7 +21,7 @@ public class HybridSearchParam {
     public HybridSearchParam(Builder builder) {
         this.ann = builder.ann;
         if (builder.filter != null) {
-            this.filter = builder.filter.getCond();
+            this.filter = builder.filter;
         }
         if (builder.outputFields != null && !builder.outputFields.isEmpty()) {
             this.outputFields = Collections.unmodifiableList(builder.outputFields);
@@ -24,6 +30,7 @@ public class HybridSearchParam {
         this.limit = builder.limit;
         this.rerank = builder.rerank;
         this.match = builder.match;
+        this.isArrayParam = builder.isAnnArrayParam | builder.isMatchArrayParam;
     }
 
     public List<AnnOption> getAnn() {
@@ -82,34 +89,58 @@ public class HybridSearchParam {
         this.match = match;
     }
 
+    public Boolean getIsArrayParam() {
+        return isArrayParam;
+    }
     public static Builder newBuilder() {
         return new Builder();
     }
 
     public static final class Builder{
         private List<AnnOption> ann;
-        private Filter filter;
+        private String filter;
         private List<String> outputFields;
         private boolean retrieveVector;
         private int limit = 10;
         private RerankParam rerank;
         private List<MatchOption> match;
 
+        private Boolean isAnnArrayParam = false;
+        private Boolean isMatchArrayParam = false;
 
         protected Builder() {
         }
 
         public Builder withAnn(List<AnnOption> ann) {
             this.ann = ann;
+            isAnnArrayParam = true;
             return this;
         }
 
         public Builder withMatch(List<MatchOption> match) {
             this.match = match;
+            isMatchArrayParam = true;
+            return this;
+        }
+
+        public Builder withAnn(AnnOption ann) {
+            isAnnArrayParam = false;
+            this.ann = Collections.singletonList(ann);
+            return this;
+        }
+
+        public Builder withMatch(MatchOption match) {
+            isMatchArrayParam = false;
+            this.match = Collections.singletonList(match);
             return this;
         }
 
         public Builder withFilter(Filter filter) {
+            this.filter = filter.getCond();
+            return this;
+        }
+
+        public Builder withFilter(String filter) {
             this.filter = filter;
             return this;
         }

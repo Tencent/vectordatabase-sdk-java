@@ -61,6 +61,11 @@ public class IndexField {
     }
 
     @JsonIgnore
+    public boolean isSparseVectorField() {
+        return FieldType.SparseVector.equals(this.fieldType);
+    }
+
+    @JsonIgnore
     public boolean isPrimaryKey() {
         return IndexType.PRIMARY_KEY.equals(this.indexType);
     }

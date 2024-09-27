@@ -27,6 +27,7 @@ import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
+import com.tencent.tcvectordb.model.param.entity.HybridSearchRes;
 import com.tencent.tcvectordb.model.param.entity.SearchRes;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
@@ -134,7 +135,7 @@ public class VectorDBClient {
     }
 
     /**
-     *
+     * upsert document
      * @param database: database name
      * @param collection: collection name
      * @param param: insert param
@@ -161,31 +162,81 @@ public class VectorDBClient {
         return this.stub.upsertDocument(insertParam, ai);
     }
 
+    /**
+     * query document
+     * @param database
+     * @param collection
+     * @param param
+     * @return
+     * @throws VectorDBException
+     */
     public List<Document> query(String database, String collection, QueryParam param) throws VectorDBException {
         return this.stub.queryDocument(
                 new QueryParamInner(database, collection, param, this.readConsistency), false);
     }
 
+    /**
+     * search document
+     * @param database
+     * @param collection
+     * @param param
+     * @return
+     * @throws VectorDBException
+     */
     public List<List<Document>> search(String database, String collection, SearchByVectorParam param) throws VectorDBException {
         return this.stub.searchDocument(new SearchParamInner(
                 database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE).getDocuments();
     }
 
+    /**
+     * search document by ID
+     * @param database
+     * @param collection
+     * @param param
+     * @return
+     * @throws VectorDBException
+     */
     public List<List<Document>> searchById(String database, String collection, SearchByIdParam param) throws VectorDBException {
         return this.stub.searchDocument(new SearchParamInner(
                 database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE).getDocuments();
     }
 
+
+    /**
+     * search document by embedding items
+     * @param database
+     * @param collection
+     * @param param
+     * @return
+     * @throws VectorDBException
+     */
     public SearchRes searchByEmbeddingItems(String database, String collection, SearchByEmbeddingItemsParam param) throws VectorDBException {
         return this.stub.searchDocument(new SearchParamInner(
                 database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE);
     }
 
+    /**
+     * delete document
+     * @param database
+     * @param collection
+     * @param param
+     * @return
+     * @throws VectorDBException
+     */
     public AffectRes delete(String database, String collection, DeleteParam param) throws VectorDBException {
         return this.stub.deleteDocument(
                 new DeleteParamInner(database, collection, param));
     }
 
+    /**
+     * update document use document object
+     * @param database
+     * @param collection
+     * @param param
+     * @param document
+     * @return
+     * @throws VectorDBException
+     */
     public AffectRes update(String database, String collection, UpdateParam param, Document document) throws VectorDBException {
         boolean ai = false;
         if (document.getVector() instanceof String){
@@ -195,6 +246,15 @@ public class VectorDBClient {
                 new UpdateParamInner(database, collection, param, document), ai);
     }
 
+    /**
+     * update document use json object
+     * @param database
+     * @param collection
+     * @param param
+     * @param document
+     * @return
+     * @throws VectorDBException
+     */
     public AffectRes update(String database, String collection, UpdateParam param, JSONObject document) throws VectorDBException {
         boolean ai = false;
         if (document.get("vector") instanceof String){
@@ -203,4 +263,24 @@ public class VectorDBClient {
         return this.stub.updateDocument(
                 new UpdateParamInner(database, collection, param, document), ai);
     }
+
+    /**
+     * sparse vector and vector hybrid search
+     * @param database
+     * @param collection
+     * @param param: HybridSearchParam
+     * @return
+     * @throws VectorDBException
+     */
+    public HybridSearchRes hybridSearch(String database, String collection, HybridSearchParam param) throws VectorDBException {
+        boolean ai = false;
+        if(param.getAnn()!=null && !param.getAnn().isEmpty() && param.getAnn().get(0).getData()!=null
+                && !param.getAnn().get(0).getData().isEmpty()
+                && param.getAnn().get(0).getData().get(0) instanceof String){
+            ai = true;
+        }
+        return this.stub.hybridSearchDocument(new HybridSearchParamInner(
+                database, collection, param, this.readConsistency), ai);
+    }
+
 }

@@ -28,13 +28,10 @@ import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
-import com.tencent.tcvectordb.encoder.SparseVectorBm25Encoder;
+import com.tencent.tcvdbtext.encoder.SparseVectorBm25Encoder;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum.BGE_BASE_ZH;
 
@@ -43,9 +40,9 @@ import static com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum.BGE_BA
  */
 public class VectorDBExampleWithSparseVector {
 
-    private static final String DBNAME = "book_4";
-    private static final String COLL_NAME = "book_segments_sparse_3";
-    private static final String COLL_NAME_ALIAS = "collection_alias_sparse_3";
+    private static final String DBNAME = "book_5";
+    private static final String COLL_NAME = "book_segments_sparse_4";
+    private static final String COLL_NAME_ALIAS = "collection_alias_sparse_4";
 
     public static void main(String[] args) throws InterruptedException {
         // 创建VectorDB Client
@@ -240,25 +237,25 @@ public class VectorDBExampleWithSparseVector {
         System.out.println("---------------------- hybridSearch ----------------------");
         SparseVectorBm25Encoder encoder = SparseVectorBm25Encoder.getBm25Encoder("zh");
         HybridSearchParam hybridSearchParam = HybridSearchParam.newBuilder()
-                .withAnn(Arrays.asList(AnnOption.newBuilder().withFieldName("vector")
+                .withAnn(AnnOption.newBuilder().withFieldName("vector")
                         .withData(generateRandomVector(768))
-                        .build()))
-                .withMatch(Arrays.asList(MatchOption.newBuilder().withFieldName("sparse_vector")
+                        .build())
+                .withMatch(MatchOption.newBuilder().withFieldName("sparse_vector")
                         .withData(encoder.encodeQueries(Arrays.asList("正大光明，忠良善果弥深")))
-                        .build()))
-//                // 指定 Top K 的 K 值
-                .withRerank(new WeightRerankParam(Arrays.asList("vector","sparse_vector"), Arrays.asList(1.0f, 0.0f)))
+                        .build())
+                // 指定 Top K 的 K 值
+                .withRerank(new WeightRerankParam(Arrays.asList("vector","sparse_vector"), Arrays.asList(1, 1)))
                 .withLimit(10)
                 // 过滤获取到结果
                 .withFilter(filterParam)
-                .withRetrieveVector(true)
-                .withOutputFields(Arrays.asList("segment"))
+//                .withRetrieveVector(true)
+//                .withOutputFields(Arrays.asList("segment"))
                 .build();
-        List<List<Document>> siDocs = collection.hybridSearch(hybridSearchParam).getDocuments();
+        List<List<Document>> siDocs = collection.hybridSearch(hybridSearchParam).getDocumentsList();
         int i = 0;
-        for (List<Document> docs : siDocs) {
-            System.out.println("\tres: " + i++);
-            for (Document doc : docs) {
+        for (Object docs : siDocs) {
+//            System.out.println("\tres: " + (i++) + docs.toString());
+            for (Document doc : (List<Document>)docs) {
                 System.out.println("\tres: " + doc.toString());
             }
         }
@@ -371,12 +368,12 @@ public class VectorDBExampleWithSparseVector {
         return CreateCollectionParam.newBuilder()
                 .withName(collName)
                 .withShardNum(1)
-                .withReplicaNum(0)
+                .withReplicaNum(1)
                 .withDescription("test sparse collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", BGE_BASE_ZH.getDimension(), IndexType.HNSW,
                         MetricType.IP, new HNSWParams(16, 200)))
-                .addField(new FilterIndex("sparse_vector", FieldType.SparseVector, IndexType.INVERTED, MetricType.IP))
+                .addField(new SparseVectorIndex("sparse_vector", IndexType.INVERTED, MetricType.IP))
                 .addField(new FilterIndex("bookName", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("author", FieldType.String, IndexType.FILTER))
                 .build();

@@ -33,6 +33,9 @@ import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.SearchContentInfo;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +61,12 @@ public class VectorDBExampleWithAI_doc {
         Map<String, Object> metaDataMap = new HashMap<>();
         metaDataMap.put("author", "Tencent");
         metaDataMap.put("tags", Arrays.asList("Embedding", "向量", "AI"));
-        loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.md", metaDataMap);
+        // 使用输入流上传文档， 需指定输入流数据大小
+//        File file = new File(System.getProperty("file_path"));
+//        loadAndSplitTextUseInputStream(client, new FileInputStream(System.getProperty("file_path")), file.length(), "腾讯云向量数据库.md", metaDataMap);
+
+        // 使用文件路径上传文档
+         loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.md", metaDataMap);
         // support markdown, pdf, pptx, docx document
         // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pdf", metaDataMap);
         // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pptx", metaDataMap);
@@ -126,6 +134,17 @@ public class VectorDBExampleWithAI_doc {
         CollectionView collection = database.describeCollectionView(COLL_NAME);
         LoadAndSplitTextParam param = LoadAndSplitTextParam.newBuilder()
                 .withLocalFilePath(filePath).withDocumentSetName(documentSetName)
+                .withSplitterProcess(SplitterPreprocessParams.newBuilder().withAppendKeywordsToChunkEnum(true).Build())
+                .Build();
+        collection.loadAndSplitText(param, metaDataMap);
+    }
+
+    private static void loadAndSplitTextUseInputStream(VectorDBClient client, InputStream inputStream, Long inputStreamSize, String documentSetName, Map<String, Object> metaDataMap) throws Exception {
+        AIDatabase database = client.aiDatabase(DBNAME);
+        CollectionView collection = database.describeCollectionView(COLL_NAME);
+        LoadAndSplitTextParam param = LoadAndSplitTextParam.newBuilder()
+                .withFileInputStream(inputStream).withInputStreamDataSize(inputStreamSize)
+                .withDocumentSetName(documentSetName).withFileType(FileType.MD)
                 .withSplitterProcess(SplitterPreprocessParams.newBuilder().withAppendKeywordsToChunkEnum(true).Build())
                 .Build();
         collection.loadAndSplitText(param, metaDataMap);

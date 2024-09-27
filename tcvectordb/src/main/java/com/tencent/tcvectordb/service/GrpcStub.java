@@ -266,7 +266,7 @@ public class GrpcStub extends HttpStub{
                         }
                     }
                 }
-                if(index.getFieldType() == FieldType.SparseVector){
+                if(index.isSparseVectorField()){
                     indexBuilder.setMetricType(index.getMetricType().getValue());
                 }
                 if(index.getFieldType()==FieldType.Array){
@@ -567,7 +567,7 @@ public class GrpcStub extends HttpStub{
     }
 
     @Override
-    public SearchRes hybridSearchDocument(HybridSearchParamInner param, boolean ai) {
+    public HybridSearchRes hybridSearchDocument(HybridSearchParamInner param, boolean ai) {
         Olama.SearchRequest.Builder builder = Olama.SearchRequest.newBuilder().setDatabase(param.getDatabase()).
                 setCollection(param.getCollection()).
                 setReadConsistency(param.getReadConsistency().getReadConsistency());
@@ -634,7 +634,7 @@ public class GrpcStub extends HttpStub{
                 WeightRerankParam weightRerankParam = (WeightRerankParam)searchParam.getRerank();
                 Map<String, Float> weightMap = new HashMap<>();
                 for (int i = 0; i < weightRerankParam.getFieldList().size(); i++) {
-                    weightMap.put(weightRerankParam.getFieldList().get(i), weightRerankParam.getWeight().get(i));
+                    weightMap.put(weightRerankParam.getFieldList().get(i), weightRerankParam.getWeight().get(i).floatValue());
                 }
                 rerankBuilder.putAllWeights(weightMap);
             }else if (searchParam.getRerank() instanceof RRFRerankParam){
@@ -659,10 +659,15 @@ public class GrpcStub extends HttpStub{
         }
         List<List<Document>> documentsList = new ArrayList<>();
         for (Olama.SearchResult searchResult : searchResponse.getResultsList()) {
-            documentsList.add(searchResult.getDocumentsList().stream().map(GrpcStub::convertDocument)
-                    .collect(Collectors.toList()));
+            List<Document> documents = searchResult.getDocumentsList().stream().map(GrpcStub::convertDocument)
+                    .collect(Collectors.toList());
+            if (!searchParam.getIsArrayParam()){
+                return new HybridSearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), Collections.unmodifiableList(documents));
+            }else {
+                documentsList.add(documents);
+            }
         }
-        return new SearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), documentsList);
+        return new HybridSearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), Collections.unmodifiableList(documentsList));
     }
 
     private static void logQuery(String url, MessageOrBuilder messageOrBuilder) {
@@ -892,6 +897,9 @@ public class GrpcStub extends HttpStub{
                     }
 
                 }
+            }
+            if (indexField.isSparseVectorField()){
+                indexField.setMetricType(MetricType.fromValue(entry.getValue().getMetricType()));
             }
             if(indexField.getFieldType()== FieldType.Array){
                 indexField.setFieldElementType(FieldElementType.fromValue(entry.getValue().getFieldElementType()));

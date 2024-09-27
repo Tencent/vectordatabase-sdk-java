@@ -6,7 +6,7 @@ package com.tencent.tcvectordb.model.param.collection;
  * Param:
  *     enable: true or false. Whether to enable TTL, true enable, false disable.
  *     timeField(String): the field name of time.Specify the field name for storing timestamps,
- *                        which must be a filter index of type uint64.
+ *                        which must be a filter index of type uint64. if not set, the document will not be expired.
  * Example:
  *    TTLConfig ttlConfig = TTLConfig.newBuilder().WithEnable(true).WithTimeField("time").build();
  */

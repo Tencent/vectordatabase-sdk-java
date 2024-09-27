@@ -385,6 +385,8 @@ public class VectorDBExample {
                 .addField(new FilterIndex("bookName", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("author", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("array_test", FieldType.Array, IndexType.FILTER))
+                // 创建ttl配置 非必填
+                .withTtlConfig(TTLConfig.newBuilder().WithEnable(true).WithTimeField("expired_at").build())
                 .build();
     }
 

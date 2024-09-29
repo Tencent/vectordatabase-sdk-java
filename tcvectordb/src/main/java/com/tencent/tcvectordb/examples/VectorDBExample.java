@@ -198,13 +198,13 @@ public class VectorDBExample {
         QueryParam queryParam = QueryParam.newBuilder()
                 .withDocumentIds(documentIds)
                 // 使用 filter 过滤数据
-//                .withFilter(filterParam)
+                .withFilter(filterParam)
                 // limit 限制返回行数，1 到 16384 之间
-                 .withLimit(5)
+                 .withLimit(3)
                 // 偏移
-                 .withOffset(0)
+                 .withOffset(1)
                 // 指定返回的 fields
-//                .withOutputFields(outputFields)
+                .withOutputFields(outputFields)
                 // 是否返回 vector 数据
                 .withRetrieveVector(false)
                 .build();
@@ -389,7 +389,7 @@ public class VectorDBExample {
         return CreateCollectionParam.newBuilder()
                 .withName(collName)
                 .withShardNum(1)
-                .withReplicaNum(1)
+                .withReplicaNum(0)
                 .withDescription("test collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", 3, IndexType.HNSW,

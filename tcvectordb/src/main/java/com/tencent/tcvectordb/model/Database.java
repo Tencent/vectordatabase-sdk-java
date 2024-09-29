@@ -104,11 +104,11 @@ public class Database {
      */
     public Collection createCollectionIfNotExists(CreateCollectionParam param) throws VectorDBException {
         List<Collection> collections = stub.listCollections(this.databaseName);
-        if (!collections.stream().anyMatch(c -> c.getCollection().equals(param.getCollection()))){
-            stub.createCollection(param);
-        }
         param.setDatabase(databaseName);
         param.setReadConsistency(readConsistency);
+        if (collections!=null && !collections.stream().anyMatch(c -> c.getCollection().equals(param.getCollection()))){
+            stub.createCollection(param);
+        }
         param.setStub(this.stub);
         return param;
     }
@@ -122,14 +122,35 @@ public class Database {
         return collections;
     }
 
+    /**
+     * exists collection, true if collection exists else false
+     * @param collection
+     * @return boolean
+     * @throws VectorDBException
+     */
     public Boolean ExistsCollection(String collection) throws VectorDBException {
-        return stub.listCollections(this.databaseName).stream().anyMatch(c -> c.getCollection().equals(collection));
+        List<Collection> collections = stub.listCollections(this.databaseName);
+        if(collections!=null && collections.stream().anyMatch(c -> c.getCollection().equals(collection))){
+            return true;
+        }
+        return false;
     }
 
+    /**
+     * truncate collection
+     * @param collectionName
+     * @return
+     */
     public AffectRes truncateCollections(String collectionName) {
         return stub.truncateCollection(this.databaseName, collectionName, DataBaseTypeEnum.BASE_DB);
     }
 
+    /**
+     * describe collection
+     * @param collectionName
+     * @return Collection if collection exist
+     * @throws VectorDBException
+     */
     public Collection describeCollection(String collectionName) throws VectorDBException {
         Collection collection = stub.describeCollection(this.databaseName, collectionName);
         collection.setStub(stub);
@@ -137,18 +158,40 @@ public class Database {
         return collection;
     }
 
+    /**
+     * drop collection
+     * @param collectionName
+     * @throws VectorDBException
+     */
     public void dropCollection(String collectionName) throws VectorDBException {
         stub.dropCollection(this.databaseName, collectionName);
     }
 
+    /**
+     * set alias for collection
+     * @param collectionName
+     * @param aliasName
+     * @return
+     */
     public AffectRes setAlias(String collectionName, String aliasName) {
         return stub.setAlias(this.databaseName, collectionName, aliasName);
     }
 
+    /**
+     * delete alias of collection
+     * @param aliasName
+     * @return
+     */
     public AffectRes deleteAlias(String aliasName) {
         return stub.deleteAlias(this.databaseName, aliasName);
     }
 
+    /**
+     * get collection info
+     * @param collectionName
+     * @return
+     * @throws VectorDBException
+     */
     public Collection collection(String collectionName) throws VectorDBException {
         return describeCollection(collectionName);
     }

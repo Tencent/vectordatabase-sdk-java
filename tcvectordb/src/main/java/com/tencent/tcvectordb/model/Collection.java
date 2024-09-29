@@ -56,7 +56,7 @@ import java.util.List;
 public class Collection{
     @JsonIgnore
     private Stub stub;
-    private String database;
+    protected String database;
     protected String collection;
     protected int replicaNum = 2;
     protected int shardNum = 1;

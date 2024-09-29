@@ -1,6 +1,8 @@
 package com.tencent.tcvectordb.model.param.collection;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * init TTLConfig when create a collection.
  * Param:
@@ -10,6 +12,7 @@ package com.tencent.tcvectordb.model.param.collection;
  * Example:
  *    TTLConfig ttlConfig = TTLConfig.newBuilder().WithEnable(true).WithTimeField("time").build();
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TTLConfig {
     private boolean enable;
     private String timeField;
@@ -17,6 +20,9 @@ public class TTLConfig {
     public TTLConfig(Builder builder) {
         this.enable = builder.enable;
         this.timeField = builder.timeField;
+    }
+
+    public TTLConfig() {
     }
 
     public boolean isEnable() {

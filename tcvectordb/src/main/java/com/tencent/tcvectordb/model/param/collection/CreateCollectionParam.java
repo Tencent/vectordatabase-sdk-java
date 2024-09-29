@@ -43,6 +43,7 @@ public class CreateCollectionParam extends Collection {
         this.embedding = builder.embedding;
         this.ttlConfig = builder.ttlConfig;
         this.filterIndexConfig = builder.filterIndexConfig;
+        this.database = builder.database;
     }
 
     public static Builder newBuilder() {
@@ -61,6 +62,8 @@ public class CreateCollectionParam extends Collection {
         private TTLConfig ttlConfig;
 
         private FilterIndexConfig filterIndexConfig;
+
+        private String database;
 
         private Builder() {
             this.indexes = new ArrayList<>();
@@ -98,6 +101,11 @@ public class CreateCollectionParam extends Collection {
 
         public Builder withTtlConfig(TTLConfig ttlConfig) {
             this.ttlConfig = ttlConfig;
+            return this;
+        }
+
+        public Builder withDatabase(String database){
+            this.database = database;
             return this;
         }
 

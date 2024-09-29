@@ -158,7 +158,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("page", 24))
                         .addDocField(new DocField("segment", "富贵功名，前缘分定，为人切莫欺心。"))
                         .addDocField(new DocField("array_test", Arrays.asList("10","11","12")))
-                        // 24小时分钟后过期
+                        // 24小时后过期
                         .addDocField(new DocField("expired_at", System.currentTimeMillis()/1000 + 24*60*60))
                         .build(),
                 Document.newBuilder()

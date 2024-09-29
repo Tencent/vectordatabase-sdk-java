@@ -128,7 +128,7 @@ public class Database {
      * @return boolean
      * @throws VectorDBException
      */
-    public Boolean ExistsCollection(String collection) throws VectorDBException {
+    public Boolean existsCollection(String collection) throws VectorDBException {
         List<Collection> collections = stub.listCollections(this.databaseName);
         if(collections!=null && collections.stream().anyMatch(c -> c.getCollection().equals(collection))){
             return true;

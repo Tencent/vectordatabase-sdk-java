@@ -57,9 +57,9 @@ public enum IndexType {
 
     INVERTED("inverted"),
 
-    BIN_FLAT("BIN_FLAT"),
-
-    BIN_HNSW("BIN_HNSW"),
+//    BIN_FLAT("BIN_FLAT"),
+//
+//    BIN_HNSW("BIN_HNSW"),
 
     /**
      * scalar index type: primaryKey

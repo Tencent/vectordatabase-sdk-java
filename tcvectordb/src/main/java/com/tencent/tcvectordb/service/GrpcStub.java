@@ -218,6 +218,19 @@ public class GrpcStub extends HttpStub{
                             .setVectorField(params.getEmbedding().getVectorField())
                     .build());
         }
+        if (params.getTtlConfig()!=null){
+            requestOrBuilder.setTtlConfig(Olama.TTLConfig.newBuilder()
+                            .setEnable(params.getTtlConfig().isEnable())
+                            .setTimeField(params.getTtlConfig().getTimeField())
+                    .build());
+        }
+        if (params.getFilterIndexConfig()!=null){
+            requestOrBuilder.setFilterIndexConfig(Olama.FilterIndexConfig.newBuilder()
+                            .setFilterAll(params.getFilterIndexConfig().isFilterAll())
+                            .addAllFieldsWithoutIndex(params.getFilterIndexConfig().getFieldWithoutFilterIndex())
+                            .setMaxStrLen(params.getFilterIndexConfig().getMaxStrLen())
+                    .build());
+        }
         if (!params.getIndexes().isEmpty()){
             for (IndexField index : params.getIndexes()) {
                 Olama.IndexColumn.Builder indexBuilder = Olama.IndexColumn.newBuilder()
@@ -847,6 +860,18 @@ public class GrpcStub extends HttpStub{
         collectionInner.setShardNum(collection.getShardNum());
         collectionInner.setReplicaNum(collection.getReplicaNum());
         collectionInner.setIndexStatus(new Collection.IndexStatus(collection.getIndexStatus().getStatus(), collection.getIndexStatus().getStartTime()));
+        if (collection.hasTtlConfig()){
+            collectionInner.setTtlConfig(TTLConfig.newBuilder()
+                            .WithEnable(collection.getTtlConfig().getEnable())
+                            .WithTimeField(collection.getTtlConfig().getTimeField())
+                    .build());
+        }
+        if (collection.hasFilterIndexConfig()){
+            collectionInner.setFilterIndexConfig(FilterIndexConfig.newBuilder()
+                            .withFieldWithoutFilterIndex(collection.getFilterIndexConfig().getFieldsWithoutIndexList())
+                            .withFilterAll(collection.getFilterIndexConfig().getFilterAll())
+                    .build());
+        }
         collectionInner.setIndexes(collection.getIndexesMap().entrySet().stream().map(entry->{
             IndexField indexField = new IndexField();
             indexField.setFieldName(entry.getValue().getFieldName());

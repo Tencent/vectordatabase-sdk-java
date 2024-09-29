@@ -39,8 +39,13 @@ public enum FieldType {
      */
     Vector("vector"),
 
+    /**
+     * array 类型
+     */
     Array("array"),
-
+    /**
+     * sparse vector
+     */
     SparseVector("sparseVector");
 
     private final String value;

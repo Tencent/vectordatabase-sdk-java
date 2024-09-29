@@ -21,7 +21,7 @@
 package com.tencent.tcvectordb.model.param.collection;
 
 /**
- * VectorIndex
+ * SparseVectorIndex
  */
 public class SparseVectorIndex extends IndexField {
 

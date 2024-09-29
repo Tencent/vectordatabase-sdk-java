@@ -88,14 +88,12 @@ public class VectorDBClient {
     }
 
     /**
-     * create database if not existed
-     * @param databaseName database's name to create. The name of the database. A database name can only include
-     *         numbers, letters, and underscores, and must not begin with a letter, and length
-     *         must between 1 and 128.
-     * @return Database object
+     * check database exists, return true if existed else false
+     * @param databaseName database's name
+     * @return Boolean
      * @throws VectorDBException
      */
-    public Boolean existsDb(String databaseName) throws VectorDBException {
+    public Boolean existsDatabase(String databaseName) throws VectorDBException {
         List<String> databaseNames = stub.listDatabases();
         if(databaseNames!=null && databaseNames.contains(databaseName)){
             return true;

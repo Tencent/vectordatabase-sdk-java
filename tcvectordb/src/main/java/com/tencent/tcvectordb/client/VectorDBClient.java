@@ -175,9 +175,9 @@ public class VectorDBClient {
      * @return boolean
      * @throws VectorDBException
      */
-    public Boolean ExistsCollection(String databaseName, String collection) throws VectorDBException {
-        List<Collection> collections = stub.listCollections(databaseName);
-        if(collections!=null && collections.stream().anyMatch(c -> c.getCollection().equals(collection))){
+    public Boolean existsCollection(String databaseName, String collection) throws VectorDBException {
+        Collection collections = stub.describeCollection(databaseName, collection);
+        if(collections!=null){
             return true;
         }
         return false;
@@ -190,11 +190,11 @@ public class VectorDBClient {
      * @return boolean
      * @throws VectorDBException
      */
-    public Collection CreateCollectionIfNotExists(String databaseName, CreateCollectionParam param) throws VectorDBException {
-        List<Collection> collections = stub.listCollections(databaseName);
+    public Collection createCollectionIfNotExists(String databaseName, CreateCollectionParam param) throws VectorDBException {
+        Collection collections = stub.describeCollection(databaseName, param.getCollection());
         param.setDatabase(databaseName);
         param.setReadConsistency(readConsistency);
-        if (collections!=null && !collections.stream().anyMatch(c -> c.getCollection().equals(param.getCollection()))){
+        if (collections!=null){
             stub.createCollection(param);
         }
         param.setStub(this.stub);

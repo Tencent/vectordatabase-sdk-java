@@ -80,7 +80,7 @@ public class VectorDBExample {
 //        可以使用下面方式创建collection
 //        db.createCollectionIfNotExists(collectionParam);
 
-        System.out.println(COLL_NAME + " exists: "+ db.ExistsCollection(COLL_NAME));
+        System.out.println(COLL_NAME + " exists: "+ db.existsCollection(COLL_NAME));
 
         // 4. 列出所有 collection
 //        Database db = client.database(DBNAME);

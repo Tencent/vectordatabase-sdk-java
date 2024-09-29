@@ -103,7 +103,10 @@ public class Database {
      * @throws VectorDBException
      */
     public Collection createCollectionIfNotExists(CreateCollectionParam param) throws VectorDBException {
-        Collection collections = stub.describeCollection(this.databaseName, param.getCollection());
+        Collection collections = null;
+        try {
+            collections = stub.describeCollection(this.databaseName, param.getCollection());
+        }catch (Exception e){}
         param.setDatabase(databaseName);
         param.setReadConsistency(readConsistency);
         if (collections==null){
@@ -129,11 +132,13 @@ public class Database {
      * @throws VectorDBException
      */
     public Boolean existsCollection(String collection) throws VectorDBException {
-        Collection collections = stub.describeCollection(this.databaseName, collection);
-        if(collections!=null){
-            return true;
+        Collection collectionInfo = null;
+        try {
+            collectionInfo = stub.describeCollection(this.databaseName, collection);
+        }catch (Exception e){
+
         }
-        return false;
+        return collectionInfo!=null;
     }
 
     /**

@@ -20,22 +20,9 @@
 
 package com.tencent.tcvectordb.client;
 
-import com.tencent.tcvectordb.exception.VectorDBException;
-import com.tencent.tcvectordb.model.AIDatabase;
-import com.tencent.tcvectordb.model.Database;
-import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
-import com.tencent.tcvectordb.model.param.dml.*;
-import com.tencent.tcvectordb.model.param.entity.AffectRes;
-import com.tencent.tcvectordb.model.param.entity.HybridSearchRes;
-import com.tencent.tcvectordb.model.param.entity.SearchRes;
-import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.GrpcStub;
-import com.tencent.tcvectordb.service.param.*;
-import org.json.JSONObject;
-
-import java.util.List;
 
 public class RPCVectorDBClient extends VectorDBClient {
 

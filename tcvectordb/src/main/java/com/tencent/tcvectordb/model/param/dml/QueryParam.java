@@ -28,7 +28,14 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Query Param
+ *  query conditions
+ *  Params:
+ *      limit(int): Limit return row's count
+ *      offset(int): Skip offset rows of query result set
+ *      retrieve_vector(bool): Whether to return vector values.
+ *      filter(Filter): filter rows before return result
+ *      document_ids(List): filter rows by id list
+ *      output_fields(List): return columns by column name list
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class QueryParam extends BaseQuery {

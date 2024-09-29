@@ -37,6 +37,11 @@ public enum MetricType {
      */
     COSINE("COSINE");
 
+    /**
+     * hamming
+     */
+//    HAMMING("HAMMING");
+
     private final String value;
 
     private MetricType(String value) {

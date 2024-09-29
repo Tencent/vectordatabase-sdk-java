@@ -28,7 +28,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.param.collection.Embedding;
+import com.tencent.tcvectordb.model.param.collection.FilterIndexConfig;
 import com.tencent.tcvectordb.model.param.collection.IndexField;
+import com.tencent.tcvectordb.model.param.collection.TTLConfig;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.BaseRes;
@@ -39,6 +41,7 @@ import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.Stub;
 import com.tencent.tcvectordb.service.param.*;
 import org.json.JSONObject;
+import org.json.Property;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -53,7 +56,7 @@ import java.util.List;
 public class Collection{
     @JsonIgnore
     private Stub stub;
-    private String database;
+    protected String database;
     protected String collection;
     protected int replicaNum = 2;
     protected int shardNum = 1;
@@ -66,6 +69,26 @@ public class Collection{
     private Collection.IndexStatus indexStatus;
     private List<String> alias;
     protected Embedding embedding;
+
+    protected TTLConfig ttlConfig;
+
+    protected FilterIndexConfig filterIndexConfig;
+
+    public TTLConfig getTtlConfig() {
+        return ttlConfig;
+    }
+
+    public void setTtlConfig(TTLConfig ttlConfig) {
+        this.ttlConfig = ttlConfig;
+    }
+
+    public FilterIndexConfig getFilterIndexConfig() {
+        return filterIndexConfig;
+    }
+
+    public void setFilterIndexConfig(FilterIndexConfig filterIndexConfig) {
+        this.filterIndexConfig = filterIndexConfig;
+    }
 
     public void setStub(Stub stub) {
         this.stub = stub;

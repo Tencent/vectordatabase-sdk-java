@@ -41,6 +41,9 @@ public class CreateCollectionParam extends Collection {
         this.description = builder.description;
         this.indexes = builder.indexes;
         this.embedding = builder.embedding;
+        this.ttlConfig = builder.ttlConfig;
+        this.filterIndexConfig = builder.filterIndexConfig;
+        this.database = builder.database;
     }
 
     public static Builder newBuilder() {
@@ -55,6 +58,12 @@ public class CreateCollectionParam extends Collection {
 
         private Embedding embedding;
         private final List<IndexField> indexes;
+
+        private TTLConfig ttlConfig;
+
+        private FilterIndexConfig filterIndexConfig;
+
+        private String database;
 
         private Builder() {
             this.indexes = new ArrayList<>();
@@ -89,6 +98,21 @@ public class CreateCollectionParam extends Collection {
             this.embedding = embedding;
             return this;
         }
+
+        public Builder withTtlConfig(TTLConfig ttlConfig) {
+            this.ttlConfig = ttlConfig;
+            return this;
+        }
+
+        public Builder withDatabase(String database){
+            this.database = database;
+            return this;
+        }
+
+//        public Builder withFilterIndexConfig(FilterIndexConfig filterIndexConfig) {
+//            this.filterIndexConfig = filterIndexConfig;
+//            return this;
+//        }
 
         public CreateCollectionParam build() throws ParamException {
             if (StringUtils.isEmpty(this.name)) {

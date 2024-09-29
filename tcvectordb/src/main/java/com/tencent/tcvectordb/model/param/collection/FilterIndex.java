@@ -21,7 +21,7 @@
 package com.tencent.tcvectordb.model.param.collection;
 
 /**
- * FilterIndex
+ * FilterIndex: Field type of index field
  */
 public class FilterIndex extends IndexField {
 

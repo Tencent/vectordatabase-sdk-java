@@ -45,6 +45,7 @@ public class VectorDBExample {
 //         创建 VectorDB Client
         VectorDBClient client = CommonService.initClient();
 
+
         // 清理环境
         CommonService.anySafe(() -> client.dropDatabase(DBNAME));
         createDatabaseAndCollection(client);
@@ -60,6 +61,8 @@ public class VectorDBExample {
         // 1. 创建数据库
         System.out.println("---------------------- createDatabase ----------------------");
         Database db = client.createDatabase(DBNAME);
+        // 可以使用这种方式创建db
+//        Database db = client.createDatabaseIfNotExists(DBNAME);
 
         // 2. 列出所有数据库
         System.out.println("---------------------- listCollections ----------------------");
@@ -73,6 +76,11 @@ public class VectorDBExample {
         System.out.println("---------------------- createCollection ----------------------");
         CreateCollectionParam collectionParam = initCreateCollectionParam(COLL_NAME);
         db.createCollection(collectionParam);
+
+//        可以使用下面方式创建collection
+//        db.createCollectionIfNotExists(collectionParam);
+
+        System.out.println(COLL_NAME + " exists: "+ db.existsCollection(COLL_NAME));
 
         // 4. 列出所有 collection
 //        Database db = client.database(DBNAME);
@@ -150,6 +158,8 @@ public class VectorDBExample {
                         .addDocField(new DocField("page", 24))
                         .addDocField(new DocField("segment", "富贵功名，前缘分定，为人切莫欺心。"))
                         .addDocField(new DocField("array_test", Arrays.asList("10","11","12")))
+                        // 24小时后过期
+                        .addDocField(new DocField("expired_at", System.currentTimeMillis()/1000 + 24*60*60))
                         .build(),
                 Document.newBuilder()
                         .withId("0005")
@@ -159,6 +169,8 @@ public class VectorDBExample {
                         .addDocField(new DocField("page", 25))
                         .addDocField(new DocField("segment",
                                 "布大惊，与陈宫商议。宫曰：“闻刘玄德新领徐州，可往投之。"))
+                        // 10分钟后过期
+                        .addDocField(new DocField("expired_at", System.currentTimeMillis()/1000 + 10*60))
                         .build()));
         System.out.println("---------------------- upsert ----------------------");
         InsertParam insertParam = InsertParam.newBuilder().withDocuments(documentList).build();
@@ -385,6 +397,9 @@ public class VectorDBExample {
                 .addField(new FilterIndex("bookName", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("author", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("array_test", FieldType.Array, IndexType.FILTER))
+                .addField(new FilterIndex("expired_at", FieldType.Uint64, IndexType.FILTER))
+                // 创建ttl配置 非必填
+                .withTtlConfig(TTLConfig.newBuilder().WithEnable(true).WithTimeField("expired_at").build())
                 .build();
     }
 

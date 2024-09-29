@@ -8,8 +8,20 @@ import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Embedding is used to create embedding collection, and specify embedding model with set model or modelName, and if
- * modelName is not null, it will be used first
+ * init Embedding when create embedding collection
+ * Param:
+ *   vector_field (String): vector field name
+ *   status (String): status of embedding, enable is available, disabled is unavailable, status is invalid when
+ *                 create collection
+ *   field (String): field name of embedding content
+ *   model (EmbeddingModel): [Deprecated] embedding model enum, this is a deprecated parameter, it will be
+ *                 instead of arg model_name, if model and model_name both are not None, model_name is used first.
+ *   model_name (str): model_name specify embedding model wher upsert documents
+ * Example:
+ *  Embedding embedding = Embedding.newBuilder().withField("field")
+ *                                              .withVectorField("vectorField")
+ *                                              .withModel(EmbeddingModelEnum.BGE_BASE_ZH)
+ *                                              .withStatus("enable").build();
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Embedding {
@@ -111,8 +123,9 @@ public class Embedding {
             return this;
         }
 
-        public void withModelName(String modelName) {
+        public Builder withModelName(String modelName) {
             this.modelName = modelName;
+            return this;
         }
 
         public Embedding build() {

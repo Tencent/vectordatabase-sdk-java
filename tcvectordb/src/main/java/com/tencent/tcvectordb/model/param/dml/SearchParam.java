@@ -35,7 +35,7 @@ public abstract class SearchParam {
     protected List<String> outputFields;
     protected boolean retrieveVector;
     protected int limit;
-
+    protected Float radius;
 
     protected SearchParam(Builder<?> builder) {
         this.params = builder.params;
@@ -47,6 +47,7 @@ public abstract class SearchParam {
         }
         this.retrieveVector = builder.retrieveVector;
         this.limit = builder.limit;
+        this.radius = builder.radius;
     }
 
 
@@ -78,6 +79,7 @@ public abstract class SearchParam {
         protected List<String> outputFields;
         protected boolean retrieveVector = false;
         protected int limit = 10;
+        protected Float radius;
 
 
         protected Builder() {

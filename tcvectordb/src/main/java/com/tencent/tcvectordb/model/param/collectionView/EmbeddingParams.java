@@ -4,6 +4,15 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencent.tcvectordb.model.DocumentSet;
 
 
+/**
+ * init EmbeddingParams when create a collectionView.
+ * Param:
+ *     language(String): en,zh or multi. language param could user LanguageType class.
+ *     enableWordsEmbedding(String): true or false. default false. words embedding could be enabled if you want to
+ *     search reranked using words
+ * Example:
+ *    EmbeddingParams embeddingParam = EmbeddingParams.newBuilder().withLanguage(LanguageType.ZH).withEnableWordEmbedding(true).build();
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class EmbeddingParams {
     private String language;

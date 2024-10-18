@@ -76,6 +76,7 @@ public class Database {
      * @param param description: the description of the collection
      * @param param indexes: list of the index fields
      * @param param embedding: Embedding class
+     * @param param ttlConfig: TTLConfig class
      *
      * @return collection object
      * @throws VectorDBException

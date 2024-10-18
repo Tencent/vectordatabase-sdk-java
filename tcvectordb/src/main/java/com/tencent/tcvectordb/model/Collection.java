@@ -50,7 +50,31 @@ import java.util.List;
 
 /**
  * VectorDB Collection
+ *
+ * <ol>
+ * <li> database: the database name of collection </li>
+ * <li> collection: name of collection, this name must be unique</li>
+ * <li> replicaNum：the replica num of the collection, The number of replicas is limited by the instance type.
+ *  eg: replicaNum must be zero if instance is free; the other instance's replicaNum must larger than zero </li>
+ * <li> shardNum: the shard num of the collection, the data of the collection will be split into shardNum parts</li>
+ * <li> description: description of the collection,</li>
+ * <li> indexes: index field of the collection;
+ *      field type could be string，uint64, array, vector and sparse vector.
+ *      index type could be primaryKey, filter if the field is scalar field, id field must be primaryKey;
+ *      index type could be FLAT, HNSW ... if the filed type is vector;
+ *      index type should be inverted if the field type is sparse vector;
+ *      metric type must be set if the field type is vector or sparse vector;
+ *      fieldElementType could be string if the field type array;
+ *      dimension must be set if the filed type is vector;
+ *      </li>,
+ *
+ * <li> alias: alias of the collection </li>
+ * <li> embedding: embedding config should be set if collection use embedding function </li>
+ * <li> TTLConfig: ttl config should be set if collection use ttl function </li>
+ * </ol>
+ *
  */
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Collection{

@@ -42,23 +42,11 @@ import java.util.*;
  *       eg: use addField(new VectorIndex("vector", 3, IndexType.HNSW, MetricType.COSINE, new HNSWParams(16, 200))) when create collection
  *           document can use withVector(Arrays.asList(0.2123, 0.22, 0.213)) to set vector of document </li>
  * <li> sparseVector：sparse vector of document should be set if collection use sparse vector,
- *      eg:
+ *      eg: use addField(new SparseVectorIndex("sparse_vector", IndexType.INVERTED, MetricType.IP)) when create collection
+ *          document can use withSparseVector(Arrays.asList(Pair.of(12233l,0，3), ...)) to set sparse vector of document
  *      </li>
- * <li> shardNum: the shard num of the collection, the data of the collection will be split into shardNum parts</li>
- * <li> description: description of the collection,</li>
- * <li> indexes: index field of the collection;
- *      field type could be string，uint64, array, vector and sparse vector.
- *      index type could be primaryKey, filter if the field is scalar field, id field must be primaryKey;
- *      index type could be FLAT, HNSW ... if the filed type is vector;
- *      index type should be inverted if the field type is sparse vector;
- *      metric type must be set if the field type is vector or sparse vector;
- *      fieldElementType could be string if the field type array;
- *      dimension must be set if the filed type is vector;
- *      </li>,
- *
- * <li> alias: alias of the collection </li>
- * <li> embedding: embedding config should be set if collection use embedding function </li>
- * <li> TTLConfig: ttl config should be set if collection use ttl function </li>
+ * <li> score: the score will be set if search document</li>
+ * <li> docFields: the scalar field of the document,</li>
  * </ol>
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)

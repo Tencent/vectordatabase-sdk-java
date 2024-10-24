@@ -208,9 +208,23 @@ public class VectorDBClient {
      * upsert document
      * @param database: database name
      * @param collection: collection name
-     * @param param: insert param
-     *
-     * @return
+     * @param param InsertParam: upsert data. buildIndex is whether to build index, default is true, documents
+     *              is a list of JSONObject or Document.
+     *              eg: Arrays.asList(
+     *                new JSONObject("{\"id\":\"0013\",\"vector\":[0.2123, 0.21, 0.213],\"bookName\":\"三国演义\",\"author\":\"吴承恩\",\"page\":21,\"segment\":\"富贵功名，前缘分定，为人切莫欺心。\"}"),
+     *                new JSONObject("{\"id\":\"0014\",\"vector\":[0.2123, 0.21, 0.213],\"bookName\":\"三国演义\",\"author\":\"吴承恩\",\"page\":21,\"segment\":\"富贵功名，前缘分定，为人切莫欺心。\"}")
+     *              ); or
+     *              Arrays.asList(Document.newBuilder()
+     *                         .withId("0001")
+     *                         .withVector(generateRandomVector(768))
+     *                         .withSparseVector(sparseVectors.get(0))
+     *                         .addDocField(new DocField("bookName", "三国演义"))
+     *                         .addDocField(new DocField("author", "罗贯中"))
+     *                         .addDocField(new DocField("page", 21))
+     *                         .addDocField(new DocField("segment", "富贵功名，前缘分定，为人切莫欺心。"))
+     *                         .addDocField(new DocField("text", "富贵功名，前缘分定，为人切莫欺心。"))
+     *                         .build());
+     * @return AffectRes.class
      * @throws VectorDBException
      */
     public AffectRes upsert(String database, String collection, InsertParam param) throws VectorDBException {
@@ -236,8 +250,14 @@ public class VectorDBClient {
      * query document
      * @param database
      * @param collection
-     * @param param
-     * @return
+     * @param param QueryParam:
+     *        limit(int): Limit return row's count
+     *        offset(int): Skip offset rows of query result set
+     *        retrieve_vector(bool): Whether to return vector values.
+     *        filter(Filter): filter rows before return result
+     *        document_ids(List): filter rows by id list
+     *        output_fields(List): return columns by column name list
+     * @return List<Document>
      * @throws VectorDBException
      */
     public List<Document> query(String database, String collection, QueryParam param) throws VectorDBException {
@@ -249,8 +269,15 @@ public class VectorDBClient {
      * search document
      * @param database
      * @param collection
-     * @param param
-     * @return
+     * @param param SearchByVectorParam:
+     *              vectors: List<List<Double>>, search documents by the vectors
+     *              limit(int): Limit return row's count
+     *              retrieve_vector(bool): Whether to return vector values.
+     *              filter(Filter): filter rows before return result
+     *              output_fields(List): return columns by column name list
+     *              radius(Float): radius of search
+     *              params(Params): params for search, eg:HNSWSearchParams, GeneralParams
+     * @return List<List<Document>>: the size of the result is the same as the size of vectors
      * @throws VectorDBException
      */
     public List<List<Document>> search(String database, String collection, SearchByVectorParam param) throws VectorDBException {
@@ -262,8 +289,15 @@ public class VectorDBClient {
      * search document by ID
      * @param database
      * @param collection
-     * @param param
-     * @return
+     * @param param SearchByVectorParam:
+     *              documentIds: List<String>, search documents by the document ids
+     *              limit(int): Limit return row's count
+     *              retrieve_vector(bool): Whether to return vector values.
+     *              filter(Filter): filter rows before return result
+     *              output_fields(List): return columns by column name list
+     *              radius(Float): radius of search
+     *              params(Params): params for search, eg:HNSWSearchParams, GeneralParams
+     * @return List<List<Document>>: the size of the result is the same as the size of documentIds
      * @throws VectorDBException
      */
     public List<List<Document>> searchById(String database, String collection, SearchByIdParam param) throws VectorDBException {
@@ -273,11 +307,18 @@ public class VectorDBClient {
 
 
     /**
-     * search document by embedding items
+     * search document by contents that would be embedded to vectors from the collection
      * @param database
      * @param collection
-     * @param param
-     * @return
+     * @param param SearchByVectorParam:
+     *              embeddingItems: List<String>, search documents by the content
+     *              limit(int): Limit return row's count
+     *              retrieve_vector(bool): Whether to return vector values.
+     *              filter(Filter): filter rows before return result
+     *              output_fields(List): return columns by column name list
+     *              radius(Float): radius of search
+     *              params(Params): params for search, eg:HNSWSearchParams, GeneralParams
+     * @return List<List<Document>>: the size of the result is the same as the size of embeddingItems
      * @throws VectorDBException
      */
     public SearchRes searchByEmbeddingItems(String database, String collection, SearchByEmbeddingItemsParam param) throws VectorDBException {
@@ -289,8 +330,8 @@ public class VectorDBClient {
      * delete document
      * @param database
      * @param collection
-     * @param param
-     * @return
+     * @param param DeleteParam: delete document that retrieved by filter and documentIds
+     * @return AffectRes
      * @throws VectorDBException
      */
     public AffectRes delete(String database, String collection, DeleteParam param) throws VectorDBException {
@@ -302,9 +343,9 @@ public class VectorDBClient {
      * update document use document object
      * @param database
      * @param collection
-     * @param param
-     * @param document
-     * @return
+     * @param param: update param used for retrieving document
+     * @param document(Document.class): the document to be updated
+     * @return AffectRes
      * @throws VectorDBException
      */
     public AffectRes update(String database, String collection, UpdateParam param, Document document) throws VectorDBException {
@@ -320,9 +361,9 @@ public class VectorDBClient {
      * update document use json object
      * @param database
      * @param collection
-     * @param param
-     * @param document
-     * @return
+     * @param param: update param used for retrieving document
+     * @param document(JSONObject.class): the document to be updated
+     * @return AffectRes
      * @throws VectorDBException
      */
     public AffectRes update(String database, String collection, UpdateParam param, JSONObject document) throws VectorDBException {
@@ -338,8 +379,16 @@ public class VectorDBClient {
      * sparse vector and vector hybrid search
      * @param database
      * @param collection
-     * @param param: HybridSearchParam
-     * @return
+     * @param param HybridSearchParam:
+     *      ann(List<AnnOption>): ann options, annOption used for vector search,
+     *      match(List<MatchOption>): match options, matchOption used for sparse vector search
+     *      retrieve_vector(bool): Whether to return vector and sparse vector values.
+     *      filter(Filter): filter rows before return result
+     *      document_ids(List): filter rows by id list
+     *      output_fields(List): return columns by column name list
+     *      Limit(int): limit the number of rows returned
+     *      rerank(RerankParam): rerank param, RRFRerankParam or WeightRerankParam
+     * @return HybridSearchRes: the size of the result is the same as the size of embeddingItems
      * @throws VectorDBException
      */
     public HybridSearchRes hybridSearch(String database, String collection, HybridSearchParam param) throws VectorDBException {

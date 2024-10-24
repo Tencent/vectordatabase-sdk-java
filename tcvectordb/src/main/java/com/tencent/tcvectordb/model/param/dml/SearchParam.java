@@ -27,6 +27,13 @@ import java.util.List;
 
 /**
  * Search Param
+ * Params:
+ *      limit(int): Limit return row's count
+ *      retrieve_vector(bool): Whether to return vector values.
+ *      filter(Filter): filter rows before return result
+ *      output_fields(List): return columns by column name list
+ *      radius(Float): radius of search
+ *      params(Params): params for search, eg:HNSWSearchParams, GeneralParams
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class SearchParam {

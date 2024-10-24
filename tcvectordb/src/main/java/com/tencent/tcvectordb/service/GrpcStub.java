@@ -934,10 +934,11 @@ public class GrpcStub extends HttpStub{
                 fieldBuilder.setValDouble(Double.parseDouble(docField.getValue().toString()));
             }else if(docField.getValue() instanceof String){
                 fieldBuilder.setValStr(ByteString.copyFromUtf8(docField.getValue().toString()));
-            }
-            if (docField.getValue() instanceof List) {
+            }else if (docField.getValue() instanceof List) {
                 fieldBuilder.setValStrArr(Olama.Field.StringArray.newBuilder().addAllStrArr(
                         ((List<?>) docField.getValue()).stream().map(ele-> ByteString.copyFromUtf8((String)ele)).collect(Collectors.toList())));
+            }else {
+                throw new VectorDBException("Unsupported field type,  field key:" + docField.getName() + " type:"+ docField.getValue().getClass());
             }
             docBuilder.putFields(docField.getName(), fieldBuilder.build());
         });
@@ -966,6 +967,8 @@ public class GrpcStub extends HttpStub{
                     fieldBuilder.setValStr(ByteString.copyFromUtf8(document.get(key).toString()));
                 }else if(document.get(key) instanceof JSONArray){
                     fieldBuilder.setValStrArr(Olama.Field.StringArray.newBuilder().addAllStrArr(((JSONArray)document.get(key)).toList().stream().map(ele-> ByteString.copyFromUtf8((String)ele)).collect(Collectors.toList())));
+                }else {
+                    throw new VectorDBException("Unsupported field type, field:+"+ key +" type:"+ document.get(key).getClass());
                 }
                 docBuilder.putFields(key, fieldBuilder.build());
             }

@@ -66,7 +66,7 @@ import java.util.List;
  *      metric type must be set if the field type is vector or sparse vector;
  *      fieldElementType could be string if the field type array;
  *      dimension must be set if the filed type is vector;
- *      </li>,
+ *      </li>
  *
  * <li> alias: alias of the collection </li>
  * <li> embedding: embedding config should be set if collection use embedding function </li>
@@ -214,6 +214,28 @@ public class Collection{
         this.embedding = embedding;
     }
 
+    /**
+     * upsert document, upsert documents into the collection
+     * @param param InsertParam: upsert data. buildIndex is whether to build index, default is true, documents
+     *              is a list of JSONObject or Document.
+     *              eg: Arrays.asList(
+     *                new JSONObject("{\"id\":\"0013\",\"vector\":[0.2123, 0.21, 0.213],\"bookName\":\"三国演义\",\"author\":\"吴承恩\",\"page\":21,\"segment\":\"富贵功名，前缘分定，为人切莫欺心。\"}"),
+     *                new JSONObject("{\"id\":\"0014\",\"vector\":[0.2123, 0.21, 0.213],\"bookName\":\"三国演义\",\"author\":\"吴承恩\",\"page\":21,\"segment\":\"富贵功名，前缘分定，为人切莫欺心。\"}")
+     *              ); or
+     *              Arrays.asList(Document.newBuilder()
+     *                         .withId("0001")
+     *                         .withVector(generateRandomVector(768))
+     *                         .withSparseVector(sparseVectors.get(0))
+     *                         .addDocField(new DocField("bookName", "三国演义"))
+     *                         .addDocField(new DocField("author", "罗贯中"))
+     *                         .addDocField(new DocField("page", 21))
+     *                         .addDocField(new DocField("segment", "富贵功名，前缘分定，为人切莫欺心。"))
+     *                         .addDocField(new DocField("text", "富贵功名，前缘分定，为人切莫欺心。"))
+     *                         .build());
+     *
+     * @return AffectRes(affectedCount, msg, code)
+     * @throws VectorDBException
+     */
     public AffectRes upsert(InsertParam param) throws VectorDBException {
         InsertParamInner insertParam = new InsertParamInner(
                 database, collection, param);
@@ -233,27 +255,92 @@ public class Collection{
         return this.stub.upsertDocument(insertParam, ai);
     }
 
+    /**
+     * query document from collection
+     * @param param QueryParam:
+     *        limit(int): Limit return row's count
+     *        offset(int): Skip offset rows of query result set
+     *        retrieve_vector(bool): Whether to return vector values.
+     *        filter(Filter): filter rows before return result
+     *        document_ids(List): filter rows by id list
+     *        output_fields(List): return columns by column name list
+     * @return List<Document>
+     * @throws VectorDBException
+     */
     public List<Document> query(QueryParam param) throws VectorDBException {
         boolean ai = false;
         return this.stub.queryDocument(
                 new QueryParamInner(database, collection, param, this.readConsistency), ai);
     }
 
+    /**
+     * search document by vector from the collection
+     * @param param SearchByVectorParam:
+     *              vectors: List<List<Double>>, search documents by the vectors
+     *              limit(int): Limit return row's count
+     *              retrieve_vector(bool): Whether to return vector values.
+     *              filter(Filter): filter rows before return result
+     *              output_fields(List): return columns by column name list
+     *              radius(Float): radius of search
+     *              params(Params): params for search, eg:HNSWSearchParams, GeneralParams
+     * @return List<List<Document>>: the size of the result is the same as the size of vectors
+     * @throws VectorDBException
+     */
     public List<List<Document>> search(SearchByVectorParam param) throws VectorDBException {
         return this.stub.searchDocument(new SearchParamInner(
                 database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE).getDocuments();
     }
 
+    /**
+     * search document by documents represented by id from the collection
+     * @param param SearchByVectorParam:
+     *              documentIds: List<String>, search documents by the document ids
+     *              limit(int): Limit return row's count
+     *              retrieve_vector(bool): Whether to return vector values.
+     *              filter(Filter): filter rows before return result
+     *              output_fields(List): return columns by column name list
+     *              radius(Float): radius of search
+     *              params(Params): params for search, eg:HNSWSearchParams, GeneralParams
+     * @return List<List<Document>>: the size of the result is the same as the size of documentIds
+     * @throws VectorDBException
+     */
     public List<List<Document>> searchById(SearchByIdParam param) throws VectorDBException {
         return this.stub.searchDocument(new SearchParamInner(
                 database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE).getDocuments();
     }
 
+    /**
+     * search document by contents that would be embedded to vectors from the collection
+     * @param param SearchByVectorParam:
+     *              embeddingItems: List<String>, search documents by the content
+     *              limit(int): Limit return row's count
+     *              retrieve_vector(bool): Whether to return vector values.
+     *              filter(Filter): filter rows before return result
+     *              output_fields(List): return columns by column name list
+     *              radius(Float): radius of search
+     *              params(Params): params for search, eg:HNSWSearchParams, GeneralParams
+     * @return List<List<Document>>: the size of the result is the same as the size of embeddingItems
+     * @throws VectorDBException
+     */
     public SearchRes searchByEmbeddingItems(SearchByEmbeddingItemsParam param) throws VectorDBException {
         return this.stub.searchDocument(new SearchParamInner(
                 database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE);
     }
 
+    /**
+     * hybrid search document using vector and sparse vector from the collection
+     * @param param HybridSearchParam:
+     *      ann(List<AnnOption>): ann options, annOption used for vector search,
+     *      match(List<MatchOption>): match options, matchOption used for sparse vector search
+     *      retrieve_vector(bool): Whether to return vector and sparse vector values.
+     *      filter(Filter): filter rows before return result
+     *      document_ids(List): filter rows by id list
+     *      output_fields(List): return columns by column name list
+     *      Limit(int): limit the number of rows returned
+     *      rerank(RerankParam): rerank param, RRFRerankParam or WeightRerankParam
+     * @return HybridSearchRes: the size of the result is the same as the size of embeddingItems
+     * @throws VectorDBException
+     */
     public HybridSearchRes hybridSearch(HybridSearchParam param) throws VectorDBException {
         boolean ai = false;
         if(param.getAnn()!=null && !param.getAnn().isEmpty() && param.getAnn().get(0).getData()!=null
@@ -265,11 +352,25 @@ public class Collection{
                 database, collection, param, this.readConsistency), ai);
     }
 
+
+    /**
+     * delete document
+     * @param param DeleteParam: delete document that retrieved by filter and documentIds
+     * @return AffectRes
+     * @throws VectorDBException
+     */
     public AffectRes delete(DeleteParam param) throws VectorDBException {
         return this.stub.deleteDocument(
                 new DeleteParamInner(database, collection, param));
     }
 
+    /**
+     * update document
+     * @param param: update param used for retrieving document
+     * @param document(Document.class): the document to be updated
+     * @return AffectRes
+     * @throws VectorDBException
+     */
     public AffectRes update(UpdateParam param, Document document) throws VectorDBException {
         boolean ai = false;
         if (document.getVector() instanceof String){
@@ -279,6 +380,13 @@ public class Collection{
                 new UpdateParamInner(database, collection, param, document), ai);
     }
 
+    /**
+     * update document
+     * @param param: update param used for retrieving document
+     * @param document(JSONObject.class): the document to be updated
+     * @return AffectRes
+     * @throws VectorDBException
+     */
     public AffectRes update(UpdateParam param, JSONObject document) throws VectorDBException {
         boolean ai = false;
         if (document.get("vector") instanceof String){
@@ -288,6 +396,11 @@ public class Collection{
                 new UpdateParamInner(database, collection, param, document), ai);
     }
 
+    /**
+     * rebuild index
+     * @param rebuildIndexParam: rebuild index param
+     * @return BaseRes
+     */
     public BaseRes rebuildIndex(RebuildIndexParam rebuildIndexParam) {
         return this.stub.rebuildIndex(new RebuildIndexParamInner(database, collection, rebuildIndexParam));
     }

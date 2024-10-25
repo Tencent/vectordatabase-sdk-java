@@ -6,6 +6,19 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * HybridSearchParam hybrid search param
+ *  Params:
+ *      ann(List<AnnOption>): ann options, annOption used for vector search,
+ *      match(List<MatchOption>): match options, matchOption used for sparse vector search
+ *      retrieve_vector(bool): Whether to return vector and sparse vector values.
+ *      filter(Filter): filter rows before return result
+ *      document_ids(List): filter rows by id list
+ *      output_fields(List): return columns by column name list
+ *      Limit(int): limit the number of rows returned
+ *      rerank(RerankParam): rerank param, RRFRerankParam or WeightRerankParam
+ *
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HybridSearchParam {
     private List<AnnOption> ann;

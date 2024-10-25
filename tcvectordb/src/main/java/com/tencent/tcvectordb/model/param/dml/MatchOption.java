@@ -7,7 +7,15 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * MatchOption for sparse vector search
+ * Params:
+ *     fieldName: String, field name of the sparse vector field, value must be "sparse_vector".
+ *     data: List<List<List<Object>>>, sparse vector data, can user MatchOption.newBuilder().withData(List<List<Pair<Long, Float>>>) to use sparse vector data.
+ *     Limit: Integer, search limit
+ * eg:
+ *     MatchOption option = new MatchOption.Builder().withFieldName("sparse_vector").withData(sparseVector).build();
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MatchOption {
     private String fieldName;

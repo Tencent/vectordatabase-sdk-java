@@ -28,6 +28,10 @@ import java.util.List;
 
 /**
  * Search By Vector Param
+ * Params:
+ *  SearchParam: SearchParam.class include search base params
+ *  vectors: List<List<Double>>, search documents by the vectors
+ *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SearchByVectorParam extends SearchParam {

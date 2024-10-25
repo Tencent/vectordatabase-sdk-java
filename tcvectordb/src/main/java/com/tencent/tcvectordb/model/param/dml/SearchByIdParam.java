@@ -28,6 +28,10 @@ import java.util.List;
 
 /**
  * Search By Id Param
+ * Params:
+ *  SearchParam: SearchParam.class include search base params
+ *  documentIds: List<Double>, search documents by documents represented by documentIds
+ *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SearchByIdParam extends SearchParam {

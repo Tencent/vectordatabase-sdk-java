@@ -27,7 +27,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Search By Vector Param
+ * Search By embedding Param
+ * Params:
+ *  SearchParam: SearchParam.class include search base params
+ *  embeddingItems: List<String>, search documents by content strings.
+ *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SearchByEmbeddingItemsParam extends SearchParam {

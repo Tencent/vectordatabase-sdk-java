@@ -21,6 +21,7 @@
 package com.tencent.tcvectordb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.tencent.tcvectordb.client.VectorDBClient;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
@@ -76,6 +77,7 @@ public class Database {
      * @param param description: the description of the collection
      * @param param indexes: list of the index fields
      * @param param embedding: Embedding class
+     * @param param ttlConfig: TTLConfig class
      *
      * @return collection object
      * @throws VectorDBException
@@ -126,12 +128,30 @@ public class Database {
     }
 
     /**
+     * this method is deprecated, recommend use {@link Database#IsExistsCollection(String)}
      * exists collection, true if collection exists else false
      * @param collection
      * @return boolean
      * @throws VectorDBException
      */
+    @Deprecated
     public Boolean existsCollection(String collection) throws VectorDBException {
+        Collection collectionInfo = null;
+        try {
+            collectionInfo = stub.describeCollection(this.databaseName, collection);
+        }catch (Exception e){
+
+        }
+        return collectionInfo!=null;
+    }
+
+    /**
+     * exists collection, true if collection exists else false
+     * @param collection
+     * @return boolean
+     * @throws VectorDBException
+     */
+    public Boolean IsExistsCollection(String collection) throws VectorDBException {
         Collection collectionInfo = null;
         try {
             collectionInfo = stub.describeCollection(this.databaseName, collection);

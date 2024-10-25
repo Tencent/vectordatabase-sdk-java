@@ -57,6 +57,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class GrpcStub extends HttpStub{
+
     private ManagedChannel channel;
     private SearchEngineGrpc.SearchEngineBlockingStub blockingStub;
 
@@ -94,6 +95,12 @@ public class GrpcStub extends HttpStub{
             url = url + ":80";
         }
         return url.replaceFirst("http://", "").replaceFirst("https://", "");
+    }
+
+    @Override
+    public void close() {
+        super.close();
+        this.channel.shutdown();
     }
 
 
@@ -934,10 +941,12 @@ public class GrpcStub extends HttpStub{
                 fieldBuilder.setValDouble(Double.parseDouble(docField.getValue().toString()));
             }else if(docField.getValue() instanceof String){
                 fieldBuilder.setValStr(ByteString.copyFromUtf8(docField.getValue().toString()));
-            }
-            if (docField.getValue() instanceof List) {
+            }else if (docField.getValue() instanceof List && ((List<?>) docField.getValue()).get(0) instanceof String ){
                 fieldBuilder.setValStrArr(Olama.Field.StringArray.newBuilder().addAllStrArr(
                         ((List<?>) docField.getValue()).stream().map(ele-> ByteString.copyFromUtf8((String)ele)).collect(Collectors.toList())));
+            }else {
+                throw new VectorDBException("Unsupported field type,  field key:" + docField.getName() + " type:"+ docField.getValue().getClass() +"\n" +
+                        "supported field type is:  Integer,Long,Double,Float,String,List<String>");
             }
             docBuilder.putFields(docField.getName(), fieldBuilder.build());
         });
@@ -964,8 +973,11 @@ public class GrpcStub extends HttpStub{
                     fieldBuilder.setValDouble(Double.parseDouble(document.get(key).toString()));
                 } else if (document.get(key) instanceof String) {
                     fieldBuilder.setValStr(ByteString.copyFromUtf8(document.get(key).toString()));
-                }else if(document.get(key) instanceof JSONArray){
+                }else if(document.get(key) instanceof JSONArray && ((JSONArray)document.get(key)).get(0) instanceof String){
                     fieldBuilder.setValStrArr(Olama.Field.StringArray.newBuilder().addAllStrArr(((JSONArray)document.get(key)).toList().stream().map(ele-> ByteString.copyFromUtf8((String)ele)).collect(Collectors.toList())));
+                }else {
+                    throw new VectorDBException("Unsupported field type, field:+"+ key +" type:"+ document.get(key).getClass()
+                            + "\nsupported field type is:  Integer,Long,Double,Float,String,JSONArray<String>");
                 }
                 docBuilder.putFields(key, fieldBuilder.build());
             }

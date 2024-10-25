@@ -43,7 +43,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.*;
 
 /**
- * VectorDB Document
+ * VectorDB DocumentSet
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DocumentSet {

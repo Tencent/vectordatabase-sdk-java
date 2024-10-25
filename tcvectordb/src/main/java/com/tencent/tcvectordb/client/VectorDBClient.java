@@ -100,6 +100,7 @@ public class VectorDBClient {
      * @return Boolean
      * @throws VectorDBException
      */
+    @Deprecated
     public Boolean existsDatabase(String databaseName) throws VectorDBException {
         List<String> databaseNames = stub.listDatabases();
         if(databaseNames!=null && databaseNames.contains(databaseName)){
@@ -114,7 +115,6 @@ public class VectorDBClient {
      * @return Boolean
      * @throws VectorDBException
      */
-    @Deprecated
     public Boolean IsExistsDatabase(String databaseName) throws VectorDBException {
         List<String> databaseNames = stub.listDatabases();
         if(databaseNames!=null && databaseNames.contains(databaseName)){

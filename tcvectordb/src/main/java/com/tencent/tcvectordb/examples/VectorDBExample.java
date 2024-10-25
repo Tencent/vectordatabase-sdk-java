@@ -63,7 +63,7 @@ public class VectorDBExample {
         Database db = client.createDatabase(DBNAME);
         // 可以使用这种方式创建db
 //        Database db = client.createDatabaseIfNotExists(DBNAME);
-        Boolean isExisted = client.existsDatabase("test_db");
+        Boolean isExisted = client.IsExistsDatabase("test_db");
 
         // 2. 列出所有数据库
         System.out.println("---------------------- listCollections ----------------------");
@@ -81,7 +81,7 @@ public class VectorDBExample {
 //        可以使用下面方式创建collection
 //        db.createCollectionIfNotExists(collectionParam);
 
-        System.out.println(COLL_NAME + " exists: "+ db.existsCollection(COLL_NAME));
+        System.out.println(COLL_NAME + " exists: "+ db.IsExistsCollection(COLL_NAME));
 
         // 4. 列出所有 collection
 //        Database db = client.database(DBNAME);
@@ -390,7 +390,7 @@ public class VectorDBExample {
         return CreateCollectionParam.newBuilder()
                 .withName(collName)
                 .withShardNum(1)
-                .withReplicaNum(1)
+                .withReplicaNum(0)
                 .withDescription("test collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", 3, IndexType.HNSW,

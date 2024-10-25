@@ -945,7 +945,7 @@ public class GrpcStub extends HttpStub{
                 fieldBuilder.setValStrArr(Olama.Field.StringArray.newBuilder().addAllStrArr(
                         ((List<?>) docField.getValue()).stream().map(ele-> ByteString.copyFromUtf8((String)ele)).collect(Collectors.toList())));
             }else {
-                throw new VectorDBException("Unsupported field type,  field key:" + docField.getName() + " type:"+ docField.getValue().getClass() +"" +
+                throw new VectorDBException("Unsupported field type,  field key:" + docField.getName() + " type:"+ docField.getValue().getClass() +"\n" +
                         "supported field type is:  Integer,Long,Double,Float,String,List<String>");
             }
             docBuilder.putFields(docField.getName(), fieldBuilder.build());

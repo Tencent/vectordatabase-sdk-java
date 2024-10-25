@@ -94,12 +94,28 @@ public class VectorDBClient {
     }
 
     /**
+     * this method is deprecated, recommend use {@link VectorDBClient#IsExistsDatabase(String)}
      * check database exists, return true if existed else false
      * @param databaseName database's name
      * @return Boolean
      * @throws VectorDBException
      */
     public Boolean existsDatabase(String databaseName) throws VectorDBException {
+        List<String> databaseNames = stub.listDatabases();
+        if(databaseNames!=null && databaseNames.contains(databaseName)){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * check database exists, return true if existed else false
+     * @param databaseName database's name
+     * @return Boolean
+     * @throws VectorDBException
+     */
+    @Deprecated
+    public Boolean IsExistsDatabase(String databaseName) throws VectorDBException {
         List<String> databaseNames = stub.listDatabases();
         if(databaseNames!=null && databaseNames.contains(databaseName)){
             return true;
@@ -175,13 +191,30 @@ public class VectorDBClient {
 
 
     /**
+     * this method is deprecated, recommend use {@link VectorDBClient#IsExistsCollection(String, String)}
      * exists collection, true if collection exists else false
      * @param databaseName
      * @param collection
      * @return boolean
      * @throws VectorDBException
      */
+    @Deprecated
     public Boolean existsCollection(String databaseName, String collection) throws VectorDBException {
+        Collection collectionInfo = null;
+        try {
+            collectionInfo = stub.describeCollection(databaseName, collection);
+        }catch (Exception e){}
+        return collectionInfo!=null;
+    }
+
+    /**
+     * exists collection, true if collection exists else false
+     * @param databaseName
+     * @param collection
+     * @return boolean
+     * @throws VectorDBException
+     */
+    public Boolean IsExistsCollection(String databaseName, String collection) throws VectorDBException {
         Collection collectionInfo = null;
         try {
             collectionInfo = stub.describeCollection(databaseName, collection);

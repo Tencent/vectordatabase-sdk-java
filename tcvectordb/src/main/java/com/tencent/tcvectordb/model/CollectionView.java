@@ -38,7 +38,21 @@ import com.tencent.tcvectordb.utils.JsonUtils;
 import java.util.*;
 
 /**
- * VectorDB Collection
+ * VectorDB CollectionView
+ *<ol>
+ *<li> database: the database name of collection </li>
+ *<li> collectionView: name of collectionView, this name must be unique</li>
+ *<li> description: description of the collection,</li>
+ *<li> indexes: index field of the collection;
+ *      field type could be string，uint64, array
+ *      index type could be primaryKey, filter if the field is scalar field, id field must be primaryKey;
+ *      fieldElementType could be string if the field type array;</li>
+ *<li> alias: alias of the collection </li>
+ *<li> embedding: embedding config should be set if collection use embedding function </li>
+ *<li> expectedFileNum: expected file numbers of the collectionView </li>
+ *<li> averageFileSize: average size of the file uploaded to the collectionView </li>
+ *</ol>
+ *
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)

@@ -36,6 +36,18 @@ import java.util.*;
 
 /**
  * VectorDB Document
+ * <ol>
+ * <li> id: Unique identifier for the document, id must be set primaryKey when create collection </li>
+ * <li> vector: vector of document, this name of document's vector, dimension of the vector must be set when create collection
+ *       eg: use addField(new VectorIndex("vector", 3, IndexType.HNSW, MetricType.COSINE, new HNSWParams(16, 200))) when create collection
+ *           document can use withVector(Arrays.asList(0.2123, 0.22, 0.213)) to set vector of document </li>
+ * <li> sparseVector：sparse vector of document should be set if collection use sparse vector,
+ *      eg: use addField(new SparseVectorIndex("sparse_vector", IndexType.INVERTED, MetricType.IP)) when create collection
+ *          document can use withSparseVector(Arrays.asList(Pair.of(12233l,0，3), ...)) to set sparse vector of document
+ *      </li>
+ * <li> score: the score will be set if search document</li>
+ * <li> docFields: the scalar field of the document,</li>
+ * </ol>
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Document {

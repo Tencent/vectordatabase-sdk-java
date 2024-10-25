@@ -6,6 +6,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * AnnOption for ann vector search
+ * Params:
+ *     fieldName: String, field name of the vector field, value must be "vector".
+ *     data: List<Double>, vector data,
+ *     documentIds: List<String>, document ids used for search.
+ * eg:
+ *     AnnOption option = new AnnOption.Builder().withFieldName("vector").withData(vector).build();
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AnnOption {
     private String fieldName;

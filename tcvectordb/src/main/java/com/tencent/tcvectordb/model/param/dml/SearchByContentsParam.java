@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Search By Vector Param
+ * Search ai collection By Content Param
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SearchByContentsParam {

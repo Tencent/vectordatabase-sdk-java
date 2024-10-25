@@ -57,6 +57,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class GrpcStub extends HttpStub{
+
     private ManagedChannel channel;
     private SearchEngineGrpc.SearchEngineBlockingStub blockingStub;
 
@@ -94,6 +95,12 @@ public class GrpcStub extends HttpStub{
             url = url + ":80";
         }
         return url.replaceFirst("http://", "").replaceFirst("https://", "");
+    }
+
+    @Override
+    public void close() {
+        super.close();
+        this.channel.shutdown();
     }
 
 

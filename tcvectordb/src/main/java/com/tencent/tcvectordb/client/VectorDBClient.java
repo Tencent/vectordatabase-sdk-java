@@ -55,6 +55,12 @@ public class VectorDBClient {
     protected VectorDBClient() {
     }
 
+    public void close() {
+        if (stub != null) {
+            stub.close();
+        }
+    }
+
     /**
      * create database
      * @param databaseName database's name to create. The name of the database. A database name can only include

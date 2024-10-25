@@ -179,4 +179,6 @@ public interface Stub {
                            Integer limit, Integer offset);
 
     BaseRes rebuildAIIndex(RebuildIndexParamInner param);
+
+    void close();
 }

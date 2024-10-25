@@ -385,6 +385,11 @@ public class HttpStub implements Stub {
     }
 
     @Override
+    public void close() {
+        this.client.dispatcher().executorService().shutdown();
+    }
+
+    @Override
     public AffectRes setAIAlias(String databaseName, String collectionName, String aliasName) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_ALIAS_SET);
         String body = String.format("{\"database\":\"%s\",\"collectionView\":\"%s\",\"alias\":\"%s\"}",

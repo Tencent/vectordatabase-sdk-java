@@ -77730,6 +77730,1891 @@ com.tencent.tcvectordb.rpc.proto.Olama.DatabaseItem defaultValue) {
 
   }
 
+  public interface AddIndexRequestOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.tencent.tcvectordb.rpc.proto.AddIndexRequest)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string database = 1;</code>
+     * @return The database.
+     */
+    java.lang.String getDatabase();
+    /**
+     * <code>string database = 1;</code>
+     * @return The bytes for database.
+     */
+    com.google.protobuf.ByteString
+        getDatabaseBytes();
+
+    /**
+     * <code>string collection = 2;</code>
+     * @return The collection.
+     */
+    java.lang.String getCollection();
+    /**
+     * <code>string collection = 2;</code>
+     * @return The bytes for collection.
+     */
+    com.google.protobuf.ByteString
+        getCollectionBytes();
+
+    /**
+     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+     */
+    int getIndexesCount();
+    /**
+     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+     */
+    boolean containsIndexes(
+        java.lang.String key);
+    /**
+     * Use {@link #getIndexesMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn>
+    getIndexes();
+    /**
+     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+     */
+    java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn>
+    getIndexesMap();
+    /**
+     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+     */
+    /* nullable */
+com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn getIndexesOrDefault(
+        java.lang.String key,
+        /* nullable */
+com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue);
+    /**
+     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+     */
+    com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn getIndexesOrThrow(
+        java.lang.String key);
+
+    /**
+     * <code>bool buildExistedData = 4;</code>
+     * @return The buildExistedData.
+     */
+    boolean getBuildExistedData();
+  }
+  /**
+   * Protobuf type {@code com.tencent.tcvectordb.rpc.proto.AddIndexRequest}
+   */
+  public static final class AddIndexRequest extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.tencent.tcvectordb.rpc.proto.AddIndexRequest)
+      AddIndexRequestOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use AddIndexRequest.newBuilder() to construct.
+    private AddIndexRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private AddIndexRequest() {
+      database_ = "";
+      collection_ = "";
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new AddIndexRequest();
+    }
+
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.tencent.tcvectordb.rpc.proto.Olama.internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexRequest_descriptor;
+    }
+
+    @SuppressWarnings({"rawtypes"})
+    @java.lang.Override
+    protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
+        int number) {
+      switch (number) {
+        case 3:
+          return internalGetIndexes();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.tencent.tcvectordb.rpc.proto.Olama.internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexRequest_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest.class, com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest.Builder.class);
+    }
+
+    public static final int DATABASE_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object database_ = "";
+    /**
+     * <code>string database = 1;</code>
+     * @return The database.
+     */
+    @java.lang.Override
+    public java.lang.String getDatabase() {
+      java.lang.Object ref = database_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        database_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string database = 1;</code>
+     * @return The bytes for database.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getDatabaseBytes() {
+      java.lang.Object ref = database_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        database_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int COLLECTION_FIELD_NUMBER = 2;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object collection_ = "";
+    /**
+     * <code>string collection = 2;</code>
+     * @return The collection.
+     */
+    @java.lang.Override
+    public java.lang.String getCollection() {
+      java.lang.Object ref = collection_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        collection_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string collection = 2;</code>
+     * @return The bytes for collection.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getCollectionBytes() {
+      java.lang.Object ref = collection_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        collection_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int INDEXES_FIELD_NUMBER = 3;
+    private static final class IndexesDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn>newDefaultInstance(
+                  com.tencent.tcvectordb.rpc.proto.Olama.internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexRequest_IndexesEntry_descriptor,
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                  com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn.getDefaultInstance());
+    }
+    @SuppressWarnings("serial")
+    private com.google.protobuf.MapField<
+        java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> indexes_;
+    private com.google.protobuf.MapField<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn>
+    internalGetIndexes() {
+      if (indexes_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            IndexesDefaultEntryHolder.defaultEntry);
+      }
+      return indexes_;
+    }
+    public int getIndexesCount() {
+      return internalGetIndexes().getMap().size();
+    }
+    /**
+     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+     */
+    @java.lang.Override
+    public boolean containsIndexes(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      return internalGetIndexes().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getIndexesMap()} instead.
+     */
+    @java.lang.Override
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> getIndexes() {
+      return getIndexesMap();
+    }
+    /**
+     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+     */
+    @java.lang.Override
+    public java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> getIndexesMap() {
+      return internalGetIndexes().getMap();
+    }
+    /**
+     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+     */
+    @java.lang.Override
+    public /* nullable */
+com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn getIndexesOrDefault(
+        java.lang.String key,
+        /* nullable */
+com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> map =
+          internalGetIndexes().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+     */
+    @java.lang.Override
+    public com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn getIndexesOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> map =
+          internalGetIndexes().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    public static final int BUILDEXISTEDDATA_FIELD_NUMBER = 4;
+    private boolean buildExistedData_ = false;
+    /**
+     * <code>bool buildExistedData = 4;</code>
+     * @return The buildExistedData.
+     */
+    @java.lang.Override
+    public boolean getBuildExistedData() {
+      return buildExistedData_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(database_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, database_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(collection_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, collection_);
+      }
+      com.google.protobuf.GeneratedMessageV3
+        .serializeStringMapTo(
+          output,
+          internalGetIndexes(),
+          IndexesDefaultEntryHolder.defaultEntry,
+          3);
+      if (buildExistedData_ != false) {
+        output.writeBool(4, buildExistedData_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(database_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, database_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(collection_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, collection_);
+      }
+      for (java.util.Map.Entry<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> entry
+           : internalGetIndexes().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn>
+        indexes__ = IndexesDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(3, indexes__);
+      }
+      if (buildExistedData_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(4, buildExistedData_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest)) {
+        return super.equals(obj);
+      }
+      com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest other = (com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest) obj;
+
+      if (!getDatabase()
+          .equals(other.getDatabase())) return false;
+      if (!getCollection()
+          .equals(other.getCollection())) return false;
+      if (!internalGetIndexes().equals(
+          other.internalGetIndexes())) return false;
+      if (getBuildExistedData()
+          != other.getBuildExistedData()) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + DATABASE_FIELD_NUMBER;
+      hash = (53 * hash) + getDatabase().hashCode();
+      hash = (37 * hash) + COLLECTION_FIELD_NUMBER;
+      hash = (53 * hash) + getCollection().hashCode();
+      if (!internalGetIndexes().getMap().isEmpty()) {
+        hash = (37 * hash) + INDEXES_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetIndexes().hashCode();
+      }
+      hash = (37 * hash) + BUILDEXISTEDDATA_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getBuildExistedData());
+      hash = (29 * hash) + getUnknownFields().hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.tencent.tcvectordb.rpc.proto.AddIndexRequest}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.tencent.tcvectordb.rpc.proto.AddIndexRequest)
+        com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequestOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.tencent.tcvectordb.rpc.proto.Olama.internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexRequest_descriptor;
+      }
+
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
+          int number) {
+        switch (number) {
+          case 3:
+            return internalGetIndexes();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapFieldReflectionAccessor internalGetMutableMapFieldReflection(
+          int number) {
+        switch (number) {
+          case 3:
+            return internalGetMutableIndexes();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.tencent.tcvectordb.rpc.proto.Olama.internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexRequest_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest.class, com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest.Builder.class);
+      }
+
+      // Construct using com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest.newBuilder()
+      private Builder() {
+
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        bitField0_ = 0;
+        database_ = "";
+        collection_ = "";
+        internalGetMutableIndexes().clear();
+        buildExistedData_ = false;
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.tencent.tcvectordb.rpc.proto.Olama.internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexRequest_descriptor;
+      }
+
+      @java.lang.Override
+      public com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest getDefaultInstanceForType() {
+        return com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest build() {
+        com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest buildPartial() {
+        com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest result = new com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest(this);
+        if (bitField0_ != 0) { buildPartial0(result); }
+        onBuilt();
+        return result;
+      }
+
+      private void buildPartial0(com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.database_ = database_;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.collection_ = collection_;
+        }
+        if (((from_bitField0_ & 0x00000004) != 0)) {
+          result.indexes_ = internalGetIndexes().build(IndexesDefaultEntryHolder.defaultEntry);
+        }
+        if (((from_bitField0_ & 0x00000008) != 0)) {
+          result.buildExistedData_ = buildExistedData_;
+        }
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest) {
+          return mergeFrom((com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest other) {
+        if (other == com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest.getDefaultInstance()) return this;
+        if (!other.getDatabase().isEmpty()) {
+          database_ = other.database_;
+          bitField0_ |= 0x00000001;
+          onChanged();
+        }
+        if (!other.getCollection().isEmpty()) {
+          collection_ = other.collection_;
+          bitField0_ |= 0x00000002;
+          onChanged();
+        }
+        internalGetMutableIndexes().mergeFrom(
+            other.internalGetIndexes());
+        bitField0_ |= 0x00000004;
+        if (other.getBuildExistedData() != false) {
+          setBuildExistedData(other.getBuildExistedData());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                database_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                collection_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 18
+              case 26: {
+                com.google.protobuf.MapEntry<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn>
+                indexes__ = input.readMessage(
+                    IndexesDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+                internalGetMutableIndexes().ensureBuilderMap().put(
+                    indexes__.getKey(), indexes__.getValue());
+                bitField0_ |= 0x00000004;
+                break;
+              } // case 26
+              case 32: {
+                buildExistedData_ = input.readBool();
+                bitField0_ |= 0x00000008;
+                break;
+              } // case 32
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.unwrapIOException();
+        } finally {
+          onChanged();
+        } // finally
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object database_ = "";
+      /**
+       * <code>string database = 1;</code>
+       * @return The database.
+       */
+      public java.lang.String getDatabase() {
+        java.lang.Object ref = database_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          database_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string database = 1;</code>
+       * @return The bytes for database.
+       */
+      public com.google.protobuf.ByteString
+          getDatabaseBytes() {
+        java.lang.Object ref = database_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          database_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string database = 1;</code>
+       * @param value The database to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDatabase(
+          java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        database_ = value;
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string database = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearDatabase() {
+        database_ = getDefaultInstance().getDatabase();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string database = 1;</code>
+       * @param value The bytes for database to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDatabaseBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
+        database_ = value;
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object collection_ = "";
+      /**
+       * <code>string collection = 2;</code>
+       * @return The collection.
+       */
+      public java.lang.String getCollection() {
+        java.lang.Object ref = collection_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          collection_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string collection = 2;</code>
+       * @return The bytes for collection.
+       */
+      public com.google.protobuf.ByteString
+          getCollectionBytes() {
+        java.lang.Object ref = collection_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          collection_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string collection = 2;</code>
+       * @param value The collection to set.
+       * @return This builder for chaining.
+       */
+      public Builder setCollection(
+          java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        collection_ = value;
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string collection = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearCollection() {
+        collection_ = getDefaultInstance().getCollection();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string collection = 2;</code>
+       * @param value The bytes for collection to set.
+       * @return This builder for chaining.
+       */
+      public Builder setCollectionBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
+        collection_ = value;
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+
+      private static final class IndexesConverter implements com.google.protobuf.MapFieldBuilder.Converter<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumnOrBuilder, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> {
+        @java.lang.Override
+        public com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn build(com.tencent.tcvectordb.rpc.proto.Olama.IndexColumnOrBuilder val) {
+          if (val instanceof com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn) { return (com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn) val; }
+          return ((com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn.Builder) val).build();
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.MapEntry<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> defaultEntry() {
+          return IndexesDefaultEntryHolder.defaultEntry;
+        }
+      };
+      private static final IndexesConverter indexesConverter = new IndexesConverter();
+
+      private com.google.protobuf.MapFieldBuilder<
+          java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumnOrBuilder, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn.Builder> indexes_;
+      private com.google.protobuf.MapFieldBuilder<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumnOrBuilder, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn.Builder>
+          internalGetIndexes() {
+        if (indexes_ == null) {
+          return new com.google.protobuf.MapFieldBuilder<>(indexesConverter);
+        }
+        return indexes_;
+      }
+      private com.google.protobuf.MapFieldBuilder<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumnOrBuilder, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn.Builder>
+          internalGetMutableIndexes() {
+        if (indexes_ == null) {
+          indexes_ = new com.google.protobuf.MapFieldBuilder<>(indexesConverter);
+        }
+        bitField0_ |= 0x00000004;
+        onChanged();
+        return indexes_;
+      }
+      public int getIndexesCount() {
+        return internalGetIndexes().ensureBuilderMap().size();
+      }
+      /**
+       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+       */
+      @java.lang.Override
+      public boolean containsIndexes(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        return internalGetIndexes().ensureBuilderMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getIndexesMap()} instead.
+       */
+      @java.lang.Override
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> getIndexes() {
+        return getIndexesMap();
+      }
+      /**
+       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+       */
+      @java.lang.Override
+      public java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> getIndexesMap() {
+        return internalGetIndexes().getImmutableMap();
+      }
+      /**
+       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+       */
+      @java.lang.Override
+      public /* nullable */
+com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn getIndexesOrDefault(
+          java.lang.String key,
+          /* nullable */
+com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumnOrBuilder> map = internalGetMutableIndexes().ensureBuilderMap();
+        return map.containsKey(key) ? indexesConverter.build(map.get(key)) : defaultValue;
+      }
+      /**
+       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+       */
+      @java.lang.Override
+      public com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn getIndexesOrThrow(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumnOrBuilder> map = internalGetMutableIndexes().ensureBuilderMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
+        }
+        return indexesConverter.build(map.get(key));
+      }
+      public Builder clearIndexes() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        internalGetMutableIndexes().clear();
+        return this;
+      }
+      /**
+       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+       */
+      public Builder removeIndexes(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        internalGetMutableIndexes().ensureBuilderMap()
+            .remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn>
+          getMutableIndexes() {
+        bitField0_ |= 0x00000004;
+        return internalGetMutableIndexes().ensureMessageMap();
+      }
+      /**
+       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+       */
+      public Builder putIndexes(
+          java.lang.String key,
+          com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn value) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        if (value == null) { throw new NullPointerException("map value"); }
+        internalGetMutableIndexes().ensureBuilderMap()
+            .put(key, value);
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+       */
+      public Builder putAllIndexes(
+          java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> values) {
+        for (java.util.Map.Entry<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> e : values.entrySet()) {
+          if (e.getKey() == null || e.getValue() == null) {
+            throw new NullPointerException();
+          }
+        }
+        internalGetMutableIndexes().ensureBuilderMap()
+            .putAll(values);
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+       */
+      public com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn.Builder putIndexesBuilderIfAbsent(
+          java.lang.String key) {
+        java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumnOrBuilder> builderMap = internalGetMutableIndexes().ensureBuilderMap();
+        com.tencent.tcvectordb.rpc.proto.Olama.IndexColumnOrBuilder entry = builderMap.get(key);
+        if (entry == null) {
+          entry = com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn.newBuilder();
+          builderMap.put(key, entry);
+        }
+        if (entry instanceof com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn) {
+          entry = ((com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn) entry).toBuilder();
+          builderMap.put(key, entry);
+        }
+        return (com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn.Builder) entry;
+      }
+
+      private boolean buildExistedData_ ;
+      /**
+       * <code>bool buildExistedData = 4;</code>
+       * @return The buildExistedData.
+       */
+      @java.lang.Override
+      public boolean getBuildExistedData() {
+        return buildExistedData_;
+      }
+      /**
+       * <code>bool buildExistedData = 4;</code>
+       * @param value The buildExistedData to set.
+       * @return This builder for chaining.
+       */
+      public Builder setBuildExistedData(boolean value) {
+
+        buildExistedData_ = value;
+        bitField0_ |= 0x00000008;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool buildExistedData = 4;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearBuildExistedData() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        buildExistedData_ = false;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.tencent.tcvectordb.rpc.proto.AddIndexRequest)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.tencent.tcvectordb.rpc.proto.AddIndexRequest)
+    private static final com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest();
+    }
+
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<AddIndexRequest>
+        PARSER = new com.google.protobuf.AbstractParser<AddIndexRequest>() {
+      @java.lang.Override
+      public AddIndexRequest parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
+      }
+    };
+
+    public static com.google.protobuf.Parser<AddIndexRequest> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<AddIndexRequest> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface AddIndexResponseOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.tencent.tcvectordb.rpc.proto.AddIndexResponse)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>int32 code = 1;</code>
+     * @return The code.
+     */
+    int getCode();
+
+    /**
+     * <code>string msg = 2;</code>
+     * @return The msg.
+     */
+    java.lang.String getMsg();
+    /**
+     * <code>string msg = 2;</code>
+     * @return The bytes for msg.
+     */
+    com.google.protobuf.ByteString
+        getMsgBytes();
+
+    /**
+     * <code>string redirect = 3;</code>
+     * @return The redirect.
+     */
+    java.lang.String getRedirect();
+    /**
+     * <code>string redirect = 3;</code>
+     * @return The bytes for redirect.
+     */
+    com.google.protobuf.ByteString
+        getRedirectBytes();
+  }
+  /**
+   * Protobuf type {@code com.tencent.tcvectordb.rpc.proto.AddIndexResponse}
+   */
+  public static final class AddIndexResponse extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.tencent.tcvectordb.rpc.proto.AddIndexResponse)
+      AddIndexResponseOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use AddIndexResponse.newBuilder() to construct.
+    private AddIndexResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private AddIndexResponse() {
+      msg_ = "";
+      redirect_ = "";
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new AddIndexResponse();
+    }
+
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.tencent.tcvectordb.rpc.proto.Olama.internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexResponse_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.tencent.tcvectordb.rpc.proto.Olama.internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexResponse_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse.class, com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse.Builder.class);
+    }
+
+    public static final int CODE_FIELD_NUMBER = 1;
+    private int code_ = 0;
+    /**
+     * <code>int32 code = 1;</code>
+     * @return The code.
+     */
+    @java.lang.Override
+    public int getCode() {
+      return code_;
+    }
+
+    public static final int MSG_FIELD_NUMBER = 2;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object msg_ = "";
+    /**
+     * <code>string msg = 2;</code>
+     * @return The msg.
+     */
+    @java.lang.Override
+    public java.lang.String getMsg() {
+      java.lang.Object ref = msg_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        msg_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string msg = 2;</code>
+     * @return The bytes for msg.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getMsgBytes() {
+      java.lang.Object ref = msg_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        msg_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int REDIRECT_FIELD_NUMBER = 3;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object redirect_ = "";
+    /**
+     * <code>string redirect = 3;</code>
+     * @return The redirect.
+     */
+    @java.lang.Override
+    public java.lang.String getRedirect() {
+      java.lang.Object ref = redirect_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        redirect_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string redirect = 3;</code>
+     * @return The bytes for redirect.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getRedirectBytes() {
+      java.lang.Object ref = redirect_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        redirect_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (code_ != 0) {
+        output.writeInt32(1, code_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(msg_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, msg_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(redirect_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, redirect_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (code_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, code_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(msg_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, msg_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(redirect_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, redirect_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse)) {
+        return super.equals(obj);
+      }
+      com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse other = (com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse) obj;
+
+      if (getCode()
+          != other.getCode()) return false;
+      if (!getMsg()
+          .equals(other.getMsg())) return false;
+      if (!getRedirect()
+          .equals(other.getRedirect())) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + CODE_FIELD_NUMBER;
+      hash = (53 * hash) + getCode();
+      hash = (37 * hash) + MSG_FIELD_NUMBER;
+      hash = (53 * hash) + getMsg().hashCode();
+      hash = (37 * hash) + REDIRECT_FIELD_NUMBER;
+      hash = (53 * hash) + getRedirect().hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.tencent.tcvectordb.rpc.proto.AddIndexResponse}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.tencent.tcvectordb.rpc.proto.AddIndexResponse)
+        com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponseOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.tencent.tcvectordb.rpc.proto.Olama.internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexResponse_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.tencent.tcvectordb.rpc.proto.Olama.internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexResponse_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse.class, com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse.Builder.class);
+      }
+
+      // Construct using com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse.newBuilder()
+      private Builder() {
+
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        bitField0_ = 0;
+        code_ = 0;
+        msg_ = "";
+        redirect_ = "";
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.tencent.tcvectordb.rpc.proto.Olama.internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexResponse_descriptor;
+      }
+
+      @java.lang.Override
+      public com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse getDefaultInstanceForType() {
+        return com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse build() {
+        com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse buildPartial() {
+        com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse result = new com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse(this);
+        if (bitField0_ != 0) { buildPartial0(result); }
+        onBuilt();
+        return result;
+      }
+
+      private void buildPartial0(com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.code_ = code_;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.msg_ = msg_;
+        }
+        if (((from_bitField0_ & 0x00000004) != 0)) {
+          result.redirect_ = redirect_;
+        }
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse) {
+          return mergeFrom((com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse other) {
+        if (other == com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse.getDefaultInstance()) return this;
+        if (other.getCode() != 0) {
+          setCode(other.getCode());
+        }
+        if (!other.getMsg().isEmpty()) {
+          msg_ = other.msg_;
+          bitField0_ |= 0x00000002;
+          onChanged();
+        }
+        if (!other.getRedirect().isEmpty()) {
+          redirect_ = other.redirect_;
+          bitField0_ |= 0x00000004;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 8: {
+                code_ = input.readInt32();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 8
+              case 18: {
+                msg_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 18
+              case 26: {
+                redirect_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000004;
+                break;
+              } // case 26
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.unwrapIOException();
+        } finally {
+          onChanged();
+        } // finally
+        return this;
+      }
+      private int bitField0_;
+
+      private int code_ ;
+      /**
+       * <code>int32 code = 1;</code>
+       * @return The code.
+       */
+      @java.lang.Override
+      public int getCode() {
+        return code_;
+      }
+      /**
+       * <code>int32 code = 1;</code>
+       * @param value The code to set.
+       * @return This builder for chaining.
+       */
+      public Builder setCode(int value) {
+
+        code_ = value;
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 code = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearCode() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        code_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object msg_ = "";
+      /**
+       * <code>string msg = 2;</code>
+       * @return The msg.
+       */
+      public java.lang.String getMsg() {
+        java.lang.Object ref = msg_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          msg_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string msg = 2;</code>
+       * @return The bytes for msg.
+       */
+      public com.google.protobuf.ByteString
+          getMsgBytes() {
+        java.lang.Object ref = msg_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          msg_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string msg = 2;</code>
+       * @param value The msg to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMsg(
+          java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        msg_ = value;
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string msg = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearMsg() {
+        msg_ = getDefaultInstance().getMsg();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string msg = 2;</code>
+       * @param value The bytes for msg to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMsgBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
+        msg_ = value;
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object redirect_ = "";
+      /**
+       * <code>string redirect = 3;</code>
+       * @return The redirect.
+       */
+      public java.lang.String getRedirect() {
+        java.lang.Object ref = redirect_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          redirect_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string redirect = 3;</code>
+       * @return The bytes for redirect.
+       */
+      public com.google.protobuf.ByteString
+          getRedirectBytes() {
+        java.lang.Object ref = redirect_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          redirect_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string redirect = 3;</code>
+       * @param value The redirect to set.
+       * @return This builder for chaining.
+       */
+      public Builder setRedirect(
+          java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        redirect_ = value;
+        bitField0_ |= 0x00000004;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string redirect = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearRedirect() {
+        redirect_ = getDefaultInstance().getRedirect();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string redirect = 3;</code>
+       * @param value The bytes for redirect to set.
+       * @return This builder for chaining.
+       */
+      public Builder setRedirectBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
+        redirect_ = value;
+        bitField0_ |= 0x00000004;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.tencent.tcvectordb.rpc.proto.AddIndexResponse)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.tencent.tcvectordb.rpc.proto.AddIndexResponse)
+    private static final com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse();
+    }
+
+    public static com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<AddIndexResponse>
+        PARSER = new com.google.protobuf.AbstractParser<AddIndexResponse>() {
+      @java.lang.Override
+      public AddIndexResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
+      }
+    };
+
+    public static com.google.protobuf.Parser<AddIndexResponse> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<AddIndexResponse> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface HttpRequestOrBuilder extends
       // @@protoc_insertion_point(interface_extends:com.tencent.tcvectordb.rpc.proto.HttpRequest)
       com.google.protobuf.MessageOrBuilder {
@@ -78920,6 +80805,21 @@ com.tencent.tcvectordb.rpc.proto.Olama.DatabaseItem defaultValue) {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_tencent_tcvectordb_rpc_proto_GetVersionResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexRequest_descriptor;
+  private static final
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexRequest_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexRequest_IndexesEntry_descriptor;
+  private static final
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexRequest_IndexesEntry_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexResponse_descriptor;
+  private static final
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexResponse_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_tencent_tcvectordb_rpc_proto_HttpRequest_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -79211,89 +81111,100 @@ com.tencent.tcvectordb.rpc.proto.Olama.DatabaseItem defaultValue) {
       "\030\003 \001(\t\022@\n\010database\030\004 \001(\0132..com.tencent.t" +
       "cvectordb.rpc.proto.DatabaseItem\"\023\n\021GetV" +
       "ersionRequest\"?\n\022GetVersionResponse\022\021\n\tt" +
-      "imestamp\030\001 \001(\003\022\026\n\016kernal_version\030\002 \001(\003\"\r" +
-      "\n\013HttpRequest\"\016\n\014HttpResponse*s\n\016ShardDa" +
-      "taState\022\025\n\021SHARD_INDEX_READY\020\000\022\030\n\024SHARD_" +
-      "INDEX_TRAINING\020\001\022\030\n\024SHARD_INDEX_BUILDING" +
-      "\020\002\022\026\n\022SHARD_INDEX_FAILED\020\003*B\n\013HealthStat" +
-      "e\022\020\n\014HEALTH_GREEN\020\000\022\021\n\rHEALTH_YELLOW\020\001\022\016" +
-      "\n\nHEALTH_RED\020\002* \n\010DataType\022\010\n\004BASE\020\000\022\n\n\006" +
-      "AI_DOC\020\001*y\n\017IndexMetricType\022\036\n\032INDEX_MET" +
-      "RIC_INNER_PRODUCT\020\000\022\023\n\017INDEX_METRIC_L2\020\001" +
-      "\022\027\n\023INDEX_METRIC_COSINE\020\002\022\030\n\024INDEX_METRI" +
-      "C_HAMMING\020\003*W\n\017IndexEngineType\022\027\n\023ENGINE" +
-      "_FAISS_VECTOR\020\000\022\027\n\023ENGINE_FAISS_BINARY\020\001" +
-      "\022\022\n\016ENGINE_HNSWLIB\020\003*=\n\tFieldType\022\017\n\013TYP" +
-      "E_STRING\020\000\022\016\n\nTYPE_ARRAY\020\001\022\017\n\013TYPE_UINT6" +
-      "4\020\002*+\n\020FieldElementType\022\027\n\023ELEMENT_TYPE_" +
-      "STRING\020\0002\211\025\n\014SearchEngine\022t\n\010setAlias\0221." +
-      "com.tencent.tcvectordb.rpc.proto.AddAlia" +
-      "sRequest\0325.com.tencent.tcvectordb.rpc.pr" +
-      "oto.UpdateAliasResponse\022q\n\010getAlias\0221.co" +
-      "m.tencent.tcvectordb.rpc.proto.GetAliasR" +
-      "equest\0322.com.tencent.tcvectordb.rpc.prot" +
-      "o.GetAliasResponse\022z\n\013deleteAlias\0224.com." +
-      "tencent.tcvectordb.rpc.proto.RemoveAlias" +
-      "Request\0325.com.tencent.tcvectordb.rpc.pro" +
-      "to.UpdateAliasResponse\022\211\001\n\020createCollect" +
-      "ion\0229.com.tencent.tcvectordb.rpc.proto.C" +
-      "reateCollectionRequest\032:.com.tencent.tcv" +
-      "ectordb.rpc.proto.CreateCollectionRespon" +
-      "se\022\203\001\n\016dropCollection\0227.com.tencent.tcve" +
-      "ctordb.rpc.proto.DropCollectionRequest\0328" +
-      ".com.tencent.tcvectordb.rpc.proto.DropCo" +
-      "llectionResponse\022\217\001\n\022truncateCollection\022" +
-      ";.com.tencent.tcvectordb.rpc.proto.Trunc" +
-      "ateCollectionRequest\032<.com.tencent.tcvec" +
-      "tordb.rpc.proto.TruncateCollectionRespon" +
-      "se\022\217\001\n\022describeCollection\022;.com.tencent." +
-      "tcvectordb.rpc.proto.DescribeCollectionR" +
-      "equest\032<.com.tencent.tcvectordb.rpc.prot" +
-      "o.DescribeCollectionResponse\022\206\001\n\017listCol" +
-      "lections\0228.com.tencent.tcvectordb.rpc.pr" +
-      "oto.ListCollectionsRequest\0329.com.tencent" +
-      ".tcvectordb.rpc.proto.ListCollectionsRes" +
-      "ponse\022}\n\014rebuildIndex\0225.com.tencent.tcve" +
-      "ctordb.rpc.proto.RebuildIndexRequest\0326.c" +
-      "om.tencent.tcvectordb.rpc.proto.RebuildI" +
-      "ndexResponse\022k\n\006upsert\022/.com.tencent.tcv" +
-      "ectordb.rpc.proto.UpsertRequest\0320.com.te" +
-      "ncent.tcvectordb.rpc.proto.UpsertRespons" +
-      "e\022k\n\006update\022/.com.tencent.tcvectordb.rpc" +
-      ".proto.UpdateRequest\0320.com.tencent.tcvec" +
-      "tordb.rpc.proto.UpdateResponse\022h\n\005query\022" +
-      "..com.tencent.tcvectordb.rpc.proto.Query" +
-      "Request\032/.com.tencent.tcvectordb.rpc.pro" +
-      "to.QueryResponse\022k\n\006search\022/.com.tencent" +
-      ".tcvectordb.rpc.proto.SearchRequest\0320.co" +
-      "m.tencent.tcvectordb.rpc.proto.SearchRes" +
-      "ponse\022r\n\rhybrid_search\022/.com.tencent.tcv" +
-      "ectordb.rpc.proto.SearchRequest\0320.com.te" +
-      "ncent.tcvectordb.rpc.proto.SearchRespons" +
-      "e\022i\n\004dele\022/.com.tencent.tcvectordb.rpc.p" +
-      "roto.DeleteRequest\0320.com.tencent.tcvecto" +
-      "rdb.rpc.proto.DeleteResponse\022q\n\014range_se" +
-      "arch\022/.com.tencent.tcvectordb.rpc.proto." +
-      "SearchRequest\0320.com.tencent.tcvectordb.r" +
-      "pc.proto.SearchResponse\022e\n\004sort\022-.com.te" +
-      "ncent.tcvectordb.rpc.proto.SortRequest\032." +
-      ".com.tencent.tcvectordb.rpc.proto.SortRe" +
-      "sponse\022w\n\016createDatabase\0221.com.tencent.t" +
-      "cvectordb.rpc.proto.DatabaseRequest\0322.co" +
-      "m.tencent.tcvectordb.rpc.proto.DatabaseR" +
-      "esponse\022u\n\014dropDatabase\0221.com.tencent.tc" +
-      "vectordb.rpc.proto.DatabaseRequest\0322.com" +
-      ".tencent.tcvectordb.rpc.proto.DatabaseRe" +
-      "sponse\022v\n\rlistDatabases\0221.com.tencent.tc" +
-      "vectordb.rpc.proto.DatabaseRequest\0322.com" +
-      ".tencent.tcvectordb.rpc.proto.DatabaseRe" +
-      "sponse\022\211\001\n\020describeDatabase\0229.com.tencen" +
-      "t.tcvectordb.rpc.proto.DescribeDatabaseR" +
-      "equest\032:.com.tencent.tcvectordb.rpc.prot" +
-      "o.DescribeDatabaseResponse\022x\n\013get_versio" +
-      "n\0223.com.tencent.tcvectordb.rpc.proto.Get" +
-      "VersionRequest\0324.com.tencent.tcvectordb." +
-      "rpc.proto.GetVersionResponseB\003\200\001\001b\006proto" +
+      "imestamp\030\001 \001(\003\022\026\n\016kernal_version\030\002 \001(\003\"\201" +
+      "\002\n\017AddIndexRequest\022\020\n\010database\030\001 \001(\t\022\022\n\n" +
+      "collection\030\002 \001(\t\022O\n\007indexes\030\003 \003(\0132>.com." +
+      "tencent.tcvectordb.rpc.proto.AddIndexReq" +
+      "uest.IndexesEntry\022\030\n\020buildExistedData\030\004 " +
+      "\001(\010\032]\n\014IndexesEntry\022\013\n\003key\030\001 \001(\t\022<\n\005valu" +
+      "e\030\002 \001(\0132-.com.tencent.tcvectordb.rpc.pro" +
+      "to.IndexColumn:\0028\001\"?\n\020AddIndexResponse\022\014" +
+      "\n\004code\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010redirect\030\003 " +
+      "\001(\t\"\r\n\013HttpRequest\"\016\n\014HttpResponse*s\n\016Sh" +
+      "ardDataState\022\025\n\021SHARD_INDEX_READY\020\000\022\030\n\024S" +
+      "HARD_INDEX_TRAINING\020\001\022\030\n\024SHARD_INDEX_BUI" +
+      "LDING\020\002\022\026\n\022SHARD_INDEX_FAILED\020\003*B\n\013Healt" +
+      "hState\022\020\n\014HEALTH_GREEN\020\000\022\021\n\rHEALTH_YELLO" +
+      "W\020\001\022\016\n\nHEALTH_RED\020\002* \n\010DataType\022\010\n\004BASE\020" +
+      "\000\022\n\n\006AI_DOC\020\001*y\n\017IndexMetricType\022\036\n\032INDE" +
+      "X_METRIC_INNER_PRODUCT\020\000\022\023\n\017INDEX_METRIC" +
+      "_L2\020\001\022\027\n\023INDEX_METRIC_COSINE\020\002\022\030\n\024INDEX_" +
+      "METRIC_HAMMING\020\003*W\n\017IndexEngineType\022\027\n\023E" +
+      "NGINE_FAISS_VECTOR\020\000\022\027\n\023ENGINE_FAISS_BIN" +
+      "ARY\020\001\022\022\n\016ENGINE_HNSWLIB\020\003*=\n\tFieldType\022\017" +
+      "\n\013TYPE_STRING\020\000\022\016\n\nTYPE_ARRAY\020\001\022\017\n\013TYPE_" +
+      "UINT64\020\002*+\n\020FieldElementType\022\027\n\023ELEMENT_" +
+      "TYPE_STRING\020\0002\374\025\n\014SearchEngine\022t\n\010setAli" +
+      "as\0221.com.tencent.tcvectordb.rpc.proto.Ad" +
+      "dAliasRequest\0325.com.tencent.tcvectordb.r" +
+      "pc.proto.UpdateAliasResponse\022q\n\010getAlias" +
+      "\0221.com.tencent.tcvectordb.rpc.proto.GetA" +
+      "liasRequest\0322.com.tencent.tcvectordb.rpc" +
+      ".proto.GetAliasResponse\022z\n\013deleteAlias\0224" +
+      ".com.tencent.tcvectordb.rpc.proto.Remove" +
+      "AliasRequest\0325.com.tencent.tcvectordb.rp" +
+      "c.proto.UpdateAliasResponse\022\211\001\n\020createCo" +
+      "llection\0229.com.tencent.tcvectordb.rpc.pr" +
+      "oto.CreateCollectionRequest\032:.com.tencen" +
+      "t.tcvectordb.rpc.proto.CreateCollectionR" +
+      "esponse\022\203\001\n\016dropCollection\0227.com.tencent" +
+      ".tcvectordb.rpc.proto.DropCollectionRequ" +
+      "est\0328.com.tencent.tcvectordb.rpc.proto.D" +
+      "ropCollectionResponse\022\217\001\n\022truncateCollec" +
+      "tion\022;.com.tencent.tcvectordb.rpc.proto." +
+      "TruncateCollectionRequest\032<.com.tencent." +
+      "tcvectordb.rpc.proto.TruncateCollectionR" +
+      "esponse\022\217\001\n\022describeCollection\022;.com.ten" +
+      "cent.tcvectordb.rpc.proto.DescribeCollec" +
+      "tionRequest\032<.com.tencent.tcvectordb.rpc" +
+      ".proto.DescribeCollectionResponse\022\206\001\n\017li" +
+      "stCollections\0228.com.tencent.tcvectordb.r" +
+      "pc.proto.ListCollectionsRequest\0329.com.te" +
+      "ncent.tcvectordb.rpc.proto.ListCollectio" +
+      "nsResponse\022}\n\014rebuildIndex\0225.com.tencent" +
+      ".tcvectordb.rpc.proto.RebuildIndexReques" +
+      "t\0326.com.tencent.tcvectordb.rpc.proto.Reb" +
+      "uildIndexResponse\022k\n\006upsert\022/.com.tencen" +
+      "t.tcvectordb.rpc.proto.UpsertRequest\0320.c" +
+      "om.tencent.tcvectordb.rpc.proto.UpsertRe" +
+      "sponse\022k\n\006update\022/.com.tencent.tcvectord" +
+      "b.rpc.proto.UpdateRequest\0320.com.tencent." +
+      "tcvectordb.rpc.proto.UpdateResponse\022h\n\005q" +
+      "uery\022..com.tencent.tcvectordb.rpc.proto." +
+      "QueryRequest\032/.com.tencent.tcvectordb.rp" +
+      "c.proto.QueryResponse\022k\n\006search\022/.com.te" +
+      "ncent.tcvectordb.rpc.proto.SearchRequest" +
+      "\0320.com.tencent.tcvectordb.rpc.proto.Sear" +
+      "chResponse\022r\n\rhybrid_search\022/.com.tencen" +
+      "t.tcvectordb.rpc.proto.SearchRequest\0320.c" +
+      "om.tencent.tcvectordb.rpc.proto.SearchRe" +
+      "sponse\022i\n\004dele\022/.com.tencent.tcvectordb." +
+      "rpc.proto.DeleteRequest\0320.com.tencent.tc" +
+      "vectordb.rpc.proto.DeleteResponse\022q\n\014ran" +
+      "ge_search\022/.com.tencent.tcvectordb.rpc.p" +
+      "roto.SearchRequest\0320.com.tencent.tcvecto" +
+      "rdb.rpc.proto.SearchResponse\022e\n\004sort\022-.c" +
+      "om.tencent.tcvectordb.rpc.proto.SortRequ" +
+      "est\032..com.tencent.tcvectordb.rpc.proto.S" +
+      "ortResponse\022w\n\016createDatabase\0221.com.tenc" +
+      "ent.tcvectordb.rpc.proto.DatabaseRequest" +
+      "\0322.com.tencent.tcvectordb.rpc.proto.Data" +
+      "baseResponse\022u\n\014dropDatabase\0221.com.tence" +
+      "nt.tcvectordb.rpc.proto.DatabaseRequest\032" +
+      "2.com.tencent.tcvectordb.rpc.proto.Datab" +
+      "aseResponse\022v\n\rlistDatabases\0221.com.tence" +
+      "nt.tcvectordb.rpc.proto.DatabaseRequest\032" +
+      "2.com.tencent.tcvectordb.rpc.proto.Datab" +
+      "aseResponse\022\211\001\n\020describeDatabase\0229.com.t" +
+      "encent.tcvectordb.rpc.proto.DescribeData" +
+      "baseRequest\032:.com.tencent.tcvectordb.rpc" +
+      ".proto.DescribeDatabaseResponse\022x\n\013get_v" +
+      "ersion\0223.com.tencent.tcvectordb.rpc.prot" +
+      "o.GetVersionRequest\0324.com.tencent.tcvect" +
+      "ordb.rpc.proto.GetVersionResponse\022q\n\010add" +
+      "Index\0221.com.tencent.tcvectordb.rpc.proto" +
+      ".AddIndexRequest\0322.com.tencent.tcvectord" +
+      "b.rpc.proto.AddIndexResponseB\003\200\001\001b\006proto" +
       "3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
@@ -79774,14 +81685,32 @@ com.tencent.tcvectordb.rpc.proto.Olama.DatabaseItem defaultValue) {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_tencent_tcvectordb_rpc_proto_GetVersionResponse_descriptor,
         new java.lang.String[] { "Timestamp", "KernalVersion", });
-    internal_static_com_tencent_tcvectordb_rpc_proto_HttpRequest_descriptor =
+    internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexRequest_descriptor =
       getDescriptor().getMessageTypes().get(71);
+    internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexRequest_descriptor,
+        new java.lang.String[] { "Database", "Collection", "Indexes", "BuildExistedData", });
+    internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexRequest_IndexesEntry_descriptor =
+      internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexRequest_descriptor.getNestedTypes().get(0);
+    internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexRequest_IndexesEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexRequest_IndexesEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexResponse_descriptor =
+      getDescriptor().getMessageTypes().get(72);
+    internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_tencent_tcvectordb_rpc_proto_AddIndexResponse_descriptor,
+        new java.lang.String[] { "Code", "Msg", "Redirect", });
+    internal_static_com_tencent_tcvectordb_rpc_proto_HttpRequest_descriptor =
+      getDescriptor().getMessageTypes().get(73);
     internal_static_com_tencent_tcvectordb_rpc_proto_HttpRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_tencent_tcvectordb_rpc_proto_HttpRequest_descriptor,
         new java.lang.String[] { });
     internal_static_com_tencent_tcvectordb_rpc_proto_HttpResponse_descriptor =
-      getDescriptor().getMessageTypes().get(72);
+      getDescriptor().getMessageTypes().get(74);
     internal_static_com_tencent_tcvectordb_rpc_proto_HttpResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_tencent_tcvectordb_rpc_proto_HttpResponse_descriptor,

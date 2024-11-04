@@ -385,6 +385,13 @@ public class HttpStub implements Stub {
     }
 
     @Override
+    public BaseRes addIndex(AddIndexParamInner addIndexParamInner) {
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.ADD_INDEX);
+        JsonNode jsonNode = this.post(url, addIndexParamInner.toString(), true);
+        return JsonUtils.parseObject(jsonNode.toString(), BaseRes.class);
+    }
+
+    @Override
     public void close() {
         this.client.dispatcher().executorService().shutdown();
     }

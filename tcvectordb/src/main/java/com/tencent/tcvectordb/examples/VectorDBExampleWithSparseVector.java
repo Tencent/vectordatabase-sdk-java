@@ -248,10 +248,10 @@ public class VectorDBExampleWithSparseVector {
                 .withLimit(10)
                 // 过滤获取到结果
                 .withFilter(filterParam)
-//                .withRetrieveVector(true)
-//                .withOutputFields(Arrays.asList("segment"))
+                .withRetrieveVector(true)
+                .withOutputFields(Arrays.asList("segment"))
                 .build();
-        List<List<Document>> siDocs = collection.hybridSearch(hybridSearchParam).getDocumentsList();
+        List<List<Document>> siDocs = client.hybridSearch(DBNAME, COLL_NAME, hybridSearchParam).getDocumentsList();
         int i = 0;
         for (Object docs : siDocs) {
 //            System.out.println("\tres: " + (i++) + docs.toString());

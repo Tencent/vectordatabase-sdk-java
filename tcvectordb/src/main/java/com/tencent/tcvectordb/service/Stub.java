@@ -180,5 +180,7 @@ public interface Stub {
 
     BaseRes rebuildAIIndex(RebuildIndexParamInner param);
 
+    BaseRes addIndex(AddIndexParamInner addIndexParamInner);
+
     void close();
 }

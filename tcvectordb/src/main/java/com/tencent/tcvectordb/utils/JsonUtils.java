@@ -65,8 +65,9 @@ public class JsonUtils {
         try {
             return DESERIALIZE_IGNORE_KEY_MAPPER.readValue(jsonStr, clz);
         } catch (JsonProcessingException e) {
+
             throw new ParamException(String.format(
-                    "can't parse content=%s", jsonStr));
+                    "can't parse content=%s", jsonStr), e);
         }
     }
 
@@ -80,7 +81,7 @@ public class JsonUtils {
             return SERIALIZE_MAPPER.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
             throw new ParamException(String.format(
-                    "can't serialize value=%s, type=%s", obj, obj.getClass().getName()));
+                    "can't serialize value=%s, type=%s", obj, obj.getClass().getName()), e);
         }
     }
 
@@ -104,8 +105,9 @@ public class JsonUtils {
         try {
             return SERIALIZE_MAPPER.readTree(jsonStr);
         } catch (JsonProcessingException e) {
+
             throw new ParamException(String.format(
-                    "can't parse content=%s", jsonStr));
+                    "can't parse content=%s", jsonStr), e);
         }
     }
 
@@ -119,9 +121,8 @@ public class JsonUtils {
         try {
             return PARAMS_DESERIALIZE_MAPPER.readValue(jsonStr, clz);
         } catch (JsonProcessingException e) {
-            System.out.println(e);
             throw new ParamException(String.format(
-                    "can't parse content=%s", jsonStr));
+                    "can't parse content=%s", jsonStr), e);
         }
     }
 }

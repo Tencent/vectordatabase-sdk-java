@@ -27,4 +27,8 @@ public class ParamException extends VectorDBException {
     public ParamException(String message) {
         super(message);
     }
+
+    public ParamException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

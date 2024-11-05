@@ -66,8 +66,10 @@ public class GrpcStub extends HttpStub{
     private String authorization;
     private int timeout = 10;
     private static final Logger logger = LoggerFactory.getLogger(GrpcStub.class.getName());
+    private ConnectParam connectParam;
     public GrpcStub(ConnectParam param){
-        super(param);
+        super();
+        connectParam = param;
         this.authorization = String.format("Bearer account=%s&api_key=%s",param.getUsername(), param.getKey());
 
         this.channel = OkHttpChannelBuilder.forTarget(this.getAddress(param.getUrl())).
@@ -137,6 +139,7 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public AffectRes createAIDatabase(AIDatabase aiDatabase) {
+        super.initHttpStub(this.connectParam);
         return super.createAIDatabase(aiDatabase);
     }
 
@@ -164,6 +167,7 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public AffectRes dropAIDatabase(AIDatabase aiDatabase) {
+        super.initHttpStub(this.connectParam);
         return super.dropAIDatabase(aiDatabase);
     }
 
@@ -300,6 +304,7 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public void createCollectionView(CreateCollectionViewParam params) {
+        super.initHttpStub(this.connectParam);
         super.createCollectionView(params);
     }
 
@@ -365,6 +370,7 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public AffectRes truncateCollectionView(String databaseName, String collectionName, DataBaseTypeEnum dbType) {
+        super.initHttpStub(this.connectParam);
         return super.truncateCollectionView(databaseName, collectionName, dbType);
     }
 
@@ -513,6 +519,7 @@ public class GrpcStub extends HttpStub{
     @Override
     public SearchRes searchDocument(SearchParamInner param, DataBaseTypeEnum dbType) {
         if (dbType.equals(DataBaseTypeEnum.AI_DB)){
+            super.initHttpStub(this.connectParam);
             return super.searchDocument(param, dbType);
         }
         Olama.SearchRequest.Builder builder = Olama.SearchRequest.newBuilder().setDatabase(param.getDatabase()).
@@ -786,66 +793,79 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public AffectRes setAIAlias(String databaseName, String collectionName, String aliasName) {
+        super.initHttpStub(this.connectParam);
         return super.setAIAlias(databaseName, collectionName, aliasName);
     }
 
     @Override
     public AffectRes deleteAIAlias(String databaseName, String aliasName) {
+        super.initHttpStub(this.connectParam);
         return super.deleteAIAlias(databaseName, aliasName);
     }
 
     @Override
     public List<CollectionView> listCollectionView(String databaseName) {
+        super.initHttpStub(this.connectParam);
         return super.listCollectionView(databaseName);
     }
 
     @Override
     public CollectionView describeCollectionView(String databaseName, String collectionName) {
+        super.initHttpStub(this.connectParam);
         return super.describeCollectionView(databaseName, collectionName);
     }
 
     @Override
     public AffectRes dropCollectionView(String databaseName, String collectionName) {
+        super.initHttpStub(this.connectParam);
         return super.dropCollectionView(databaseName, collectionName);
     }
 
     @Override
     public List<DocumentSet> queryAIDocument(CollectionViewQueryParamInner queryParamInner) {
+        super.initHttpStub(this.connectParam);
         return super.queryAIDocument(queryParamInner);
     }
 
     @Override
     public AffectRes deleteAIDocument(CollectionViewDeleteParamInner deleteParamInner) {
+        super.initHttpStub(this.connectParam);
         return super.deleteAIDocument(deleteParamInner);
     }
 
     @Override
     public SearchContentRes searchAIDocument(SearchDocParamInner searchDocParamInner) {
+        super.initHttpStub(this.connectParam);
         return super.searchAIDocument(searchDocParamInner);
     }
 
     @Override
     public AffectRes updateAIDocument(CollectionViewUpdateParamInner updateParamInner) {
+        super.initHttpStub(this.connectParam);
         return super.updateAIDocument(updateParamInner);
     }
 
     @Override
     public void upload(String databaseName, String collectionName, LoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
+        super.initHttpStub(this.connectParam);
         super.upload(databaseName, collectionName, loadAndSplitTextParam, metaDataMap);
     }
 
     @Override
     public GetDocumentSetRes getFile(String databaseName, String collectionName, String fileName, String fileId) {
+        super.initHttpStub(this.connectParam);
         return super.getFile(databaseName, collectionName, fileName, fileId);
     }
 
     @Override
     public GetChunksRes getChunks(String databaseName, String collectionName, String documentSetName, String documentSetId, Integer limit, Integer offset) {
+        super.initHttpStub(this.connectParam);
         return super.getChunks(databaseName, collectionName, documentSetName, documentSetId, limit, offset);
     }
 
     @Override
     public BaseRes rebuildAIIndex(RebuildIndexParamInner param) {
+        super.initHttpStub(this.connectParam);
         return super.rebuildAIIndex(param);
     }
 

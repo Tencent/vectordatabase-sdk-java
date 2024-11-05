@@ -29,6 +29,7 @@ import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
+import com.tencent.tcvectordb.model.param.entity.BaseRes;
 import com.tencent.tcvectordb.utils.JsonUtils;
 import org.json.JSONObject;
 
@@ -53,10 +54,50 @@ public class VectorDBExample {
         createDatabaseAndCollection(client);
         upsertData(client);
         queryData(client);
-        updateAndDelete(client);
-        deleteAndDrop(client);
+        addIndex(client);
+//        updateAndDelete(client);
+//        deleteAndDrop(client);
         testFilter();
 
+    }
+
+    private static void addIndex(VectorDBClient client) throws InterruptedException{
+        BaseRes baseRes = client.AddIndex(DBNAME, COLL_NAME, AddIndexParam.newBuilder().withBuildExistedData(true)
+                .withIndexes(Arrays.asList(new FilterIndex("owner", FieldType.String, IndexType.FILTER))).build());
+        System.out.println("--------add index-------");
+        System.out.println("\t res: "+ JsonUtils.toJsonString(baseRes));
+        Thread.sleep(1000);
+        System.out.println("--------describe collection-------");
+        Database db = client.database(DBNAME);
+        Collection collection = db.describeCollection(COLL_NAME);
+        System.out.println("\t collection describe: "+ JsonUtils.toJsonString(collection));
+        List<Document> documentList = Arrays.asList(
+                Document.newBuilder()
+                        .withId("0006")
+                        .withVector(Arrays.asList(0.2123, 0.21, 0.214))
+                        .addDocField(new DocField("bookName", "西游记"))
+                        .addDocField(new DocField("author", "吴承恩"))
+                        .addDocField(new DocField("page", 21))
+                        .addDocField(new DocField("segment", "富贵功名，前缘分定，为人切莫欺心。"))
+                        .addDocField(new DocField("array_test", Arrays.asList("1","2","3")))
+                        .addDocField(new DocField("owner", "vector_db"))
+                        .build(),
+                Document.newBuilder()
+                        .withId("0007")
+                        .withVector(Arrays.asList(0.2123, 0.22, 0.215))
+                        .addDocField(new DocField("bookName", "西游记"))
+                        .addDocField(new DocField("author", "吴承恩"))
+                        .addDocField(new DocField("page", 22))
+                        .addDocField(new DocField("segment",
+                                "正大光明，忠良善果弥深。些些狂妄天加谴，眼前不遇待时临。"))
+                        .addDocField(new DocField("array_test", Arrays.asList("4","5","6")))
+                        .addDocField(new DocField("owner", "vector_db_1"))
+                        .build());
+        client.upsert(DBNAME, COLL_NAME, InsertParam.newBuilder().addAllDocument(documentList).build());
+        List<Document> docs = client.query(DBNAME,COLL_NAME, QueryParam.newBuilder().withFilter("owner=\"vector_db\"").withLimit(10).build());
+        for (int i = 0; i < docs.size(); i++) {
+            System.out.println("res "+i+" "+ JsonUtils.toJsonString(docs.get(i)));
+        }
     }
 
 
@@ -134,6 +175,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("page", 21))
                         .addDocField(new DocField("segment", "富贵功名，前缘分定，为人切莫欺心。"))
                         .addDocField(new DocField("array_test", Arrays.asList("1","2","3")))
+                        .addDocField(new DocField("owner", "vector_db_1"))
                         .build(),
                 Document.newBuilder()
                         .withId("0002")
@@ -144,6 +186,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("segment",
                                 "正大光明，忠良善果弥深。些些狂妄天加谴，眼前不遇待时临。"))
                         .addDocField(new DocField("array_test", Arrays.asList("4","5","6")))
+                        .addDocField(new DocField("owner", "vector_db"))
                         .build(),
                 Document.newBuilder()
                         .withId("0003")
@@ -153,6 +196,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("page", 23))
                         .addDocField(new DocField("segment", "细作探知这个消息，飞报吕布。"))
                         .addDocField(new DocField("array_test", Arrays.asList("7","8","9")))
+                        .addDocField(new DocField("owner", "vector_db_1"))
                         .build(),
                 Document.newBuilder()
                         .withId("0004")
@@ -162,6 +206,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("page", 24))
                         .addDocField(new DocField("segment", "富贵功名，前缘分定，为人切莫欺心。"))
                         .addDocField(new DocField("array_test", Arrays.asList("10","11","12")))
+                        .addDocField(new DocField("owner", "vector_db_1"))
                         // 24小时后过期
                         .addDocField(new DocField("expired_at", System.currentTimeMillis()/1000 + 24*60*60))
                         .build(),
@@ -173,6 +218,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("page", 25))
                         .addDocField(new DocField("segment",
                                 "布大惊，与陈宫商议。宫曰：“闻刘玄德新领徐州，可往投之。"))
+                        .addDocField(new DocField("owner", "vector_db"))
                         // 10分钟后过期
                         .addDocField(new DocField("expired_at", System.currentTimeMillis()/1000 + 10*60))
                         .build()));

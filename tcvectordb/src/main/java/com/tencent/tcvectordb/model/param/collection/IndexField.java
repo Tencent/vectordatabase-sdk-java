@@ -122,10 +122,6 @@ public class IndexField {
         this.indexType = indexType;
     }
 
-    public void setDimension(int dimension) {
-        this.dimension = dimension;
-    }
-
     public FieldElementType getFieldElementType() {
         return fieldElementType;
     }

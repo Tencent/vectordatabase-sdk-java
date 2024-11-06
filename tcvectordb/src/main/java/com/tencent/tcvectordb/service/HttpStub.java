@@ -63,28 +63,38 @@ import java.util.concurrent.TimeUnit;
  * HTTP Stub for DB service API
  */
 public class HttpStub implements Stub {
-    private final ConnectParam connectParam;
-    private final OkHttpClient client;
-    private final Headers.Builder headersBuilder;
-    private final ObjectMapper mapper = new ObjectMapper();
+    private  ConnectParam connectParam;
+    private  OkHttpClient client;
+    private  Headers.Builder headersBuilder;
+    private  ObjectMapper mapper = new ObjectMapper();
     private static final MediaType JSON =
             MediaType.parse("application/json; charset=utf-8");
     private static final Logger logger = LoggerFactory.getLogger(HttpStub.class.getName());
-
+    public HttpStub(){}
 
     public HttpStub(ConnectParam connectParam) {
-        this.connectParam = connectParam;
-        String authorization = String.format("Bearer account=%s&api_key=%s",
-                connectParam.getUsername(), connectParam.getKey());
-        this.headersBuilder = new Headers.Builder()
-                .add("Authorization", authorization);
-        logger.debug("header: {}", authorization);
-        this.client = new OkHttpClient.Builder()
-                .connectTimeout(this.connectParam.getConnectTimeout(), TimeUnit.SECONDS)
-                .readTimeout(connectParam.getTimeout(), TimeUnit.SECONDS)
-                .connectionPool(new ConnectionPool(
-                        this.connectParam.getMaxIdleConnections(), this.connectParam.getKeepAliveDuration(), TimeUnit.SECONDS))
-                .build();
+        initHttpStub(connectParam);
+    }
+
+    protected void initHttpStub(ConnectParam connectParam) {
+        if (client == null) {
+            synchronized (this) {
+                if (client == null) {
+                    this.connectParam = connectParam;
+                    String authorization = String.format("Bearer account=%s&api_key=%s",
+                            connectParam.getUsername(), connectParam.getKey());
+                    this.headersBuilder = new Headers.Builder()
+                            .add("Authorization", authorization);
+                    logger.debug("header: {}", authorization);
+                    this.client = new OkHttpClient.Builder()
+                            .connectTimeout(this.connectParam.getConnectTimeout(), TimeUnit.SECONDS)
+                            .readTimeout(connectParam.getTimeout(), TimeUnit.SECONDS)
+                            .connectionPool(new ConnectionPool(
+                                    this.connectParam.getMaxIdleConnections(), this.connectParam.getKeepAliveDuration(), TimeUnit.SECONDS))
+                            .build();
+                }
+            }
+        }
     }
 
     @Override
@@ -724,11 +734,13 @@ public class HttpStub implements Stub {
     }
 
     private Headers get_headers(boolean ai) {
+        Headers.Builder headersTmp = new Headers.Builder();
         String backend = "vdb";
         if (ai){
             backend = "ai";
         }
-        this.headersBuilder.add("backend-service", backend);
+        headersTmp.add("backend-service", backend);
+        headersTmp.add("Authorization", this.headersBuilder.get("Authorization"));
         logger.debug("Backend: {}", backend);
         return headersBuilder.build();
     }

@@ -21,10 +21,8 @@
 package com.tencent.tcvectordb.examples;
 
 import com.tencent.tcvectordb.client.VectorDBClient;
+import com.tencent.tcvectordb.model.*;
 import com.tencent.tcvectordb.model.Collection;
-import com.tencent.tcvectordb.model.Database;
-import com.tencent.tcvectordb.model.DocField;
-import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;

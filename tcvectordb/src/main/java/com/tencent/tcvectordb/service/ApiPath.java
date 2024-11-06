@@ -58,4 +58,5 @@ public class ApiPath {
     public final static String AI_ALIAS_SET = "ai/alias/set";
     public final static String AI_ALIAS_DELETE = "ai/alias/delete";
     public final static String AI_REBUILD_INDEX = "ai/index/rebuild";
+    public final static String ADD_INDEX = "index/add";
 }

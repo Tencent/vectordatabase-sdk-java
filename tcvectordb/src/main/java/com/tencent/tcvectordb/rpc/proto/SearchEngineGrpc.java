@@ -11,7 +11,7 @@ import static io.grpc.MethodDescriptor.generateFullMethodName;
     value = "by gRPC proto compiler",
     comments = "Source: olama.proto")
 @io.grpc.stub.annotations.GrpcGenerated
-public final class SearchEngineGrpc {
+public final class  SearchEngineGrpc {
 
   private SearchEngineGrpc() {}
 
@@ -700,6 +700,37 @@ public final class SearchEngineGrpc {
     return getGetVersionMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse> getAddIndexMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = ApiPath.ADD_INDEX,
+      requestType = com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest.class,
+      responseType = com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse> getAddIndexMethod() {
+    io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest, com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse> getAddIndexMethod;
+    if ((getAddIndexMethod = SearchEngineGrpc.getAddIndexMethod) == null) {
+      synchronized (SearchEngineGrpc.class) {
+        if ((getAddIndexMethod = SearchEngineGrpc.getAddIndexMethod) == null) {
+          SearchEngineGrpc.getAddIndexMethod = getAddIndexMethod =
+              io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest, com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(ApiPath.ADD_INDEX)
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.ADD_INDEX))
+              .build();
+        }
+      }
+    }
+    return getAddIndexMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -966,6 +997,16 @@ public final class SearchEngineGrpc {
     default void getVersion(com.tencent.tcvectordb.rpc.proto.Olama.GetVersionRequest request,
         io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.GetVersionResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetVersionMethod(), responseObserver);
+    }
+
+    /**
+     * <pre>
+     * 新增scalar的索引
+     * </pre>
+     */
+    default void addIndex(com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getAddIndexMethod(), responseObserver);
     }
   }
 
@@ -1237,6 +1278,17 @@ public final class SearchEngineGrpc {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getGetVersionMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     * <pre>
+     * 新增scalar的索引
+     * </pre>
+     */
+    public void addIndex(com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getAddIndexMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -1473,6 +1525,16 @@ public final class SearchEngineGrpc {
     public com.tencent.tcvectordb.rpc.proto.Olama.GetVersionResponse getVersion(com.tencent.tcvectordb.rpc.proto.Olama.GetVersionRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getGetVersionMethod(), getCallOptions(), request);
+    }
+
+    /**
+     * <pre>
+     * 新增scalar的索引
+     * </pre>
+     */
+    public com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse addIndex(com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getAddIndexMethod(), getCallOptions(), request);
     }
   }
 
@@ -1733,6 +1795,17 @@ public final class SearchEngineGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getGetVersionMethod(), getCallOptions()), request);
     }
+
+    /**
+     * <pre>
+     * 新增scalar的索引
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse> addIndex(
+        com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getAddIndexMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_SET_ALIAS = 0;
@@ -1757,6 +1830,7 @@ public final class SearchEngineGrpc {
   private static final int METHODID_LIST_DATABASES = 19;
   private static final int METHODID_DESCRIBE_DATABASE = 20;
   private static final int METHODID_GET_VERSION = 21;
+  private static final int METHODID_ADD_INDEX = 22;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -1862,6 +1936,10 @@ public final class SearchEngineGrpc {
         case METHODID_GET_VERSION:
           serviceImpl.getVersion((com.tencent.tcvectordb.rpc.proto.Olama.GetVersionRequest) request,
               (io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.GetVersionResponse>) responseObserver);
+          break;
+        case METHODID_ADD_INDEX:
+          serviceImpl.addIndex((com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest) request,
+              (io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -2035,6 +2113,13 @@ public final class SearchEngineGrpc {
               com.tencent.tcvectordb.rpc.proto.Olama.GetVersionRequest,
               com.tencent.tcvectordb.rpc.proto.Olama.GetVersionResponse>(
                 service, METHODID_GET_VERSION)))
+        .addMethod(
+          getAddIndexMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.tencent.tcvectordb.rpc.proto.Olama.AddIndexRequest,
+              com.tencent.tcvectordb.rpc.proto.Olama.AddIndexResponse>(
+                service, METHODID_ADD_INDEX)))
         .build();
   }
 
@@ -2105,6 +2190,7 @@ public final class SearchEngineGrpc {
               .addMethod(getListDatabasesMethod())
               .addMethod(getDescribeDatabaseMethod())
               .addMethod(getGetVersionMethod())
+              .addMethod(getAddIndexMethod())
               .build();
         }
       }

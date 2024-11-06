@@ -101,7 +101,7 @@ public class ConnectParam {
         /**
          * connect timeout, unit is second
          */
-        private int connectTimeout = 2;
+        private int connectTimeout = 10;
         /**
          * max idle connection count, unit is second
          */

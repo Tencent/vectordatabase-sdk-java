@@ -37,8 +37,8 @@ import java.util.List;
 
 public class example {
     public static void main(String[] args) {
-//        quickStart();
-//        fitStart();
+        quickStart();
+        fitStart();
         userDict();
     }
     public static void quickStart() {

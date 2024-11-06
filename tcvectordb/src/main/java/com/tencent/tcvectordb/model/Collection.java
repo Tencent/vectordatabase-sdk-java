@@ -405,6 +405,18 @@ public class Collection{
         return this.stub.rebuildIndex(new RebuildIndexParamInner(database, collection, rebuildIndexParam));
     }
 
+    /**
+     * Used to add a scalar field index to an existing collection
+     * (the scalar field may contain historical data or a newly added empty field)
+     * @param addIndexParam:
+     * @return
+     * @throws VectorDBException
+     */
+    public BaseRes AddIndex(AddIndexParam addIndexParam) throws VectorDBException {
+        return this.stub.addIndex(
+                new AddIndexParamInner(database, collection, addIndexParam));
+    }
+
     @Override
     public String toString() {
         ObjectMapper mapper = new ObjectMapper();

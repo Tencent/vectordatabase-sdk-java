@@ -60,7 +60,7 @@ public class AddIndexParam {
     }
 
     public static final class Builder {
-        private boolean buildExistedData;
+        private boolean buildExistedData = true;
         private List<IndexField> indexes;
 
         private Builder() {

@@ -29,6 +29,7 @@ import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
+import com.tencent.tcvectordb.model.param.entity.BaseRes;
 import com.tencent.tcvectordb.model.param.entity.HybridSearchRes;
 import com.tencent.tcvectordb.model.param.entity.SearchRes;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
@@ -439,6 +440,20 @@ public class VectorDBClient {
         }
         return this.stub.hybridSearchDocument(new HybridSearchParamInner(
                 database, collection, param, this.readConsistency), ai);
+    }
+
+    /**
+     * Used to add a scalar field index to an existing collection
+     * (the scalar field may contain historical data or a newly added empty field)
+     * @param database
+     * @param collection
+     * @param addIndexParam:
+     * @return
+     * @throws VectorDBException
+     */
+    public BaseRes AddIndex(String database, String collection, AddIndexParam addIndexParam) throws VectorDBException {
+        return this.stub.addIndex(
+                new AddIndexParamInner(database, collection, addIndexParam));
     }
 
 }

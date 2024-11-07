@@ -20,13 +20,16 @@
 
 package com.tencent.tcvectordb.examples;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.tencent.tcvectordb.client.VectorDBClient;
 import com.tencent.tcvectordb.model.*;
 import com.tencent.tcvectordb.model.Collection;
 import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
+import com.tencent.tcvectordb.model.param.entity.BaseRes;
 import com.tencent.tcvectordb.utils.JsonUtils;
+import org.json.JSONObject;
 
 import java.util.*;
 /**
@@ -49,9 +52,50 @@ public class VectorDBExample {
         createDatabaseAndCollection(client);
         upsertData(client);
         queryData(client);
+//        addIndex(client);
         updateAndDelete(client);
         deleteAndDrop(client);
         testFilter();
+
+    }
+
+    private static void addIndex(VectorDBClient client) throws InterruptedException{
+        BaseRes baseRes = client.AddIndex(DBNAME, COLL_NAME, AddIndexParam.newBuilder().withBuildExistedData(true)
+                .withIndexes(Arrays.asList(new FilterIndex("owner", FieldType.Uint64, IndexType.FILTER))).build());
+        System.out.println("--------add index-------");
+        System.out.println("\t res: "+ JsonUtils.toJsonString(baseRes));
+        Thread.sleep(1000);
+        System.out.println("--------describe collection-------");
+        Database db = client.database(DBNAME);
+        Collection collection = db.describeCollection(COLL_NAME);
+        System.out.println("\t collection describe: "+ JsonUtils.toJsonString(collection));
+        List<Document> documentList = Arrays.asList(
+                Document.newBuilder()
+                        .withId("0006")
+                        .withVector(Arrays.asList(0.2123, 0.21, 0.214))
+                        .addDocField(new DocField("bookName", "西游记"))
+                        .addDocField(new DocField("author", "吴承恩"))
+                        .addDocField(new DocField("page", 21))
+                        .addDocField(new DocField("segment", "富贵功名，前缘分定，为人切莫欺心。"))
+                        .addDocField(new DocField("array_test", Arrays.asList("1","2","3")))
+                        .addDocField(new DocField("owner", 2))
+                        .build(),
+                Document.newBuilder()
+                        .withId("0007")
+                        .withVector(Arrays.asList(0.2123, 0.22, 0.215))
+                        .addDocField(new DocField("bookName", "西游记"))
+                        .addDocField(new DocField("author", "吴承恩"))
+                        .addDocField(new DocField("page", 22))
+                        .addDocField(new DocField("segment",
+                                "正大光明，忠良善果弥深。些些狂妄天加谴，眼前不遇待时临。"))
+                        .addDocField(new DocField("array_test", Arrays.asList("4","5","6")))
+                        .addDocField(new DocField("owner", 1))
+                        .build());
+        client.upsert(DBNAME, COLL_NAME, InsertParam.newBuilder().addAllDocument(documentList).build());
+        List<Document> docs = client.query(DBNAME,COLL_NAME, QueryParam.newBuilder().withFilter("owner=1").withLimit(10).build());
+        for (int i = 0; i < docs.size(); i++) {
+            System.out.println("res "+i+" "+ JsonUtils.toJsonString(docs.get(i)));
+        }
     }
 
 
@@ -129,6 +173,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("page", 21))
                         .addDocField(new DocField("segment", "富贵功名，前缘分定，为人切莫欺心。"))
                         .addDocField(new DocField("array_test", Arrays.asList("1","2","3")))
+                        .addDocField(new DocField("owner", 2))
                         .build(),
                 Document.newBuilder()
                         .withId("0002")
@@ -139,6 +184,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("segment",
                                 "正大光明，忠良善果弥深。些些狂妄天加谴，眼前不遇待时临。"))
                         .addDocField(new DocField("array_test", Arrays.asList("4","5","6")))
+                        .addDocField(new DocField("owner", 1))
                         .build(),
                 Document.newBuilder()
                         .withId("0003")
@@ -148,6 +194,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("page", 23))
                         .addDocField(new DocField("segment", "细作探知这个消息，飞报吕布。"))
                         .addDocField(new DocField("array_test", Arrays.asList("7","8","9")))
+                        .addDocField(new DocField("owner", 2))
                         .build(),
                 Document.newBuilder()
                         .withId("0004")
@@ -157,6 +204,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("page", 24))
                         .addDocField(new DocField("segment", "富贵功名，前缘分定，为人切莫欺心。"))
                         .addDocField(new DocField("array_test", Arrays.asList("10","11","12")))
+                        .addDocField(new DocField("owner", 2))
                         // 24小时后过期
                         .addDocField(new DocField("expired_at", System.currentTimeMillis()/1000 + 24*60*60))
                         .build(),
@@ -168,6 +216,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("page", 25))
                         .addDocField(new DocField("segment",
                                 "布大惊，与陈宫商议。宫曰：“闻刘玄德新领徐州，可往投之。"))
+                        .addDocField(new DocField("owner", 1))
                         // 10分钟后过期
                         .addDocField(new DocField("expired_at", System.currentTimeMillis()/1000 + 10*60))
                         .build()));
@@ -179,8 +228,8 @@ public class VectorDBExample {
 
         collection.upsert(insertParam);
 //        可以直接使用client进行操作
-//        client.upsert(DBNAME,COLL_NAME, insertParam);
-
+        AffectRes affectRes = client.upsert(DBNAME,COLL_NAME, insertParam);
+        System.out.println(JsonUtils.toJsonString(affectRes));
         // notice：upsert 操作可用会有延迟
         Thread.sleep(1000 * 5);
     }
@@ -195,15 +244,15 @@ public class VectorDBExample {
                 .and(Filter.exclude("array_test", Arrays.asList("7")));
         List<String> outputFields = Arrays.asList("id", "bookName");
         QueryParam queryParam = QueryParam.newBuilder()
-                .withDocumentIds(documentIds)
+                .withDocumentIds(Arrays.asList("0001", "0002", "0003", "0004", "0005"))
                 // 使用 filter 过滤数据
-                .withFilter(filterParam)
+                .withFilter("bookName=\"三国演义\"")
                 // limit 限制返回行数，1 到 16384 之间
                  .withLimit(5)
                 // 偏移
                  .withOffset(0)
                 // 指定返回的 fields
-//                .withOutputFields(outputFields)
+                .addAllOutputFields("id", "bookName")
                 // 是否返回 vector 数据
                 .withRetrieveVector(false)
                 .build();
@@ -229,7 +278,7 @@ public class VectorDBExample {
                 // 过滤获取到结果
                 .withFilter(filterParam)
                 .build();
-        List<List<Document>> siDocs = collection.searchById(searchByIdParam);
+        List<List<Document>> siDocs = client.searchById(DBNAME, COLL_NAME, searchByIdParam);
         int i = 0;
         for (List<Document> docs : siDocs) {
             System.out.println("\tres: " + i++);
@@ -249,12 +298,12 @@ public class VectorDBExample {
                 // 若使用 HNSW 索引，则需要指定参数ef，ef越大，召回率越高，但也会影响检索速度
                 .withParams(new HNSWSearchParams(100))
                 // 指定 Top K 的 K 值
-                .withLimit(2)
+                .withLimit(10)
                 // 过滤获取到结果
                 .withFilter(filterParam)
                 .build();
         // 输出相似性检索结果，检索结果为二维数组，每一位为一组返回结果，分别对应 search 时指定的多个向量
-        List<List<Document>> svDocs = collection.search(searchByVectorParam);
+        List<List<Document>> svDocs = client.search(DBNAME, COLL_NAME, searchByVectorParam);
         i = 0;
         for (List<Document> docs : svDocs) {
             System.out.println("\tres: " + i);
@@ -279,7 +328,7 @@ public class VectorDBExample {
         UpdateParam updateParam = UpdateParam
                 .newBuilder()
                 .addAllDocumentId(documentIds)
-                .withFilter(filterParam)
+                .withFilter("bookName=\"三国演义\"")
                 .build();
 //        JSONObject data = new JSONObject("{\"page\":100, \"extend\":\"extendContent_1\",\"array_test\":[\"extendContent\",\"extendContent1\"]}");
         Document updateDoc = Document
@@ -289,7 +338,7 @@ public class VectorDBExample {
                 .addDocField(new DocField("extend", "extendContent"))
                 .addDocField(new DocField("array_test", Arrays.asList("extendContent", "extendContent1")))
                 .build();
-        AffectRes affectRes = collection.update(updateParam, updateDoc);
+        AffectRes affectRes = client.update(DBNAME, COLL_NAME, updateParam, updateDoc);
         System.out.println(affectRes.toString());
         System.out.println("---------------------- delete ----------------------");
         // delete
@@ -298,12 +347,14 @@ public class VectorDBExample {
 
         // filter 限制只会删除 id = "00001" 成功
         filterParam = new Filter("bookName=\"西游记\"");
+
         DeleteParam build = DeleteParam
                 .newBuilder()
-                .addAllDocumentId(documentIds)
-                .withFilter(filterParam)
+                .addAllDocumentId("0001", "0003")
+                .withFilter("bookName=\"西游记\"")
                 .build();
-        collection.delete(build);
+        AffectRes deleteAffectRes = client.delete(DBNAME, COLL_NAME, build);
+        System.out.println(deleteAffectRes.toString());
 
 
         // rebuild index
@@ -388,7 +439,7 @@ public class VectorDBExample {
         return CreateCollectionParam.newBuilder()
                 .withName(collName)
                 .withShardNum(1)
-                .withReplicaNum(0)
+                .withReplicaNum(1)
                 .withDescription("test collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", 3, IndexType.HNSW,

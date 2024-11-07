@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencent.tcvectordb.model.param.collection.ParamsSerializer;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class SplitterPreprocessParams implements ParamsSerializer {
+public class SplitterPreprocessParams{
     private boolean appendTitleToChunk;
     private boolean appendKeywordsToChunk;
     private String chunkSplitter;

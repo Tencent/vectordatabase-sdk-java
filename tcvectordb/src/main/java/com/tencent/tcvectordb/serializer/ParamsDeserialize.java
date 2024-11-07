@@ -16,7 +16,7 @@ public class ParamsDeserialize extends JsonDeserializer<ParamsSerializer> {
     public ParamsSerializer deserialize(JsonParser p, DeserializationContext ctxt)
             throws IOException, JacksonException {
         String paramsStr = p.getCodec().readTree(p).toString();
-        Object o = p.currentValue();
+        Object o = p.getCurrentValue();
         if (o instanceof IndexField) {
             IndexField indexField = (IndexField) o;
             if (indexField.isVectorField()) {

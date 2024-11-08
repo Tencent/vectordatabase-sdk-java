@@ -100,9 +100,11 @@ public class GrpcStub extends HttpStub{
     }
 
     @Override
-    public void close() {
+    public synchronized void close() {
         super.close();
-        this.channel.shutdown();
+        if (this.channel!=null){
+            this.channel.shutdown();
+        }
     }
 
 

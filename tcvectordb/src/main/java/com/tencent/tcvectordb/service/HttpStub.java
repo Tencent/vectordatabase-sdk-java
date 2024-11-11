@@ -402,8 +402,10 @@ public class HttpStub implements Stub {
     }
 
     @Override
-    public void close() {
-        this.client.dispatcher().executorService().shutdown();
+    public synchronized void close() {
+        if (this.client != null){
+            this.client.dispatcher().executorService().shutdown();
+        }
     }
 
     @Override

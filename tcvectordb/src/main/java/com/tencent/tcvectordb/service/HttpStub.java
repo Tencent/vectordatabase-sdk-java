@@ -611,7 +611,7 @@ public class HttpStub implements Stub {
         }
 
 
-        if (! Arrays.asList(FileType.MD, FileType.WORD).contains(fileType) &&
+        if (!Arrays.asList(FileType.MD, FileType.WORD).contains(fileType) &&
                 Objects.nonNull(loadAndSplitTextParam.getSplitterProcess()) &&
                 StringUtils.isNotEmpty(loadAndSplitTextParam.getSplitterProcess().getChunkSplitter())) {
             logger.warn("only markdown files are allowed to use chunkSplitter");
@@ -625,16 +625,24 @@ public class HttpStub implements Stub {
                 String.valueOf(StandardCharsets.UTF_8));
         metadata.addUserMetadata("data", metaJson);
 
+        Map<String, Object> config = new HashMap<>();
         if (loadAndSplitTextParam.getSplitterProcess() != null) {
-            Map<String, Object> config = new HashMap<>();
+
             config.put("appendTitleToChunk", loadAndSplitTextParam.getSplitterProcess().isAppendTitleToChunk());
             config.put("appendKeywordsToChunk", loadAndSplitTextParam.getSplitterProcess().isAppendKeywordsToChunk());
             if (loadAndSplitTextParam.getSplitterProcess().getChunkSplitter() != null) {
                 config.put("chunkSplitter", loadAndSplitTextParam.getSplitterProcess().getChunkSplitter());
             }
+        }
+        if (loadAndSplitTextParam.getParsingProcess() != null){
+            config.put("parsingProcess", loadAndSplitTextParam.getParsingProcess());
+        }
+
+        if(config.size() > 0){
             metadata.addUserMetadata("config", URLEncoder.encode(Base64.getEncoder().encodeToString(JsonUtils.toJsonString(config).getBytes(StandardCharsets.UTF_8)),
                     String.valueOf(StandardCharsets.UTF_8)));
         }
+
 
         if (JsonUtils.toJsonString(metadata).length() > 2048) {
             throw new VectorDBException("cos header for param MetaData is too large, it can not be more than 2k");

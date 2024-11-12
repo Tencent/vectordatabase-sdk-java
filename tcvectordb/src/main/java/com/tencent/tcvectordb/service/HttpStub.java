@@ -533,15 +533,18 @@ public class HttpStub implements Stub {
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
-    public UploadUrlRes getUploadUrl(String databaseName, String collectionViewName, String documentSetName, String fileName) {
+    public UploadUrlRes getUploadUrl(String databaseName, String collectionViewName, LoadAndSplitTextParam loadAndSplitTextParam, String fileName) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_UPLOADER_URL);
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("database", databaseName);
         params.put("collectionView", collectionViewName);
-        if (documentSetName != null) {
-            params.put("documentSetName", documentSetName);
+        if (loadAndSplitTextParam.getDocumentSetName() != null) {
+            params.put("documentSetName", loadAndSplitTextParam.getDocumentSetName());
         } else if (fileName != null) {
             params.put("documentSetName", fileName);
+        }
+        if (loadAndSplitTextParam.getParsingProcess()!=null){
+            params.put("parsingProcess",loadAndSplitTextParam.getParsingProcess());
         }
         String body = JsonUtils.toJsonString(params);
         JsonNode jsonNode = this.post(url, body, true);
@@ -573,7 +576,7 @@ public class HttpStub implements Stub {
             fileType = loadAndSplitTextParam.getFileType();
         }
 
-        UploadUrlRes uploadUrlRes = getUploadUrl(databaseName, collectionViewName, loadAndSplitTextParam.getDocumentSetName(), fileName);
+        UploadUrlRes uploadUrlRes = getUploadUrl(databaseName, collectionViewName, loadAndSplitTextParam, fileName);
 
         if (Code.isFailed(uploadUrlRes.getCode()) ||
                 uploadUrlRes.getCredentials() == null ||

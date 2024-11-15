@@ -19,6 +19,13 @@ public class BaseRes {
         this.warning = warning;
     }
 
+    public BaseRes(int code, String msg, String warning, int count) {
+        this.code = code;
+        this.msg = msg;
+        this.warning = warning;
+        this.count = count;
+    }
+
     public String getRequestId() {
         return requestId;
     }

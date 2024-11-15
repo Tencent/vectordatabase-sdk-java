@@ -380,6 +380,12 @@ public class HttpStub implements Stub {
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
+    public BaseRes countDocument(QueryCountParamInner param, boolean ai) {
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DOC_COUNT);
+        JsonNode jsonNode = this.post(url, param.toString(), ai);
+        return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
+    }
+
     @Override
     public BaseRes rebuildIndex(RebuildIndexParamInner param) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.REBUILD_INDEX);

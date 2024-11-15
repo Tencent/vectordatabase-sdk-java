@@ -417,6 +417,18 @@ public class Collection{
                 new AddIndexParamInner(database, collection, addIndexParam));
     }
 
+    /**
+     * Used to query the number of documents that match the query, if countQueryParam is null,
+     * return all rows number of the collection
+     * @param countQueryParam:
+     * @return
+     * @throws VectorDBException
+     */
+    public BaseRes Count(CountQueryParam countQueryParam) throws VectorDBException {
+        return this.stub.countDocument(
+                new QueryCountParamInner(database, collection, countQueryParam, this.readConsistency), false);
+    }
+
     @Override
     public String toString() {
         ObjectMapper mapper = new ObjectMapper();

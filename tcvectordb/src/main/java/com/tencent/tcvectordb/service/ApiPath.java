@@ -40,6 +40,7 @@ public class ApiPath {
     public final static String DOC_HYBRID_SEARCH = "document/hybridSearch";
     public final static String DOC_DELETE = "document/delete";
     public final static String DOC_UPDATE = "document/update";
+    public final static String DOC_COUNT = "document/count";
     public final static String REBUILD_INDEX = "index/rebuild";
     public final static String AI_DB_CREATE = "ai/database/create";
     public final static String AI_DB_DROP = "ai/database/drop";

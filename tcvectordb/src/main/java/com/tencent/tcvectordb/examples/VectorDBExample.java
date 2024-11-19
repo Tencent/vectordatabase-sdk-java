@@ -60,7 +60,7 @@ public class VectorDBExample {
     }
 
     private static void addIndex(VectorDBClient client) throws InterruptedException{
-        BaseRes baseRes = client.AddIndex(DBNAME, COLL_NAME, AddIndexParam.newBuilder().withBuildExistedData(true)
+        BaseRes baseRes = client.AddIndex(DBNAME, COLL_NAME, AddIndexParam.newBuilder()
                 .withIndexes(Arrays.asList(new FilterIndex("owner", FieldType.Uint64, IndexType.FILTER))).build());
         System.out.println("--------add index-------");
         System.out.println("\t res: "+ JsonUtils.toJsonString(baseRes));
@@ -91,7 +91,9 @@ public class VectorDBExample {
                         .addDocField(new DocField("array_test", Arrays.asList("4","5","6")))
                         .addDocField(new DocField("owner", 1))
                         .build());
+
         client.upsert(DBNAME, COLL_NAME, InsertParam.newBuilder().addAllDocument(documentList).build());
+        Thread.sleep(3000);
         List<Document> docs = client.query(DBNAME,COLL_NAME, QueryParam.newBuilder().withFilter("owner=1").withLimit(10).build());
         for (int i = 0; i < docs.size(); i++) {
             System.out.println("res "+i+" "+ JsonUtils.toJsonString(docs.get(i)));

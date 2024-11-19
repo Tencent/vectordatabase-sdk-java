@@ -136,7 +136,7 @@ public class VectorDBExampleWithAI_doc {
         LoadAndSplitTextParam param = LoadAndSplitTextParam.newBuilder()
                 .withLocalFilePath(filePath).withDocumentSetName(documentSetName)
                 .withSplitterProcess(SplitterPreprocessParams.newBuilder().withAppendKeywordsToChunkEnum(true).Build())
-                .withParsingProcess(ParsingProcessParam.newBuilder().withParsingType(ParsingTypeEnum.VisonModel).build())
+                .withParsingProcess(ParsingProcessParam.newBuilder().withParsingType(ParsingTypeEnum.VisionModel).build())
                 .Build();
         collection.loadAndSplitText(param, metaDataMap);
     }

@@ -797,7 +797,7 @@ public final class  SearchEngineGrpc {
       com.tencent.tcvectordb.rpc.proto.Olama.ModifyVectorIndexResponse> getModifyVectorIndexMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "modifyVectorIndex",
+      fullMethodName = ApiPath.MODIFY_VECTOR_INDEX,
       requestType = com.tencent.tcvectordb.rpc.proto.Olama.ModifyVectorIndexRequest.class,
       responseType = com.tencent.tcvectordb.rpc.proto.Olama.ModifyVectorIndexResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -810,13 +810,13 @@ public final class  SearchEngineGrpc {
           SearchEngineGrpc.getModifyVectorIndexMethod = getModifyVectorIndexMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.ModifyVectorIndexRequest, com.tencent.tcvectordb.rpc.proto.Olama.ModifyVectorIndexResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "modifyVectorIndex"))
+              .setFullMethodName(ApiPath.MODIFY_VECTOR_INDEX)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvectordb.rpc.proto.Olama.ModifyVectorIndexRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvectordb.rpc.proto.Olama.ModifyVectorIndexResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("modifyVectorIndex"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.MODIFY_VECTOR_INDEX))
               .build();
         }
       }

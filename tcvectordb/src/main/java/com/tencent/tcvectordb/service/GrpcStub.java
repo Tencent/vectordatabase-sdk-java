@@ -647,6 +647,17 @@ public class GrpcStub extends HttpStub{
                 if(matchOption.getLimit()!=null){
                     sparseBuilder.setLimit(matchOption.getLimit());
                 }
+
+                if (matchOption.getCutoffFrequency()!=null || matchOption.getTerminateAfter()!=null){
+                    Olama.SparseSearchParams.Builder sparseSearchParamsBuilder = Olama.SparseSearchParams.newBuilder();
+                    if (matchOption.getCutoffFrequency()!=null){
+                        sparseSearchParamsBuilder.setCutoffFrequency(matchOption.getCutoffFrequency());
+                    }
+                    if (matchOption.getTerminateAfter()!=null){
+                        sparseSearchParamsBuilder.setTerminateAfter(matchOption.getTerminateAfter());
+                    }
+                    sparseBuilder.setParams(sparseSearchParamsBuilder.build()).build();
+                }
                 return sparseBuilder.build();
             }).collect(Collectors.toList()));
         }
@@ -718,6 +729,9 @@ public class GrpcStub extends HttpStub{
         }
         if (!paramQuery.getFilter().isEmpty()){
             queryCondBuilder.setFilter(paramQuery.getFilter());
+        }
+        if(param.getQuery().getLimit()!=null){
+            queryCondBuilder.setLimit(param.getQuery().getLimit());
         }
         Olama.DeleteRequest deleteRequest = Olama.DeleteRequest.newBuilder()
                 .setDatabase(param.getDatabase())
@@ -898,6 +912,35 @@ public class GrpcStub extends HttpStub{
                     explainResponse.getCode(), explainResponse.getMsg()));
         }
         return new BaseRes(explainResponse.getCode(), explainResponse.getMsg(),"", Math.toIntExact(explainResponse.getAffectedCount()));
+    }
+
+    @Override
+    public BaseRes modifyVectorIndex(ModifyIndexParamInner param, boolean ai) {
+        Olama.ModifyVectorIndexRequest.Builder builder = Olama.ModifyVectorIndexRequest.newBuilder()
+                .setDatabase(param.getDatabase())
+                .setCollection(param.getCollection());
+        if (param.getModifyVectorIndexParam().getRebuildRules()!=null){
+            builder.setRebuildRules(Olama.RebuildIndexRequest.newBuilder()
+                    .setDropBeforeRebuild(param.getModifyVectorIndexParam().getRebuildRules().dropBeforeRebuild())
+                    .setThrottle(param.getModifyVectorIndexParam().getRebuildRules().getThrottle()).build());
+        }
+        if (!param.getModifyVectorIndexParam().getVectorIndexes().isEmpty()){
+            builder.putAllIndexes(param.getModifyVectorIndexParam().getVectorIndexes().stream()
+                    .map(indexField -> getRpcIndexBuilder(indexField).build()).collect(Collectors.toMap(index -> index.getFieldName(), index -> index)));
+        }
+        logQuery(ApiPath.MODIFY_VECTOR_INDEX, builder);
+        Olama.ModifyVectorIndexResponse modifyVectorIndexResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
+                .modifyVectorIndex(builder.build());
+        logResponse(ApiPath.MODIFY_VECTOR_INDEX, modifyVectorIndexResponse);
+        if(modifyVectorIndexResponse==null){
+            throw new VectorDBException("VectorDBServer error: modifyVectorIndex not response");
+        }
+        if (modifyVectorIndexResponse.getCode()!=0){
+            throw new VectorDBException(String.format(
+                    "VectorDBServer error: modifyVectorIndex not Success, body code=%s, message=%s",
+                    modifyVectorIndexResponse.getCode(), modifyVectorIndexResponse.getMsg()));
+        }
+        return new BaseRes(modifyVectorIndexResponse.getCode(), modifyVectorIndexResponse.getMsg(), "");
     }
 
 

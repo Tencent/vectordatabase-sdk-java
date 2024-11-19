@@ -185,4 +185,6 @@ public interface Stub {
     void close();
 
     BaseRes countDocument(QueryCountParamInner param, boolean ai);
+
+    BaseRes modifyVectorIndex(ModifyIndexParamInner param, boolean ai);
 }

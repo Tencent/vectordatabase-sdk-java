@@ -27,9 +27,19 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DeleteParam extends BaseQuery {
+    private Integer limit;
 
     public DeleteParam(Builder builder) {
         super(builder);
+        this.limit = builder.limit;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
     }
 
     public static Builder newBuilder() {
@@ -37,13 +47,18 @@ public class DeleteParam extends BaseQuery {
     }
 
     public static class Builder extends BaseQuery.Builder<Builder> {
-
+        private Integer limit;
         private Builder() {
             super();
         }
 
         public DeleteParam build() {
             return new DeleteParam(this);
+        }
+
+        public Builder withLimit(Integer limit) {
+            this.limit = limit;
+            return this;
         }
 
         @Override

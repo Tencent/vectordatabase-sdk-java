@@ -387,6 +387,13 @@ public class HttpStub implements Stub {
     }
 
     @Override
+    public BaseRes modifyVectorIndex(ModifyIndexParamInner param, boolean ai) {
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.MODIFY_VECTOR_INDEX);
+        JsonNode jsonNode = this.post(url, param.toString(), ai);
+        return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
+    }
+
+    @Override
     public BaseRes rebuildIndex(RebuildIndexParamInner param) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.REBUILD_INDEX);
         JsonNode jsonNode = this.post(url, param.toString(), false);

@@ -606,7 +606,7 @@ message ExplainResponse {
 
 message SparseSearchParams {
     uint32 terminateAfter          = 1;   // 搜索到指定数量的结果就终止
-    float cutoffFrequency          = 2;   // 全文检索时过滤掉高频词
+    double cutoffFrequency          = 2;   // 全文检索时过滤掉高频词
 }
 
 message ModifyVectorIndexRequest {

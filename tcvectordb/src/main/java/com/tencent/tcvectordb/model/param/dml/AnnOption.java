@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -82,6 +83,11 @@ public class AnnOption {
         }
         public Builder withData(List<Double> vector){
             this.data = Arrays.asList(vector);
+            return this;
+        }
+
+        public Builder withTextData(List<String> texts){
+            this.data = Collections.singletonList(texts);
             return this;
         }
 

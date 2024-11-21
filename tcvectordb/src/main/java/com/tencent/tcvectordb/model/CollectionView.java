@@ -27,6 +27,7 @@ import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.param.collection.IndexField;
 import com.tencent.tcvectordb.model.param.collectionView.EmbeddingParams;
 import com.tencent.tcvectordb.model.param.collectionView.LoadAndSplitTextParam;
+import com.tencent.tcvectordb.model.param.collectionView.ParsingProcessParam;
 import com.tencent.tcvectordb.model.param.collectionView.SplitterPreprocessParams;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.*;
@@ -73,6 +74,8 @@ public class CollectionView {
     private List<String> alias;
 
     protected List<IndexField> indexes;
+
+    protected ParsingProcessParam parsingProcess;
 
     public List<IndexField> getIndexes() {
         return indexes;
@@ -157,6 +160,14 @@ public class CollectionView {
 
     public void setAverageFileSize(Integer averageFileSize) {
         this.averageFileSize = averageFileSize;
+    }
+
+    public ParsingProcessParam getParsingProcess() {
+        return parsingProcess;
+    }
+
+    public void setParsingProcess(ParsingProcessParam parsingProcess) {
+        this.parsingProcess = parsingProcess;
     }
 
     public CollectionView() {

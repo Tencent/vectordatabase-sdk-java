@@ -11,7 +11,7 @@ import static io.grpc.MethodDescriptor.generateFullMethodName;
     value = "by gRPC proto compiler",
     comments = "Source: olama.proto")
 @io.grpc.stub.annotations.GrpcGenerated
-public final class  SearchEngineGrpc {
+public final class SearchEngineGrpc {
 
   private SearchEngineGrpc() {}
 
@@ -824,6 +824,37 @@ public final class  SearchEngineGrpc {
     return getModifyVectorIndexMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.CountRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.CountResponse> getCountMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = ApiPath.DOC_COUNT,
+      requestType = com.tencent.tcvectordb.rpc.proto.Olama.CountRequest.class,
+      responseType = com.tencent.tcvectordb.rpc.proto.Olama.CountResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.CountRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.CountResponse> getCountMethod() {
+    io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.CountRequest, com.tencent.tcvectordb.rpc.proto.Olama.CountResponse> getCountMethod;
+    if ((getCountMethod = SearchEngineGrpc.getCountMethod) == null) {
+      synchronized (SearchEngineGrpc.class) {
+        if ((getCountMethod = SearchEngineGrpc.getCountMethod) == null) {
+          SearchEngineGrpc.getCountMethod = getCountMethod =
+              io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.CountRequest, com.tencent.tcvectordb.rpc.proto.Olama.CountResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(ApiPath.DOC_COUNT)
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.CountRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.CountResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.DOC_COUNT))
+              .build();
+        }
+      }
+    }
+    return getCountMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -1130,6 +1161,13 @@ public final class  SearchEngineGrpc {
     default void modifyVectorIndex(com.tencent.tcvectordb.rpc.proto.Olama.ModifyVectorIndexRequest request,
         io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.ModifyVectorIndexResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getModifyVectorIndexMethod(), responseObserver);
+    }
+
+    /**
+     */
+    default void count(com.tencent.tcvectordb.rpc.proto.Olama.CountRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.CountResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getCountMethod(), responseObserver);
     }
   }
 
@@ -1445,6 +1483,14 @@ public final class  SearchEngineGrpc {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getModifyVectorIndexMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void count(com.tencent.tcvectordb.rpc.proto.Olama.CountRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.CountResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getCountMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -1721,6 +1767,13 @@ public final class  SearchEngineGrpc {
     public com.tencent.tcvectordb.rpc.proto.Olama.ModifyVectorIndexResponse modifyVectorIndex(com.tencent.tcvectordb.rpc.proto.Olama.ModifyVectorIndexRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getModifyVectorIndexMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.tencent.tcvectordb.rpc.proto.Olama.CountResponse count(com.tencent.tcvectordb.rpc.proto.Olama.CountRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getCountMethod(), getCallOptions(), request);
     }
   }
 
@@ -2025,6 +2078,14 @@ public final class  SearchEngineGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getModifyVectorIndexMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.tencent.tcvectordb.rpc.proto.Olama.CountResponse> count(
+        com.tencent.tcvectordb.rpc.proto.Olama.CountRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getCountMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_SET_ALIAS = 0;
@@ -2053,6 +2114,7 @@ public final class  SearchEngineGrpc {
   private static final int METHODID_GET_VERSION = 23;
   private static final int METHODID_ADD_INDEX = 24;
   private static final int METHODID_MODIFY_VECTOR_INDEX = 25;
+  private static final int METHODID_COUNT = 26;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -2174,6 +2236,10 @@ public final class  SearchEngineGrpc {
         case METHODID_MODIFY_VECTOR_INDEX:
           serviceImpl.modifyVectorIndex((com.tencent.tcvectordb.rpc.proto.Olama.ModifyVectorIndexRequest) request,
               (io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.ModifyVectorIndexResponse>) responseObserver);
+          break;
+        case METHODID_COUNT:
+          serviceImpl.count((com.tencent.tcvectordb.rpc.proto.Olama.CountRequest) request,
+              (io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.CountResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -2375,6 +2441,13 @@ public final class  SearchEngineGrpc {
               com.tencent.tcvectordb.rpc.proto.Olama.ModifyVectorIndexRequest,
               com.tencent.tcvectordb.rpc.proto.Olama.ModifyVectorIndexResponse>(
                 service, METHODID_MODIFY_VECTOR_INDEX)))
+        .addMethod(
+          getCountMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.tencent.tcvectordb.rpc.proto.Olama.CountRequest,
+              com.tencent.tcvectordb.rpc.proto.Olama.CountResponse>(
+                service, METHODID_COUNT)))
         .build();
   }
 
@@ -2449,6 +2522,7 @@ public final class  SearchEngineGrpc {
               .addMethod(getGetVersionMethod())
               .addMethod(getAddIndexMethod())
               .addMethod(getModifyVectorIndexMethod())
+              .addMethod(getCountMethod())
               .build();
         }
       }

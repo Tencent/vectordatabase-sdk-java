@@ -490,14 +490,21 @@ public class VectorDBClient {
 
 
     /**
-     *Currently, this method is only for dense vectors, i.e. vector
+     * Currently, this method is only for dense vectors, i.e. vector
      * Supports re-specifying vector index parameters, HNSW supports re-specifying M and efConstruction, IVF supports re-specifying nlist (IVF_PQ supports re-specifying M and nlist)
      * Supports re-specifying similarity calculation method
      * The new configuration after the vector index is modified is defined by the field vectorIndexes
      * After adjusting the parameters, this interface will trigger a rebuild, and the rebuild rules are specified by the field rebuildRules
-     * @param database
-     * @param collection
-     * @param modifyVectorIndexParam
+     * @param database The name of the database where the collection resides.
+     * @param collection The name of the collection
+     * @param modifyVectorIndexParam Adjust vector index parameters.
+     *              vectorIndexes (List<VectorIndex></FilterIndex>): The vector fields to adjust
+     *              rebuildRules: Specified rebuild rules.This interface will trigger a rebuild after adjusting
+     *                     the parameters:For example: {"drop_before_rebuild": True , "throttle": 1}
+     *                     drop_before_rebuild (bool): Whether to delete the old index before rebuilding the new index during
+     *                               index reconstruction. True: Delete the old index before rebuilding the index.
+     *                     throttle (int): Whether to limit the number of CPU cores for building the index on a single node.
+     *                               0: No limit on CPU cores. 1: CPU core count is 1.
      * @return
      * @throws VectorDBException
      */

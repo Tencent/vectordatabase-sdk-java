@@ -79,6 +79,9 @@ public abstract class SearchParam {
         return limit;
     }
 
+    public Float getRadius() {
+        return radius;
+    }
 
     protected static abstract class Builder<T extends Builder<T>> {
         protected Params params;
@@ -124,6 +127,11 @@ public abstract class SearchParam {
 
         public T withLimit(int limit) {
             this.limit = limit;
+            return self();
+        }
+
+        public T withRadius(Float radius) {
+            this.radius = radius;
             return self();
         }
     }

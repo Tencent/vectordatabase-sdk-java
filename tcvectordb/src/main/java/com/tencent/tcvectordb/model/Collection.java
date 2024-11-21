@@ -214,6 +214,7 @@ public class Collection{
         this.embedding = embedding;
     }
 
+
     /**
      * upsert document, upsert documents into the collection
      * @param param InsertParam: upsert data. buildIndex is whether to build index, default is true, documents
@@ -449,13 +450,11 @@ public class Collection{
     }
 
     /**
-     *Currently, this method is only for dense vectors, i.e. vector
+     * Currently, this method is only for dense vectors, i.e. vector
      * Supports re-specifying vector index parameters, HNSW supports re-specifying M and efConstruction, IVF supports re-specifying nlist (IVF_PQ supports re-specifying M and nlist)
      * Supports re-specifying similarity calculation method
      * The new configuration after the vector index is modified is defined by the field vectorIndexes
      * After adjusting the parameters, this interface will trigger a rebuild, and the rebuild rules are specified by the field rebuildRules
-     * @param database
-     * @param collection
      * @param modifyVectorIndexParam
      * @return
      * @throws VectorDBException

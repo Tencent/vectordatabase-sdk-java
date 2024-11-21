@@ -569,6 +569,11 @@ public class GrpcStub extends HttpStub{
                 searchConBuilder.setParams(Olama.SearchParams.newBuilder().setEf(params.getEf()).build());
             }
         }
+
+        if (searchParam.getRadius()!=null){
+            searchConBuilder.setRange(true);
+            searchConBuilder.getParamsBuilder().setRadius(searchParam.getRadius());
+        }
         builder.setSearch(searchConBuilder.build());
         logQuery(ApiPath.DOC_SEARCH, builder);
         Olama.SearchResponse searchResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).search(builder.build());
@@ -613,7 +618,7 @@ public class GrpcStub extends HttpStub{
                         }
                         if (annOption.getData()!=null){
                             if (annOption.getData().get(0) instanceof String){
-                                annBuilder.addAllDataExpr(annOption.getData().stream().map(item->(String)item).collect(Collectors.toList()));
+                                annBuilder.addAllEmbeddingItems(annOption.getData().stream().map(item->(String)item).collect(Collectors.toList()));
                             }if (annOption.getData().get(0) instanceof List){
                                 annBuilder.addAllData(annOption.getData().stream()
                                         .map(item-> Olama.VectorArray.newBuilder().addAllVector(((List<Object>)item).
@@ -893,7 +898,7 @@ public class GrpcStub extends HttpStub{
     }
 
     public BaseRes countDocument(QueryCountParamInner param, boolean ai) {
-        Olama.ExplainRequest.Builder builder = Olama.ExplainRequest.newBuilder()
+        Olama.CountRequest.Builder builder = Olama.CountRequest.newBuilder()
                 .setDatabase(param.getDatabase())
                 .setCollection(param.getCollection());
         if (param.getQuery()!=null) {
@@ -903,19 +908,19 @@ public class GrpcStub extends HttpStub{
             }
             builder.setQuery(queryBuilder.build());
         }
-        Olama.ExplainRequest explainRequest = builder.build();
+        Olama.CountRequest countRequest = builder.build();
         logQuery(ApiPath.DOC_COUNT, builder);
-        Olama.ExplainResponse explainResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).explain(explainRequest);
-        logResponse(ApiPath.DOC_COUNT, explainResponse);
-        if(explainResponse==null){
+        Olama.CountResponse countResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).count(countRequest);
+        logResponse(ApiPath.DOC_COUNT, countResponse);
+        if(countResponse==null){
             throw new VectorDBException("VectorDBServer error: count not response");
         }
-        if (explainResponse.getCode()!=0){
+        if (countResponse.getCode()!=0){
             throw new VectorDBException(String.format(
                     "VectorDBServer error: count not Success, body code=%s, message=%s",
-                    explainResponse.getCode(), explainResponse.getMsg()));
+                    countResponse.getCode(), countResponse.getMsg()));
         }
-        return new BaseRes(explainResponse.getCode(), explainResponse.getMsg(),"", Math.toIntExact(explainResponse.getAffectedCount()));
+        return new BaseRes(countResponse.getCode(), countResponse.getMsg(),"", countResponse.getCode());
     }
 
     @Override

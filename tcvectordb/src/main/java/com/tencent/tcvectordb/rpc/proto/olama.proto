@@ -623,6 +623,19 @@ message ModifyVectorIndexResponse {
     string redirect                 = 3;
 };
 
+message CountRequest {
+    string database         = 1;
+    string collection       = 2;
+    QueryCond query         = 3;
+};
+
+message CountResponse {
+    int32 code                    = 1;
+    string msg                    = 2;
+    string redirect               = 3;
+    uint64 count                  = 4;
+};
+
 message HttpRequest {};
 
 message HttpResponse {};
@@ -687,4 +700,6 @@ service SearchEngine {
     rpc addIndex(AddIndexRequest) returns (AddIndexResponse);
     // 修改index配置
     rpc modifyVectorIndex(ModifyVectorIndexRequest) returns (ModifyVectorIndexResponse);
+
+    rpc count(CountRequest) returns (CountResponse);
 };

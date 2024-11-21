@@ -52,6 +52,7 @@ import java.util.*;
  *<li> embedding: embedding config should be set if collection use embedding function </li>
  *<li> expectedFileNum: expected file numbers of the collectionView </li>
  *<li> averageFileSize: average size of the file uploaded to the collectionView </li>
+ *<li> parsingProcess: document parsing parameters </li>
  *</ol>
  *
  */
@@ -224,6 +225,12 @@ public class CollectionView {
         return documentSets;
     }
 
+    /**
+     * get document set info using documentSetId
+     * @param documentSetName
+     * @return name of the documentSet
+     * @throws VectorDBException
+     */
     public DocumentSet getDocumentSetByName(String documentSetName) throws VectorDBException {
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
                 new CollectionViewQueryParamInner(database, collectionView,
@@ -239,6 +246,12 @@ public class CollectionView {
         throw new VectorDBException("data not existed!");
     }
 
+    /**
+     * get document set info using documentSetId
+     * @param documentSetId: id of the document set
+     * @return DocumentSet
+     * @throws VectorDBException
+     */
     public DocumentSet getDocumentSetById(String documentSetId) throws VectorDBException {
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
                 new CollectionViewQueryParamInner(database, collectionView,
@@ -254,6 +267,12 @@ public class CollectionView {
         throw new VectorDBException("data not existed!");
     }
 
+    /**
+     * search documents in collection view
+     * @param param
+     * @return
+     * @throws VectorDBException
+     */
     public List<SearchContentInfo> search(SearchByContentsParam param) throws VectorDBException {
         return this.stub.searchAIDocument(new SearchDocParamInner(
                 database, collectionView, param, this.readConsistency)).getDocuments();
@@ -283,10 +302,28 @@ public class CollectionView {
                 new CollectionViewUpdateParamInner(database, collectionView, param, updateFieldValues));
     }
 
+    /**
+     * Upload local file or file input stream, parse and save it remotely.
+     * @param loadAndSplitTextParam:
+     *             localFilePath  : File path to load
+     *             documentSetName: File name as DocumentSet
+     *             splitterProcess : Args for splitter process
+     *             parsingProcess  : Document parsing parameters
+     *             fileInputStream: file input stream; user input stream, when use this way,  documentSetName、inputStreamSize and fileType params must be specified
+     *             fileType:        file type
+     *             inputStreamSize : input stream size
+     * @param metaDataMap: extra properties to save
+     * @throws Exception
+     */
     public void loadAndSplitText(LoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
         this.stub.upload(database, collectionView,  loadAndSplitTextParam, metaDataMap);
     }
 
+    /**
+     * Upload local file or file input stream without metaDataMap, parse and save it remotely.
+     * @param loadAndSplitTextParam: LoadAndSplitTextParams
+     * @throws Exception
+     */
     public void loadAndSplitText(LoadAndSplitTextParam loadAndSplitTextParam) throws Exception {
         this.stub.upload(database, collectionView,  loadAndSplitTextParam, Collections.EMPTY_MAP);
     }

@@ -490,7 +490,7 @@ public class VectorDBClient {
 
 
     /**
-     *Currently, this interface is only for dense vectors, i.e. vector
+     *Currently, this method is only for dense vectors, i.e. vector
      * Supports re-specifying vector index parameters, HNSW supports re-specifying M and efConstruction, IVF supports re-specifying nlist (IVF_PQ supports re-specifying M and nlist)
      * Supports re-specifying similarity calculation method
      * The new configuration after the vector index is modified is defined by the field vectorIndexes

@@ -897,7 +897,11 @@ public class GrpcStub extends HttpStub{
                 .setDatabase(param.getDatabase())
                 .setCollection(param.getCollection());
         if (param.getQuery()!=null) {
-            builder.setQuery(Olama.QueryCond.newBuilder().setFilter(param.getQuery().getFilter()).build());
+            Olama.QueryCond.Builder queryBuilder =  Olama.QueryCond.newBuilder();
+            if (param.getQuery().getFilter()!=null){
+                queryBuilder.setFilter(param.getQuery().getFilter());
+            }
+            builder.setQuery(queryBuilder.build());
         }
         Olama.ExplainRequest explainRequest = builder.build();
         logQuery(ApiPath.DOC_COUNT, builder);

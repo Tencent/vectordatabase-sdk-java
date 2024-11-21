@@ -406,13 +406,32 @@ public class Collection{
     }
 
     /**
+     * this method is deprecated, recommend use {@link Collection#addIndex(String, String, AddIndexParam)}
      * Used to add a scalar field index to an existing collection
      * (the scalar field may contain historical data or a newly added empty field)
+     * @param database
+     * @param collection
      * @param addIndexParam:
      * @return
      * @throws VectorDBException
      */
-    public BaseRes AddIndex(AddIndexParam addIndexParam) throws VectorDBException {
+    @Deprecated
+    public BaseRes AddIndex(String database, String collection, AddIndexParam addIndexParam) throws VectorDBException {
+        return this.stub.addIndex(
+                new AddIndexParamInner(database, collection, addIndexParam));
+    }
+
+
+    /**
+     * Used to add a scalar field index to an existing collection
+     * (the scalar field may contain historical data or a newly added empty field)
+     * @param database
+     * @param collection
+     * @param addIndexParam:
+     * @return
+     * @throws VectorDBException
+     */
+    public BaseRes addIndex(String database, String collection, AddIndexParam addIndexParam) throws VectorDBException {
         return this.stub.addIndex(
                 new AddIndexParamInner(database, collection, addIndexParam));
     }
@@ -424,9 +443,26 @@ public class Collection{
      * @return
      * @throws VectorDBException
      */
-    public BaseRes Count(CountQueryParam countQueryParam) throws VectorDBException {
+    public BaseRes count(CountQueryParam countQueryParam) throws VectorDBException {
         return this.stub.countDocument(
                 new QueryCountParamInner(database, collection, countQueryParam, this.readConsistency), false);
+    }
+
+    /**
+     *Currently, this method is only for dense vectors, i.e. vector
+     * Supports re-specifying vector index parameters, HNSW supports re-specifying M and efConstruction, IVF supports re-specifying nlist (IVF_PQ supports re-specifying M and nlist)
+     * Supports re-specifying similarity calculation method
+     * The new configuration after the vector index is modified is defined by the field vectorIndexes
+     * After adjusting the parameters, this interface will trigger a rebuild, and the rebuild rules are specified by the field rebuildRules
+     * @param database
+     * @param collection
+     * @param modifyVectorIndexParam
+     * @return
+     * @throws VectorDBException
+     */
+    public BaseRes modifyVectorIndex(ModifyVectorIndexParam modifyVectorIndexParam) throws VectorDBException {
+        return this.stub.modifyVectorIndex(
+                new ModifyIndexParamInner(database, collection, modifyVectorIndexParam), false);
     }
 
     @Override

@@ -142,8 +142,8 @@ public class Document {
             if(vector instanceof List){
                 ArrayNode vectorNode = JsonNodeFactory.instance.arrayNode();
                 ((List<?>) vector).forEach(ele->{
-                    if (ele instanceof Double) {
-                        vectorNode.add(((Double) ele).doubleValue());
+                    if (ele instanceof Number) {
+                        vectorNode.add(((Number) ele).doubleValue());
                     }
                     if (ele instanceof String) {
                         vectorNode.add(ele.toString());

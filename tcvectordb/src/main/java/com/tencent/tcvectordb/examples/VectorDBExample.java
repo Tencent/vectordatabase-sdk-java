@@ -232,6 +232,9 @@ public class VectorDBExample {
         System.out.println(JsonUtils.toJsonString(affectRes));
         // notice：upsert 操作可用会有延迟
         Thread.sleep(1000 * 5);
+
+        BaseRes res = client.count(DBNAME,COLL_NAME, CountQueryParam.newBuilder().build());
+        System.out.println("count document: "+ res.getCount());
     }
 
     private static void queryData(VectorDBClient client) {
@@ -352,6 +355,7 @@ public class VectorDBExample {
                 .newBuilder()
                 .addAllDocumentId("0001", "0003")
                 .withFilter("bookName=\"西游记\"")
+                .withLimit(1)
                 .build();
         AffectRes deleteAffectRes = client.delete(DBNAME, COLL_NAME, build);
         System.out.println(deleteAffectRes.toString());

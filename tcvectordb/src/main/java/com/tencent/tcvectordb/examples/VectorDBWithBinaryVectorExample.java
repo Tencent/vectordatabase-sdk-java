@@ -135,13 +135,9 @@ public class VectorDBWithBinaryVectorExample {
 
         System.out.println("---------------------- query ----------------------");
         List<String> documentIds = Arrays.asList("0001", "0002", "0003", "0004", "0005");
-        Filter filterParam = new Filter("bookName=\"三国演义\"")
-                .and(Filter.exclude("array_test", Arrays.asList("7")));
         List<String> outputFields = Arrays.asList("id", "bookName");
         QueryParam queryParam = QueryParam.newBuilder()
                 .withDocumentIds(Arrays.asList("0001", "0002", "0003", "0004", "0005"))
-                // 使用 filter 过滤数据
-                .withFilter("bookName=\"三国演义\"")
                 // limit 限制返回行数，1 到 16384 之间
                  .withLimit(5)
                 // 偏移
@@ -149,7 +145,7 @@ public class VectorDBWithBinaryVectorExample {
                 // 指定返回的 fields
                 .addAllOutputFields("id", "bookName")
                 // 是否返回 vector 数据
-                .withRetrieveVector(false)
+                .withRetrieveVector(true)
                 .build();
         List<Document> qdos = collection.query(queryParam);
         for (Document doc : qdos) {
@@ -165,13 +161,11 @@ public class VectorDBWithBinaryVectorExample {
 
         System.out.println("---------------------- searchById ----------------------");
         SearchByIdParam searchByIdParam = SearchByIdParam.newBuilder()
-                .withDocumentIds(documentIds)
+                .withDocumentIds(Arrays.asList("0001"))
                 // 若使用 HNSW 索引，则需要指定参数 ef，ef 越大，召回率越高，但也会影响检索速度
                 .withParams(new HNSWSearchParams(100))
                 // 指定 Top K 的 K 值
                 .withLimit(2)
-                // 过滤获取到结果
-                .withFilter(filterParam)
                 .build();
         List<List<Document>> siDocs = client.searchById(DBNAME, COLL_NAME, searchByIdParam);
         int i = 0;
@@ -193,8 +187,6 @@ public class VectorDBWithBinaryVectorExample {
                 .withParams(new HNSWSearchParams(100))
                 // 指定 Top K 的 K 值
                 .withLimit(10)
-                // 过滤获取到结果
-                .withFilter(filterParam)
                 .build();
         // 输出相似性检索结果，检索结果为二维数组，每一位为一组返回结果，分别对应 search 时指定的多个向量
         List<List<Document>> svDocs = client.search(DBNAME, COLL_NAME, searchByVectorParam);
@@ -228,7 +220,7 @@ public class VectorDBWithBinaryVectorExample {
                 .withReplicaNum(1)
                 .withDescription("test binary collection")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
-                .addField(new VectorIndex("vector", 16, IndexType.BIN_FLAT,
+                .addField(new VectorIndex("vector", 16, FieldType.BinaryVector, IndexType.BIN_FLAT,
                         MetricType.HAMMING, new HNSWParams(16, 200)))
                 .withFilterIndexConfig(FilterIndexConfig.newBuilder().withFilterAll(true).build())
                 .build();

@@ -20,6 +20,8 @@
 
 package com.tencent.tcvectordb.model.param.collection;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * MetricType
  */
@@ -40,7 +42,7 @@ public enum MetricType {
     /**
      * hamming
      */
-    HAMMING("HAMMING");
+    HAMMING("Hamming");
 
     private final String value;
 
@@ -48,6 +50,7 @@ public enum MetricType {
         this.value = value;
     }
 
+    @JsonValue
     public String getValue() {
         return value;
     }

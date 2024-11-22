@@ -227,11 +227,15 @@ public class GrpcStub extends HttpStub{
             requestOrBuilder.addAllAliasList(params.getAlias());
         }
         if (params.getEmbedding()!=null){
-            requestOrBuilder.setEmbeddingParams(Olama.EmbeddingParams.newBuilder()
-                            .setField(params.getEmbedding().getField())
-                            .setModelName(params.getEmbedding().getModel().getModelName())
-                            .setVectorField(params.getEmbedding().getVectorField())
-                    .build());
+            Olama.EmbeddingParams.Builder embeddingBuilder = Olama.EmbeddingParams.newBuilder()
+                    .setField(params.getEmbedding().getField())
+                    .setVectorField(params.getEmbedding().getVectorField());
+            if (params.getEmbedding().getModel() != null) {
+                embeddingBuilder.setModelName(params.getEmbedding().getModel().getModelName());
+            }else{
+                embeddingBuilder.setModelName(params.getEmbedding().getModelName());
+            }
+            requestOrBuilder.setEmbeddingParams(embeddingBuilder.build());
         }
         if (params.getTtlConfig()!=null){
             requestOrBuilder.setTtlConfig(Olama.TTLConfig.newBuilder()
@@ -240,11 +244,16 @@ public class GrpcStub extends HttpStub{
                     .build());
         }
         if (params.getFilterIndexConfig()!=null){
-            requestOrBuilder.setFilterIndexConfig(Olama.FilterIndexConfig.newBuilder()
-                            .setFilterAll(params.getFilterIndexConfig().isFilterAll())
-                            .addAllFieldsWithoutIndex(params.getFilterIndexConfig().getFieldWithoutFilterIndex())
-                            .setMaxStrLen(params.getFilterIndexConfig().getMaxStrLen())
-                    .build());
+            Olama.FilterIndexConfig.Builder filterBuilder = Olama.FilterIndexConfig.newBuilder().
+                    setFilterAll(params.getFilterIndexConfig().isFilterAll());
+            if (params.getFilterIndexConfig().getFieldsWithoutIndex()!=null){
+                filterBuilder.addAllFieldsWithoutIndex(params.getFilterIndexConfig().getFieldsWithoutIndex());
+            }
+            if(params.getFilterIndexConfig().getMaxStrLen()!=null){
+                filterBuilder.setMaxStrLen(params.getFilterIndexConfig().getMaxStrLen());
+            }
+            requestOrBuilder.setFilterIndexConfig(filterBuilder.build());
+
         }
         if (!params.getIndexes().isEmpty()){
             for (IndexField index : params.getIndexes()) {

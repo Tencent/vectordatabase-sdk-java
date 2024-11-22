@@ -86,6 +86,11 @@ public class AnnOption {
             return this;
         }
 
+        public Builder withTextData(String texts){
+            this.data = Collections.singletonList(texts);
+            return this;
+        }
+
         public Builder withTextData(List<String> texts){
             this.data = Collections.singletonList(texts);
             return this;

@@ -230,6 +230,7 @@ public class VectorDBWithBinaryVectorExample {
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", 16, IndexType.BIN_FLAT,
                         MetricType.HAMMING, new HNSWParams(16, 200)))
+                .withFilterIndexConfig(FilterIndexConfig.newBuilder().withFilterAll(true).build())
                 .build();
     }
 

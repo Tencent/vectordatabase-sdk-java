@@ -1050,7 +1050,7 @@ public class GrpcStub extends HttpStub{
         }
         if (document.getVector()!=null){
             if (document.getVector() instanceof List){
-                docBuilder.addAllVector(((List<Double>)document.getVector()).stream().map(ele->ele.floatValue()).collect(Collectors.toList()));
+                docBuilder.addAllVector(((List<Number>)document.getVector()).stream().map(ele->ele.floatValue()).collect(Collectors.toList()));
             }else if (document.getVector() instanceof String){
                 docBuilder.setDataExpr((String)document.getVector());
             }

@@ -214,7 +214,7 @@ public class Document {
             return this;
         }
 
-        public Builder withVector(List<Double> vector) {
+        public Builder withVector(List<? extends Number> vector) {
             this.vector = vector;
             return this;
         }

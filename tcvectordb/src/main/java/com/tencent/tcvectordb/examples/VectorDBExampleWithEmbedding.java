@@ -228,7 +228,6 @@ public class VectorDBExampleWithEmbedding {
         // search
         // 1. search 提供按照 vector 搜索的能力
         // 其他选项类似 search 接口
-
         System.out.println("---------------------- search ----------------------");
         queryParam = QueryParam.newBuilder()
                 .withDocumentIds(documentIds)
@@ -247,6 +246,7 @@ public class VectorDBExampleWithEmbedding {
             List<Double> vector = (List<Double>) document.getVector();
             vectors.add(vector);
         }
+        List<List<Double>> test = vectors;
         SearchByVectorParam searchByVectorParam = SearchByVectorParam.newBuilder()
                 .withVectors(vectors)
                 // 若使用 HNSW 索引，则需要指定参数ef，ef越大，召回率越高，但也会影响检索速度

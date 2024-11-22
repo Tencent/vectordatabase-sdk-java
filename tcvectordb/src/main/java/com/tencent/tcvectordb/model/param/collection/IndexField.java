@@ -57,7 +57,7 @@ public class IndexField {
 
     @JsonIgnore
     public boolean isVectorField() {
-        return FieldType.Vector.equals(this.fieldType);
+        return FieldType.Vector.equals(this.fieldType) || FieldType.BinaryVector.equals(this.fieldType);
     }
 
     @JsonIgnore

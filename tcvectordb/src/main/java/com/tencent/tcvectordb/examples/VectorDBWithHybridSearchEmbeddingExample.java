@@ -135,7 +135,7 @@ public class VectorDBWithHybridSearchEmbeddingExample {
         System.out.println("---------------------- hybridSearch ----------------------");
         SparseVectorBm25Encoder encoder = SparseVectorBm25Encoder.getBm25Encoder("zh");
         HybridSearchParam hybridSearchParam = HybridSearchParam.newBuilder()
-                .withAnn(AnnOption.newBuilder().withFieldName("vector")
+                .withAnn(AnnOption.newBuilder().withFieldName("text")
                         .withTextData("什么是腾讯云向量数据库")
                         .build())
                 .withMatch(MatchOption.newBuilder().withFieldName("sparse_vector")
@@ -146,13 +146,13 @@ public class VectorDBWithHybridSearchEmbeddingExample {
                 .withLimit(2)
                 .withRetrieveVector(false)
                 .build();
-        List<List<Document>> siDocs = client.hybridSearch(DBNAME, COLL_NAME, hybridSearchParam).getDocumentsList();
+        List<Document> siDocs = client.hybridSearch(DBNAME, COLL_NAME, hybridSearchParam).getDocuments();
         int i = 0;
         for (Object docs : siDocs) {
-//            System.out.println("\tres: " + (i++) + docs.toString());
-            for (Document doc : (List<Document>)docs) {
-                System.out.println("\tres: " + doc.toString());
-            }
+            System.out.println("\tres: " + (i++) + docs.toString());
+//            for (Document doc : (List<Document>)docs) {
+//                System.out.println("\tres: " + doc.toString());
+//            }
         }
     }
 

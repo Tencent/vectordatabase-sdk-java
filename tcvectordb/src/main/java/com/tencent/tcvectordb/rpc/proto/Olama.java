@@ -82951,37 +82951,37 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
         getCollectionBytes();
 
     /**
-     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; vectorIndexes = 3;</code>
      */
-    int getIndexesCount();
+    int getVectorIndexesCount();
     /**
-     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; vectorIndexes = 3;</code>
      */
-    boolean containsIndexes(
+    boolean containsVectorIndexes(
         java.lang.String key);
     /**
-     * Use {@link #getIndexesMap()} instead.
+     * Use {@link #getVectorIndexesMap()} instead.
      */
     @java.lang.Deprecated
     java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn>
-    getIndexes();
+    getVectorIndexes();
     /**
-     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; vectorIndexes = 3;</code>
      */
     java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn>
-    getIndexesMap();
+    getVectorIndexesMap();
     /**
-     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; vectorIndexes = 3;</code>
      */
     /* nullable */
-com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn getIndexesOrDefault(
+com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn getVectorIndexesOrDefault(
         java.lang.String key,
         /* nullable */
 com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue);
     /**
-     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; vectorIndexes = 3;</code>
      */
-    com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn getIndexesOrThrow(
+    com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn getVectorIndexesOrThrow(
         java.lang.String key);
 
     /**
@@ -83040,7 +83040,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue);
         int number) {
       switch (number) {
         case 3:
-          return internalGetIndexes();
+          return internalGetVectorIndexes();
         default:
           throw new RuntimeException(
               "Invalid map field number: " + number);
@@ -83133,13 +83133,13 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue);
       }
     }
 
-    public static final int INDEXES_FIELD_NUMBER = 3;
-    private static final class IndexesDefaultEntryHolder {
+    public static final int VECTORINDEXES_FIELD_NUMBER = 3;
+    private static final class VectorIndexesDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
           java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> defaultEntry =
               com.google.protobuf.MapEntry
               .<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn>newDefaultInstance(
-                  com.tencent.tcvectordb.rpc.proto.Olama.internal_static_com_tencent_tcvectordb_rpc_proto_ModifyVectorIndexRequest_IndexesEntry_descriptor, 
+                  com.tencent.tcvectordb.rpc.proto.Olama.internal_static_com_tencent_tcvectordb_rpc_proto_ModifyVectorIndexRequest_VectorIndexesEntry_descriptor, 
                   com.google.protobuf.WireFormat.FieldType.STRING,
                   "",
                   com.google.protobuf.WireFormat.FieldType.MESSAGE,
@@ -83147,65 +83147,65 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue);
     }
     @SuppressWarnings("serial")
     private com.google.protobuf.MapField<
-        java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> indexes_;
+        java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> vectorIndexes_;
     private com.google.protobuf.MapField<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn>
-    internalGetIndexes() {
-      if (indexes_ == null) {
+    internalGetVectorIndexes() {
+      if (vectorIndexes_ == null) {
         return com.google.protobuf.MapField.emptyMapField(
-            IndexesDefaultEntryHolder.defaultEntry);
+            VectorIndexesDefaultEntryHolder.defaultEntry);
       }
-      return indexes_;
+      return vectorIndexes_;
     }
-    public int getIndexesCount() {
-      return internalGetIndexes().getMap().size();
+    public int getVectorIndexesCount() {
+      return internalGetVectorIndexes().getMap().size();
     }
     /**
-     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; vectorIndexes = 3;</code>
      */
     @java.lang.Override
-    public boolean containsIndexes(
+    public boolean containsVectorIndexes(
         java.lang.String key) {
       if (key == null) { throw new NullPointerException("map key"); }
-      return internalGetIndexes().getMap().containsKey(key);
+      return internalGetVectorIndexes().getMap().containsKey(key);
     }
     /**
-     * Use {@link #getIndexesMap()} instead.
+     * Use {@link #getVectorIndexesMap()} instead.
      */
     @java.lang.Override
     @java.lang.Deprecated
-    public java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> getIndexes() {
-      return getIndexesMap();
+    public java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> getVectorIndexes() {
+      return getVectorIndexesMap();
     }
     /**
-     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; vectorIndexes = 3;</code>
      */
     @java.lang.Override
-    public java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> getIndexesMap() {
-      return internalGetIndexes().getMap();
+    public java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> getVectorIndexesMap() {
+      return internalGetVectorIndexes().getMap();
     }
     /**
-     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; vectorIndexes = 3;</code>
      */
     @java.lang.Override
     public /* nullable */
-com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn getIndexesOrDefault(
+com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn getVectorIndexesOrDefault(
         java.lang.String key,
         /* nullable */
 com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
       if (key == null) { throw new NullPointerException("map key"); }
       java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> map =
-          internalGetIndexes().getMap();
+          internalGetVectorIndexes().getMap();
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
-     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+     * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; vectorIndexes = 3;</code>
      */
     @java.lang.Override
-    public com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn getIndexesOrThrow(
+    public com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn getVectorIndexesOrThrow(
         java.lang.String key) {
       if (key == null) { throw new NullPointerException("map key"); }
       java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> map =
-          internalGetIndexes().getMap();
+          internalGetVectorIndexes().getMap();
       if (!map.containsKey(key)) {
         throw new java.lang.IllegalArgumentException();
       }
@@ -83272,8 +83272,8 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
       com.google.protobuf.GeneratedMessageV3
         .serializeStringMapTo(
           output,
-          internalGetIndexes(),
-          IndexesDefaultEntryHolder.defaultEntry,
+          internalGetVectorIndexes(),
+          VectorIndexesDefaultEntryHolder.defaultEntry,
           3);
       if (rebuild_ != false) {
         output.writeBool(4, rebuild_);
@@ -83297,14 +83297,14 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, collection_);
       }
       for (java.util.Map.Entry<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> entry
-           : internalGetIndexes().getMap().entrySet()) {
+           : internalGetVectorIndexes().getMap().entrySet()) {
         com.google.protobuf.MapEntry<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn>
-        indexes__ = IndexesDefaultEntryHolder.defaultEntry.newBuilderForType()
+        vectorIndexes__ = VectorIndexesDefaultEntryHolder.defaultEntry.newBuilderForType()
             .setKey(entry.getKey())
             .setValue(entry.getValue())
             .build();
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(3, indexes__);
+            .computeMessageSize(3, vectorIndexes__);
       }
       if (rebuild_ != false) {
         size += com.google.protobuf.CodedOutputStream
@@ -83333,8 +83333,8 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
           .equals(other.getDatabase())) return false;
       if (!getCollection()
           .equals(other.getCollection())) return false;
-      if (!internalGetIndexes().equals(
-          other.internalGetIndexes())) return false;
+      if (!internalGetVectorIndexes().equals(
+          other.internalGetVectorIndexes())) return false;
       if (getRebuild()
           != other.getRebuild()) return false;
       if (hasRebuildRules() != other.hasRebuildRules()) return false;
@@ -83357,9 +83357,9 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
       hash = (53 * hash) + getDatabase().hashCode();
       hash = (37 * hash) + COLLECTION_FIELD_NUMBER;
       hash = (53 * hash) + getCollection().hashCode();
-      if (!internalGetIndexes().getMap().isEmpty()) {
-        hash = (37 * hash) + INDEXES_FIELD_NUMBER;
-        hash = (53 * hash) + internalGetIndexes().hashCode();
+      if (!internalGetVectorIndexes().getMap().isEmpty()) {
+        hash = (37 * hash) + VECTORINDEXES_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetVectorIndexes().hashCode();
       }
       hash = (37 * hash) + REBUILD_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
@@ -83482,7 +83482,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
           int number) {
         switch (number) {
           case 3:
-            return internalGetIndexes();
+            return internalGetVectorIndexes();
           default:
             throw new RuntimeException(
                 "Invalid map field number: " + number);
@@ -83493,7 +83493,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
           int number) {
         switch (number) {
           case 3:
-            return internalGetMutableIndexes();
+            return internalGetMutableVectorIndexes();
           default:
             throw new RuntimeException(
                 "Invalid map field number: " + number);
@@ -83529,7 +83529,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
         bitField0_ = 0;
         database_ = "";
         collection_ = "";
-        internalGetMutableIndexes().clear();
+        internalGetMutableVectorIndexes().clear();
         rebuild_ = false;
         rebuildRules_ = null;
         if (rebuildRulesBuilder_ != null) {
@@ -83576,7 +83576,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
           result.collection_ = collection_;
         }
         if (((from_bitField0_ & 0x00000004) != 0)) {
-          result.indexes_ = internalGetIndexes().build(IndexesDefaultEntryHolder.defaultEntry);
+          result.vectorIndexes_ = internalGetVectorIndexes().build(VectorIndexesDefaultEntryHolder.defaultEntry);
         }
         if (((from_bitField0_ & 0x00000008) != 0)) {
           result.rebuild_ = rebuild_;
@@ -83645,8 +83645,8 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
           bitField0_ |= 0x00000002;
           onChanged();
         }
-        internalGetMutableIndexes().mergeFrom(
-            other.internalGetIndexes());
+        internalGetMutableVectorIndexes().mergeFrom(
+            other.internalGetVectorIndexes());
         bitField0_ |= 0x00000004;
         if (other.getRebuild() != false) {
           setRebuild(other.getRebuild());
@@ -83692,10 +83692,10 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
               } // case 18
               case 26: {
                 com.google.protobuf.MapEntry<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn>
-                indexes__ = input.readMessage(
-                    IndexesDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-                internalGetMutableIndexes().ensureBuilderMap().put(
-                    indexes__.getKey(), indexes__.getValue());
+                vectorIndexes__ = input.readMessage(
+                    VectorIndexesDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+                internalGetMutableVectorIndexes().ensureBuilderMap().put(
+                    vectorIndexes__.getKey(), vectorIndexes__.getValue());
                 bitField0_ |= 0x00000004;
                 break;
               } // case 26
@@ -83872,7 +83872,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
         return this;
       }
 
-      private static final class IndexesConverter implements com.google.protobuf.MapFieldBuilder.Converter<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumnOrBuilder, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> {
+      private static final class VectorIndexesConverter implements com.google.protobuf.MapFieldBuilder.Converter<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumnOrBuilder, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> {
         @java.lang.Override
         public com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn build(com.tencent.tcvectordb.rpc.proto.Olama.IndexColumnOrBuilder val) {
           if (val instanceof com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn) { return (com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn) val; }
@@ -83881,94 +83881,94 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
 
         @java.lang.Override
         public com.google.protobuf.MapEntry<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> defaultEntry() {
-          return IndexesDefaultEntryHolder.defaultEntry;
+          return VectorIndexesDefaultEntryHolder.defaultEntry;
         }
       };
-      private static final IndexesConverter indexesConverter = new IndexesConverter();
+      private static final VectorIndexesConverter vectorIndexesConverter = new VectorIndexesConverter();
 
       private com.google.protobuf.MapFieldBuilder<
-          java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumnOrBuilder, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn.Builder> indexes_;
+          java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumnOrBuilder, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn.Builder> vectorIndexes_;
       private com.google.protobuf.MapFieldBuilder<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumnOrBuilder, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn.Builder>
-          internalGetIndexes() {
-        if (indexes_ == null) {
-          return new com.google.protobuf.MapFieldBuilder<>(indexesConverter);
+          internalGetVectorIndexes() {
+        if (vectorIndexes_ == null) {
+          return new com.google.protobuf.MapFieldBuilder<>(vectorIndexesConverter);
         }
-        return indexes_;
+        return vectorIndexes_;
       }
       private com.google.protobuf.MapFieldBuilder<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumnOrBuilder, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn.Builder>
-          internalGetMutableIndexes() {
-        if (indexes_ == null) {
-          indexes_ = new com.google.protobuf.MapFieldBuilder<>(indexesConverter);
+          internalGetMutableVectorIndexes() {
+        if (vectorIndexes_ == null) {
+          vectorIndexes_ = new com.google.protobuf.MapFieldBuilder<>(vectorIndexesConverter);
         }
         bitField0_ |= 0x00000004;
         onChanged();
-        return indexes_;
+        return vectorIndexes_;
       }
-      public int getIndexesCount() {
-        return internalGetIndexes().ensureBuilderMap().size();
+      public int getVectorIndexesCount() {
+        return internalGetVectorIndexes().ensureBuilderMap().size();
       }
       /**
-       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; vectorIndexes = 3;</code>
        */
       @java.lang.Override
-      public boolean containsIndexes(
+      public boolean containsVectorIndexes(
           java.lang.String key) {
         if (key == null) { throw new NullPointerException("map key"); }
-        return internalGetIndexes().ensureBuilderMap().containsKey(key);
+        return internalGetVectorIndexes().ensureBuilderMap().containsKey(key);
       }
       /**
-       * Use {@link #getIndexesMap()} instead.
+       * Use {@link #getVectorIndexesMap()} instead.
        */
       @java.lang.Override
       @java.lang.Deprecated
-      public java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> getIndexes() {
-        return getIndexesMap();
+      public java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> getVectorIndexes() {
+        return getVectorIndexesMap();
       }
       /**
-       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; vectorIndexes = 3;</code>
        */
       @java.lang.Override
-      public java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> getIndexesMap() {
-        return internalGetIndexes().getImmutableMap();
+      public java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> getVectorIndexesMap() {
+        return internalGetVectorIndexes().getImmutableMap();
       }
       /**
-       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; vectorIndexes = 3;</code>
        */
       @java.lang.Override
       public /* nullable */
-com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn getIndexesOrDefault(
+com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn getVectorIndexesOrDefault(
           java.lang.String key,
           /* nullable */
 com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
         if (key == null) { throw new NullPointerException("map key"); }
-        java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumnOrBuilder> map = internalGetMutableIndexes().ensureBuilderMap();
-        return map.containsKey(key) ? indexesConverter.build(map.get(key)) : defaultValue;
+        java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumnOrBuilder> map = internalGetMutableVectorIndexes().ensureBuilderMap();
+        return map.containsKey(key) ? vectorIndexesConverter.build(map.get(key)) : defaultValue;
       }
       /**
-       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; vectorIndexes = 3;</code>
        */
       @java.lang.Override
-      public com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn getIndexesOrThrow(
+      public com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn getVectorIndexesOrThrow(
           java.lang.String key) {
         if (key == null) { throw new NullPointerException("map key"); }
-        java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumnOrBuilder> map = internalGetMutableIndexes().ensureBuilderMap();
+        java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumnOrBuilder> map = internalGetMutableVectorIndexes().ensureBuilderMap();
         if (!map.containsKey(key)) {
           throw new java.lang.IllegalArgumentException();
         }
-        return indexesConverter.build(map.get(key));
+        return vectorIndexesConverter.build(map.get(key));
       }
-      public Builder clearIndexes() {
+      public Builder clearVectorIndexes() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        internalGetMutableIndexes().clear();
+        internalGetMutableVectorIndexes().clear();
         return this;
       }
       /**
-       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; vectorIndexes = 3;</code>
        */
-      public Builder removeIndexes(
+      public Builder removeVectorIndexes(
           java.lang.String key) {
         if (key == null) { throw new NullPointerException("map key"); }
-        internalGetMutableIndexes().ensureBuilderMap()
+        internalGetMutableVectorIndexes().ensureBuilderMap()
             .remove(key);
         return this;
       }
@@ -83977,44 +83977,44 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
        */
       @java.lang.Deprecated
       public java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn>
-          getMutableIndexes() {
+          getMutableVectorIndexes() {
         bitField0_ |= 0x00000004;
-        return internalGetMutableIndexes().ensureMessageMap();
+        return internalGetMutableVectorIndexes().ensureMessageMap();
       }
       /**
-       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; vectorIndexes = 3;</code>
        */
-      public Builder putIndexes(
+      public Builder putVectorIndexes(
           java.lang.String key,
           com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn value) {
         if (key == null) { throw new NullPointerException("map key"); }
         if (value == null) { throw new NullPointerException("map value"); }
-        internalGetMutableIndexes().ensureBuilderMap()
+        internalGetMutableVectorIndexes().ensureBuilderMap()
             .put(key, value);
         bitField0_ |= 0x00000004;
         return this;
       }
       /**
-       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; vectorIndexes = 3;</code>
        */
-      public Builder putAllIndexes(
+      public Builder putAllVectorIndexes(
           java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> values) {
         for (java.util.Map.Entry<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn> e : values.entrySet()) {
           if (e.getKey() == null || e.getValue() == null) {
             throw new NullPointerException();
           }
         }
-        internalGetMutableIndexes().ensureBuilderMap()
+        internalGetMutableVectorIndexes().ensureBuilderMap()
             .putAll(values);
         bitField0_ |= 0x00000004;
         return this;
       }
       /**
-       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; indexes = 3;</code>
+       * <code>map&lt;string, .com.tencent.tcvectordb.rpc.proto.IndexColumn&gt; vectorIndexes = 3;</code>
        */
-      public com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn.Builder putIndexesBuilderIfAbsent(
+      public com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn.Builder putVectorIndexesBuilderIfAbsent(
           java.lang.String key) {
-        java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumnOrBuilder> builderMap = internalGetMutableIndexes().ensureBuilderMap();
+        java.util.Map<java.lang.String, com.tencent.tcvectordb.rpc.proto.Olama.IndexColumnOrBuilder> builderMap = internalGetMutableVectorIndexes().ensureBuilderMap();
         com.tencent.tcvectordb.rpc.proto.Olama.IndexColumnOrBuilder entry = builderMap.get(key);
         if (entry == null) {
           entry = com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn.newBuilder();
@@ -87993,10 +87993,10 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_tencent_tcvectordb_rpc_proto_ModifyVectorIndexRequest_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_tencent_tcvectordb_rpc_proto_ModifyVectorIndexRequest_IndexesEntry_descriptor;
+    internal_static_com_tencent_tcvectordb_rpc_proto_ModifyVectorIndexRequest_VectorIndexesEntry_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_tencent_tcvectordb_rpc_proto_ModifyVectorIndexRequest_IndexesEntry_fieldAccessorTable;
+      internal_static_com_tencent_tcvectordb_rpc_proto_ModifyVectorIndexRequest_VectorIndexesEntry_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_tencent_tcvectordb_rpc_proto_ModifyVectorIndexResponse_descriptor;
   private static final 
@@ -88323,120 +88323,120 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
       "de\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010redirect\030\003 \001(\t\022" +
       "\025\n\raffectedTable\030\004 \003(\004\022\025\n\raffectedCount\030" +
       "\005 \001(\004\"E\n\022SparseSearchParams\022\026\n\016terminate" +
-      "After\030\001 \001(\r\022\027\n\017cutoffFrequency\030\002 \001(\001\"\327\002\n" +
+      "After\030\001 \001(\r\022\027\n\017cutoffFrequency\030\002 \001(\001\"\351\002\n" +
       "\030ModifyVectorIndexRequest\022\020\n\010database\030\001 " +
-      "\001(\t\022\022\n\ncollection\030\002 \001(\t\022X\n\007indexes\030\003 \003(\013" +
-      "2G.com.tencent.tcvectordb.rpc.proto.Modi" +
-      "fyVectorIndexRequest.IndexesEntry\022\017\n\007reb" +
-      "uild\030\004 \001(\010\022K\n\014rebuildRules\030\005 \001(\01325.com.t" +
-      "encent.tcvectordb.rpc.proto.RebuildIndex" +
-      "Request\032]\n\014IndexesEntry\022\013\n\003key\030\001 \001(\t\022<\n\005" +
-      "value\030\002 \001(\0132-.com.tencent.tcvectordb.rpc" +
-      ".proto.IndexColumn:\0028\001\"H\n\031ModifyVectorIn" +
-      "dexResponse\022\014\n\004code\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022\020" +
-      "\n\010redirect\030\003 \001(\t\"p\n\014CountRequest\022\020\n\010data" +
-      "base\030\001 \001(\t\022\022\n\ncollection\030\002 \001(\t\022:\n\005query\030" +
-      "\003 \001(\0132+.com.tencent.tcvectordb.rpc.proto" +
-      ".QueryCond\"K\n\rCountResponse\022\014\n\004code\030\001 \001(" +
-      "\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010redirect\030\003 \001(\t\022\r\n\005coun" +
-      "t\030\004 \001(\004\"\r\n\013HttpRequest\"\016\n\014HttpResponse*s" +
-      "\n\016ShardDataState\022\025\n\021SHARD_INDEX_READY\020\000\022" +
-      "\030\n\024SHARD_INDEX_TRAINING\020\001\022\030\n\024SHARD_INDEX" +
-      "_BUILDING\020\002\022\026\n\022SHARD_INDEX_FAILED\020\003*B\n\013H" +
-      "ealthState\022\020\n\014HEALTH_GREEN\020\000\022\021\n\rHEALTH_Y" +
-      "ELLOW\020\001\022\016\n\nHEALTH_RED\020\002* \n\010DataType\022\010\n\004B" +
-      "ASE\020\000\022\n\n\006AI_DOC\020\001*y\n\017IndexMetricType\022\036\n\032" +
-      "INDEX_METRIC_INNER_PRODUCT\020\000\022\023\n\017INDEX_ME" +
-      "TRIC_L2\020\001\022\027\n\023INDEX_METRIC_COSINE\020\002\022\030\n\024IN" +
-      "DEX_METRIC_HAMMING\020\003*W\n\017IndexEngineType\022" +
-      "\027\n\023ENGINE_FAISS_VECTOR\020\000\022\027\n\023ENGINE_FAISS" +
-      "_BINARY\020\001\022\022\n\016ENGINE_HNSWLIB\020\003*=\n\tFieldTy" +
-      "pe\022\017\n\013TYPE_STRING\020\000\022\016\n\nTYPE_ARRAY\020\001\022\017\n\013T" +
-      "YPE_UINT64\020\002*+\n\020FieldElementType\022\027\n\023ELEM" +
-      "ENT_TYPE_STRING\020\0002\331\031\n\014SearchEngine\022t\n\010se" +
-      "tAlias\0221.com.tencent.tcvectordb.rpc.prot" +
-      "o.AddAliasRequest\0325.com.tencent.tcvector" +
-      "db.rpc.proto.UpdateAliasResponse\022q\n\010getA" +
-      "lias\0221.com.tencent.tcvectordb.rpc.proto." +
-      "GetAliasRequest\0322.com.tencent.tcvectordb" +
-      ".rpc.proto.GetAliasResponse\022z\n\013deleteAli" +
-      "as\0224.com.tencent.tcvectordb.rpc.proto.Re" +
-      "moveAliasRequest\0325.com.tencent.tcvectord" +
-      "b.rpc.proto.UpdateAliasResponse\022\211\001\n\020crea" +
-      "teCollection\0229.com.tencent.tcvectordb.rp" +
-      "c.proto.CreateCollectionRequest\032:.com.te" +
-      "ncent.tcvectordb.rpc.proto.CreateCollect" +
-      "ionResponse\022\203\001\n\016dropCollection\0227.com.ten" +
-      "cent.tcvectordb.rpc.proto.DropCollection" +
-      "Request\0328.com.tencent.tcvectordb.rpc.pro" +
-      "to.DropCollectionResponse\022\217\001\n\022truncateCo" +
-      "llection\022;.com.tencent.tcvectordb.rpc.pr" +
-      "oto.TruncateCollectionRequest\032<.com.tenc" +
-      "ent.tcvectordb.rpc.proto.TruncateCollect" +
-      "ionResponse\022\217\001\n\022describeCollection\022;.com" +
-      ".tencent.tcvectordb.rpc.proto.DescribeCo" +
-      "llectionRequest\032<.com.tencent.tcvectordb" +
-      ".rpc.proto.DescribeCollectionResponse\022\206\001" +
-      "\n\017listCollections\0228.com.tencent.tcvector" +
-      "db.rpc.proto.ListCollectionsRequest\0329.co" +
+      "\001(\t\022\022\n\ncollection\030\002 \001(\t\022d\n\rvectorIndexes" +
+      "\030\003 \003(\0132M.com.tencent.tcvectordb.rpc.prot" +
+      "o.ModifyVectorIndexRequest.VectorIndexes" +
+      "Entry\022\017\n\007rebuild\030\004 \001(\010\022K\n\014rebuildRules\030\005" +
+      " \001(\01325.com.tencent.tcvectordb.rpc.proto." +
+      "RebuildIndexRequest\032c\n\022VectorIndexesEntr" +
+      "y\022\013\n\003key\030\001 \001(\t\022<\n\005value\030\002 \001(\0132-.com.tenc" +
+      "ent.tcvectordb.rpc.proto.IndexColumn:\0028\001" +
+      "\"H\n\031ModifyVectorIndexResponse\022\014\n\004code\030\001 " +
+      "\001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010redirect\030\003 \001(\t\"p\n\014Co" +
+      "untRequest\022\020\n\010database\030\001 \001(\t\022\022\n\ncollecti" +
+      "on\030\002 \001(\t\022:\n\005query\030\003 \001(\0132+.com.tencent.tc" +
+      "vectordb.rpc.proto.QueryCond\"K\n\rCountRes" +
+      "ponse\022\014\n\004code\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010redi" +
+      "rect\030\003 \001(\t\022\r\n\005count\030\004 \001(\004\"\r\n\013HttpRequest" +
+      "\"\016\n\014HttpResponse*s\n\016ShardDataState\022\025\n\021SH" +
+      "ARD_INDEX_READY\020\000\022\030\n\024SHARD_INDEX_TRAININ" +
+      "G\020\001\022\030\n\024SHARD_INDEX_BUILDING\020\002\022\026\n\022SHARD_I" +
+      "NDEX_FAILED\020\003*B\n\013HealthState\022\020\n\014HEALTH_G" +
+      "REEN\020\000\022\021\n\rHEALTH_YELLOW\020\001\022\016\n\nHEALTH_RED\020" +
+      "\002* \n\010DataType\022\010\n\004BASE\020\000\022\n\n\006AI_DOC\020\001*y\n\017I" +
+      "ndexMetricType\022\036\n\032INDEX_METRIC_INNER_PRO" +
+      "DUCT\020\000\022\023\n\017INDEX_METRIC_L2\020\001\022\027\n\023INDEX_MET" +
+      "RIC_COSINE\020\002\022\030\n\024INDEX_METRIC_HAMMING\020\003*W" +
+      "\n\017IndexEngineType\022\027\n\023ENGINE_FAISS_VECTOR" +
+      "\020\000\022\027\n\023ENGINE_FAISS_BINARY\020\001\022\022\n\016ENGINE_HN" +
+      "SWLIB\020\003*=\n\tFieldType\022\017\n\013TYPE_STRING\020\000\022\016\n" +
+      "\nTYPE_ARRAY\020\001\022\017\n\013TYPE_UINT64\020\002*+\n\020FieldE" +
+      "lementType\022\027\n\023ELEMENT_TYPE_STRING\020\0002\331\031\n\014" +
+      "SearchEngine\022t\n\010setAlias\0221.com.tencent.t" +
+      "cvectordb.rpc.proto.AddAliasRequest\0325.co" +
+      "m.tencent.tcvectordb.rpc.proto.UpdateAli" +
+      "asResponse\022q\n\010getAlias\0221.com.tencent.tcv" +
+      "ectordb.rpc.proto.GetAliasRequest\0322.com." +
+      "tencent.tcvectordb.rpc.proto.GetAliasRes" +
+      "ponse\022z\n\013deleteAlias\0224.com.tencent.tcvec" +
+      "tordb.rpc.proto.RemoveAliasRequest\0325.com" +
+      ".tencent.tcvectordb.rpc.proto.UpdateAlia" +
+      "sResponse\022\211\001\n\020createCollection\0229.com.ten" +
+      "cent.tcvectordb.rpc.proto.CreateCollecti" +
+      "onRequest\032:.com.tencent.tcvectordb.rpc.p" +
+      "roto.CreateCollectionResponse\022\203\001\n\016dropCo" +
+      "llection\0227.com.tencent.tcvectordb.rpc.pr" +
+      "oto.DropCollectionRequest\0328.com.tencent." +
+      "tcvectordb.rpc.proto.DropCollectionRespo" +
+      "nse\022\217\001\n\022truncateCollection\022;.com.tencent" +
+      ".tcvectordb.rpc.proto.TruncateCollection" +
+      "Request\032<.com.tencent.tcvectordb.rpc.pro" +
+      "to.TruncateCollectionResponse\022\217\001\n\022descri" +
+      "beCollection\022;.com.tencent.tcvectordb.rp" +
+      "c.proto.DescribeCollectionRequest\032<.com." +
+      "tencent.tcvectordb.rpc.proto.DescribeCol" +
+      "lectionResponse\022\206\001\n\017listCollections\0228.co" +
       "m.tencent.tcvectordb.rpc.proto.ListColle" +
-      "ctionsResponse\022}\n\014rebuildIndex\0225.com.ten" +
-      "cent.tcvectordb.rpc.proto.RebuildIndexRe" +
-      "quest\0326.com.tencent.tcvectordb.rpc.proto" +
-      ".RebuildIndexResponse\022k\n\006upsert\022/.com.te" +
-      "ncent.tcvectordb.rpc.proto.UpsertRequest" +
-      "\0320.com.tencent.tcvectordb.rpc.proto.Upse" +
-      "rtResponse\022k\n\006update\022/.com.tencent.tcvec" +
-      "tordb.rpc.proto.UpdateRequest\0320.com.tenc" +
-      "ent.tcvectordb.rpc.proto.UpdateResponse\022" +
-      "h\n\005query\022..com.tencent.tcvectordb.rpc.pr" +
-      "oto.QueryRequest\032/.com.tencent.tcvectord" +
-      "b.rpc.proto.QueryResponse\022k\n\006search\022/.co" +
-      "m.tencent.tcvectordb.rpc.proto.SearchReq" +
-      "uest\0320.com.tencent.tcvectordb.rpc.proto." +
-      "SearchResponse\022r\n\rhybrid_search\022/.com.te" +
-      "ncent.tcvectordb.rpc.proto.SearchRequest" +
-      "\0320.com.tencent.tcvectordb.rpc.proto.Sear" +
-      "chResponse\022r\n\016keyword_search\022/.com.tence" +
-      "nt.tcvectordb.rpc.proto.SearchRequest\032/." +
-      "com.tencent.tcvectordb.rpc.proto.SearchR" +
-      "equest\022n\n\007explain\0220.com.tencent.tcvector" +
-      "db.rpc.proto.ExplainRequest\0321.com.tencen" +
-      "t.tcvectordb.rpc.proto.ExplainResponse\022i" +
-      "\n\004dele\022/.com.tencent.tcvectordb.rpc.prot" +
-      "o.DeleteRequest\0320.com.tencent.tcvectordb" +
-      ".rpc.proto.DeleteResponse\022q\n\014range_searc" +
-      "h\022/.com.tencent.tcvectordb.rpc.proto.Sea" +
-      "rchRequest\0320.com.tencent.tcvectordb.rpc." +
-      "proto.SearchResponse\022e\n\004sort\022-.com.tence" +
-      "nt.tcvectordb.rpc.proto.SortRequest\032..co" +
-      "m.tencent.tcvectordb.rpc.proto.SortRespo" +
-      "nse\022w\n\016createDatabase\0221.com.tencent.tcve" +
-      "ctordb.rpc.proto.DatabaseRequest\0322.com.t" +
-      "encent.tcvectordb.rpc.proto.DatabaseResp" +
-      "onse\022u\n\014dropDatabase\0221.com.tencent.tcvec" +
-      "tordb.rpc.proto.DatabaseRequest\0322.com.te" +
-      "ncent.tcvectordb.rpc.proto.DatabaseRespo" +
-      "nse\022v\n\rlistDatabases\0221.com.tencent.tcvec" +
-      "tordb.rpc.proto.DatabaseRequest\0322.com.te" +
-      "ncent.tcvectordb.rpc.proto.DatabaseRespo" +
-      "nse\022\211\001\n\020describeDatabase\0229.com.tencent.t" +
-      "cvectordb.rpc.proto.DescribeDatabaseRequ" +
-      "est\032:.com.tencent.tcvectordb.rpc.proto.D" +
-      "escribeDatabaseResponse\022x\n\013get_version\0223" +
-      ".com.tencent.tcvectordb.rpc.proto.GetVer" +
-      "sionRequest\0324.com.tencent.tcvectordb.rpc" +
-      ".proto.GetVersionResponse\022q\n\010addIndex\0221." +
-      "com.tencent.tcvectordb.rpc.proto.AddInde" +
-      "xRequest\0322.com.tencent.tcvectordb.rpc.pr" +
-      "oto.AddIndexResponse\022\214\001\n\021modifyVectorInd" +
-      "ex\022:.com.tencent.tcvectordb.rpc.proto.Mo",
-      "difyVectorIndexRequest\032;.com.tencent.tcv" +
-      "ectordb.rpc.proto.ModifyVectorIndexRespo" +
-      "nse\022h\n\005count\022..com.tencent.tcvectordb.rp" +
-      "c.proto.CountRequest\032/.com.tencent.tcvec" +
-      "tordb.rpc.proto.CountResponseB\003\200\001\001b\006prot" +
-      "o3"
+      "ctionsRequest\0329.com.tencent.tcvectordb.r" +
+      "pc.proto.ListCollectionsResponse\022}\n\014rebu" +
+      "ildIndex\0225.com.tencent.tcvectordb.rpc.pr" +
+      "oto.RebuildIndexRequest\0326.com.tencent.tc" +
+      "vectordb.rpc.proto.RebuildIndexResponse\022" +
+      "k\n\006upsert\022/.com.tencent.tcvectordb.rpc.p" +
+      "roto.UpsertRequest\0320.com.tencent.tcvecto" +
+      "rdb.rpc.proto.UpsertResponse\022k\n\006update\022/" +
+      ".com.tencent.tcvectordb.rpc.proto.Update" +
+      "Request\0320.com.tencent.tcvectordb.rpc.pro" +
+      "to.UpdateResponse\022h\n\005query\022..com.tencent" +
+      ".tcvectordb.rpc.proto.QueryRequest\032/.com" +
+      ".tencent.tcvectordb.rpc.proto.QueryRespo" +
+      "nse\022k\n\006search\022/.com.tencent.tcvectordb.r" +
+      "pc.proto.SearchRequest\0320.com.tencent.tcv" +
+      "ectordb.rpc.proto.SearchResponse\022r\n\rhybr" +
+      "id_search\022/.com.tencent.tcvectordb.rpc.p" +
+      "roto.SearchRequest\0320.com.tencent.tcvecto" +
+      "rdb.rpc.proto.SearchResponse\022r\n\016keyword_" +
+      "search\022/.com.tencent.tcvectordb.rpc.prot" +
+      "o.SearchRequest\032/.com.tencent.tcvectordb" +
+      ".rpc.proto.SearchRequest\022n\n\007explain\0220.co" +
+      "m.tencent.tcvectordb.rpc.proto.ExplainRe" +
+      "quest\0321.com.tencent.tcvectordb.rpc.proto" +
+      ".ExplainResponse\022i\n\004dele\022/.com.tencent.t" +
+      "cvectordb.rpc.proto.DeleteRequest\0320.com." +
+      "tencent.tcvectordb.rpc.proto.DeleteRespo" +
+      "nse\022q\n\014range_search\022/.com.tencent.tcvect" +
+      "ordb.rpc.proto.SearchRequest\0320.com.tence" +
+      "nt.tcvectordb.rpc.proto.SearchResponse\022e" +
+      "\n\004sort\022-.com.tencent.tcvectordb.rpc.prot" +
+      "o.SortRequest\032..com.tencent.tcvectordb.r" +
+      "pc.proto.SortResponse\022w\n\016createDatabase\022" +
+      "1.com.tencent.tcvectordb.rpc.proto.Datab" +
+      "aseRequest\0322.com.tencent.tcvectordb.rpc." +
+      "proto.DatabaseResponse\022u\n\014dropDatabase\0221" +
+      ".com.tencent.tcvectordb.rpc.proto.Databa" +
+      "seRequest\0322.com.tencent.tcvectordb.rpc.p" +
+      "roto.DatabaseResponse\022v\n\rlistDatabases\0221" +
+      ".com.tencent.tcvectordb.rpc.proto.Databa" +
+      "seRequest\0322.com.tencent.tcvectordb.rpc.p" +
+      "roto.DatabaseResponse\022\211\001\n\020describeDataba" +
+      "se\0229.com.tencent.tcvectordb.rpc.proto.De" +
+      "scribeDatabaseRequest\032:.com.tencent.tcve" +
+      "ctordb.rpc.proto.DescribeDatabaseRespons" +
+      "e\022x\n\013get_version\0223.com.tencent.tcvectord" +
+      "b.rpc.proto.GetVersionRequest\0324.com.tenc" +
+      "ent.tcvectordb.rpc.proto.GetVersionRespo" +
+      "nse\022q\n\010addIndex\0221.com.tencent.tcvectordb" +
+      ".rpc.proto.AddIndexRequest\0322.com.tencent" +
+      ".tcvectordb.rpc.proto.AddIndexResponse\022\214" +
+      "\001\n\021modifyVectorIndex\022:.com.tencent.tcvec",
+      "tordb.rpc.proto.ModifyVectorIndexRequest" +
+      "\032;.com.tencent.tcvectordb.rpc.proto.Modi" +
+      "fyVectorIndexResponse\022h\n\005count\022..com.ten" +
+      "cent.tcvectordb.rpc.proto.CountRequest\032/" +
+      ".com.tencent.tcvectordb.rpc.proto.CountR" +
+      "esponseB\003\200\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -88957,12 +88957,12 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
     internal_static_com_tencent_tcvectordb_rpc_proto_ModifyVectorIndexRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_tencent_tcvectordb_rpc_proto_ModifyVectorIndexRequest_descriptor,
-        new java.lang.String[] { "Database", "Collection", "Indexes", "Rebuild", "RebuildRules", });
-    internal_static_com_tencent_tcvectordb_rpc_proto_ModifyVectorIndexRequest_IndexesEntry_descriptor =
+        new java.lang.String[] { "Database", "Collection", "VectorIndexes", "Rebuild", "RebuildRules", });
+    internal_static_com_tencent_tcvectordb_rpc_proto_ModifyVectorIndexRequest_VectorIndexesEntry_descriptor =
       internal_static_com_tencent_tcvectordb_rpc_proto_ModifyVectorIndexRequest_descriptor.getNestedTypes().get(0);
-    internal_static_com_tencent_tcvectordb_rpc_proto_ModifyVectorIndexRequest_IndexesEntry_fieldAccessorTable = new
+    internal_static_com_tencent_tcvectordb_rpc_proto_ModifyVectorIndexRequest_VectorIndexesEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_tencent_tcvectordb_rpc_proto_ModifyVectorIndexRequest_IndexesEntry_descriptor,
+        internal_static_com_tencent_tcvectordb_rpc_proto_ModifyVectorIndexRequest_VectorIndexesEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_tencent_tcvectordb_rpc_proto_ModifyVectorIndexResponse_descriptor =
       getDescriptor().getMessageTypes().get(77);

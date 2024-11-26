@@ -943,7 +943,7 @@ public class GrpcStub extends HttpStub{
                     .setThrottle(param.getModifyVectorIndexParam().getRebuildRules().getThrottle()).build());
         }
         if (!param.getModifyVectorIndexParam().getVectorIndexes().isEmpty()){
-            builder.putAllIndexes(param.getModifyVectorIndexParam().getVectorIndexes().stream()
+            builder.putAllVectorIndexes(param.getModifyVectorIndexParam().getVectorIndexes().stream()
                     .map(indexField -> getRpcIndexBuilder(indexField).build()).collect(Collectors.toMap(index -> index.getFieldName(), index -> index)));
         }
         logQuery(ApiPath.MODIFY_VECTOR_INDEX, builder);

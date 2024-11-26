@@ -612,7 +612,7 @@ message SparseSearchParams {
 message ModifyVectorIndexRequest {
     string database                     = 1;
     string collection                   = 2;
-    map<string, IndexColumn> indexes    = 3;
+    map<string, IndexColumn> vectorIndexes    = 3;
     bool rebuild                        = 4;
     RebuildIndexRequest rebuildRules    = 5;
 };

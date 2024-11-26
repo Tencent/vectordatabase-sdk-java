@@ -929,7 +929,7 @@ public class GrpcStub extends HttpStub{
                     "VectorDBServer error: count not Success, body code=%s, message=%s",
                     countResponse.getCode(), countResponse.getMsg()));
         }
-        return new BaseRes(countResponse.getCode(), countResponse.getMsg(),"", countResponse.getCode());
+        return new BaseRes(countResponse.getCode(), countResponse.getMsg(),"", countResponse.getCount());
     }
 
     @Override

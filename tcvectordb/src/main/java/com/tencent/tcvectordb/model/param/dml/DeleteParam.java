@@ -55,7 +55,7 @@ public class DeleteParam extends BaseQuery {
 
         public DeleteParam build() {
             if (this.limit !=null && this.limit == 0){
-                throw new ParamException("The value od limit cannot be 0");
+                throw new ParamException("The value of limit cannot be 0");
             }
             return new DeleteParam(this);
         }

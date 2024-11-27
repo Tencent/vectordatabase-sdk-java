@@ -1,9 +1,9 @@
 package com.tencent.tcvectordb.service.param;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.tencent.tcvectordb.model.param.collection.IndexField;
-import com.tencent.tcvectordb.model.param.dml.AddIndexParam;
+import com.tencent.tcvectordb.model.param.collection.VectorIndex;
 import com.tencent.tcvectordb.model.param.dml.ModifyVectorIndexParam;
+import com.tencent.tcvectordb.model.param.dml.RebuildIndexParam;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.List;
@@ -12,12 +12,14 @@ import java.util.List;
 public class ModifyIndexParamInner {
     private String database;
     private String collection;
-    private ModifyVectorIndexParam modifyVectorIndexParam;
+    private RebuildIndexParam rebuildRules;
+    private List<VectorIndex> vectorIndexes;
 
     public ModifyIndexParamInner(String database, String collection, ModifyVectorIndexParam modifyVectorIndexParam) {
         this.database = database;
         this.collection = collection;
-        this.modifyVectorIndexParam = modifyVectorIndexParam;
+        this.rebuildRules = modifyVectorIndexParam.getRebuildRules();
+        this.vectorIndexes = modifyVectorIndexParam.getVectorIndexes();
     }
 
     public String getDatabase() {
@@ -28,8 +30,12 @@ public class ModifyIndexParamInner {
         return collection;
     }
 
-    public ModifyVectorIndexParam getModifyVectorIndexParam() {
-        return modifyVectorIndexParam;
+    public RebuildIndexParam getRebuildRules() {
+        return rebuildRules;
+    }
+
+    public List<VectorIndex> getVectorIndexes() {
+        return vectorIndexes;
     }
 
     @Override

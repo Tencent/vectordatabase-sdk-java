@@ -21,6 +21,7 @@
 package com.tencent.tcvectordb.model.param.dml;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.tencent.tcvdbtext.exception.ParamException;
 
 /**
  * Delete Param
@@ -53,6 +54,9 @@ public class DeleteParam extends BaseQuery {
         }
 
         public DeleteParam build() {
+            if (this.limit !=null && this.limit == 0){
+                throw new ParamException("The value od limit cannot be 0");
+            }
             return new DeleteParam(this);
         }
 

@@ -53,6 +53,7 @@ public class VectorDBExample {
         upsertData(client);
         queryData(client);
 //        addIndex(client);
+        modifyVectorIndex(client);
         updateAndDelete(client);
         deleteAndDrop(client);
         testFilter();
@@ -479,6 +480,28 @@ public class VectorDBExample {
                 .addDocField(new DocField("segment", "细作探知这个消息，飞报吕布。"))
                 .addDocField(new DocField("array_test", Arrays.asList("7","8","9")))
                 .build().toString());
+    }
+
+    /**
+     * modifyVectorIndex test
+     * @param client
+     * @throws InterruptedException
+     */
+    private static void modifyVectorIndex(VectorDBClient client) throws InterruptedException{
+        System.out.println("--------modify vector index-------");
+        Database db = client.database(DBNAME);
+        Collection collection = db.describeCollection(COLL_NAME);
+        System.out.println("before");
+        System.out.println(JsonUtils.toJsonString(collection));
+        BaseRes baseRes = client.modifyVectorIndex(DBNAME, COLL_NAME, ModifyVectorIndexParam.newBuilder()
+                        .withVectorIndex(new VectorIndex(MetricType.IP, new HNSWParams(8, 100)))
+                        .withRebuildRules(RebuildIndexParam.newBuilder().withDropBeforeRebuild(true).withThrottle(1).build())
+                .build());
+        System.out.println("modify res: "+ JsonUtils.toJsonString(baseRes));
+        Collection collectionAfter = db.describeCollection(COLL_NAME);
+        System.out.println("after");
+        System.out.println(JsonUtils.toJsonString(collectionAfter));
+
     }
 
 

@@ -1,6 +1,7 @@
 package com.tencent.tcvectordb.model.param.collection;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.tencent.tcvdbtext.exception.ParamException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,6 +90,9 @@ public class FilterIndexConfig {
             return this;
         }
         public FilterIndexConfig build() {
+            if (this.maxStrLen!=null && this.maxStrLen==0){
+                throw new ParamException("The value of maxStrLen cannot be 0.");
+            }
             return new FilterIndexConfig(this);
         }
     }

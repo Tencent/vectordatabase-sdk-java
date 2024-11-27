@@ -29,6 +29,7 @@ import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
+import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
 import com.tencent.tcvectordb.utils.BinaryUtils;
 import com.tencent.tcvectordb.utils.JsonUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -140,6 +141,7 @@ public class VectorDBWithHybridSearchEmbeddingExample {
                         .build())
                 .withMatch(MatchOption.newBuilder().withFieldName("sparse_vector")
                         .withData(encoder.encodeQueries(Arrays.asList("什么是腾讯云向量数据库")))
+                        .withCutoffFrequency(0.9)
                         .build())
                 // 指定 Top K 的 K 值
                 .withRerank(new WeightRerankParam(Arrays.asList("vector","sparse_vector"), Arrays.asList(1, 1)))
@@ -176,11 +178,11 @@ public class VectorDBWithHybridSearchEmbeddingExample {
                 .withReplicaNum(1)
                 .withDescription("test hybrid embedding collection")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
-                .addField(new VectorIndex("vector", 1024, FieldType.Vector, IndexType.HNSW,
+                .addField(new VectorIndex("vector", 768, FieldType.Vector, IndexType.HNSW,
                         MetricType.IP, new HNSWParams(16, 200)))
                 .addField(new SparseVectorIndex("sparse_vector", IndexType.INVERTED, MetricType.IP))
                 .withEmbedding(Embedding.newBuilder().withVectorField("vector").
-                        withField("text").withModelName("BAAI/bge-m3").build())
+                        withField("text").withModelName(EmbeddingModelEnum.BGE_BASE_ZH.getModelName()).build())
                 .withFilterIndexConfig(FilterIndexConfig.newBuilder().withFilterAll(true).build())
                 .build();
     }

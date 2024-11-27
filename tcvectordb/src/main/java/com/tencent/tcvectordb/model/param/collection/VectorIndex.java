@@ -47,4 +47,13 @@ public class VectorIndex  extends IndexField {
         setMetricType(metricType);
         setParams(params);
     }
+
+    public VectorIndex(MetricType metricType, ParamsSerializer params) {
+        setFieldName("vector");
+        setFieldType(FieldType.Vector);
+//        setIndexType(indexType);
+//        setDimension(dimension);
+        setMetricType(metricType);
+        setParams(params);
+    }
 }

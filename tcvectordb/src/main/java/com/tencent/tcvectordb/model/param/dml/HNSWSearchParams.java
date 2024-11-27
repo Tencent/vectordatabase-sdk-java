@@ -20,6 +20,8 @@
 
 package com.tencent.tcvectordb.model.param.dml;
 
+import com.tencent.tcvectordb.exception.ParamException;
+
 /**
  * VectorDB HNSWSearchParams
  */
@@ -27,6 +29,9 @@ public class HNSWSearchParams implements Params {
     private int ef;
 
     public HNSWSearchParams(int ef) {
+        if (ef == 0){
+            throw new ParamException("The value of ef cannot be 0");
+        }
         this.ef = ef;
     }
 

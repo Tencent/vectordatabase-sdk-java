@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RebuildIndexParam {
-    private boolean dropBeforeRebuild;
-    private int throttle;
+    private Boolean dropBeforeRebuild;
+    private Integer throttle;
 
 
     public RebuildIndexParam() {
@@ -16,7 +16,7 @@ public class RebuildIndexParam {
         this.throttle = builder.throttle;
     }
 
-    public boolean dropBeforeRebuild() {
+    public Boolean getDropBeforeRebuild() {
         return dropBeforeRebuild;
     }
 
@@ -30,7 +30,7 @@ public class RebuildIndexParam {
 
     public static final class Builder {
         private boolean dropBeforeRebuild = false;
-        private int throttle = 0;
+        private Integer throttle = 1;
 
         private Builder() {
         }

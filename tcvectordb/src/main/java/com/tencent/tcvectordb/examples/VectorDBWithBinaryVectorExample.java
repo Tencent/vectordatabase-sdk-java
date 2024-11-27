@@ -226,30 +226,4 @@ public class VectorDBWithBinaryVectorExample {
                 .withFilterIndexConfig(FilterIndexConfig.newBuilder().withFilterAll(true).build())
                 .build();
     }
-
-    /**
-     * 测试 Filter
-     */
-    public static void testFilter() {
-        System.out.println("---------------------- testFilter ----------------------");
-        System.out.println("\tres: " + new Filter("author=\"jerry\"")
-                .and("a=1")
-                .or("r=\"or\"")
-                .orNot("rn=2")
-                .andNot("an=\"andNot\"").and(Filter.include("key", Arrays.asList("1","2","3")))
-                .getCond());
-        System.out.println("\tres: " + Filter.in("key", Arrays.asList("v1", "v2", "v3")));
-        System.out.println("\tres: " + Filter.in("key", Arrays.asList(1, 2, 3)));
-        System.out.println(Document.newBuilder()
-                .withId("0003")
-                .withVector(Arrays.asList(0.2123, 0.23, 0.213))
-                .addDocField(new DocField("bookName", "三国演义"))
-                .addDocField(new DocField("author", "罗贯中"))
-                .addDocField(new DocField("page", 23))
-                .addDocField(new DocField("segment", "细作探知这个消息，飞报吕布。"))
-                .addDocField(new DocField("array_test", Arrays.asList("7","8","9")))
-                .build().toString());
-    }
-
-
 }

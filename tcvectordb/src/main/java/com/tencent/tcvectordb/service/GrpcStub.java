@@ -280,34 +280,35 @@ public class GrpcStub extends HttpStub{
     private static Olama.IndexColumn.Builder getRpcIndexBuilder(IndexField index) {
         Olama.IndexColumn.Builder indexBuilder = Olama.IndexColumn.newBuilder()
                 .setFieldName(index.getFieldName())
-                .setFieldType(index.getFieldType().getValue())
-                .setIndexType(index.getIndexType().getValue());
+                .setFieldType(index.getFieldType().getValue());
+        if (index.getIndexType()!=null){
+            indexBuilder.setIndexType(index.getIndexType().getValue());
+        }
         if(index.isVectorField()){
-            indexBuilder.setDimension(index.getDimension());
-            indexBuilder.setMetricType(index.getMetricType().getValue());
+            if(index.getDimension()!=null){
+                indexBuilder.setDimension(index.getDimension());
+            }
+            if (index.getMetricType()!=null) {
+                indexBuilder.setMetricType(index.getMetricType().getValue());
+            }
             if(index.getParams()!=null){
-                switch (index.getIndexType()) {
-                    case HNSW:
-                        HNSWParams hnswParams = (HNSWParams) index.getParams();
-                        indexBuilder.setParams(Olama.IndexParams.newBuilder()
-                                .setM(hnswParams.getM())
-                                .setEfConstruction(hnswParams.getEfConstruction()).build());
-                        break;
-                    case IVF_FLAT:
-                        IVFFLATParams ivfflatParams = (IVFFLATParams) index.getParams();
-                        indexBuilder.setParams(Olama.IndexParams.newBuilder()
-                                .setNlist(ivfflatParams.getNList()).build());
-                        break;
-                    case IVF_PQ:
-                        IVFPQParams ivfpqParams = (IVFPQParams) index.getParams();
-                        indexBuilder.setParams(Olama.IndexParams.newBuilder()
-                                .setNlist(ivfpqParams.getNList()).setM(ivfpqParams.getM()).build());
-                        break;
-                    case IVF_SQ8:
-                        IVFSQ8Params ivfsq8Params = (IVFSQ8Params) index.getParams();
-                        indexBuilder.setParams(Olama.IndexParams.newBuilder()
-                                .setNlist(ivfsq8Params.getNList()).build());
-                        break;
+                if(index.getParams() instanceof HNSWParams) {
+                    HNSWParams hnswParams = (HNSWParams) index.getParams();
+                    indexBuilder.setParams(Olama.IndexParams.newBuilder()
+                            .setM(hnswParams.getM())
+                            .setEfConstruction(hnswParams.getEfConstruction()).build());
+                }else if(index.getParams() instanceof IVFFLATParams) {
+                    IVFFLATParams ivfflatParams = (IVFFLATParams) index.getParams();
+                    indexBuilder.setParams(Olama.IndexParams.newBuilder()
+                            .setNlist(ivfflatParams.getNList()).build());
+                }else if (index.getParams() instanceof IVFPQParams) {
+                    IVFPQParams ivfpqParams = (IVFPQParams) index.getParams();
+                    indexBuilder.setParams(Olama.IndexParams.newBuilder()
+                            .setNlist(ivfpqParams.getNList()).setM(ivfpqParams.getM()).build());
+                }else if(index.getParams() instanceof  IVFSQ8Params) {
+                    IVFSQ8Params ivfsq8Params = (IVFSQ8Params) index.getParams();
+                    indexBuilder.setParams(Olama.IndexParams.newBuilder()
+                            .setNlist(ivfsq8Params.getNList()).build());
                 }
             }
         }
@@ -937,13 +938,13 @@ public class GrpcStub extends HttpStub{
         Olama.ModifyVectorIndexRequest.Builder builder = Olama.ModifyVectorIndexRequest.newBuilder()
                 .setDatabase(param.getDatabase())
                 .setCollection(param.getCollection());
-        if (param.getModifyVectorIndexParam().getRebuildRules()!=null){
+        if (param.getRebuildRules()!=null){
             builder.setRebuildRules(Olama.RebuildIndexRequest.newBuilder()
-                    .setDropBeforeRebuild(param.getModifyVectorIndexParam().getRebuildRules().dropBeforeRebuild())
-                    .setThrottle(param.getModifyVectorIndexParam().getRebuildRules().getThrottle()).build());
+                    .setDropBeforeRebuild(param.getRebuildRules().getDropBeforeRebuild())
+                    .setThrottle(param.getRebuildRules().getThrottle()).build());
         }
-        if (!param.getModifyVectorIndexParam().getVectorIndexes().isEmpty()){
-            builder.putAllVectorIndexes(param.getModifyVectorIndexParam().getVectorIndexes().stream()
+        if (!param.getVectorIndexes().isEmpty()){
+            builder.putAllVectorIndexes(param.getVectorIndexes().stream()
                     .map(indexField -> getRpcIndexBuilder(indexField).build()).collect(Collectors.toMap(index -> index.getFieldName(), index -> index)));
         }
         logQuery(ApiPath.MODIFY_VECTOR_INDEX, builder);

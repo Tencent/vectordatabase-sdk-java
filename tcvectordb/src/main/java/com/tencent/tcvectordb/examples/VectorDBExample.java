@@ -246,7 +246,7 @@ public class VectorDBExample {
         QueryParam queryParam = QueryParam.newBuilder()
                 .withDocumentIds(Arrays.asList("0001", "0002", "0003", "0004", "0005"))
                 // 使用 filter 过滤数据
-                .withFilter("bookName=\"三国演义\"")
+//                .withFilter("bookName=\"三国演义\"")
                 // limit 限制返回行数，1 到 16384 之间
                  .withLimit(5)
                 // 偏移
@@ -328,7 +328,7 @@ public class VectorDBExample {
         UpdateParam updateParam = UpdateParam
                 .newBuilder()
                 .addAllDocumentId(documentIds)
-                .withFilter("bookName=\"三国演义\"")
+//                .withFilter("bookName=\"三国演义\"")
                 .build();
 //        JSONObject data = new JSONObject("{\"page\":100, \"extend\":\"extendContent_1\",\"array_test\":[\"extendContent\",\"extendContent1\"]}");
         Document updateDoc = Document
@@ -351,7 +351,7 @@ public class VectorDBExample {
         DeleteParam build = DeleteParam
                 .newBuilder()
                 .addAllDocumentId("0001", "0003")
-                .withFilter("bookName=\"西游记\"")
+//                .withFilter("bookName=\"西游记\"")
                 .build();
         AffectRes deleteAffectRes = client.delete(DBNAME, COLL_NAME, build);
         System.out.println(deleteAffectRes.toString());

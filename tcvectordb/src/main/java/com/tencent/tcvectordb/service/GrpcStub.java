@@ -244,7 +244,7 @@ public class GrpcStub extends HttpStub{
                             .setMaxStrLen(params.getFilterIndexConfig().getMaxStrLen())
                     .build());
         }
-        if (!params.getIndexes().isEmpty()){
+        if (params.getIndexes() != null && !params.getIndexes().isEmpty()){
             for (IndexField index : params.getIndexes()) {
                 Olama.IndexColumn.Builder indexBuilder = getRpcIndexBuilder(index);
                 requestOrBuilder.putIndexes(index.getFieldName(), indexBuilder.build());
@@ -455,7 +455,7 @@ public class GrpcStub extends HttpStub{
             builder.setBuildIndex(param.getBuildIndex());
         }
 
-        if (!param.getDocuments().isEmpty()){
+        if (param.getDocuments()!=null && !param.getDocuments().isEmpty()){
             for (Object document : param.getDocuments()) {
                 if (document instanceof Document){
                     Olama.Document doc= convertDocument2OlamaDoc((Document) document);
@@ -711,10 +711,10 @@ public class GrpcStub extends HttpStub{
     public AffectRes deleteDocument(DeleteParamInner param) {
         Olama.QueryCond.Builder queryCondBuilder = Olama.QueryCond.newBuilder();
         DeleteParam paramQuery = param.getQuery();
-        if(!paramQuery.getDocumentIds().isEmpty()){
+        if(paramQuery.getDocumentIds()!=null && !paramQuery.getDocumentIds().isEmpty()){
             queryCondBuilder.addAllDocumentIds(paramQuery.getDocumentIds());
         }
-        if (!paramQuery.getFilter().isEmpty()){
+        if (paramQuery.getFilter()!=null && !paramQuery.getFilter().isEmpty()){
             queryCondBuilder.setFilter(paramQuery.getFilter());
         }
         Olama.DeleteRequest deleteRequest = Olama.DeleteRequest.newBuilder()
@@ -740,10 +740,10 @@ public class GrpcStub extends HttpStub{
     public AffectRes updateDocument(UpdateParamInner param, boolean ai) {
         Olama.QueryCond.Builder queryCondBuilder = Olama.QueryCond.newBuilder();
         UpdateParam paramQuery = param.getQuery();
-        if(!paramQuery.getDocumentIds().isEmpty()){
+        if(paramQuery.getDocumentIds()!=null && !paramQuery.getDocumentIds().isEmpty()){
             queryCondBuilder.addAllDocumentIds(paramQuery.getDocumentIds());
         }
-        if (!paramQuery.getFilter().isEmpty()){
+        if (paramQuery.getFilter()!=null && !paramQuery.getFilter().isEmpty()){
             queryCondBuilder.setFilter(paramQuery.getFilter());
         }
         SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai));

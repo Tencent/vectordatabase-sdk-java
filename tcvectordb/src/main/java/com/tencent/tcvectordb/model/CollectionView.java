@@ -52,6 +52,7 @@ import java.util.*;
  *<li> embedding: embedding config should be set if collection use embedding function </li>
  *<li> expectedFileNum: expected file numbers of the collectionView </li>
  *<li> averageFileSize: average size of the file uploaded to the collectionView </li>
+ *<li> parsingProcess: document parsing parameters </li>
  *</ol>
  *
  */

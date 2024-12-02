@@ -71,16 +71,17 @@ public class AIDatabase {
 
     /**
      * create collection view
-     * @param param: createCollectionView create collection view param
-     *             name            : The name of the collection view.
-     *             description     : An optional description of the collection view.
-     *             embedding       : Args for embedding.
-     *             splitter_process: Args for splitter process
-     *             index           : A list of the index properties for the documents in a collection.
-     *             timeout         : An optional duration of time in seconds to allow for the request.
-     *                               When timeout is set to None, will use the connect timeout.
-     *             expected_file_num: Expected total number of documents
-     *             average_file_size: Estimate the average document size
+     * @param param: createCollectionView create collection view param:
+     *             <ol>
+     *             <li>name            : The name of the collection view.</>
+     *             <li>description     : An optional description of the collection view.</>
+     *             <li>embedding       : Args for embedding.</>
+     *             <li>splitter_process: Args for splitter process</>
+     *             <li>index           : A list of the index properties for the documents in a collection.</>
+     *             <li>parsing_process : Args for parsing process</>
+     *             <li>expected_file_num: Expected total number of documents</>
+     *             <li>average_file_size: Estimate the average document size</>
+     *             </>
      * @return CollectionView
      * @throws VectorDBException
      */

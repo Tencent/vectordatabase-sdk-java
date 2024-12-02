@@ -12,6 +12,9 @@ import com.tencent.tcvectordb.service.Stub;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * AIDatabase and about CollectionView operating.
+ */
 public class AIDatabase {
     private final Stub stub;
     private final String databaseName;
@@ -43,10 +46,20 @@ public class AIDatabase {
         return readConsistency;
     }
 
+    /**
+     * truncate documentSet data of collection view
+     * @param collectionViewName: collection view name
+     * @return AffectRes
+     */
     public AffectRes truncateCollectionView(String collectionViewName) {
         return stub.truncateCollectionView(this.databaseName, collectionViewName, DataBaseTypeEnum.AI_DB);
     }
 
+    /**
+     * list collection view
+     * @return List<CollectionView>: collection view list
+     * @throws VectorDBException
+     */
     public List<CollectionView> listCollectionView() throws VectorDBException {
         List<CollectionView> collections = stub.listCollectionView(this.databaseName);
         collections.forEach(c -> {
@@ -56,6 +69,21 @@ public class AIDatabase {
         return collections;
     }
 
+    /**
+     * create collection view
+     * @param param: createCollectionView create collection view param
+     *             name            : The name of the collection view.
+     *             description     : An optional description of the collection view.
+     *             embedding       : Args for embedding.
+     *             splitter_process: Args for splitter process
+     *             index           : A list of the index properties for the documents in a collection.
+     *             timeout         : An optional duration of time in seconds to allow for the request.
+     *                               When timeout is set to None, will use the connect timeout.
+     *             expected_file_num: Expected total number of documents
+     *             average_file_size: Estimate the average document size
+     * @return CollectionView
+     * @throws VectorDBException
+     */
     public CollectionView createCollectionView(CreateCollectionViewParam param) throws VectorDBException {
         param.setDatabase(databaseName);
         param.setReadConsistency(readConsistency);
@@ -64,6 +92,13 @@ public class AIDatabase {
         return param;
     }
 
+
+    /**
+     * describe collection view info
+     * @param collectionView: collection view name
+     * @return CollectionView
+     * @throws VectorDBException
+     */
     public CollectionView describeCollectionView(String collectionView) throws VectorDBException {
         CollectionView collection = stub.describeCollectionView(this.databaseName, collectionView);
         collection.setStub(stub);
@@ -71,14 +106,31 @@ public class AIDatabase {
         return collection;
     }
 
+    /**
+     * drop collection view
+     * @param collectionViewName: collection view name
+     * @return AffectRes
+     * @throws VectorDBException
+     */
     public AffectRes dropCollectionView(String collectionViewName) throws VectorDBException {
         return stub.dropCollectionView(this.databaseName, collectionViewName);
     }
 
+    /**
+     * set alias for collection view
+     * @param collectionViewName: collection view name
+     * @param aliasName: alias name to set
+     * @return AffectRes
+     */
     public AffectRes setAIAlias(String collectionViewName, String aliasName) {
         return stub.setAIAlias(this.databaseName, collectionViewName, aliasName);
     }
 
+    /**
+     * delete alias for collection view
+     * @param aliasName: alias name to delete
+     * @return AffectRes
+     */
     public AffectRes deleteAIAlias(String aliasName) {
         return stub.deleteAIAlias(this.databaseName, aliasName);
     }

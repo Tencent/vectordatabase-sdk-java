@@ -44,6 +44,7 @@ import java.util.*;
 
 /**
  * VectorDB DocumentSet
+ *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DocumentSet {
@@ -98,30 +99,72 @@ public class DocumentSet {
         }
     }
 
+    /**
+     * search documentSet by content with similarity
+     * @param param SearchByContentsParam:
+     *              contents: The contents to search
+     *              expand_chunk     : Parameters for Forward and Backward Expansion of Chunks
+     *              rerank           : Parameters for Rerank
+     *              filter           : The optional filter condition of the scalar index field
+     *              limit            : The limit of the query result, not support now
+     *              timeout          : An optional duration of time in seconds to allow for the request.
+     *                                When timeout is set to None, will use the connect timeout.
+     *
+     * @return List<SearchContentInfo>
+     * @throws VectorDBException
+     */
     public List<SearchContentInfo> search(SearchByContentsParam param) throws VectorDBException {
         param.setDocumentSetName(Arrays.asList(documentSetName));
         return this.stub.searchAIDocument(new SearchDocParamInner(
                 database, collectionViewName, param, readConsistency)).getDocuments();
     }
 
+    /**
+     * get chunks of documentSet
+     * @return GetChunksRes
+     * @throws VectorDBException
+     */
     public GetChunksRes getChunks() throws VectorDBException {
         return this.stub.getChunks(database, collectionViewName, documentSetName, documentSetId, null, null);
     }
 
+    /**
+     * get chunks of documentSet by limit
+     * @param limit: limit of chunks
+     * @return GetChunksRes
+     * @throws VectorDBException
+     */
     public GetChunksRes getChunks(Integer limit) throws VectorDBException {
         return this.stub.getChunks(database, collectionViewName, documentSetName, documentSetId, limit, null);
     }
 
+    /**
+     * get chunks of documentSet by limit and offset
+     * @param limit: limit of chunks
+     * @param offset: offset of chunks
+     * @return GetChunksRes
+     * @throws VectorDBException
+     */
     public GetChunksRes getChunks(Integer limit, Integer offset) throws VectorDBException {
         return this.stub.getChunks(database, collectionViewName, documentSetName, documentSetId, limit, offset);
     }
 
+    /**
+     * delete documentSet
+     * @return AffectRes
+     * @throws VectorDBException
+     */
     public AffectRes delete() throws VectorDBException {
         return this.stub.deleteAIDocument(
                 new CollectionViewDeleteParamInner(database, collectionViewName,
                         CollectionViewConditionParam.newBuilder().withDocumentSetIds(Arrays.asList(documentSetId)).build()));
     }
 
+    /**
+     * get text of documentSet
+     * @return String
+     * @throws VectorDBException
+     */
     public String getText() {
         return this.stub.getFile(database, collectionViewName, documentSetName, documentSetId).getDocumentSet().getText();
     }

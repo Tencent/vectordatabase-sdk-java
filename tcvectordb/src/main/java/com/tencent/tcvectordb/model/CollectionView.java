@@ -27,6 +27,7 @@ import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.param.collection.IndexField;
 import com.tencent.tcvectordb.model.param.collectionView.EmbeddingParams;
 import com.tencent.tcvectordb.model.param.collectionView.LoadAndSplitTextParam;
+import com.tencent.tcvectordb.model.param.collectionView.ParsingProcessParam;
 import com.tencent.tcvectordb.model.param.collectionView.SplitterPreprocessParams;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.*;
@@ -51,6 +52,7 @@ import java.util.*;
  *<li> embedding: embedding config should be set if collection use embedding function </li>
  *<li> expectedFileNum: expected file numbers of the collectionView </li>
  *<li> averageFileSize: average size of the file uploaded to the collectionView </li>
+ *<li> parsingProcess: document parsing parameters </li>
  *</ol>
  *
  */
@@ -73,6 +75,8 @@ public class CollectionView {
     private List<String> alias;
 
     protected List<IndexField> indexes;
+
+    protected ParsingProcessParam parsingProcess;
 
     public List<IndexField> getIndexes() {
         return indexes;
@@ -159,9 +163,31 @@ public class CollectionView {
         this.averageFileSize = averageFileSize;
     }
 
+    public ParsingProcessParam getParsingProcess() {
+        return parsingProcess;
+    }
+
+    public void setParsingProcess(ParsingProcessParam parsingProcess) {
+        this.parsingProcess = parsingProcess;
+    }
+
     public CollectionView() {
     }
 
+    /**
+     * query document set by params include document_set_id, document_set_name, filter, limit, offset, output_fields
+     * @param param CollectionViewQueryParam
+     *             document_set_id  : DocumentSet's id to query
+     *             document_set_name: DocumentSet's name to query
+     *             filter           : The optional filter condition of the scalar index field.
+     *             limit            : The limit of the query result
+     *             offset           : The offset of the query result
+     *             output_fields    : The fields to return when query
+     *             timeout          : An optional duration of time in seconds to allow for the request
+     *                                When timeout is set to None, will use the connect timeout
+     * @return List<DocumentSet>
+     * @throws VectorDBException
+     */
     public List<DocumentSet> query(CollectionViewQueryParam param) throws VectorDBException {
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
                 new CollectionViewQueryParamInner(database, collectionView, param, this.readConsistency));
@@ -173,6 +199,11 @@ public class CollectionView {
         return documentSets;
     }
 
+    /**
+     * query document set by default params include limit is 3, offset is 0 and output_fields is all fields
+     * @return
+     * @throws VectorDBException
+     */
     public List<DocumentSet> query() throws VectorDBException {
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
                 new CollectionViewQueryParamInner(database, collectionView,
@@ -186,6 +217,12 @@ public class CollectionView {
         return documentSets;
     }
 
+    /**
+     * query document set by limit
+     * @param limit
+     * @return
+     * @throws VectorDBException
+     */
     public List<DocumentSet> query(int limit) throws VectorDBException {
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
                 new CollectionViewQueryParamInner(database, collectionView,
@@ -199,6 +236,13 @@ public class CollectionView {
         return documentSets;
     }
 
+    /**
+     * query document set by limit and offset
+     * @param limit
+     * @param offset
+     * @return
+     * @throws VectorDBException
+     */
     public List<DocumentSet> query(int limit, int offset) throws VectorDBException {
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
                 new CollectionViewQueryParamInner(database, collectionView,
@@ -213,6 +257,12 @@ public class CollectionView {
         return documentSets;
     }
 
+    /**
+     * query document set by documentSetName
+     * @param documentSetName
+     * @return
+     * @throws VectorDBException
+     */
     public DocumentSet getDocumentSetByName(String documentSetName) throws VectorDBException {
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
                 new CollectionViewQueryParamInner(database, collectionView,
@@ -228,6 +278,12 @@ public class CollectionView {
         throw new VectorDBException("data not existed!");
     }
 
+    /**
+     * query document set by documentSetId
+     * @param documentSetId
+     * @return
+     * @throws VectorDBException
+     */
     public DocumentSet getDocumentSetById(String documentSetId) throws VectorDBException {
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
                 new CollectionViewQueryParamInner(database, collectionView,
@@ -243,59 +299,162 @@ public class CollectionView {
         throw new VectorDBException("data not existed!");
     }
 
+    /**
+     * search documentSet by contents with similarity
+     * @param param SearchByContentsParam:
+     *              contents: The contents to search
+     *              document_set_name: DocumentSet's name
+     *              expand_chunk     : Parameters for Forward and Backward Expansion of Chunks
+     *              rerank           : Parameters for Rerank
+     *              filter           : The optional filter condition of the scalar index field
+     *              limit            : The limit of the query result, not support now
+     *              timeout          : An optional duration of time in seconds to allow for the request.
+     *                                When timeout is set to None, will use the connect timeout.
+     *
+     * @return List<SearchContentInfo>
+     * @throws VectorDBException
+     */
     public List<SearchContentInfo> search(SearchByContentsParam param) throws VectorDBException {
         return this.stub.searchAIDocument(new SearchDocParamInner(
                 database, collectionView, param, this.readConsistency)).getDocuments();
     }
 
 
+    /**
+     * delete document set by documentSetName, documentSetId or filter
+     * @param param CollectionViewConditionParam:
+     *              documentSetId: DocumentSet's id to filter
+     *              documentSetNamed: DocumentSet's name to filter
+     *              filter           : The optional filter condition of the scalar index field
+     * @return AffectRes
+     * @throws VectorDBException
+     */
     public AffectRes deleteDocumentSets(CollectionViewConditionParam param) throws VectorDBException {
         return this.stub.deleteAIDocument(
                 new CollectionViewDeleteParamInner(database, collectionView, param));
     }
 
+    /**
+     * delete document set by documentSetName
+     * @param documentSetName
+     * @return AffectRes
+     * @throws VectorDBException
+     */
     public AffectRes deleteByDocumentSetName(String documentSetName) throws VectorDBException {
         return this.stub.deleteAIDocument(
                 new CollectionViewDeleteParamInner(database, collectionView,
                         CollectionViewConditionParam.newBuilder().withDocumentSetNames(Arrays.asList(documentSetName)).build()));
     }
 
+    /**
+     * delete document set by documentSetId
+     * @param documentSetId: DocumentSet's id to filter
+     * @return AffectRes
+     * @throws VectorDBException
+     */
     public AffectRes deleteByDocumentSetId(String documentSetId) throws VectorDBException {
         return this.stub.deleteAIDocument(
                 new CollectionViewDeleteParamInner(database, collectionView,
                         CollectionViewConditionParam.newBuilder().withDocumentSetIds(Arrays.asList(documentSetId)).build()));
     }
 
+    /**
+     * update a document set by documentSetName, documentSetId or filter
+     * @param param CollectionViewConditionParam:
+     *               documentSetId: DocumentSet's id to update
+     *               documentSetNamed: DocumentSet's name to update
+     *               filter           : The optional filter condition of the scalar index field
+     * @param updateFieldValues: The update field values
+     * @return
+     * @throws VectorDBException
+     */
     public AffectRes update(CollectionViewConditionParam param, Map<String, Object> updateFieldValues) throws VectorDBException {
 
         return this.stub.updateAIDocument(
                 new CollectionViewUpdateParamInner(database, collectionView, param, updateFieldValues));
     }
 
+    /**
+     * Upload local file or file input stream, parse and save it remotely.
+     * @param loadAndSplitTextParam:
+     *             localFilePath  : File path to load
+     *             documentSetName: File name as DocumentSet
+     *             splitterProcess : Args for splitter process
+     *             parsingProcess  : Document parsing parameters
+     *             fileInputStream: file input stream; user input stream, when use this way,  documentSetName、inputStreamSize and fileType params must be specified
+     *             fileType:        file type
+     *             inputStreamSize : input stream size
+     * @param metaDataMap: extra properties to save
+     * @throws Exception
+     */
     public void loadAndSplitText(LoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
         this.stub.upload(database, collectionView,  loadAndSplitTextParam, metaDataMap);
     }
 
+    /**
+     * Upload local file or file input stream, parse and save it remotely.
+     * @param loadAndSplitTextParam:
+     *             localFilePath  : File path to load
+     *             documentSetName: File name as DocumentSet
+     *             splitterProcess : Args for splitter process
+     *             parsingProcess  : Document parsing parameters
+     *             fileInputStream: file input stream; user input stream, when use this way,  documentSetName、inputStreamSize and fileType params must be specified
+     *             fileType:        file type
+     *             inputStreamSize : input stream size
+     * @throws Exception
+     */
     public void loadAndSplitText(LoadAndSplitTextParam loadAndSplitTextParam) throws Exception {
         this.stub.upload(database, collectionView,  loadAndSplitTextParam, Collections.EMPTY_MAP);
     }
 
+    /**
+     * get file content by fileName and fileId
+     * @param fileName: file name as same as documentSetName
+     * @param fileId: file id as same as documentSetName
+     * @return
+     */
     public DocumentFileContent getFile(String fileName, String fileId) {
         return this.stub.getFile(database, collectionView, fileName, fileId).getDocumentSet();
     }
 
+    /**
+     * rebuild index
+     * @param rebuildIndexParam: index param
+     * @return BaseRes
+     * @throws VectorDBException
+     */
     public BaseRes rebuildIndex(RebuildIndexParam rebuildIndexParam) throws VectorDBException {
         return this.stub.rebuildAIIndex(new RebuildIndexParamInner(database, collectionView, rebuildIndexParam));
     }
 
+    /**
+     * get chunks of documentSet
+     * @param documentSetName: documentSet's name
+     * @param limit
+     * @param offset
+     * @return GetChunksRes
+     */
     public GetChunksRes getChunks(String documentSetName, Integer limit, Integer offset) {
         return this.stub.getChunks(database, collectionView, documentSetName, null, limit, offset);
     }
 
+    /**
+     * get chunks of documentSet by default limit
+     * @param documentSetName: documentSet's name
+     * @return GetChunksRes
+     */
     public GetChunksRes getChunks(String documentSetName) {
         return this.stub.getChunks(database, collectionView, documentSetName, null, null, null);
     }
 
+    /**
+     * get chunks of documentSet by documentSetId, documentSetName, limit and offset
+     * @param documentSetId: documentSet's id
+     * @param documentSetName: documentSet's name
+     * @param limit: limit
+     * @param offset: offset
+     * @return GetChunksRes
+     */
     public GetChunksRes getChunks(String documentSetId, String documentSetName, Integer limit, Integer offset) {
         return this.stub.getChunks(database, collectionView, documentSetName, documentSetId, limit, offset);
     }

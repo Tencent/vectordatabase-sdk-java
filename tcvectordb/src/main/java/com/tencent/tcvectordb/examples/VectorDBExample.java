@@ -256,7 +256,7 @@ public class VectorDBExample {
                 // 偏移
                  .withOffset(0)
                 // 指定返回的 fields
-                .addAllOutputFields("id", "bookName")
+//                .addAllOutputFields("id", "bookName")
                 // 是否返回 vector 数据
                 .withRetrieveVector(false)
                 .build();

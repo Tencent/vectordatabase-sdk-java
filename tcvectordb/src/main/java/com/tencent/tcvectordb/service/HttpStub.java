@@ -561,8 +561,7 @@ public class HttpStub implements Stub {
         }
         String body = JsonUtils.toJsonString(params);
         JsonNode jsonNode = this.post(url, body, true);
-        return JsonUtils.collectionDeserializer(jsonNode.toString(), new TypeReference<UploadUrlRes>() {
-        });
+        return JsonUtils.parseObject(jsonNode.toString(), UploadUrlRes.class);
     }
 
     @Override

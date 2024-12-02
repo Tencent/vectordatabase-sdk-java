@@ -12,6 +12,9 @@ import com.tencent.tcvectordb.service.Stub;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * AIDatabase and about CollectionView operating.
+ */
 public class AIDatabase {
     private final Stub stub;
     private final String databaseName;
@@ -44,17 +47,17 @@ public class AIDatabase {
     }
 
     /**
-     * clear the document of the collectionView
-     * @param collectionViewName: name of the collectionView
-     * @return
+     * truncate documentSet data of collection view
+     * @param collectionViewName: collection view name
+     * @return AffectRes
      */
     public AffectRes truncateCollectionView(String collectionViewName) {
         return stub.truncateCollectionView(this.databaseName, collectionViewName, DataBaseTypeEnum.AI_DB);
     }
 
     /**
-     * Get collection view list.
-     * @return List<CollectionView>
+     * list collection view
+     * @return List<CollectionView>: collection view list
      * @throws VectorDBException
      */
     public List<CollectionView> listCollectionView() throws VectorDBException {
@@ -67,21 +70,19 @@ public class AIDatabase {
     }
 
     /**
-     * create a collection view.
-     * @param param collectionView : The name of the collection view.
-     *             description     : An optional description of the collection view.
-     *             embedding       : Args for embedding.
-     *             splitterPreprocess: Args for splitter process
-     *             index           : A list of the index properties for the documents in a collection.
-     *             expectedFileNum: Expected total number of documents
-     *             averageFileSize: Estimate the average document size
-     *             shard            : The shard number of the collection.
-     *                                Shard will divide a large dataset into smaller subsets.
-     *             replicas         : The replicas number of the collection.
-     *                                Replicas refers to the number of identical copies of each primary shard,
-     *                                used for disaster recovery and load balancing.
-     *             parsingProcess  : Document parsing parameters
-     * @return
+     * create collection view
+     * @param param: createCollectionView create collection view param:
+     *             <ol>
+     *             <li>name            : The name of the collection view.</>
+     *             <li>description     : An optional description of the collection view.</>
+     *             <li>embedding       : Args for embedding.</>
+     *             <li>splitter_process: Args for splitter process</>
+     *             <li>index           : A list of the index properties for the documents in a collection.</>
+     *             <li>parsing_process : Args for parsing process</>
+     *             <li>expected_file_num: Expected total number of documents</>
+     *             <li>average_file_size: Estimate the average document size</>
+     *             </>
+     * @return CollectionView
      * @throws VectorDBException
      */
     public CollectionView createCollectionView(CreateCollectionViewParam param) throws VectorDBException {
@@ -92,10 +93,11 @@ public class AIDatabase {
         return param;
     }
 
+
     /**
-     * Get a CollectionView by name.
-     * @param collectionView
-     * @return
+     * describe collection view info
+     * @param collectionView: collection view name
+     * @return CollectionView
      * @throws VectorDBException
      */
     public CollectionView describeCollectionView(String collectionView) throws VectorDBException {
@@ -106,9 +108,9 @@ public class AIDatabase {
     }
 
     /**
-     * drop the CollectionView
-     * @param collectionViewName: name of the CollectionView
-     * @return
+     * drop collection view
+     * @param collectionViewName: collection view name
+     * @return AffectRes
      * @throws VectorDBException
      */
     public AffectRes dropCollectionView(String collectionViewName) throws VectorDBException {
@@ -116,19 +118,19 @@ public class AIDatabase {
     }
 
     /**
-     * Set alias for collection view.
-     * @param collectionViewName:The name of the collection_view.
-     * @param aliasName:alias name to set
-     * @return AffectRes: contains affectedCount
+     * set alias for collection view
+     * @param collectionViewName: collection view name
+     * @param aliasName: alias name to set
+     * @return AffectRes
      */
     public AffectRes setAIAlias(String collectionViewName, String aliasName) {
         return stub.setAIAlias(this.databaseName, collectionViewName, aliasName);
     }
 
     /**
-     * delete alias for collection view.
-     * @param aliasName:alias name to delete
-     * @return AffectRes: contains affectedCount
+     * delete alias for collection view
+     * @param aliasName: alias name to delete
+     * @return AffectRes
      */
     public AffectRes deleteAIAlias(String aliasName) {
         return stub.deleteAIAlias(this.databaseName, aliasName);

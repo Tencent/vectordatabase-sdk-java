@@ -251,13 +251,13 @@ public class VectorDBExampleWithSparseVector {
                 .withRetrieveVector(true)
                 .withOutputFields(Arrays.asList("segment"))
                 .build();
-        List<List<Document>> siDocs = client.hybridSearch(DBNAME, COLL_NAME, hybridSearchParam).getDocumentsList();
+        List<Document> siDocs = client.hybridSearch(DBNAME, COLL_NAME, hybridSearchParam).getDocuments();
         int i = 0;
         for (Object docs : siDocs) {
-//            System.out.println("\tres: " + (i++) + docs.toString());
-            for (Document doc : (List<Document>)docs) {
-                System.out.println("\tres: " + doc.toString());
-            }
+            System.out.println("\tres: " + (i++) + docs.toString());
+//            for (Document doc : (List<Document>)docs) {
+//                System.out.println("\tres: " + doc.toString());
+//            }
         }
     }
 
@@ -333,15 +333,6 @@ public class VectorDBExampleWithSparseVector {
 
         // 删除 database
         System.out.println("---------------------- dropDatabase ----------------------");
-        client.dropDatabase(DBNAME);
-    }
-
-
-    private static void clear(VectorDBClient client) {
-//        List<String> databases = client.listDatabase();
-//        for (String database : databases) {
-//            client.dropDatabase(database);
-//        }
         client.dropDatabase(DBNAME);
     }
 

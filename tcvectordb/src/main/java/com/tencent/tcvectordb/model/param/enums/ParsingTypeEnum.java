@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum ParsingTypeEnum {
     AlgorithmParsing("AlgorithmParsing"),
-    VisonModel("VisonModelParsing");
+    VisionModel("VisionModelParsing");
     private final String value;
     ParsingTypeEnum(String value) {
         this.value = value;

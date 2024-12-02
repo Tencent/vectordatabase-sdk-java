@@ -67,14 +67,14 @@ public class VectorDBExampleWithAI_doc {
 //        loadAndSplitTextUseInputStream(client, new FileInputStream(System.getProperty("file_path")), file.length(), "腾讯云向量数据库.md", metaDataMap);
 
         // 使用文件路径上传文档
-         loadAndSplitText(client, "/data/home/yihaoan/tcvdb.pdf", "tcvdb.pdf", metaDataMap);
+         loadAndSplitText(client, System.getProperty("file_path"), "documentSetName", metaDataMap);
         // support markdown, pdf, pptx, docx document
         // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pdf", metaDataMap);
         // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pptx", metaDataMap);
         // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.docx", metaDataMap);
 
         // 解析加载文件需要等待时间
-        Thread.sleep(1000 * 10);
+        Thread.sleep(1000 * 20);
 
         queryData(client);
         GetFile(client, "tcvdb.pdf");
@@ -136,7 +136,8 @@ public class VectorDBExampleWithAI_doc {
         LoadAndSplitTextParam param = LoadAndSplitTextParam.newBuilder()
                 .withLocalFilePath(filePath).withDocumentSetName(documentSetName)
                 .withSplitterProcess(SplitterPreprocessParams.newBuilder().withAppendKeywordsToChunkEnum(true).Build())
-                .withParsingProcess(ParsingProcessParam.newBuilder().withParsingType(ParsingTypeEnum.VisionModel).build())
+                // parsingProcess is used for parsing pdf file by vision model
+//                .withParsingProcess(ParsingProcessParam.newBuilder().withParsingType(ParsingTypeEnum.VisionModel).build())
                 .Build();
         collection.loadAndSplitText(param, metaDataMap);
     }
@@ -281,6 +282,7 @@ public class VectorDBExampleWithAI_doc {
                 .withSplitterPreprocess(SplitterPreprocessParams.newBuilder().
                         withAppendKeywordsToChunkEnum(true).
                         withAppendTitleToChunkEnum(false).Build())
+//                .withParsingProcess(ParsingProcessParam.newBuilder().withParsingType(ParsingTypeEnum.VisionModel).build())
                 .build();
     }
 }

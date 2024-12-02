@@ -533,20 +533,22 @@ public class HttpStub implements Stub {
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
-    public UploadUrlRes getUploadUrl(String databaseName, String collectionViewName, String documentSetName, String fileName) {
+    public UploadUrlRes getUploadUrl(String databaseName, String collectionViewName, LoadAndSplitTextParam loadAndSplitTextParam, String fileName) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_UPLOADER_URL);
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("database", databaseName);
         params.put("collectionView", collectionViewName);
-        if (documentSetName != null) {
-            params.put("documentSetName", documentSetName);
+        if (loadAndSplitTextParam.getDocumentSetName() != null) {
+            params.put("documentSetName", loadAndSplitTextParam.getDocumentSetName());
         } else if (fileName != null) {
             params.put("documentSetName", fileName);
         }
+        if (loadAndSplitTextParam.getParsingProcess()!=null){
+            params.put("parsingProcess",loadAndSplitTextParam.getParsingProcess());
+        }
         String body = JsonUtils.toJsonString(params);
         JsonNode jsonNode = this.post(url, body, true);
-        return JsonUtils.collectionDeserializer(jsonNode.toString(), new TypeReference<UploadUrlRes>() {
-        });
+        return JsonUtils.parseObject(jsonNode.toString(), UploadUrlRes.class);
     }
 
     @Override
@@ -573,7 +575,7 @@ public class HttpStub implements Stub {
             fileType = loadAndSplitTextParam.getFileType();
         }
 
-        UploadUrlRes uploadUrlRes = getUploadUrl(databaseName, collectionViewName, loadAndSplitTextParam.getDocumentSetName(), fileName);
+        UploadUrlRes uploadUrlRes = getUploadUrl(databaseName, collectionViewName, loadAndSplitTextParam, fileName);
 
         if (Code.isFailed(uploadUrlRes.getCode()) ||
                 uploadUrlRes.getCredentials() == null ||
@@ -611,7 +613,7 @@ public class HttpStub implements Stub {
         }
 
 
-        if (! Arrays.asList(FileType.MD, FileType.WORD).contains(fileType) &&
+        if (!Arrays.asList(FileType.MD, FileType.WORD).contains(fileType) &&
                 Objects.nonNull(loadAndSplitTextParam.getSplitterProcess()) &&
                 StringUtils.isNotEmpty(loadAndSplitTextParam.getSplitterProcess().getChunkSplitter())) {
             logger.warn("only markdown files are allowed to use chunkSplitter");
@@ -625,16 +627,24 @@ public class HttpStub implements Stub {
                 String.valueOf(StandardCharsets.UTF_8));
         metadata.addUserMetadata("data", metaJson);
 
+        Map<String, Object> config = new HashMap<>();
         if (loadAndSplitTextParam.getSplitterProcess() != null) {
-            Map<String, Object> config = new HashMap<>();
+
             config.put("appendTitleToChunk", loadAndSplitTextParam.getSplitterProcess().isAppendTitleToChunk());
             config.put("appendKeywordsToChunk", loadAndSplitTextParam.getSplitterProcess().isAppendKeywordsToChunk());
             if (loadAndSplitTextParam.getSplitterProcess().getChunkSplitter() != null) {
                 config.put("chunkSplitter", loadAndSplitTextParam.getSplitterProcess().getChunkSplitter());
             }
+        }
+        if (loadAndSplitTextParam.getParsingProcess() != null){
+            config.put("parsingProcess", loadAndSplitTextParam.getParsingProcess());
+        }
+
+        if(config.size() > 0){
             metadata.addUserMetadata("config", URLEncoder.encode(Base64.getEncoder().encodeToString(JsonUtils.toJsonString(config).getBytes(StandardCharsets.UTF_8)),
                     String.valueOf(StandardCharsets.UTF_8)));
         }
+
 
         if (JsonUtils.toJsonString(metadata).length() > 2048) {
             throw new VectorDBException("cos header for param MetaData is too large, it can not be more than 2k");

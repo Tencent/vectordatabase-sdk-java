@@ -9,6 +9,8 @@ public class SplitterPreprocessParams{
     private boolean appendKeywordsToChunk;
     private String chunkSplitter;
 
+
+
     public SplitterPreprocessParams() {
         this.appendTitleToChunk = false;
         this.appendKeywordsToChunk = false;
@@ -36,9 +38,6 @@ public class SplitterPreprocessParams{
         return appendKeywordsToChunk;
     }
 
-    public void setAppendKeywordsToChunk(boolean appendKeywordsToChunk) {
-        this.appendKeywordsToChunk = appendKeywordsToChunk;
-    }
 
     public static Builder newBuilder() {
         return new Builder();

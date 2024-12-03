@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.tencent.tcvectordb.exception.VectorDBException;
+import com.tencent.tcvectordb.model.param.collectionView.ParsingProcessParam;
 import com.tencent.tcvectordb.model.param.collectionView.SplitterPreprocessParams;
 import com.tencent.tcvectordb.model.param.dml.CollectionViewConditionParam;
 import com.tencent.tcvectordb.model.param.dml.SearchByContentsParam;
@@ -60,6 +61,15 @@ public class DocumentSet {
     private List<DocField> docFields;
     private Map<String, Object> docKeyValue;
     private SplitterPreprocessParams splitterPreprocess;
+    private ParsingProcessParam parsingProcess;
+
+    public ParsingProcessParam getParsingProcess() {
+        return parsingProcess;
+    }
+
+    public void setParsingProcess(ParsingProcessParam parsingProcess) {
+        this.parsingProcess = parsingProcess;
+    }
 
     public SplitterPreprocessParams getSplitterPreprocess() {
         return splitterPreprocess;
@@ -215,6 +225,9 @@ public class DocumentSet {
         if (splitterPreprocess!=null) {
             node.put("splitterPreprocess", JsonUtils.toJsonString(splitterPreprocess));
         }
+        if (parsingProcess!=null) {
+            node.put("parsingProcess", JsonUtils.toJsonString(parsingProcess));
+        }
 
         if (docFields != null && !docFields.isEmpty()) {
             for (DocField field : docFields) {
@@ -242,6 +255,7 @@ public class DocumentSet {
         this.documentSetId = builder.documentSetId;
         this.textPrefix = builder.textPrefix;
         this.splitterPreprocess = builder.splitterPreprocess;
+        this.parsingProcess = builder.parsingProcessParam;
     }
 
     public static Builder newBuilder() {
@@ -255,6 +269,7 @@ public class DocumentSet {
         private DocumentSetInfo documentSetInfo;
         private List<DocField> docFields;
         private SplitterPreprocessParams splitterPreprocess;
+        private ParsingProcessParam parsingProcessParam;
 
         public Builder() {
             this.docFields = new ArrayList<>();
@@ -282,6 +297,11 @@ public class DocumentSet {
 
         public Builder withSplitProcess(SplitterPreprocessParams splitterPreprocess) {
             this.splitterPreprocess = splitterPreprocess;
+            return this;
+        }
+
+        public Builder withParsingProcess(ParsingProcessParam parsingProcess) {
+            this.parsingProcessParam = parsingProcess;
             return this;
         }
 

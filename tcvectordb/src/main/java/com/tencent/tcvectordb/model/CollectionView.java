@@ -308,8 +308,6 @@ public class CollectionView {
      *              rerank           : Parameters for Rerank
      *              filter           : The optional filter condition of the scalar index field
      *              limit            : The limit of the query result, not support now
-     *              timeout          : An optional duration of time in seconds to allow for the request.
-     *                                When timeout is set to None, will use the connect timeout.
      *
      * @return List<SearchContentInfo>
      * @throws VectorDBException

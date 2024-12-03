@@ -58,7 +58,6 @@ public class VectorDBExampleWithEmbedding {
         queryData(client);
         updateAndDelete(client);
         deleteAndDrop(client);
-        testFilter();
     }
 
     private static void createDatabaseAndCollection(VectorDBClient client) {
@@ -435,20 +434,5 @@ public class VectorDBExampleWithEmbedding {
                                 .build())
                 .build();
     }
-
-    /**
-     * 测试 Filter
-     */
-    public static void testFilter() {
-        System.out.println("\tres: " + new Filter("author=\"jerry\"")
-                .and("a=1")
-                .or("r=\"or\"")
-                .orNot("rn=2")
-                .andNot("an=\"andNot\"")
-                .getCond());
-        System.out.println("\tres: " + Filter.in("key", Arrays.asList("v1", "v2", "v3")));
-        System.out.println("\tres: " + Filter.in("key", Arrays.asList(1, 2, 3)));
-    }
-
 
 }

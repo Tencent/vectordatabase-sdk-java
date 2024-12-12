@@ -37,10 +37,7 @@ import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.Collection;
 import com.tencent.tcvectordb.model.*;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
-import com.tencent.tcvectordb.model.param.collectionView.CreateCollectionViewParam;
-import com.tencent.tcvectordb.model.param.collectionView.FileType;
-import com.tencent.tcvectordb.model.param.collectionView.LoadAndSplitTextParam;
-import com.tencent.tcvectordb.model.param.collectionView.SplitterPreprocessParams;
+import com.tencent.tcvectordb.model.param.collectionView.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
@@ -903,6 +900,9 @@ public class HttpStub implements Stub {
             } else if (StringUtils.equals("splitterPreprocess", name)) {
                 SplitterPreprocessParams splitterPreprocess = JsonUtils.parseObject(ele.toString(), SplitterPreprocessParams.class);
                 builder.withSplitProcess(splitterPreprocess);
+            }else if (StringUtils.equals("parsingProcess", name)) {
+                ParsingProcessParam parsingProcessParam = JsonUtils.parseObject(ele.toString(), ParsingProcessParam.class);
+                builder.withParsingProcess(parsingProcessParam);
             } else {
                 if (ele.isInt()) {
                     builder.addFilterField(new DocField(name, ele.asInt()));

@@ -209,7 +209,7 @@ public class VectorDBWithBinaryVectorExample {
         database.dropCollection(COLL_NAME);
 
         // 删除 database
-        System.out.println("---------------------- truncate collection ----------------------");
+        System.out.println("---------------------- drop database ----------------------");
         client.dropDatabase(DBNAME);
     }
 
@@ -222,7 +222,7 @@ public class VectorDBWithBinaryVectorExample {
                 .withDescription("test binary collection")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", 16, FieldType.BinaryVector, IndexType.BIN_FLAT,
-                        MetricType.HAMMING, new HNSWParams(16, 200)))
+                        MetricType.HAMMING))
                 .withFilterIndexConfig(FilterIndexConfig.newBuilder().withFilterAll(true).build())
                 .build();
     }

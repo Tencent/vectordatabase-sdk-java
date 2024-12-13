@@ -123,7 +123,7 @@ public class VectorDBWithHybridSearchEmbeddingExample {
         System.out.println("---------------------- upsert ----------------------");
         InsertParam insertParam = InsertParam.newBuilder().withDocuments(documentList).build();
 
-        collection.upsert(insertParam);
+//        collection.upsert(insertParam);
         AffectRes affectRes = client.upsert(DBNAME,COLL_NAME, insertParam);
         System.out.println(JsonUtils.toJsonString(affectRes));
         // notice：upsert 操作可用会有延迟

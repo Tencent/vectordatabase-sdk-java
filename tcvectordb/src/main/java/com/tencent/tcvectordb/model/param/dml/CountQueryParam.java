@@ -60,6 +60,11 @@ public class CountQueryParam {
             return this;
         }
 
+        public Builder withFilter(Filter filter) {
+            this.filter = filter.getCond();
+            return this;
+        }
+
         public CountQueryParam build() {
             return new CountQueryParam(this);
         }

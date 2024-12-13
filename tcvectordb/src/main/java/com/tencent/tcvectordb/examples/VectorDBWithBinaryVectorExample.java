@@ -223,7 +223,11 @@ public class VectorDBWithBinaryVectorExample {
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", 16, FieldType.BinaryVector, IndexType.BIN_FLAT,
                         MetricType.HAMMING))
-                .withFilterIndexConfig(FilterIndexConfig.newBuilder().withFilterAll(true).build())
+                .withFilterIndexConfig(FilterIndexConfig.newBuilder()
+                        .withFilterAll(true)
+                        .withFieldWithoutFilterIndex(Arrays.asList("test1", "test2"))
+                        .withMaxStrLen(64)
+                        .build())
                 .build();
     }
 }

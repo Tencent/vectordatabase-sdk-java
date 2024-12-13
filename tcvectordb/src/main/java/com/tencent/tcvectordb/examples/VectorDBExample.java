@@ -236,7 +236,9 @@ public class VectorDBExample {
         // notice：upsert 操作可用会有延迟
         Thread.sleep(1000 * 5);
 
-        BaseRes res = client.count(DBNAME,COLL_NAME, CountQueryParam.newBuilder().build());
+        BaseRes res = client.count(DBNAME,COLL_NAME, CountQueryParam.newBuilder()
+                .withFilter("bookName=\"三国演义\"")
+                .build());
         System.out.println("count document: "+ res.getCount());
     }
 

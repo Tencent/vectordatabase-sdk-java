@@ -15,7 +15,7 @@ public class RebuildIndexParamInner {
     public RebuildIndexParamInner(String database, String collection, RebuildIndexParam rebuildIndexParam) {
         this.database = database;
         this.collection = collection;
-        this.dropBeforeRebuild = rebuildIndexParam.dropBeforeRebuild();
+        this.dropBeforeRebuild = rebuildIndexParam.getDropBeforeRebuild();
         this.throttle = rebuildIndexParam.getThrottle();
     }
 

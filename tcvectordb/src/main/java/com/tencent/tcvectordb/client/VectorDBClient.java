@@ -443,6 +443,7 @@ public class VectorDBClient {
     }
 
     /**
+     * this method is deprecated, recommend use {@link VectorDBClient#addIndex(String, String, AddIndexParam)}
      * Used to add a scalar field index to an existing collection
      * (the scalar field may contain historical data or a newly added empty field)
      * @param database
@@ -451,9 +452,65 @@ public class VectorDBClient {
      * @return
      * @throws VectorDBException
      */
+    @Deprecated
     public BaseRes AddIndex(String database, String collection, AddIndexParam addIndexParam) throws VectorDBException {
         return this.stub.addIndex(
                 new AddIndexParamInner(database, collection, addIndexParam));
+    }
+
+
+    /**
+     * Used to add a scalar field index to an existing collection
+     * (the scalar field may contain historical data or a newly added empty field)
+     * @param database
+     * @param collection
+     * @param addIndexParam:
+     * @return
+     * @throws VectorDBException
+     */
+    public BaseRes addIndex(String database, String collection, AddIndexParam addIndexParam) throws VectorDBException {
+        return this.stub.addIndex(
+                new AddIndexParamInner(database, collection, addIndexParam));
+    }
+
+
+    /**
+     * Used to query the number of documents that match the query, if countQueryParam is null,
+     * return all rows number of the collection
+     * @param database
+     * @param collection
+     * @param countQueryParam:
+     * @return
+     * @throws VectorDBException
+     */
+    public BaseRes count(String database, String collection, CountQueryParam countQueryParam) throws VectorDBException {
+        return this.stub.countDocument(
+                new QueryCountParamInner(database, collection, countQueryParam, this.readConsistency), false);
+    }
+
+
+    /**
+     * Currently, this method is only for dense vectors, i.e. vector
+     * Supports re-specifying vector index parameters, HNSW supports re-specifying M and efConstruction, IVF supports re-specifying nlist (IVF_PQ supports re-specifying M and nlist)
+     * Supports re-specifying similarity calculation method
+     * The new configuration after the vector index is modified is defined by the field vectorIndexes
+     * After adjusting the parameters, this interface will trigger a rebuild, and the rebuild rules are specified by the field rebuildRules
+     * @param database The name of the database where the collection resides.
+     * @param collection The name of the collection
+     * @param modifyVectorIndexParam Adjust vector index parameters.
+     *              vectorIndexes (List<VectorIndex></FilterIndex>): The vector fields to adjust
+     *              rebuildRules: Specified rebuild rules.This interface will trigger a rebuild after adjusting
+     *                     the parameters:For example: {"drop_before_rebuild": True , "throttle": 1}
+     *                     drop_before_rebuild (bool): Whether to delete the old index before rebuilding the new index during
+     *                               index reconstruction. True: Delete the old index before rebuilding the index.
+     *                     throttle (int): Whether to limit the number of CPU cores for building the index on a single node.
+     *                               0: No limit on CPU cores. 1: CPU core count is 1.
+     * @return
+     * @throws VectorDBException
+     */
+    public BaseRes modifyVectorIndex(String database, String collection, ModifyVectorIndexParam modifyVectorIndexParam) throws VectorDBException {
+        return this.stub.modifyVectorIndex(
+                new ModifyIndexParamInner(database, collection, modifyVectorIndexParam), false);
     }
 
 }

@@ -20,22 +20,53 @@
 
 package com.tencent.tcvectordb.model.param.dml;
 
-import com.tencent.tcvectordb.exception.ParamException;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
- * VectorDB HNSWSearchParams
+ *  query count of match conditions, if filter is null, return all rows count
+ *  Params:
+ *      filter(Filter): filter rows before return result
  */
-public class HNSWSearchParams implements Params {
-    private int ef;
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class CountQueryParam {
+    private String filter;
 
-    public HNSWSearchParams(int ef) {
-        if (ef == 0){
-            throw new ParamException("The value of ef cannot be 0");
-        }
-        this.ef = ef;
+    public String getFilter() {
+        return filter;
     }
 
-    public int getEf() {
-        return ef;
+    public void setFilter(String filter) {
+        this.filter = filter;
+    }
+
+    public CountQueryParam(Builder builder) {
+        this.filter = builder.filter;
+    }
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        private String filter;
+
+        public Builder withFilter(String filter) {
+            this.filter = filter;
+            return this;
+        }
+
+        public Builder withFilter(Filter filter) {
+            this.filter = filter.getCond();
+            return this;
+        }
+
+        public CountQueryParam build() {
+            return new CountQueryParam(this);
+        }
     }
 }

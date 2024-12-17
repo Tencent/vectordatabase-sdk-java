@@ -70,17 +70,16 @@ public class Database {
     /***
      * create collection
      * @param param createCollectionParam: the parameters of the collection to be created
-     * @param param databaseName: the name of the database to be created
-     * @param param collection: the name of the collection to be created
-     * @param param replicaNum: the number of replicas
-     * @param param shardNum: the number of shards
-     * @param param description: the description of the collection
-     * @param param indexes: list of the index fields
-     * @param param embedding: Embedding class
-     * @param param ttlConfig: TTLConfig class
+     *              databaseName: the name of the database to be created
+     *              collection: the name of the collection to be created
+     *              replicaNum: the number of replicas
+     *              shardNum: the number of shards
+     *              description: the description of the collection
+     *              indexes: list of the index fields
+     *              embedding: Embedding class
+     *              ttlConfig: TTLConfig class
      *
      * @return collection object
-     * @throws VectorDBException
      */
     public Collection createCollection(CreateCollectionParam param) throws VectorDBException {
         param.setDatabase(databaseName);
@@ -93,13 +92,13 @@ public class Database {
     /***
      * create collection if not exists
      * @param param createCollectionParam: the parameters of the collection to be created
-     * @param param databaseName: the name of the database to be created
-     * @param param collection: the name of the collection to be created
-     * @param param replicaNum: the number of replicas
-     * @param param shardNum: the number of shards
-     * @param param description: the description of the collection
-     * @param param indexes: list of the index fields
-     * @param param embedding: Embedding class
+     *              databaseName: the name of the database to be created
+     *              collection: the name of the collection to be created
+     *              replicaNum: the number of replicas
+     *              shardNum: the number of shards
+     *              description: the description of the collection
+     *              indexes: list of the index fields
+     *              embedding: Embedding class
      *
      * @return collection object
      * @throws VectorDBException

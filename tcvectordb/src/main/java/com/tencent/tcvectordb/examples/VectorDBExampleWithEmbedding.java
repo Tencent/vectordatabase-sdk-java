@@ -58,7 +58,6 @@ public class VectorDBExampleWithEmbedding {
         queryData(client);
         updateAndDelete(client);
         deleteAndDrop(client);
-        testFilter();
     }
 
     private static void createDatabaseAndCollection(VectorDBClient client) {
@@ -228,7 +227,6 @@ public class VectorDBExampleWithEmbedding {
         // search
         // 1. search 提供按照 vector 搜索的能力
         // 其他选项类似 search 接口
-
         System.out.println("---------------------- search ----------------------");
         queryParam = QueryParam.newBuilder()
                 .withDocumentIds(documentIds)
@@ -247,6 +245,7 @@ public class VectorDBExampleWithEmbedding {
             List<Double> vector = (List<Double>) document.getVector();
             vectors.add(vector);
         }
+        List<List<Double>> test = vectors;
         SearchByVectorParam searchByVectorParam = SearchByVectorParam.newBuilder()
                 .withVectors(vectors)
                 // 若使用 HNSW 索引，则需要指定参数ef，ef越大，召回率越高，但也会影响检索速度
@@ -435,20 +434,5 @@ public class VectorDBExampleWithEmbedding {
                                 .build())
                 .build();
     }
-
-    /**
-     * 测试 Filter
-     */
-    public static void testFilter() {
-        System.out.println("\tres: " + new Filter("author=\"jerry\"")
-                .and("a=1")
-                .or("r=\"or\"")
-                .orNot("rn=2")
-                .andNot("an=\"andNot\"")
-                .getCond());
-        System.out.println("\tres: " + Filter.in("key", Arrays.asList("v1", "v2", "v3")));
-        System.out.println("\tres: " + Filter.in("key", Arrays.asList(1, 2, 3)));
-    }
-
 
 }

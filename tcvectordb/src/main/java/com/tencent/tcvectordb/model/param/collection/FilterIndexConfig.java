@@ -1,6 +1,7 @@
 package com.tencent.tcvectordb.model.param.collection;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.tencent.tcvdbtext.exception.ParamException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +25,14 @@ import java.util.List;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class FilterIndexConfig {
     private boolean filterAll;
-    private List<String> fieldWithoutFilterIndex = new ArrayList<>();
-    private int maxStrLen=32;
+    private List<String> fieldsWithoutIndex = new ArrayList<>();
+    private Integer maxStrLen;
+
+    public FilterIndexConfig(){}
 
     public FilterIndexConfig(Builder builder) {
         this.filterAll = builder.filterAll;
-        this.fieldWithoutFilterIndex = builder.fieldWithoutFilterIndex;
+        this.fieldsWithoutIndex = builder.fieldWithoutFilterIndex;
         this.maxStrLen = builder.maxStrLen;
     }
 
@@ -42,19 +45,19 @@ public class FilterIndexConfig {
         this.filterAll = filterAll;
     }
 
-    public List<String> getFieldWithoutFilterIndex() {
-        return fieldWithoutFilterIndex;
+    public List<String> getFieldsWithoutIndex() {
+        return fieldsWithoutIndex;
     }
 
-    public void setFieldWithoutFilterIndex(List<String> fieldWithoutFilterIndex) {
-        this.fieldWithoutFilterIndex = fieldWithoutFilterIndex;
+    public void setFieldsWithoutIndex(List<String> fieldsWithoutIndex) {
+        this.fieldsWithoutIndex = fieldsWithoutIndex;
     }
 
-    public int getMaxStrLen() {
+    public Integer getMaxStrLen() {
         return maxStrLen;
     }
 
-    public void setMaxStrLen(int maxStrLen) {
+    public void setMaxStrLen(Integer maxStrLen) {
         this.maxStrLen = maxStrLen;
     }
 
@@ -66,7 +69,7 @@ public class FilterIndexConfig {
     public static class Builder {
         private boolean filterAll;
         private List<String> fieldWithoutFilterIndex;
-        private int maxStrLen;
+        private Integer maxStrLen = 32;
 
         private Builder() {
 
@@ -82,11 +85,14 @@ public class FilterIndexConfig {
             return this;
         }
 
-        public Builder withMaxStrLen(int maxStrLen) {
+        public Builder withMaxStrLen(Integer maxStrLen) {
             this.maxStrLen = maxStrLen;
             return this;
         }
         public FilterIndexConfig build() {
+            if (this.maxStrLen!=null && this.maxStrLen==0){
+                throw new ParamException("The value of maxStrLen cannot be 0.");
+            }
             return new FilterIndexConfig(this);
         }
     }

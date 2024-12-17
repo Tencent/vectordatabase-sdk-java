@@ -6,6 +6,7 @@ import java.io.InputStream;
 
 /**
  * LoadAndSplitTextParam upload file param
+ *
  */
 public class LoadAndSplitTextParam {
     /**

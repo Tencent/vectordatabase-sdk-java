@@ -20,6 +20,7 @@
 
 package com.tencent.tcvectordb.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.MessageOrBuilder;
@@ -40,6 +41,7 @@ import com.tencent.tcvectordb.rpc.Interceptor.BackendServiceInterceptor;
 import com.tencent.tcvectordb.rpc.proto.Olama;
 import com.tencent.tcvectordb.rpc.proto.SearchEngineGrpc;
 import com.tencent.tcvectordb.service.param.*;
+import com.tencent.tcvectordb.utils.JsonUtils;
 import io.grpc.*;
 import io.grpc.okhttp.OkHttpChannelBuilder;
 import org.apache.commons.lang3.tuple.Pair;
@@ -225,11 +227,15 @@ public class GrpcStub extends HttpStub{
             requestOrBuilder.addAllAliasList(params.getAlias());
         }
         if (params.getEmbedding()!=null){
-            requestOrBuilder.setEmbeddingParams(Olama.EmbeddingParams.newBuilder()
-                            .setField(params.getEmbedding().getField())
-                            .setModelName(params.getEmbedding().getModel().getModelName())
-                            .setVectorField(params.getEmbedding().getVectorField())
-                    .build());
+            Olama.EmbeddingParams.Builder embeddingBuilder = Olama.EmbeddingParams.newBuilder()
+                    .setField(params.getEmbedding().getField())
+                    .setVectorField(params.getEmbedding().getVectorField());
+            if (params.getEmbedding().getModel() != null) {
+                embeddingBuilder.setModelName(params.getEmbedding().getModel().getModelName());
+            }else{
+                embeddingBuilder.setModelName(params.getEmbedding().getModelName());
+            }
+            requestOrBuilder.setEmbeddingParams(embeddingBuilder.build());
         }
         if (params.getTtlConfig()!=null){
             requestOrBuilder.setTtlConfig(Olama.TTLConfig.newBuilder()
@@ -238,11 +244,16 @@ public class GrpcStub extends HttpStub{
                     .build());
         }
         if (params.getFilterIndexConfig()!=null){
-            requestOrBuilder.setFilterIndexConfig(Olama.FilterIndexConfig.newBuilder()
-                            .setFilterAll(params.getFilterIndexConfig().isFilterAll())
-                            .addAllFieldsWithoutIndex(params.getFilterIndexConfig().getFieldWithoutFilterIndex())
-                            .setMaxStrLen(params.getFilterIndexConfig().getMaxStrLen())
-                    .build());
+            Olama.FilterIndexConfig.Builder filterBuilder = Olama.FilterIndexConfig.newBuilder().
+                    setFilterAll(params.getFilterIndexConfig().isFilterAll());
+            if (params.getFilterIndexConfig().getFieldsWithoutIndex()!=null){
+                filterBuilder.addAllFieldsWithoutIndex(params.getFilterIndexConfig().getFieldsWithoutIndex());
+            }
+            if(params.getFilterIndexConfig().getMaxStrLen()!=null){
+                filterBuilder.setMaxStrLen(params.getFilterIndexConfig().getMaxStrLen());
+            }
+            requestOrBuilder.setFilterIndexConfig(filterBuilder.build());
+
         }
         if (params.getIndexes() != null && !params.getIndexes().isEmpty()){
             for (IndexField index : params.getIndexes()) {
@@ -269,34 +280,35 @@ public class GrpcStub extends HttpStub{
     private static Olama.IndexColumn.Builder getRpcIndexBuilder(IndexField index) {
         Olama.IndexColumn.Builder indexBuilder = Olama.IndexColumn.newBuilder()
                 .setFieldName(index.getFieldName())
-                .setFieldType(index.getFieldType().getValue())
-                .setIndexType(index.getIndexType().getValue());
+                .setFieldType(index.getFieldType().getValue());
+        if (index.getIndexType()!=null){
+            indexBuilder.setIndexType(index.getIndexType().getValue());
+        }
         if(index.isVectorField()){
-            indexBuilder.setDimension(index.getDimension());
-            indexBuilder.setMetricType(index.getMetricType().getValue());
+            if(index.getDimension()!=null){
+                indexBuilder.setDimension(index.getDimension());
+            }
+            if (index.getMetricType()!=null) {
+                indexBuilder.setMetricType(index.getMetricType().getValue());
+            }
             if(index.getParams()!=null){
-                switch (index.getIndexType()) {
-                    case HNSW:
-                        HNSWParams hnswParams = (HNSWParams) index.getParams();
-                        indexBuilder.setParams(Olama.IndexParams.newBuilder()
-                                .setM(hnswParams.getM())
-                                .setEfConstruction(hnswParams.getEfConstruction()).build());
-                        break;
-                    case IVF_FLAT:
-                        IVFFLATParams ivfflatParams = (IVFFLATParams) index.getParams();
-                        indexBuilder.setParams(Olama.IndexParams.newBuilder()
-                                .setNlist(ivfflatParams.getNList()).build());
-                        break;
-                    case IVF_PQ:
-                        IVFPQParams ivfpqParams = (IVFPQParams) index.getParams();
-                        indexBuilder.setParams(Olama.IndexParams.newBuilder()
-                                .setNlist(ivfpqParams.getNList()).setM(ivfpqParams.getM()).build());
-                        break;
-                    case IVF_SQ8:
-                        IVFSQ8Params ivfsq8Params = (IVFSQ8Params) index.getParams();
-                        indexBuilder.setParams(Olama.IndexParams.newBuilder()
-                                .setNlist(ivfsq8Params.getNList()).build());
-                        break;
+                if(index.getParams() instanceof HNSWParams) {
+                    HNSWParams hnswParams = (HNSWParams) index.getParams();
+                    indexBuilder.setParams(Olama.IndexParams.newBuilder()
+                            .setM(hnswParams.getM())
+                            .setEfConstruction(hnswParams.getEfConstruction()).build());
+                }else if(index.getParams() instanceof IVFFLATParams) {
+                    IVFFLATParams ivfflatParams = (IVFFLATParams) index.getParams();
+                    indexBuilder.setParams(Olama.IndexParams.newBuilder()
+                            .setNlist(ivfflatParams.getNList()).build());
+                }else if (index.getParams() instanceof IVFPQParams) {
+                    IVFPQParams ivfpqParams = (IVFPQParams) index.getParams();
+                    indexBuilder.setParams(Olama.IndexParams.newBuilder()
+                            .setNlist(ivfpqParams.getNList()).setM(ivfpqParams.getM()).build());
+                }else if(index.getParams() instanceof  IVFSQ8Params) {
+                    IVFSQ8Params ivfsq8Params = (IVFSQ8Params) index.getParams();
+                    indexBuilder.setParams(Olama.IndexParams.newBuilder()
+                            .setNlist(ivfsq8Params.getNList()).build());
                 }
             }
         }
@@ -567,6 +579,11 @@ public class GrpcStub extends HttpStub{
                 searchConBuilder.setParams(Olama.SearchParams.newBuilder().setEf(params.getEf()).build());
             }
         }
+
+        if (searchParam.getRadius()!=null){
+            searchConBuilder.setRange(true);
+            searchConBuilder.getParamsBuilder().setRadius(searchParam.getRadius());
+        }
         builder.setSearch(searchConBuilder.build());
         logQuery(ApiPath.DOC_SEARCH, builder);
         Olama.SearchResponse searchResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).search(builder.build());
@@ -611,7 +628,7 @@ public class GrpcStub extends HttpStub{
                         }
                         if (annOption.getData()!=null){
                             if (annOption.getData().get(0) instanceof String){
-                                annBuilder.addAllDataExpr(annOption.getData().stream().map(item->(String)item).collect(Collectors.toList()));
+                                annBuilder.addAllEmbeddingItems(annOption.getData().stream().map(item->(String)item).collect(Collectors.toList()));
                             }if (annOption.getData().get(0) instanceof List){
                                 annBuilder.addAllData(annOption.getData().stream()
                                         .map(item-> Olama.VectorArray.newBuilder().addAllVector(((List<Object>)item).
@@ -644,6 +661,17 @@ public class GrpcStub extends HttpStub{
                 });
                 if(matchOption.getLimit()!=null){
                     sparseBuilder.setLimit(matchOption.getLimit());
+                }
+
+                if (matchOption.getCutoffFrequency()!=null || matchOption.getTerminateAfter()!=null){
+                    Olama.SparseSearchParams.Builder sparseSearchParamsBuilder = Olama.SparseSearchParams.newBuilder();
+                    if (matchOption.getCutoffFrequency()!=null){
+                        sparseSearchParamsBuilder.setCutoffFrequency(matchOption.getCutoffFrequency());
+                    }
+                    if (matchOption.getTerminateAfter()!=null){
+                        sparseSearchParamsBuilder.setTerminateAfter(matchOption.getTerminateAfter());
+                    }
+                    sparseBuilder.setParams(sparseSearchParamsBuilder.build()).build();
                 }
                 return sparseBuilder.build();
             }).collect(Collectors.toList()));
@@ -716,6 +744,9 @@ public class GrpcStub extends HttpStub{
         }
         if (paramQuery.getFilter()!=null && !paramQuery.getFilter().isEmpty()){
             queryCondBuilder.setFilter(paramQuery.getFilter());
+        }
+        if(param.getQuery().getLimit()!=null){
+            queryCondBuilder.setLimit(param.getQuery().getLimit());
         }
         Olama.DeleteRequest deleteRequest = Olama.DeleteRequest.newBuilder()
                 .setDatabase(param.getDatabase())
@@ -876,6 +907,61 @@ public class GrpcStub extends HttpStub{
         return super.rebuildAIIndex(param);
     }
 
+    public BaseRes countDocument(QueryCountParamInner param, boolean ai) {
+        Olama.CountRequest.Builder builder = Olama.CountRequest.newBuilder()
+                .setDatabase(param.getDatabase())
+                .setCollection(param.getCollection());
+        if (param.getQuery()!=null) {
+            Olama.QueryCond.Builder queryBuilder =  Olama.QueryCond.newBuilder();
+            if (param.getQuery().getFilter()!=null){
+                queryBuilder.setFilter(param.getQuery().getFilter());
+            }
+            builder.setQuery(queryBuilder.build());
+        }
+        Olama.CountRequest countRequest = builder.build();
+        logQuery(ApiPath.DOC_COUNT, builder);
+        Olama.CountResponse countResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).count(countRequest);
+        logResponse(ApiPath.DOC_COUNT, countResponse);
+        if(countResponse==null){
+            throw new VectorDBException("VectorDBServer error: count not response");
+        }
+        if (countResponse.getCode()!=0){
+            throw new VectorDBException(String.format(
+                    "VectorDBServer error: count not Success, body code=%s, message=%s",
+                    countResponse.getCode(), countResponse.getMsg()));
+        }
+        return new BaseRes(countResponse.getCode(), countResponse.getMsg(),"", countResponse.getCount());
+    }
+
+    @Override
+    public BaseRes modifyVectorIndex(ModifyIndexParamInner param, boolean ai) {
+        Olama.ModifyVectorIndexRequest.Builder builder = Olama.ModifyVectorIndexRequest.newBuilder()
+                .setDatabase(param.getDatabase())
+                .setCollection(param.getCollection());
+        if (param.getRebuildRules()!=null){
+            builder.setRebuildRules(Olama.RebuildIndexRequest.newBuilder()
+                    .setDropBeforeRebuild(param.getRebuildRules().getDropBeforeRebuild())
+                    .setThrottle(param.getRebuildRules().getThrottle()).build());
+        }
+        if (param.getVectorIndexes() !=null && !param.getVectorIndexes().isEmpty()){
+            builder.putAllVectorIndexes(param.getVectorIndexes().stream()
+                    .map(indexField -> getRpcIndexBuilder(indexField).build()).collect(Collectors.toMap(index -> index.getFieldName(), index -> index)));
+        }
+        logQuery(ApiPath.MODIFY_VECTOR_INDEX, builder);
+        Olama.ModifyVectorIndexResponse modifyVectorIndexResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
+                .modifyVectorIndex(builder.build());
+        logResponse(ApiPath.MODIFY_VECTOR_INDEX, modifyVectorIndexResponse);
+        if(modifyVectorIndexResponse==null){
+            throw new VectorDBException("VectorDBServer error: modifyVectorIndex not response");
+        }
+        if (modifyVectorIndexResponse.getCode()!=0){
+            throw new VectorDBException(String.format(
+                    "VectorDBServer error: modifyVectorIndex not Success, body code=%s, message=%s",
+                    modifyVectorIndexResponse.getCode(), modifyVectorIndexResponse.getMsg()));
+        }
+        return new BaseRes(modifyVectorIndexResponse.getCode(), modifyVectorIndexResponse.getMsg(), "");
+    }
+
 
     @Override
     public BaseRes addIndex(AddIndexParamInner addIndexParamInner) {
@@ -974,7 +1060,7 @@ public class GrpcStub extends HttpStub{
         }
         if (document.getVector()!=null){
             if (document.getVector() instanceof List){
-                docBuilder.addAllVector(((List<Double>)document.getVector()).stream().map(ele->ele.floatValue()).collect(Collectors.toList()));
+                docBuilder.addAllVector(((List<Number>)document.getVector()).stream().map(ele->ele.floatValue()).collect(Collectors.toList()));
             }else if (document.getVector() instanceof String){
                 docBuilder.setDataExpr((String)document.getVector());
             }

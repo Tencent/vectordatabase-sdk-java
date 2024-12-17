@@ -87,6 +87,7 @@ enum DataType {
 message DatabaseItem {
     int64 create_time   = 1;
     DataType db_type    = 2;
+    int64 count         = 3;
 }
 
 message SnapshotRule {
@@ -446,6 +447,7 @@ message AnnData {
     SearchParams params                 = 4; // 搜索参数
     uint32 limit                        = 5; // 结果数量
     repeated string data_expr           = 6; // 表达式搜索
+    repeated string embeddingItems      = 7; // 使用embedding字段检索
 }
 
 message SparseVectorArray {
@@ -456,6 +458,7 @@ message SparseData {
     string   fieldName                  = 1; // 字段名称
     repeated SparseVectorArray data     = 2; // 使用向量值检索
     uint32 limit                        = 3; // 结果数量
+    SparseSearchParams params           = 4; // 搜索参数
 }
 
 message RerankParams {
@@ -586,6 +589,53 @@ message AddIndexResponse {
     string redirect = 3;
 };
 
+message ExplainRequest {
+    string database         = 1;
+    string collection       = 2;
+    QueryCond query         = 3;
+    string readConsistency  = 4;
+};
+
+message ExplainResponse {
+    int32 code                    = 1;
+    string msg                    = 2;
+    string redirect               = 3;
+    repeated uint64 affectedTable = 4;
+    uint64 affectedCount          = 5;
+};
+
+message SparseSearchParams {
+    uint32 terminateAfter          = 1;   // 搜索到指定数量的结果就终止
+    double cutoffFrequency          = 2;   // 全文检索时过滤掉高频词
+}
+
+message ModifyVectorIndexRequest {
+    string database                     = 1;
+    string collection                   = 2;
+    map<string, IndexColumn> vectorIndexes    = 3;
+    bool rebuild                        = 4;
+    RebuildIndexRequest rebuildRules    = 5;
+};
+
+message ModifyVectorIndexResponse {
+    int32 code                      = 1;
+    string msg                      = 2;
+    string redirect                 = 3;
+};
+
+message CountRequest {
+    string database         = 1;
+    string collection       = 2;
+    QueryCond query         = 3;
+};
+
+message CountResponse {
+    int32 code                    = 1;
+    string msg                    = 2;
+    string redirect               = 3;
+    uint64 count                  = 4;
+};
+
 message HttpRequest {};
 
 message HttpResponse {};
@@ -622,6 +672,10 @@ service SearchEngine {
     rpc search(SearchRequest) returns (SearchResponse);
     // 混合搜索
     rpc hybrid_search(SearchRequest) returns (SearchResponse);
+    // 关键词检索
+    rpc keyword_search(SearchRequest) returns (SearchRequest);
+    // explain
+    rpc explain(ExplainRequest) returns (ExplainResponse);
     // 删除向量
     rpc dele(DeleteRequest) returns (DeleteResponse);
 
@@ -644,4 +698,8 @@ service SearchEngine {
 
     // 新增scalar的索引
     rpc addIndex(AddIndexRequest) returns (AddIndexResponse);
+    // 修改index配置
+    rpc modifyVectorIndex(ModifyVectorIndexRequest) returns (ModifyVectorIndexResponse);
+
+    rpc count(CountRequest) returns (CountResponse);
 };

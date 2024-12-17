@@ -21,15 +21,26 @@
 package com.tencent.tcvectordb.model.param.dml;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.tencent.tcvdbtext.exception.ParamException;
 
 /**
  * Delete Param
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DeleteParam extends BaseQuery {
+    private Integer limit;
 
     public DeleteParam(Builder builder) {
         super(builder);
+        this.limit = builder.limit;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
     }
 
     public static Builder newBuilder() {
@@ -37,13 +48,21 @@ public class DeleteParam extends BaseQuery {
     }
 
     public static class Builder extends BaseQuery.Builder<Builder> {
-
+        private Integer limit;
         private Builder() {
             super();
         }
 
         public DeleteParam build() {
+            if (this.limit !=null && this.limit == 0){
+                throw new ParamException("The value of limit cannot be 0");
+            }
             return new DeleteParam(this);
+        }
+
+        public Builder withLimit(Integer limit) {
+            this.limit = limit;
+            return this;
         }
 
         @Override

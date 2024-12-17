@@ -40,6 +40,11 @@ public enum FieldType {
     Vector("vector"),
 
     /**
+     * binary vector
+     */
+    BinaryVector("binary_vector"),
+
+    /**
      * array 类型
      */
     Array("array"),

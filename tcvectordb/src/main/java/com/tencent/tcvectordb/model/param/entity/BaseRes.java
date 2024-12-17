@@ -6,7 +6,7 @@ public class BaseRes {
     protected String msg;
     protected String warning;
 
-    protected int count;
+    protected long count;
 
     protected String requestId;
 
@@ -17,6 +17,13 @@ public class BaseRes {
         this.code = code;
         this.msg = msg;
         this.warning = warning;
+    }
+
+    public BaseRes(int code, String msg, String warning, long count) {
+        this.code = code;
+        this.msg = msg;
+        this.warning = warning;
+        this.count = count;
     }
 
     public String getRequestId() {
@@ -39,7 +46,7 @@ public class BaseRes {
         return warning;
     }
 
-    public int getCount() {
+    public long getCount() {
         return count;
     }
 

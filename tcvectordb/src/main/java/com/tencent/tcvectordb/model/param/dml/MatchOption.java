@@ -13,6 +13,8 @@ import java.util.List;
  *     fieldName: String, field name of the sparse vector field, value must be "sparse_vector".
  *     data: List<List<List<Object>>>, sparse vector data, can user MatchOption.newBuilder().withData(List<List<Pair<Long, Float>>>) to use sparse vector data.
  *     Limit: Integer, search limit
+ *     terminateAfter: Integer, search terminate after this number of documents.
+ *     cutoffFrequency: Double, cutoff frequency.
  * eg:
  *     MatchOption option = new MatchOption.Builder().withFieldName("sparse_vector").withData(sparseVector).build();
  */
@@ -21,6 +23,9 @@ public class MatchOption {
     private String fieldName;
     private List<List<List<Object>>> data;
     private Integer limit;
+
+    private Integer terminateAfter;
+    private Double cutoffFrequency;
 
     public String getFieldName() {
         return fieldName;
@@ -46,10 +51,28 @@ public class MatchOption {
         this.limit = limit;
     }
 
+    public Integer getTerminateAfter() {
+        return terminateAfter;
+    }
+
+    public void setTerminateAfter(Integer terminateAfter) {
+        this.terminateAfter = terminateAfter;
+    }
+
+    public Double getCutoffFrequency() {
+        return cutoffFrequency;
+    }
+
+    public void setCutoffFrequency(double cutoffFrequency) {
+        this.cutoffFrequency = cutoffFrequency;
+    }
+
     public MatchOption(Builder builder) {
         this.fieldName = builder.fieldName;
         this.data = builder.data;
         this.limit = builder.limit;
+        this.terminateAfter = builder.terminateAfter;
+        this.cutoffFrequency = builder.cutoffFrequency;
     }
 
     public static Builder newBuilder() {
@@ -60,6 +83,9 @@ public class MatchOption {
         private String fieldName;
         private List<List<List<Object>>> data;
         private Integer limit;
+
+        private Integer terminateAfter;
+        private double cutoffFrequency;
 
         private Builder() {
         }
@@ -87,6 +113,16 @@ public class MatchOption {
 
         public Builder withLimit(Integer limit){
             this.limit = limit;
+            return this;
+        }
+
+        public Builder withTerminateAfter(Integer terminateAfter){
+            this.terminateAfter = terminateAfter;
+            return this;
+        }
+
+        public Builder withCutoffFrequency(double cutoffFrequency){
+            this.cutoffFrequency = cutoffFrequency;
             return this;
         }
 

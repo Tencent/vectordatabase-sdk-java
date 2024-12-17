@@ -109,10 +109,10 @@ public class CreateCollectionParam extends Collection {
             return this;
         }
 
-//        public Builder withFilterIndexConfig(FilterIndexConfig filterIndexConfig) {
-//            this.filterIndexConfig = filterIndexConfig;
-//            return this;
-//        }
+        public Builder withFilterIndexConfig(FilterIndexConfig filterIndexConfig) {
+            this.filterIndexConfig = filterIndexConfig;
+            return this;
+        }
 
         public CreateCollectionParam build() throws ParamException {
             if (StringUtils.isEmpty(this.name)) {

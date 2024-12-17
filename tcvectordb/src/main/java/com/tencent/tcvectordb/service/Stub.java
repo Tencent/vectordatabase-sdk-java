@@ -183,4 +183,8 @@ public interface Stub {
     BaseRes addIndex(AddIndexParamInner addIndexParamInner);
 
     void close();
+
+    BaseRes countDocument(QueryCountParamInner param, boolean ai);
+
+    BaseRes modifyVectorIndex(ModifyIndexParamInner param, boolean ai);
 }

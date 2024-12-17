@@ -25,6 +25,7 @@ import com.tencent.tcvectordb.exception.ParamException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Search By Vector Param
@@ -35,14 +36,14 @@ import java.util.List;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SearchByVectorParam extends SearchParam {
-    private List<List<Double>> vectors;
+    private List<List<? extends Number>> vectors;
 
     private SearchByVectorParam(Builder builder) {
         super(builder);
         this.vectors = builder.vectors;
     }
 
-    public List<List<Double>> getVectors() {
+    public List<List<? extends Number>> getVectors() {
         return vectors;
     }
 
@@ -51,19 +52,19 @@ public class SearchByVectorParam extends SearchParam {
     }
 
     public static class Builder extends SearchParam.Builder<Builder> {
-        private List<List<Double>> vectors;
+        private List<List<? extends Number>> vectors;
 
         private Builder() {
             super();
             this.vectors = new ArrayList<>();
         }
 
-        public Builder withVectors(List<List<Double>> vectors) {
-            this.vectors = vectors;
+        public Builder withVectors(List<? extends List<? extends Number>> vectors) {
+            this.vectors = vectors.stream().collect(Collectors.toList());
             return this;
         }
 
-        public Builder addVector(List<Double> vector) {
+        public Builder addVector(List<? extends Number> vector) {
             this.vectors.add(vector);
             return this;
         }

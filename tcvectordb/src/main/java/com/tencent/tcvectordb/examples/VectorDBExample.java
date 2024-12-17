@@ -53,6 +53,7 @@ public class VectorDBExample {
         upsertData(client);
         queryData(client);
 //        addIndex(client);
+        modifyVectorIndex(client);
         updateAndDelete(client);
         deleteAndDrop(client);
         testFilter();
@@ -234,6 +235,11 @@ public class VectorDBExample {
         System.out.println(JsonUtils.toJsonString(affectRes));
         // notice：upsert 操作可用会有延迟
         Thread.sleep(1000 * 5);
+
+        BaseRes res = client.count(DBNAME,COLL_NAME, CountQueryParam.newBuilder()
+                .withFilter("bookName=\"三国演义\"")
+                .build());
+        System.out.println("count document: "+ res.getCount());
     }
 
     private static void queryData(VectorDBClient client) {
@@ -254,7 +260,7 @@ public class VectorDBExample {
                 // 偏移
                  .withOffset(0)
                 // 指定返回的 fields
-                .addAllOutputFields("id", "bookName")
+//                .addAllOutputFields("id", "bookName")
                 // 是否返回 vector 数据
                 .withRetrieveVector(false)
                 .build();
@@ -330,7 +336,7 @@ public class VectorDBExample {
         UpdateParam updateParam = UpdateParam
                 .newBuilder()
                 .addAllDocumentId(documentIds)
-//                .withFilter("bookName=\"三国演义\"")
+                .withFilter("bookName=\"三国演义\"")
                 .build();
 //        JSONObject data = new JSONObject("{\"page\":100, \"extend\":\"extendContent_1\",\"array_test\":[\"extendContent\",\"extendContent1\"]}");
         Document updateDoc = Document
@@ -353,7 +359,8 @@ public class VectorDBExample {
         DeleteParam build = DeleteParam
                 .newBuilder()
                 .addAllDocumentId("0001", "0003")
-//                .withFilter("bookName=\"西游记\"")
+                .withFilter("bookName=\"西游记\"")
+                .withLimit(1)
                 .build();
         AffectRes deleteAffectRes = client.delete(DBNAME, COLL_NAME, build);
         System.out.println(deleteAffectRes.toString());
@@ -477,6 +484,28 @@ public class VectorDBExample {
                 .addDocField(new DocField("segment", "细作探知这个消息，飞报吕布。"))
                 .addDocField(new DocField("array_test", Arrays.asList("7","8","9")))
                 .build().toString());
+    }
+
+    /**
+     * modifyVectorIndex test
+     * @param client
+     * @throws InterruptedException
+     */
+    private static void modifyVectorIndex(VectorDBClient client) throws InterruptedException{
+        System.out.println("--------modify vector index-------");
+        Database db = client.database(DBNAME);
+        Collection collection = db.describeCollection(COLL_NAME);
+        System.out.println("before");
+        System.out.println(JsonUtils.toJsonString(collection));
+        BaseRes baseRes = client.modifyVectorIndex(DBNAME, COLL_NAME, ModifyVectorIndexParam.newBuilder()
+                        .withVectorIndex(new VectorIndex(MetricType.IP, new HNSWParams(8, 100)))
+                        .withRebuildRules(RebuildIndexParam.newBuilder().withDropBeforeRebuild(true).withThrottle(1).build())
+                .build());
+        System.out.println("modify res: "+ JsonUtils.toJsonString(baseRes));
+        Collection collectionAfter = db.describeCollection(COLL_NAME);
+        System.out.println("after");
+        System.out.println(JsonUtils.toJsonString(collectionAfter));
+
     }
 
 

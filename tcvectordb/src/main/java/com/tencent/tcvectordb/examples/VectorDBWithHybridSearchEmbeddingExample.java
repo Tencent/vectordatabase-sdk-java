@@ -166,7 +166,7 @@ public class VectorDBWithHybridSearchEmbeddingExample {
         database.dropCollection(COLL_NAME);
 
         // 删除 database
-        System.out.println("---------------------- truncate collection ----------------------");
+        System.out.println("---------------------- delete database ----------------------");
         client.dropDatabase(DBNAME);
     }
 

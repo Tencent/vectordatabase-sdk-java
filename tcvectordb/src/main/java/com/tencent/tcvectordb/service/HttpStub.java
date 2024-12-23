@@ -41,6 +41,8 @@ import com.tencent.tcvectordb.model.param.collectionView.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
+import com.tencent.tcvectordb.model.param.user.*;
+import com.tencent.tcvectordb.rpc.proto.Olama;
 import com.tencent.tcvectordb.service.param.*;
 import com.tencent.tcvectordb.utils.FileUtils;
 import com.tencent.tcvectordb.utils.JsonUtils;
@@ -732,6 +734,55 @@ public class HttpStub implements Stub {
         });
     }
 
+
+    @Override
+    public BaseRes createUser(UserCreateParam userCreateParam) {
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.USER_CREATE);
+        JsonNode jsonNode = this.post(url, userCreateParam.toString(), false);
+        return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
+    }
+
+    @Override
+    public BaseRes grantToUser(UserGrantParam param) {
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.USER_GRANT);
+        JsonNode jsonNode = this.post(url, param.toString(), false);
+        return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
+    }
+
+    @Override
+    public BaseRes revokeFromUser(UserRevokeParam param) {
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.USER_REVOKE);
+        JsonNode jsonNode = this.post(url, param.toString(), false);
+        return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
+    }
+
+    @Override
+    public UserDescribeRes describeUser(UserDescribeParam userDescribeParam) {
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.USER_DESCRIBE);
+        JsonNode jsonNode = this.post(url, userDescribeParam.toString(), false);
+        return JsonUtils.parseObject(jsonNode.toString(), UserDescribeRes.class);
+    }
+
+    @Override
+    public UserListRes listUser() {
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.USER_LIST);
+        JsonNode jsonNode = this.get(url, false);
+        return JsonUtils.parseObject(jsonNode.toString(), UserListRes.class);
+    }
+
+    @Override
+    public BaseRes dropUser(UserDropParam userDropParam) {
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.USER_DROP);
+        JsonNode jsonNode = this.post(url, userDropParam.toString(), false);
+        return JsonUtils.parseObject(jsonNode.toString(), BaseRes.class);
+    }
+
+    @Override
+    public BaseRes changeUserPassword(UserChangePasswordParam build) {
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.USER_CHANGE_PASSWORD);
+        JsonNode jsonNode = this.post(url, build.toString(), false);
+        return JsonUtils.parseObject(jsonNode.toString(), BaseRes.class);
+    }
 
     private JsonNode get(String url, boolean ai) {
         Request request = new Request.Builder()

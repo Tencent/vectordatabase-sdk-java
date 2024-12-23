@@ -61,4 +61,15 @@ public class ApiPath {
     public final static String AI_REBUILD_INDEX = "ai/index/rebuild";
     public final static String ADD_INDEX = "index/add";
     public final static String MODIFY_VECTOR_INDEX = "index/modifyVectorIndex";
+
+    // user 相关api
+    public final static String USER_CREATE = "user/create";
+    public final static String USER_GRANT = "user/grant";
+    public final static String USER_REVOKE = "user/revoke";
+    public final static String USER_DESCRIBE = "user/describe";
+    public final static String USER_LIST = "user/list";
+    public final static String USER_DROP = "user/drop";
+    public final static String USER_CHANGE_PASSWORD = "user/changePassword";
+
+
 }

@@ -20,7 +20,7 @@
 
 package com.tencent.tcvectordb.examples;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+
 import com.tencent.tcvectordb.client.VectorDBClient;
 import com.tencent.tcvectordb.model.*;
 import com.tencent.tcvectordb.model.Collection;
@@ -28,8 +28,8 @@ import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.BaseRes;
+import com.tencent.tcvectordb.model.param.enums.OrderEnum;
 import com.tencent.tcvectordb.utils.JsonUtils;
-import org.json.JSONObject;
 
 import java.util.*;
 /**
@@ -263,6 +263,7 @@ public class VectorDBExample {
 //                .addAllOutputFields("id", "bookName")
                 // 是否返回 vector 数据
                 .withRetrieveVector(false)
+                .withSort(Arrays.asList(OrderRule.newBuilder().withFieldName("page").withDirection(OrderEnum.DESC).build()))
                 .build();
         List<Document> qdos = collection.query(queryParam);
         for (Document doc : qdos) {
@@ -305,6 +306,7 @@ public class VectorDBExample {
                 .addVector(Arrays.asList(0.2123, 0.23, 0.213))
                 // 若使用 HNSW 索引，则需要指定参数ef，ef越大，召回率越高，但也会影响检索速度
                 .withParams(new HNSWSearchParams(100))
+                .withRadius(0.5)
                 // 指定 Top K 的 K 值
                 .withLimit(10)
                 // 过滤获取到结果

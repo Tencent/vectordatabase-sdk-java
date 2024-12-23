@@ -25,6 +25,7 @@ import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.collectionView.LoadAndSplitTextParam;
 import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
+import com.tencent.tcvectordb.model.param.user.*;
 import com.tencent.tcvectordb.service.param.*;
 
 import java.util.List;
@@ -187,4 +188,18 @@ public interface Stub {
     BaseRes countDocument(QueryCountParamInner param, boolean ai);
 
     BaseRes modifyVectorIndex(ModifyIndexParamInner param, boolean ai);
+
+    BaseRes createUser(UserCreateParam userCreateParam);
+
+    BaseRes grantToUser(UserGrantParam param);
+
+    BaseRes revokeFromUser(UserRevokeParam param);
+
+    UserDescribeRes describeUser(UserDescribeParam userDescribeParam);
+
+    UserListRes listUser();
+
+    BaseRes dropUser(UserDropParam userDropParam);
+
+    BaseRes changeUserPassword(UserChangePasswordParam build);
 }

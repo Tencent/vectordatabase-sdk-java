@@ -44,6 +44,15 @@ public class QueryParam extends BaseQuery {
     private long offset;
     private List<String> outputFields;
 
+    private List<OrderRule> sort;
+
+    public List<OrderRule> getSort() {
+        return sort;
+    }
+
+    public void setSort(List<OrderRule> sort) {
+        this.sort = sort;
+    }
 
     public boolean isRetrieveVector() {
         return retrieveVector;
@@ -67,9 +76,11 @@ public class QueryParam extends BaseQuery {
         this.retrieveVector = builder.retrieveVector;
         this.limit = builder.limit;
         this.offset = builder.offset;
+        this.sort = builder.sort;
         if (builder.outputFields != null && !builder.outputFields.isEmpty()) {
             this.outputFields = Collections.unmodifiableList(builder.outputFields);
         }
+
     }
 
     public static Builder newBuilder() {
@@ -89,6 +100,8 @@ public class QueryParam extends BaseQuery {
         private long offset = 0;
 
         private List<String> outputFields;
+
+        private List<OrderRule> sort;
 
         private Builder() {
             super();
@@ -136,6 +149,11 @@ public class QueryParam extends BaseQuery {
 
         public Builder withOutputFields(List<String> outputFields) {
             this.outputFields = outputFields;
+            return this;
+        }
+
+        public Builder withSort(List<OrderRule> sort) {
+            this.sort = sort;
             return this;
         }
 

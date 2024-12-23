@@ -36,6 +36,7 @@ import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
+import com.tencent.tcvectordb.model.param.user.*;
 import com.tencent.tcvectordb.rpc.Interceptor.AuthorityInterceptor;
 import com.tencent.tcvectordb.rpc.Interceptor.BackendServiceInterceptor;
 import com.tencent.tcvectordb.rpc.proto.Olama;
@@ -514,7 +515,11 @@ public class GrpcStub extends HttpStub{
         if (queryParam.getFilter()!=null){
             queryCondBuilder.setFilter(queryParam.getFilter());
         }
-
+        if (queryParam.getSort()!=null && queryParam.getSort().size()>0){
+            queryCondBuilder.addAllSort(queryParam.getSort().stream().map(sort -> {
+                return Olama.OrderRule.newBuilder().setFieldName(sort.getFieldName()).setDesc(sort.getDirection().equals("desc")).build();
+            }).collect(Collectors.toList()));
+        }
         queryBuilder.setQuery(queryCondBuilder.build());
         logQuery(ApiPath.DOC_QUERY, queryBuilder);
         Olama.QueryResponse queryResponse = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai)).withDeadlineAfter(this.timeout, TimeUnit.SECONDS).query(queryBuilder.build());
@@ -987,6 +992,147 @@ public class GrpcStub extends HttpStub{
         return new BaseRes(addIndexResponse.getCode(), addIndexResponse.getMsg(), "");
     }
 
+    @Override
+    public BaseRes createUser(UserCreateParam userCreateParam) {
+        Olama.UserAccountRequest request = Olama.UserAccountRequest
+                .newBuilder()
+                .setUser(userCreateParam.getUser())
+                .setPassword(userCreateParam.getPassword()).build();
+        logQuery(ApiPath.USER_CREATE, request);
+        Olama.UserAccountResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userCreate(request);
+        logResponse(ApiPath.USER_CREATE, response);
+        if (response.getCode()!=0){
+            throw new VectorDBException(String.format(
+                    "VectorDBServer error: create user account error, body code=%s, message=%s",
+                    response.getCode(), response.getMsg()));
+        }
+        return new BaseRes(response.getCode(), response.getMsg(), "");
+    }
+
+
+    @Override
+    public BaseRes grantToUser(UserGrantParam param) {
+        Olama.UserPrivilegesRequest.Builder builder = Olama.UserPrivilegesRequest.newBuilder()
+                .setUser(param.getUser());
+        if (param.getPrivileges()!=null){
+            builder.addAllPrivileges(param.getPrivileges().stream().map(privilege ->
+                    Olama.Privilege.newBuilder()
+                            .setResource(privilege.getResource())
+                            .addAllActions(privilege.getActions()).build()).collect(Collectors.toList()));
+        }
+        logQuery(ApiPath.USER_GRANT, builder);
+        Olama.UserPrivilegesResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userGrant(builder.build());
+        logResponse(ApiPath.USER_GRANT, response);
+        if (response.getCode()!=0){
+            throw new VectorDBException(String.format(
+                    "VectorDBServer error: grant user account error, body code=%s, message=%s",
+                    response.getCode(), response.getMsg()));
+        }
+        return new BaseRes(response.getCode(), response.getMsg(), "");
+
+    }
+
+
+    @Override
+    public BaseRes revokeFromUser(UserRevokeParam param) {
+        Olama.UserPrivilegesRequest.Builder builder = Olama.UserPrivilegesRequest.newBuilder()
+                .setUser(param.getUser());
+        if (param.getPrivileges()!=null){
+            builder.addAllPrivileges(param.getPrivileges().stream().map(privilege ->
+                    Olama.Privilege.newBuilder()
+                            .setResource(privilege.getResource())
+                            .addAllActions(privilege.getActions()).build()).collect(Collectors.toList()));
+        }
+        logQuery(ApiPath.USER_REVOKE, builder);
+        Olama.UserPrivilegesResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userRevoke(builder.build());
+        logResponse(ApiPath.USER_REVOKE, response);
+        if (response.getCode()!=0){
+            throw new VectorDBException(String.format(
+                    "VectorDBServer error: revoke user error, body code=%s, message=%s",
+                    response.getCode(), response.getMsg()));
+        }
+        return new BaseRes(response.getCode(), response.getMsg(), "");
+    }
+
+    @Override
+    public UserDescribeRes describeUser(UserDescribeParam userDescribeParam) {
+        Olama.UserDescribeRequest request = Olama.UserDescribeRequest.newBuilder()
+                .setUser(userDescribeParam.getUser()).build();
+
+        logQuery(ApiPath.USER_DESCRIBE, request);
+        Olama.UserDescribeResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userDescribe(request);
+        logResponse(ApiPath.USER_DESCRIBE, response);
+        if (response.getCode()!=0){
+            throw new VectorDBException(String.format(
+                    "VectorDBServer error: revoke user error, body code=%s, message=%s",
+                    response.getCode(), response.getMsg()));
+        }
+        UserDescribeRes res = new UserDescribeRes(response.getCode(), response.getMsg(), "");
+        if (response.hasUser()){
+            res.setUser(response.getUser().getName());
+            res.setPrivileges(response.getUser().getPrivilegesList().stream().map(privilege ->
+                    PrivilegeParam.newBuilder().withResource(privilege.getResource()).withActions(privilege.getActionsList()).build())
+                    .collect(Collectors.toList()));
+        }
+        return res;
+    }
+
+    @Override
+    public UserListRes listUser() {
+        Olama.UserListRequest request = Olama.UserListRequest.newBuilder().build();
+        logQuery(ApiPath.USER_LIST, request);
+        Olama.UserListResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userList(request);
+        logResponse(ApiPath.USER_LIST, response);
+        if (response.getCode()!=0){
+            throw new VectorDBException(String.format(
+                    "VectorDBServer error: list user error, body code=%s, message=%s",
+                    response.getCode(), response.getMsg()));
+        }
+        UserListRes res = new UserListRes(response.getCode(), response.getMsg(), "");
+        if (response.getUsersList()!=null && !response.getUsersList().isEmpty()){
+            res.setUsers(response.getUsersList().stream().map(user -> {
+                UserInfo userInfo = new UserInfo();
+                userInfo.setUser(user.getName());
+                userInfo.setPrivileges(user.getPrivilegesList().stream().map(privilege ->
+                                PrivilegeParam.newBuilder().withResource(privilege.getResource()).withActions(privilege.getActionsList()).build())
+                        .collect(Collectors.toList()));
+                return userInfo;
+            }).collect(Collectors.toList()));
+        }
+        return res;
+    }
+
+    @Override
+    public BaseRes dropUser(UserDropParam userDropParam) {
+        Olama.UserAccountRequest request = Olama.UserAccountRequest.newBuilder()
+                .setUser(userDropParam.getUser()).build();
+        logQuery(ApiPath.USER_DROP, request);
+        Olama.UserAccountResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userDrop(request);
+        logResponse(ApiPath.USER_DROP, response);
+        if (response.getCode()!=0){
+            throw new VectorDBException(String.format(
+                    "VectorDBServer error: drop user error, body code=%s, message=%s",
+                    response.getCode(), response.getMsg()));
+        }
+        return new BaseRes(response.getCode(), response.getMsg(), "");
+    }
+
+    @Override
+    public BaseRes changeUserPassword(UserChangePasswordParam build) {
+        Olama.UserAccountRequest request = Olama.UserAccountRequest.newBuilder()
+                .setUser(build.getUser())
+                .setPassword(build.getPassword()).build();
+        logQuery(ApiPath.USER_CHANGE_PASSWORD, request);
+        Olama.UserAccountResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userChangePassword(request);
+        logResponse(ApiPath.USER_CHANGE_PASSWORD, response);
+        if (response.getCode()!=0){
+            throw new VectorDBException(String.format(
+                    "VectorDBServer error: change user password error, body code=%s, message=%s",
+                    response.getCode(), response.getMsg()));
+        }
+        return new BaseRes(response.getCode(), response.getMsg(), "");
+    }
+
     private static Collection convertRpcToCollection(Olama.CreateCollectionRequest collection) {
         Collection collectionInner = new Collection();
         collectionInner.setDatabase(collection.getDatabase());
@@ -1052,6 +1198,8 @@ public class GrpcStub extends HttpStub{
         }).collect(Collectors.toList()));
         return collectionInner;
     }
+
+
 
     private static Olama.Document convertDocument2OlamaDoc(Document document) {
         Olama.Document.Builder docBuilder = Olama.Document.newBuilder();

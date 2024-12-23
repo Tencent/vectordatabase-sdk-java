@@ -34,6 +34,7 @@ import com.tencent.tcvectordb.model.param.entity.HybridSearchRes;
 import com.tencent.tcvectordb.model.param.entity.SearchRes;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
+import com.tencent.tcvectordb.model.param.user.*;
 import com.tencent.tcvectordb.service.HttpStub;
 import com.tencent.tcvectordb.service.Stub;
 import com.tencent.tcvectordb.service.param.*;
@@ -511,6 +512,37 @@ public class VectorDBClient {
     public BaseRes modifyVectorIndex(String database, String collection, ModifyVectorIndexParam modifyVectorIndexParam) throws VectorDBException {
         return this.stub.modifyVectorIndex(
                 new ModifyIndexParamInner(database, collection, modifyVectorIndexParam), false);
+    }
+
+    public BaseRes createUser(String username, String password) throws VectorDBException {
+        return this.stub.createUser(
+                new UserCreateParam(username, password));
+    }
+
+
+    public BaseRes grantToUser(UserGrantParam param) throws VectorDBException {
+        return this.stub.grantToUser(param);
+    }
+
+    public BaseRes revokeFromUser(UserRevokeParam param) throws VectorDBException {
+        return this.stub.revokeFromUser(param);
+    }
+
+
+    public UserDescribeRes describeUser(String user) throws VectorDBException {
+        return this.stub.describeUser(new UserDescribeParam(user));
+    }
+
+    public UserListRes listUser() throws VectorDBException {
+        return this.stub.listUser();
+    }
+
+    public BaseRes dropUser(String user) throws VectorDBException {
+        return this.stub.dropUser(new UserDropParam(user));
+    }
+
+    public BaseRes changeUserPassword(String user, String password) throws VectorDBException {
+        return this.stub.changeUserPassword(UserChangePasswordParam.newBuilder().withUser(user).withPassword(password).build());
     }
 
 }

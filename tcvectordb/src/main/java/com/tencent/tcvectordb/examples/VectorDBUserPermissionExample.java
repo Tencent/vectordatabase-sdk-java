@@ -18,14 +18,13 @@ public class VectorDBUserPermissionExample {
     public static String coll_test = "java-sdk-user-coll-test";
     public static String db_test = "java-sdk-test-user-permission";
 
-    public static String user_test = "java-sdk-test-user";
+    public static String user_test = "java_sdk_test_user";
     public static void main(String[] args) {
-        System.out.println(OrderEnum.ASC.name());
-        String vdbURL = "";
-        String vdbKey = "";
+        String vdbURL = "http://11.141.218.232:8100";
+        String vdbKey = "73mzPLYqqdJe4X9aNUu5sRUGiltwO8wfbKX8XJ8I";
         System.out.println("\tvdb_url: " + vdbURL);
         System.out.println("\tvdb_key: " + vdbKey);
-        VectorDBClient client = new RPCVectorDBClient(ConnectParam.newBuilder()
+        VectorDBClient client = new VectorDBClient(ConnectParam.newBuilder()
                 .withUrl(vdbURL)
                 .withUsername("root")
                 .withKey(vdbKey)
@@ -58,7 +57,7 @@ public class VectorDBUserPermissionExample {
                 .withUser(user_test)
                 .withPrivileges(Arrays.asList(
                         PrivilegeParam.newBuilder().withResource("java-sdk-test-user-permission.*").withActions(Arrays.asList("read")).build(),
-                        PrivilegeParam.newBuilder().withResource("java-sdk-test-user-permission").withActions(Arrays.asList("readWrite")).build())
+                        PrivilegeParam.newBuilder().withResource("java-sdk-test-user-permission.*").withActions(Arrays.asList("readWrite")).build())
                 ).build());
         System.out.println("grant user permission res: " + JsonUtils.toJsonString(res));
         res = client.describeUser(user_test);

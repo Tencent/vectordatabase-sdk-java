@@ -8,8 +8,8 @@ public enum OrderEnum {
 
     private final String order;
 
-    OrderEnum(String fileType) {
-        this.order = fileType;
+    OrderEnum(String order) {
+        this.order = order;
     }
 
     @JsonValue

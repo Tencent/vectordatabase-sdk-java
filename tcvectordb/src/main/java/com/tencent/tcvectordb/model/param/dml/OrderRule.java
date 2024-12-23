@@ -41,7 +41,7 @@ public class OrderRule {
         }
 
         public Builder withDirection(OrderEnum direction) {
-            this.direction = direction.name();
+            this.direction = direction.getOrder();
             return this;
         }
 

@@ -7,6 +7,8 @@ import java.util.List;
 public class UserListRes extends BaseRes {
     private List<UserInfo> users;
 
+    public UserListRes(){}
+
     public UserListRes(int code, String message,String warning) {
         super(code, message, warning);
     }

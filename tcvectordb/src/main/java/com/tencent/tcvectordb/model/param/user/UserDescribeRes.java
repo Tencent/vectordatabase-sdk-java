@@ -9,6 +9,10 @@ public class UserDescribeRes extends BaseRes {
     private String user;
     private String createTime;
     private List<PrivilegeParam> privileges;
+
+    public UserDescribeRes() {
+    }
+
     public UserDescribeRes(int code, String msg, String warning) {
         super(code, msg, warning);
     }

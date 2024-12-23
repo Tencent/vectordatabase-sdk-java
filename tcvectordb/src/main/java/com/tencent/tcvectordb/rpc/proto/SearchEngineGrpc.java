@@ -859,7 +859,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse> getUserCreateMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "user_create",
+      fullMethodName = ApiPath.USER_CREATE,
       requestType = com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest.class,
       responseType = com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -872,13 +872,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getUserCreateMethod = getUserCreateMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest, com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "user_create"))
+              .setFullMethodName(ApiPath.USER_CREATE)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("user_create"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.USER_CREATE))
               .build();
         }
       }
@@ -890,7 +890,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse> getUserDropMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "user_drop",
+      fullMethodName = ApiPath.USER_DROP,
       requestType = com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest.class,
       responseType = com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -903,13 +903,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getUserDropMethod = getUserDropMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest, com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "user_drop"))
+              .setFullMethodName(ApiPath.USER_DROP)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("user_drop"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.USER_DROP))
               .build();
         }
       }
@@ -921,7 +921,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse> getUserChangePasswordMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "user_change_password",
+      fullMethodName = ApiPath.USER_CHANGE_PASSWORD,
       requestType = com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest.class,
       responseType = com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -934,13 +934,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getUserChangePasswordMethod = getUserChangePasswordMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest, com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "user_change_password"))
+              .setFullMethodName(ApiPath.USER_CHANGE_PASSWORD)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("user_change_password"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.USER_CHANGE_PASSWORD))
               .build();
         }
       }
@@ -952,7 +952,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse> getUserGrantMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "user_grant",
+      fullMethodName = ApiPath.USER_GRANT,
       requestType = com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest.class,
       responseType = com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -965,13 +965,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getUserGrantMethod = getUserGrantMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest, com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "user_grant"))
+              .setFullMethodName(ApiPath.USER_GRANT)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("user_grant"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.USER_GRANT))
               .build();
         }
       }
@@ -983,7 +983,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse> getUserRevokeMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "user_revoke",
+      fullMethodName = ApiPath.USER_REVOKE,
       requestType = com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest.class,
       responseType = com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -996,13 +996,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getUserRevokeMethod = getUserRevokeMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest, com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "user_revoke"))
+              .setFullMethodName(ApiPath.USER_REVOKE)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("user_revoke"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.USER_REVOKE))
               .build();
         }
       }
@@ -1014,7 +1014,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvectordb.rpc.proto.Olama.UserListResponse> getUserListMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "user_list",
+      fullMethodName = ApiPath.USER_LIST,
       requestType = com.tencent.tcvectordb.rpc.proto.Olama.UserListRequest.class,
       responseType = com.tencent.tcvectordb.rpc.proto.Olama.UserListResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -1027,13 +1027,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getUserListMethod = getUserListMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.UserListRequest, com.tencent.tcvectordb.rpc.proto.Olama.UserListResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "user_list"))
+              .setFullMethodName(ApiPath.USER_LIST)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvectordb.rpc.proto.Olama.UserListRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvectordb.rpc.proto.Olama.UserListResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("user_list"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.USER_LIST))
               .build();
         }
       }
@@ -1045,7 +1045,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeResponse> getUserDescribeMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "user_describe",
+      fullMethodName = ApiPath.USER_DESCRIBE,
       requestType = com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeRequest.class,
       responseType = com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -1058,13 +1058,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getUserDescribeMethod = getUserDescribeMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeRequest, com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "user_describe"))
+              .setFullMethodName(ApiPath.USER_DESCRIBE)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("user_describe"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.USER_DESCRIBE))
               .build();
         }
       }

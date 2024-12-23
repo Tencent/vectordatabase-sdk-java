@@ -7,6 +7,16 @@ public class PrivilegeParam {
     private String resource;
     private List<String> actions;
 
+    public PrivilegeParam() {
+    }
+
+    public void setResource(String resource) {
+        this.resource = resource;
+    }
+
+    public void setActions(List<String> actions) {
+        this.actions = actions;
+    }
 
     public PrivilegeParam(Builder builder) {
         this.resource = builder.resource;

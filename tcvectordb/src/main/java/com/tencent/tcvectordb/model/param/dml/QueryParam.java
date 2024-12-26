@@ -36,6 +36,7 @@ import java.util.List;
  *      filter(Filter): filter rows before return result
  *      document_ids(List): filter rows by id list
  *      output_fields(List): return columns by column name list
+ *      sort(OrderRule): sort rows by OrderRule{fieldName, direction} before return result
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class QueryParam extends BaseQuery {

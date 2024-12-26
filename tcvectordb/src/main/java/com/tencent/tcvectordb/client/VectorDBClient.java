@@ -246,6 +246,71 @@ public class VectorDBClient {
     }
 
     /**
+     * list collection of database
+     * @param databaseName: database's name
+     * @return List<Collection>: the list of collection
+     * @throws VectorDBException
+     */
+    public List<Collection> listCollections(String databaseName) throws VectorDBException {
+        List<Collection> collections = stub.listCollections(databaseName);
+        collections.forEach(c -> {
+            c.setStub(stub);
+            c.setReadConsistency(readConsistency);
+        });
+        return collections;
+    }
+
+    /**
+     * truncate collection
+     * @param collectionName
+     * @return
+     */
+    public AffectRes truncateCollections(String databaseName, String collectionName) {
+        return stub.truncateCollection(databaseName, collectionName, DataBaseTypeEnum.BASE_DB);
+    }
+
+    /**
+     * describe collection
+     * @param collectionName
+     * @return Collection if collection exist
+     * @throws VectorDBException
+     */
+    public Collection describeCollection(String databaseName, String collectionName) throws VectorDBException {
+        Collection collection = stub.describeCollection(databaseName, collectionName);
+        collection.setStub(stub);
+        collection.setReadConsistency(readConsistency);
+        return collection;
+    }
+
+    /**
+     * drop collection
+     * @param collectionName
+     * @throws VectorDBException
+     */
+    public void dropCollection(String databaseName, String collectionName) throws VectorDBException {
+        stub.dropCollection(databaseName, collectionName);
+    }
+
+    /**
+     * set alias for collection
+     * @param collectionName
+     * @param aliasName
+     * @return
+     */
+    public AffectRes setAlias(String databaseName,  String collectionName, String aliasName) {
+        return stub.setAlias(databaseName, collectionName, aliasName);
+    }
+
+    /**
+     * delete alias of collection
+     * @param aliasName
+     * @return
+     */
+    public AffectRes deleteAlias(String databaseName, String aliasName) {
+        return stub.deleteAlias(databaseName, aliasName);
+    }
+
+    /**
      * upsert document
      * @param database: database name
      * @param collection: collection name
@@ -298,6 +363,7 @@ public class VectorDBClient {
      *        filter(Filter): filter rows before return result
      *        document_ids(List): filter rows by id list
      *        output_fields(List): return columns by column name list
+     *        sort(OrderRule): sort rows by OrderRule{fieldName, direction} before return result
      * @return List<Document>
      * @throws VectorDBException
      */
@@ -459,6 +525,14 @@ public class VectorDBClient {
                 new AddIndexParamInner(database, collection, addIndexParam));
     }
 
+    /**
+     * rebuild index
+     * @param rebuildIndexParam: rebuild index param
+     * @return BaseRes
+     */
+    public BaseRes rebuildIndex(String database, String collection, RebuildIndexParam rebuildIndexParam) {
+        return this.stub.rebuildIndex(new RebuildIndexParamInner(database, collection, rebuildIndexParam));
+    }
 
     /**
      * Used to add a scalar field index to an existing collection

@@ -1,5 +1,6 @@
 package com.tencent.tcvectordb.model.param.dml;
 
+import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.model.param.enums.OrderEnum;
 
 public class OrderRule {
@@ -46,6 +47,9 @@ public class OrderRule {
         }
 
         public OrderRule build() {
+            if (this.fieldName == null) {
+                throw new ParamException("fieldName can not be null");
+            }
             return new OrderRule(this);
         }
     }

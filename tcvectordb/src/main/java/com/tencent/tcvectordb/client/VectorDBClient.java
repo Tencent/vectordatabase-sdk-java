@@ -514,33 +514,125 @@ public class VectorDBClient {
                 new ModifyIndexParamInner(database, collection, modifyVectorIndexParam), false);
     }
 
+    /**
+     * create user
+     * @param username: user name to create
+     * @param password: The password of user.
+     * @return BaseRes.class: {code: 0, msg: "operation success"}
+     * @throws VectorDBException
+     */
     public BaseRes createUser(String username, String password) throws VectorDBException {
         return this.stub.createUser(
                 new UserCreateParam(username, password));
     }
 
 
+    /**
+     * grant user to database
+     * @param param: UserGrantParam.class:
+     *                  user (str): The user to grant permission.
+     *                  privileges (str): The privileges to grant. For example:
+     *                      {
+     *                          "resource": "db0.*",
+     *                          "actions": ["read"]
+     *                      }
+     *                for example:
+     *                UserGrantParam.newBuilder()
+     *                 .withUser(user_test)
+     *                 .withPrivileges(Arrays.asList(
+     *                         PrivilegeParam.newBuilder().withResource("java-sdk-test-user-permission.*").withActions(Arrays.asList("read")).build(),
+     *                         PrivilegeParam.newBuilder().withResource("java-sdk-test-user-permission.*").withActions(Arrays.asList("readWrite")).build()))
+     *                 .build()
+     * @return BaseRes.class: {code: 0, msg: "operation success"}
+     * @throws VectorDBException
+     */
     public BaseRes grantToUser(UserGrantParam param) throws VectorDBException {
         return this.stub.grantToUser(param);
     }
 
+
+    /**
+     * revoke user from database
+     * @param param: UserRevokeParam.class:
+     *                  user (str): The user to grant permission.
+     *                  privileges (str): The privileges to grant. For example:
+     *                      {
+     *                          "resource": "db0.*",
+     *                          "actions": ["read"]
+     *                      }
+     *                for example:
+     *                UserRevokeParam.newBuilder()
+     *                 .withUser(user_test)
+     *                 .withPrivileges(Arrays.asList(
+     *                         PrivilegeParam.newBuilder().withResource("java-sdk-test-user-permission.*").withActions(Arrays.asList("read")).build(),
+     *                         PrivilegeParam.newBuilder().withResource("java-sdk-test-user-permission.*").withActions(Arrays.asList("readWrite")).build()))
+     *                 .build()
+     * @return BaseRes.class: {code: 0, msg: "operation success"}
+     * @throws VectorDBException
+     */
     public BaseRes revokeFromUser(UserRevokeParam param) throws VectorDBException {
         return this.stub.revokeFromUser(param);
     }
 
 
+    /**
+     * describe user
+     * @param user: user name to describe
+     * @return UserDescribeRes.class:
+     *          {
+     *               "user": "test_user",
+     *               "createTime": "2024-10-01 00:00:00",
+     *               "privileges": [
+     *                 {
+     *                   "resource": "db0.*",
+     *                   "actions": ["read"]
+     *                 }
+     *               ]
+     *          }
+     * @throws VectorDBException
+     */
     public UserDescribeRes describeUser(String user) throws VectorDBException {
         return this.stub.describeUser(new UserDescribeParam(user));
     }
 
+    /**
+     * list user
+     * @return UserListRes.class:
+     *          {
+     *               "users": [
+     *                 "user": "test_user",
+     *                    "createTime": "2024-10-01 00:00:00",
+     *                    "privileges": [
+     *                      {
+     *                        "resource": "db0.*",
+     *                        "actions": ["read"]
+     *                       }
+     *                    ]
+     *               ]
+     *          }
+     * @throws VectorDBException
+     */
     public UserListRes listUser() throws VectorDBException {
         return this.stub.listUser();
     }
 
+    /**
+     * drop user
+     * @param user: user name to drop
+     * @return baseRes.class: {code: 0, msg: "operation success"}
+     * @throws VectorDBException
+     */
     public BaseRes dropUser(String user) throws VectorDBException {
         return this.stub.dropUser(new UserDropParam(user));
     }
 
+    /**
+     * change user password
+     * @param user: user name to change password
+     * @param password: <PASSWORD>
+     * @return baseRes.class: {code: 0, msg: "operation success"}
+     * @throws VectorDBException
+     */
     public BaseRes changeUserPassword(String user, String password) throws VectorDBException {
         return this.stub.changeUserPassword(UserChangePasswordParam.newBuilder().withUser(user).withPassword(password).build());
     }

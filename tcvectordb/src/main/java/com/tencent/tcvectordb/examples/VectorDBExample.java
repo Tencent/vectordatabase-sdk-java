@@ -263,7 +263,7 @@ public class VectorDBExample {
 //                .addAllOutputFields("id", "bookName")
                 // 是否返回 vector 数据
                 .withRetrieveVector(false)
-                .withSort(Arrays.asList(OrderRule.newBuilder().withFieldName("page").withDirection(OrderEnum.DESC).build()))
+                .withSort(OrderRule.newBuilder().withFieldName("page").withDirection(OrderEnum.DESC).build())
                 .build();
         List<Document> qdos = collection.query(queryParam);
         for (Document doc : qdos) {

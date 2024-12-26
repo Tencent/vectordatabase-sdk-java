@@ -152,8 +152,8 @@ public class QueryParam extends BaseQuery {
             return this;
         }
 
-        public Builder withSort(List<OrderRule> sort) {
-            this.sort = sort;
+        public Builder withSort(OrderRule sort) {
+            this.sort = Collections.singletonList(sort);
             return this;
         }
 

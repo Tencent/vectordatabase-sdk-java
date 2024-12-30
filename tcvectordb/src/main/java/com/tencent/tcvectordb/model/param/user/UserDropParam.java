@@ -1,7 +1,9 @@
 package com.tencent.tcvectordb.model.param.user;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDropParam {
     private String user;
 

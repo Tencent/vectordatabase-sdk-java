@@ -994,12 +994,16 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public BaseRes createUser(UserCreateParam userCreateParam) {
-        Olama.UserAccountRequest request = Olama.UserAccountRequest
-                .newBuilder()
-                .setUser(userCreateParam.getUser())
-                .setPassword(userCreateParam.getPassword()).build();
-        logQuery(ApiPath.USER_CREATE, request);
-        Olama.UserAccountResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userCreate(request);
+        Olama.UserAccountRequest.Builder builder = Olama.UserAccountRequest
+                .newBuilder();
+        if (userCreateParam.getUser()!=null){
+            builder.setUser(userCreateParam.getUser());
+        }
+        if (userCreateParam.getPassword()!=null){
+            builder.setPassword(userCreateParam.getPassword()).build();
+        }
+        logQuery(ApiPath.USER_CREATE, builder.build());
+        Olama.UserAccountResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userCreate(builder.build());
         logResponse(ApiPath.USER_CREATE, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
@@ -1012,8 +1016,11 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public BaseRes grantToUser(UserGrantParam param) {
-        Olama.UserPrivilegesRequest.Builder builder = Olama.UserPrivilegesRequest.newBuilder()
-                .setUser(param.getUser());
+
+        Olama.UserPrivilegesRequest.Builder builder = Olama.UserPrivilegesRequest.newBuilder();
+        if (param.getUser()!=null){
+            builder.setUser(param.getUser());
+        }
         if (param.getPrivileges()!=null){
             builder.addAllPrivileges(param.getPrivileges().stream().map(privilege ->
                     Olama.Privilege.newBuilder()
@@ -1035,8 +1042,10 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public BaseRes revokeFromUser(UserRevokeParam param) {
-        Olama.UserPrivilegesRequest.Builder builder = Olama.UserPrivilegesRequest.newBuilder()
-                .setUser(param.getUser());
+        Olama.UserPrivilegesRequest.Builder builder = Olama.UserPrivilegesRequest.newBuilder();
+        if (param.getUser()!=null){
+            builder.setUser(param.getUser());
+        }
         if (param.getPrivileges()!=null){
             builder.addAllPrivileges(param.getPrivileges().stream().map(privilege ->
                     Olama.Privilege.newBuilder()
@@ -1056,11 +1065,13 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public UserDescribeRes describeUser(UserDescribeParam userDescribeParam) {
-        Olama.UserDescribeRequest request = Olama.UserDescribeRequest.newBuilder()
-                .setUser(userDescribeParam.getUser()).build();
 
-        logQuery(ApiPath.USER_DESCRIBE, request);
-        Olama.UserDescribeResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userDescribe(request);
+        Olama.UserDescribeRequest.Builder builder = Olama.UserDescribeRequest.newBuilder();
+        if (userDescribeParam.getUser()!=null){
+            builder.setUser(userDescribeParam.getUser());
+        }
+        logQuery(ApiPath.USER_DESCRIBE, builder.build());
+        Olama.UserDescribeResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userDescribe(builder.build());
         logResponse(ApiPath.USER_DESCRIBE, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
@@ -1104,10 +1115,13 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public BaseRes dropUser(UserDropParam userDropParam) {
-        Olama.UserAccountRequest request = Olama.UserAccountRequest.newBuilder()
-                .setUser(userDropParam.getUser()).build();
-        logQuery(ApiPath.USER_DROP, request);
-        Olama.UserAccountResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userDrop(request);
+        Olama.UserAccountRequest.Builder builder = Olama.UserAccountRequest.newBuilder();
+        if (userDropParam.getUser() != null) {
+            builder.setUser(userDropParam.getUser());
+        }
+
+        logQuery(ApiPath.USER_DROP, builder.build());
+        Olama.UserAccountResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userDrop(builder.build());
         logResponse(ApiPath.USER_DROP, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
@@ -1118,12 +1132,17 @@ public class GrpcStub extends HttpStub{
     }
 
     @Override
-    public BaseRes changeUserPassword(UserChangePasswordParam build) {
-        Olama.UserAccountRequest request = Olama.UserAccountRequest.newBuilder()
-                .setUser(build.getUser())
-                .setPassword(build.getPassword()).build();
-        logQuery(ApiPath.USER_CHANGE_PASSWORD, request);
-        Olama.UserAccountResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userChangePassword(request);
+    public BaseRes changeUserPassword(UserChangePasswordParam param) {
+        Olama.UserAccountRequest.Builder builder = Olama.UserAccountRequest
+                .newBuilder();
+        if (param.getUser()!=null){
+            builder.setUser(param.getUser());
+        }
+        if (param.getPassword()!=null){
+            builder.setPassword(param.getPassword()).build();
+        }
+        logQuery(ApiPath.USER_CHANGE_PASSWORD, builder.build());
+        Olama.UserAccountResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userChangePassword(builder.build());
         logResponse(ApiPath.USER_CHANGE_PASSWORD, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(

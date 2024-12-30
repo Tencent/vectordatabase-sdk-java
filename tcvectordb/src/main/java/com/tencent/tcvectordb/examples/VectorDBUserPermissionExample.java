@@ -8,6 +8,7 @@ import com.tencent.tcvectordb.model.param.enums.OrderEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.model.param.user.PrivilegeParam;
 import com.tencent.tcvectordb.model.param.user.UserGrantParam;
+import com.tencent.tcvectordb.model.param.user.UserListRes;
 import com.tencent.tcvectordb.model.param.user.UserRevokeParam;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
@@ -20,17 +21,18 @@ public class VectorDBUserPermissionExample {
 
     public static String user_test = "java_sdk_test_user";
     public static void main(String[] args) {
-        String vdbURL = "http://11.141.218.232:8100";
-        String vdbKey = "73mzPLYqqdJe4X9aNUu5sRUGiltwO8wfbKX8XJ8I";
+        String vdbURL = "";
+        String vdbKey = "";
         System.out.println("\tvdb_url: " + vdbURL);
         System.out.println("\tvdb_key: " + vdbKey);
-        VectorDBClient client = new VectorDBClient(ConnectParam.newBuilder()
+        VectorDBClient client = new RPCVectorDBClient(ConnectParam.newBuilder()
                 .withUrl(vdbURL)
                 .withUsername("root")
                 .withKey(vdbKey)
                 .withTimeout(30)
                 .build(),  ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
 
+//        userGrantTest(client);
         client.createDatabaseIfNotExists(db_test);
         CommonService.anySafe(() -> client.dropUser(user_test));
 
@@ -49,8 +51,8 @@ public class VectorDBUserPermissionExample {
         System.out.println("describe user res: " + JsonUtils.toJsonString(res));
 
         System.out.println("list user: ");
-        res = client.listUser();
-        System.out.println("list user res: " + JsonUtils.toJsonString(res));
+        UserListRes userListRes = client.listUser();
+        System.out.println("list user res: " + JsonUtils.toJsonString(userListRes.getUsers()));
 
         System.out.println("grant user permission: " + user_test);
         res = client.grantToUser(UserGrantParam.newBuilder()
@@ -77,6 +79,35 @@ public class VectorDBUserPermissionExample {
         System.out.println("drop user permission: " + user_test);
         res = client.dropUser(user_test);
         System.out.println("drop user res: " + JsonUtils.toJsonString(res));
+
+    }
+
+    public static void userCreateTest(VectorDBClient client){
+        System.out.println("create user: " + user_test);
+        CommonService.anySafe(() -> client.dropUser(user_test));
+        BaseRes res = client.createUser("abc1234_12", "1dfubrfvchsbr");
+        System.out.println(JsonUtils.toJsonString(res));
+    }
+
+    public static void userGrantTest(VectorDBClient client){
+        System.out.println("create user: " + user_test);
+        CommonService.anySafe(() -> {
+            client.dropUser(user_test);
+//            client.dropDatabase(db_test);
+        });
+        BaseRes res = client.createUser(user_test, "1dfubrfvchsbr");
+        System.out.println(JsonUtils.toJsonString(res));
+
+        client.createDatabaseIfNotExists(db_test);
+        res = client.grantToUser(UserGrantParam.newBuilder()
+                .withPrivileges(Arrays.asList(
+                        PrivilegeParam.newBuilder().withResource("java-sdk-test-user-permission.*").withActions(Arrays.asList("read")).build(),
+                        PrivilegeParam.newBuilder().withResource("java-sdk-test-user-permission.*").withActions(Arrays.asList("dbAdmin")).build())
+                ).build());
+        System.out.println("grant user permission res: " + JsonUtils.toJsonString(res));
+
+        res = client.describeUser(user_test);
+        System.out.println("describe user res: " + JsonUtils.toJsonString(res));
 
     }
 

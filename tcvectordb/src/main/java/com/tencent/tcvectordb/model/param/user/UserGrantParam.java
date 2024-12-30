@@ -1,10 +1,12 @@
 package com.tencent.tcvectordb.model.param.user;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserGrantParam {
     private String user;
     private List<PrivilegeParam> privileges;

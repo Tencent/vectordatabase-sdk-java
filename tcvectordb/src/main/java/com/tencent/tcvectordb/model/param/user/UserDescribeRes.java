@@ -1,6 +1,7 @@
 package com.tencent.tcvectordb.model.param.user;
 
 import com.tencent.tcvectordb.model.param.entity.BaseRes;
+import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,7 @@ public class UserDescribeRes extends BaseRes {
         return "UserDescribeRes{" +
                 "user='" + user + '\'' +
                 ", createTime='" + createTime + '\'' +
-                ", privileges=" + privileges +
+                ", privileges=" + JsonUtils.toJsonString(privileges) +
                 '}';
     }
 }

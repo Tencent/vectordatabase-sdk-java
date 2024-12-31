@@ -707,7 +707,7 @@ public class VectorDBClient {
      * @return baseRes.class: {code: 0, msg: "operation success"}
      * @throws VectorDBException
      */
-    public BaseRes changeUserPassword(String user, String password) throws VectorDBException {
+    public BaseRes changePassword(String user, String password) throws VectorDBException {
         return this.stub.changeUserPassword(UserChangePasswordParam.newBuilder().withUser(user).withPassword(password).build());
     }
 

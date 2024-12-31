@@ -1,17 +1,15 @@
 package com.tencent.tcvectordb.examples;
 
-import com.tencent.tcvectordb.client.RPCVectorDBClient;
 import com.tencent.tcvectordb.client.VectorDBClient;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.entity.BaseRes;
-import com.tencent.tcvectordb.model.param.enums.OrderEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.model.param.user.*;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.Arrays;
 
-public class VectorDBUserPermissionExample {
+public class VectorDBUserManageExample {
 
     public static String coll_test = "java-sdk-user-coll-test";
     public static String db_test = "java-sdk-test-user-permission";
@@ -40,7 +38,7 @@ public class VectorDBUserPermissionExample {
         System.out.println("describe user res: " + userDescribeRes.toString());
 
         System.out.println("-----------change user: " + user_test);
-        res = client.changeUserPassword(user_test, "dd8e8b3d6740");
+        res = client.changePassword(user_test, "dd8e8b3d6740");
         System.out.println("change user password res: " + res.getCode() + " " + res.getMsg());
         System.out.println("-----------describe user: " + user_test);
         userDescribeRes = client.describeUser(user_test);

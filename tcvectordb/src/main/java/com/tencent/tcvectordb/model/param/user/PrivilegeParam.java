@@ -62,4 +62,5 @@ public class PrivilegeParam {
             return new PrivilegeParam(this);
         }
     }
+
 }

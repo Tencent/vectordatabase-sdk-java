@@ -40,4 +40,12 @@ public class UserDescribeRes extends BaseRes {
         return privileges;
     }
 
+    @Override
+    public String toString() {
+        return "UserDescribeRes{" +
+                "user='" + user + '\'' +
+                ", createTime='" + createTime + '\'' +
+                ", privileges=" + privileges +
+                '}';
+    }
 }

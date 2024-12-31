@@ -34,4 +34,5 @@ public class UserInfo{
         return privileges;
     }
 
+
 }

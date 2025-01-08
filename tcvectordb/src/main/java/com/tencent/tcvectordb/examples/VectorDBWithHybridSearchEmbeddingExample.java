@@ -141,7 +141,8 @@ public class VectorDBWithHybridSearchEmbeddingExample {
                         .build())
                 .withMatch(MatchOption.newBuilder().withFieldName("sparse_vector")
                         .withData(encoder.encodeQueries(Arrays.asList("什么是腾讯云向量数据库")))
-                        .withCutoffFrequency(0.9)
+                        .withCutoffFrequency(0.1)
+                        .withTerminateAfter(4000)
                         .build())
                 // 指定 Top K 的 K 值
                 .withRerank(new WeightRerankParam(Arrays.asList("vector","sparse_vector"), Arrays.asList(1, 1)))

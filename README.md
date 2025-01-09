@@ -24,14 +24,14 @@ You can use **Apache Maven** or **Gradle**/**Grails** to download the SDK.
         <dependency>
             <groupId>com.tencent.tcvectordb</groupId>
             <artifactId>vectordatabase-sdk-java</artifactId>
-            <version>2.1.2</version>
+            <version>2.1.3</version>
         </dependency>
        ```
 
    - Gradle/Grails
 
         ```gradle
-        compile 'com.tencent.tcvectordb:vectordatabase-sdk-java:2.1.2'
+        compile 'com.tencent.tcvectordb:vectordatabase-sdk-java:2.1.3'
         ```
 
 ### Examples

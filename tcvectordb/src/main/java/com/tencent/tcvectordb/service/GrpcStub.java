@@ -1124,9 +1124,7 @@ public class GrpcStub extends HttpStub{
 
     private static Document convertDocument(Olama.Document document) {
         Document.Builder builder =  Document.newBuilder().withId(document.getId());
-        if (document.getScore()>0){
-            builder.withScore(Double.valueOf(document.getScore()));
-        }
+        builder.withScore(Double.valueOf(document.getScore()));
         if (document.getVectorCount()>0){
             builder.withVector(document.getVectorList().stream().map(ele->ele.doubleValue()).collect(Collectors.toList()));
         }

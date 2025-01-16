@@ -51,7 +51,12 @@ public enum FieldType {
     /**
      * sparse vector
      */
-    SparseVector("sparseVector");
+    SparseVector("sparseVector"),
+
+    /**
+     * Json 类型
+     */
+    Json("json");
 
     private final String value;
 

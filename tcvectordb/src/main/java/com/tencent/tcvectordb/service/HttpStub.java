@@ -48,6 +48,7 @@ import com.tencent.tcvectordb.utils.FileUtils;
 import com.tencent.tcvectordb.utils.JsonUtils;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -925,7 +926,10 @@ public class HttpStub implements Stub {
                 } else if (ele.isArray()) {
                     List values = JsonUtils.parseObject(ele.toString(), List.class);
                     builder.addFilterField(new DocField(name, values));
-                } else {
+                } else if(ele.isObject()){
+                    builder.addFilterField(new DocField(name, new JSONObject(ele.toString())));
+                }
+                else {
                     builder.addFilterField(new DocField(name, ele.asText()));
                 }
             }

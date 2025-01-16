@@ -20,36 +20,34 @@
 
 package com.tencent.tcvectordb.model.param.collection;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
- * FilterIndex: Field type of index field
+ * IndexType
  */
-public class FilterIndex extends IndexField {
+public enum AutoIdType {
+    /**
+     * scalar index type: filter
+     */
+    UUID("uuid");
 
-    public FilterIndex(String fieldName, FieldType fieldType, IndexType indexType) {
-        setFieldName(fieldName);
-        setFieldType(fieldType);
-        setIndexType(indexType);
+    private final String value;
+
+    private AutoIdType(String value) {
+        this.value = value;
     }
 
-    public FilterIndex(String fieldName, FieldType fieldType, IndexType indexType, MetricType metricType) {
-        setFieldName(fieldName);
-        setFieldType(fieldType);
-        setIndexType(indexType);
-        setMetricType(metricType);
+    @JsonValue
+    public String getValue() {
+        return value;
     }
 
-    // autoId is used to generate a id for each document
-    public FilterIndex(String fieldName, FieldType fieldType, IndexType indexType, String autoId) {
-        setFieldName(fieldName);
-        setFieldType(fieldType);
-        setIndexType(indexType);
-        setAutoId(autoId);
-    }
-
-    public FilterIndex(String fieldName, FieldType fieldType, IndexType indexType, AutoIdType autoIdType) {
-        setFieldName(fieldName);
-        setFieldType(fieldType);
-        setIndexType(indexType);
-        setAutoId(autoIdType.getValue());
+    public static AutoIdType fromValue(String value) {
+        for (AutoIdType indexType : AutoIdType.values()) {
+            if (indexType.getValue().equals(value)) {
+                return indexType;
+            }
+        }
+        return null; // 或者抛出一个异常，如果value不合法
     }
 }

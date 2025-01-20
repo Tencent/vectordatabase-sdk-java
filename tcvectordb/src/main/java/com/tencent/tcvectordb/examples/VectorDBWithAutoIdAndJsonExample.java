@@ -222,7 +222,7 @@ public class VectorDBWithAutoIdAndJsonExample {
                 .withName(collName)
                 .withShardNum(1)
                 .withReplicaNum(1)
-                .withDescription("test binary collection")
+                .withDescription("test json collection")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY, AutoIdType.UUID))
                 .addField(new VectorIndex("vector", BGE_BASE_ZH.getDimension(), IndexType.HNSW,
                         MetricType.IP, new HNSWParams(16, 200)))

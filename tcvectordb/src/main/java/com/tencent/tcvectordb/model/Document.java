@@ -180,10 +180,10 @@ public class Document {
                         node.set(field.getName(), strNode);
                         break;
                     case Json:
-                        ObjectMapper objectMapper = new ObjectMapper();
-                        Map<String, Object> map = objectMapper.convertValue(field.getValue(), Map.class);
-                        JsonNode jsonNode = objectMapper.valueToTree(map);
+                        Map<String, Object> map = JsonUtils.parseObject(field.getValue().toString(), Map.class);
+                        JsonNode jsonNode = JsonUtils.toJsonNode(map);
                         node.put(field.getName(), jsonNode);
+                        break;
                     default:
                         node.put(field.getName(), field.getStringValue());
                 }

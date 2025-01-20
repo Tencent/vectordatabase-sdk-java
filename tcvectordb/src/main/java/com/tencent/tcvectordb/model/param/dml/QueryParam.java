@@ -36,6 +36,7 @@ import java.util.List;
  *      filter(Filter): filter rows before return result
  *      document_ids(List): filter rows by id list
  *      output_fields(List): return columns by column name list
+ *      sort(OrderRule): sort rows by OrderRule{fieldName, direction} before return result
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class QueryParam extends BaseQuery {
@@ -44,6 +45,15 @@ public class QueryParam extends BaseQuery {
     private long offset;
     private List<String> outputFields;
 
+    private List<OrderRule> sort;
+
+    public List<OrderRule> getSort() {
+        return sort;
+    }
+
+    public void setSort(List<OrderRule> sort) {
+        this.sort = sort;
+    }
 
     public boolean isRetrieveVector() {
         return retrieveVector;
@@ -67,9 +77,11 @@ public class QueryParam extends BaseQuery {
         this.retrieveVector = builder.retrieveVector;
         this.limit = builder.limit;
         this.offset = builder.offset;
+        this.sort = builder.sort;
         if (builder.outputFields != null && !builder.outputFields.isEmpty()) {
             this.outputFields = Collections.unmodifiableList(builder.outputFields);
         }
+
     }
 
     public static Builder newBuilder() {
@@ -89,6 +101,8 @@ public class QueryParam extends BaseQuery {
         private long offset = 0;
 
         private List<String> outputFields;
+
+        private List<OrderRule> sort;
 
         private Builder() {
             super();
@@ -136,6 +150,11 @@ public class QueryParam extends BaseQuery {
 
         public Builder withOutputFields(List<String> outputFields) {
             this.outputFields = outputFields;
+            return this;
+        }
+
+        public Builder withSort(OrderRule sort) {
+            this.sort = Collections.singletonList(sort);
             return this;
         }
 

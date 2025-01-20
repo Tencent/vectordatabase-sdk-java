@@ -855,6 +855,223 @@ public final class SearchEngineGrpc {
     return getCountMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse> getUserCreateMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = ApiPath.USER_CREATE,
+      requestType = com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest.class,
+      responseType = com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse> getUserCreateMethod() {
+    io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest, com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse> getUserCreateMethod;
+    if ((getUserCreateMethod = SearchEngineGrpc.getUserCreateMethod) == null) {
+      synchronized (SearchEngineGrpc.class) {
+        if ((getUserCreateMethod = SearchEngineGrpc.getUserCreateMethod) == null) {
+          SearchEngineGrpc.getUserCreateMethod = getUserCreateMethod =
+              io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest, com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(ApiPath.USER_CREATE)
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.USER_CREATE))
+              .build();
+        }
+      }
+    }
+    return getUserCreateMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse> getUserDropMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = ApiPath.USER_DROP,
+      requestType = com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest.class,
+      responseType = com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse> getUserDropMethod() {
+    io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest, com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse> getUserDropMethod;
+    if ((getUserDropMethod = SearchEngineGrpc.getUserDropMethod) == null) {
+      synchronized (SearchEngineGrpc.class) {
+        if ((getUserDropMethod = SearchEngineGrpc.getUserDropMethod) == null) {
+          SearchEngineGrpc.getUserDropMethod = getUserDropMethod =
+              io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest, com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(ApiPath.USER_DROP)
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.USER_DROP))
+              .build();
+        }
+      }
+    }
+    return getUserDropMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse> getUserChangePasswordMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = ApiPath.USER_CHANGE_PASSWORD,
+      requestType = com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest.class,
+      responseType = com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse> getUserChangePasswordMethod() {
+    io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest, com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse> getUserChangePasswordMethod;
+    if ((getUserChangePasswordMethod = SearchEngineGrpc.getUserChangePasswordMethod) == null) {
+      synchronized (SearchEngineGrpc.class) {
+        if ((getUserChangePasswordMethod = SearchEngineGrpc.getUserChangePasswordMethod) == null) {
+          SearchEngineGrpc.getUserChangePasswordMethod = getUserChangePasswordMethod =
+              io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest, com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(ApiPath.USER_CHANGE_PASSWORD)
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.USER_CHANGE_PASSWORD))
+              .build();
+        }
+      }
+    }
+    return getUserChangePasswordMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse> getUserGrantMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = ApiPath.USER_GRANT,
+      requestType = com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest.class,
+      responseType = com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse> getUserGrantMethod() {
+    io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest, com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse> getUserGrantMethod;
+    if ((getUserGrantMethod = SearchEngineGrpc.getUserGrantMethod) == null) {
+      synchronized (SearchEngineGrpc.class) {
+        if ((getUserGrantMethod = SearchEngineGrpc.getUserGrantMethod) == null) {
+          SearchEngineGrpc.getUserGrantMethod = getUserGrantMethod =
+              io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest, com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(ApiPath.USER_GRANT)
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.USER_GRANT))
+              .build();
+        }
+      }
+    }
+    return getUserGrantMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse> getUserRevokeMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = ApiPath.USER_REVOKE,
+      requestType = com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest.class,
+      responseType = com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse> getUserRevokeMethod() {
+    io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest, com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse> getUserRevokeMethod;
+    if ((getUserRevokeMethod = SearchEngineGrpc.getUserRevokeMethod) == null) {
+      synchronized (SearchEngineGrpc.class) {
+        if ((getUserRevokeMethod = SearchEngineGrpc.getUserRevokeMethod) == null) {
+          SearchEngineGrpc.getUserRevokeMethod = getUserRevokeMethod =
+              io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest, com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(ApiPath.USER_REVOKE)
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.USER_REVOKE))
+              .build();
+        }
+      }
+    }
+    return getUserRevokeMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.UserListRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.UserListResponse> getUserListMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = ApiPath.USER_LIST,
+      requestType = com.tencent.tcvectordb.rpc.proto.Olama.UserListRequest.class,
+      responseType = com.tencent.tcvectordb.rpc.proto.Olama.UserListResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.UserListRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.UserListResponse> getUserListMethod() {
+    io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.UserListRequest, com.tencent.tcvectordb.rpc.proto.Olama.UserListResponse> getUserListMethod;
+    if ((getUserListMethod = SearchEngineGrpc.getUserListMethod) == null) {
+      synchronized (SearchEngineGrpc.class) {
+        if ((getUserListMethod = SearchEngineGrpc.getUserListMethod) == null) {
+          SearchEngineGrpc.getUserListMethod = getUserListMethod =
+              io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.UserListRequest, com.tencent.tcvectordb.rpc.proto.Olama.UserListResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(ApiPath.USER_LIST)
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.UserListRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.UserListResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.USER_LIST))
+              .build();
+        }
+      }
+    }
+    return getUserListMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeResponse> getUserDescribeMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = ApiPath.USER_DESCRIBE,
+      requestType = com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeRequest.class,
+      responseType = com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeResponse> getUserDescribeMethod() {
+    io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeRequest, com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeResponse> getUserDescribeMethod;
+    if ((getUserDescribeMethod = SearchEngineGrpc.getUserDescribeMethod) == null) {
+      synchronized (SearchEngineGrpc.class) {
+        if ((getUserDescribeMethod = SearchEngineGrpc.getUserDescribeMethod) == null) {
+          SearchEngineGrpc.getUserDescribeMethod = getUserDescribeMethod =
+              io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeRequest, com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(ApiPath.USER_DESCRIBE)
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.USER_DESCRIBE))
+              .build();
+        }
+      }
+    }
+    return getUserDescribeMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -1168,6 +1385,77 @@ public final class SearchEngineGrpc {
     default void count(com.tencent.tcvectordb.rpc.proto.Olama.CountRequest request,
         io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.CountResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getCountMethod(), responseObserver);
+    }
+
+    /**
+     * <pre>
+     * RBAC相关接口
+     * 创建用户
+     * </pre>
+     */
+    default void userCreate(com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getUserCreateMethod(), responseObserver);
+    }
+
+    /**
+     * <pre>
+     * 删除用户
+     * </pre>
+     */
+    default void userDrop(com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getUserDropMethod(), responseObserver);
+    }
+
+    /**
+     * <pre>
+     * 修改用户密码
+     * </pre>
+     */
+    default void userChangePassword(com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getUserChangePasswordMethod(), responseObserver);
+    }
+
+    /**
+     * <pre>
+     * 授予用户角色或权限
+     * </pre>
+     */
+    default void userGrant(com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getUserGrantMethod(), responseObserver);
+    }
+
+    /**
+     * <pre>
+     * 撤销用户角色或权限
+     * </pre>
+     */
+    default void userRevoke(com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getUserRevokeMethod(), responseObserver);
+    }
+
+    /**
+     * <pre>
+     * 展示所有用户列表
+     * </pre>
+     */
+    default void userList(com.tencent.tcvectordb.rpc.proto.Olama.UserListRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.UserListResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getUserListMethod(), responseObserver);
+    }
+
+    /**
+     * <pre>
+     * 展示某个用户的详细信息
+     * </pre>
+     */
+    default void userDescribe(com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getUserDescribeMethod(), responseObserver);
     }
   }
 
@@ -1491,6 +1779,84 @@ public final class SearchEngineGrpc {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getCountMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     * <pre>
+     * RBAC相关接口
+     * 创建用户
+     * </pre>
+     */
+    public void userCreate(com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getUserCreateMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     * <pre>
+     * 删除用户
+     * </pre>
+     */
+    public void userDrop(com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getUserDropMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     * <pre>
+     * 修改用户密码
+     * </pre>
+     */
+    public void userChangePassword(com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getUserChangePasswordMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     * <pre>
+     * 授予用户角色或权限
+     * </pre>
+     */
+    public void userGrant(com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getUserGrantMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     * <pre>
+     * 撤销用户角色或权限
+     * </pre>
+     */
+    public void userRevoke(com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getUserRevokeMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     * <pre>
+     * 展示所有用户列表
+     * </pre>
+     */
+    public void userList(com.tencent.tcvectordb.rpc.proto.Olama.UserListRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.UserListResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getUserListMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     * <pre>
+     * 展示某个用户的详细信息
+     * </pre>
+     */
+    public void userDescribe(com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getUserDescribeMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -1774,6 +2140,77 @@ public final class SearchEngineGrpc {
     public com.tencent.tcvectordb.rpc.proto.Olama.CountResponse count(com.tencent.tcvectordb.rpc.proto.Olama.CountRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getCountMethod(), getCallOptions(), request);
+    }
+
+    /**
+     * <pre>
+     * RBAC相关接口
+     * 创建用户
+     * </pre>
+     */
+    public com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse userCreate(com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getUserCreateMethod(), getCallOptions(), request);
+    }
+
+    /**
+     * <pre>
+     * 删除用户
+     * </pre>
+     */
+    public com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse userDrop(com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getUserDropMethod(), getCallOptions(), request);
+    }
+
+    /**
+     * <pre>
+     * 修改用户密码
+     * </pre>
+     */
+    public com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse userChangePassword(com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getUserChangePasswordMethod(), getCallOptions(), request);
+    }
+
+    /**
+     * <pre>
+     * 授予用户角色或权限
+     * </pre>
+     */
+    public com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse userGrant(com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getUserGrantMethod(), getCallOptions(), request);
+    }
+
+    /**
+     * <pre>
+     * 撤销用户角色或权限
+     * </pre>
+     */
+    public com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse userRevoke(com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getUserRevokeMethod(), getCallOptions(), request);
+    }
+
+    /**
+     * <pre>
+     * 展示所有用户列表
+     * </pre>
+     */
+    public com.tencent.tcvectordb.rpc.proto.Olama.UserListResponse userList(com.tencent.tcvectordb.rpc.proto.Olama.UserListRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getUserListMethod(), getCallOptions(), request);
+    }
+
+    /**
+     * <pre>
+     * 展示某个用户的详细信息
+     * </pre>
+     */
+    public com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeResponse userDescribe(com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getUserDescribeMethod(), getCallOptions(), request);
     }
   }
 
@@ -2086,6 +2523,84 @@ public final class SearchEngineGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getCountMethod(), getCallOptions()), request);
     }
+
+    /**
+     * <pre>
+     * RBAC相关接口
+     * 创建用户
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse> userCreate(
+        com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getUserCreateMethod(), getCallOptions()), request);
+    }
+
+    /**
+     * <pre>
+     * 删除用户
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse> userDrop(
+        com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getUserDropMethod(), getCallOptions()), request);
+    }
+
+    /**
+     * <pre>
+     * 修改用户密码
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse> userChangePassword(
+        com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getUserChangePasswordMethod(), getCallOptions()), request);
+    }
+
+    /**
+     * <pre>
+     * 授予用户角色或权限
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse> userGrant(
+        com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getUserGrantMethod(), getCallOptions()), request);
+    }
+
+    /**
+     * <pre>
+     * 撤销用户角色或权限
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse> userRevoke(
+        com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getUserRevokeMethod(), getCallOptions()), request);
+    }
+
+    /**
+     * <pre>
+     * 展示所有用户列表
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.tencent.tcvectordb.rpc.proto.Olama.UserListResponse> userList(
+        com.tencent.tcvectordb.rpc.proto.Olama.UserListRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getUserListMethod(), getCallOptions()), request);
+    }
+
+    /**
+     * <pre>
+     * 展示某个用户的详细信息
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeResponse> userDescribe(
+        com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getUserDescribeMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_SET_ALIAS = 0;
@@ -2115,6 +2630,13 @@ public final class SearchEngineGrpc {
   private static final int METHODID_ADD_INDEX = 24;
   private static final int METHODID_MODIFY_VECTOR_INDEX = 25;
   private static final int METHODID_COUNT = 26;
+  private static final int METHODID_USER_CREATE = 27;
+  private static final int METHODID_USER_DROP = 28;
+  private static final int METHODID_USER_CHANGE_PASSWORD = 29;
+  private static final int METHODID_USER_GRANT = 30;
+  private static final int METHODID_USER_REVOKE = 31;
+  private static final int METHODID_USER_LIST = 32;
+  private static final int METHODID_USER_DESCRIBE = 33;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -2240,6 +2762,34 @@ public final class SearchEngineGrpc {
         case METHODID_COUNT:
           serviceImpl.count((com.tencent.tcvectordb.rpc.proto.Olama.CountRequest) request,
               (io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.CountResponse>) responseObserver);
+          break;
+        case METHODID_USER_CREATE:
+          serviceImpl.userCreate((com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest) request,
+              (io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse>) responseObserver);
+          break;
+        case METHODID_USER_DROP:
+          serviceImpl.userDrop((com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest) request,
+              (io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse>) responseObserver);
+          break;
+        case METHODID_USER_CHANGE_PASSWORD:
+          serviceImpl.userChangePassword((com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest) request,
+              (io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse>) responseObserver);
+          break;
+        case METHODID_USER_GRANT:
+          serviceImpl.userGrant((com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest) request,
+              (io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse>) responseObserver);
+          break;
+        case METHODID_USER_REVOKE:
+          serviceImpl.userRevoke((com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest) request,
+              (io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse>) responseObserver);
+          break;
+        case METHODID_USER_LIST:
+          serviceImpl.userList((com.tencent.tcvectordb.rpc.proto.Olama.UserListRequest) request,
+              (io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.UserListResponse>) responseObserver);
+          break;
+        case METHODID_USER_DESCRIBE:
+          serviceImpl.userDescribe((com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeRequest) request,
+              (io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -2448,6 +2998,55 @@ public final class SearchEngineGrpc {
               com.tencent.tcvectordb.rpc.proto.Olama.CountRequest,
               com.tencent.tcvectordb.rpc.proto.Olama.CountResponse>(
                 service, METHODID_COUNT)))
+        .addMethod(
+          getUserCreateMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest,
+              com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse>(
+                service, METHODID_USER_CREATE)))
+        .addMethod(
+          getUserDropMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest,
+              com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse>(
+                service, METHODID_USER_DROP)))
+        .addMethod(
+          getUserChangePasswordMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.tencent.tcvectordb.rpc.proto.Olama.UserAccountRequest,
+              com.tencent.tcvectordb.rpc.proto.Olama.UserAccountResponse>(
+                service, METHODID_USER_CHANGE_PASSWORD)))
+        .addMethod(
+          getUserGrantMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest,
+              com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse>(
+                service, METHODID_USER_GRANT)))
+        .addMethod(
+          getUserRevokeMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesRequest,
+              com.tencent.tcvectordb.rpc.proto.Olama.UserPrivilegesResponse>(
+                service, METHODID_USER_REVOKE)))
+        .addMethod(
+          getUserListMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.tencent.tcvectordb.rpc.proto.Olama.UserListRequest,
+              com.tencent.tcvectordb.rpc.proto.Olama.UserListResponse>(
+                service, METHODID_USER_LIST)))
+        .addMethod(
+          getUserDescribeMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeRequest,
+              com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeResponse>(
+                service, METHODID_USER_DESCRIBE)))
         .build();
   }
 
@@ -2523,6 +3122,13 @@ public final class SearchEngineGrpc {
               .addMethod(getAddIndexMethod())
               .addMethod(getModifyVectorIndexMethod())
               .addMethod(getCountMethod())
+              .addMethod(getUserCreateMethod())
+              .addMethod(getUserDropMethod())
+              .addMethod(getUserChangePasswordMethod())
+              .addMethod(getUserGrantMethod())
+              .addMethod(getUserRevokeMethod())
+              .addMethod(getUserListMethod())
+              .addMethod(getUserDescribeMethod())
               .build();
         }
       }

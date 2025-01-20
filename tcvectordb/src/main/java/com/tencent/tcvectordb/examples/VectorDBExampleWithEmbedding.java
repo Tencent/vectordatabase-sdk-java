@@ -428,7 +428,7 @@ public class VectorDBExampleWithEmbedding {
                 .withEmbedding(
                         Embedding
                                 .newBuilder()
-                                .withModel(BGE_BASE_ZH)
+                                .withModelName("bge-base-zh")
                                 .withField("text")
                                 .withVectorField("vector")
                                 .build())

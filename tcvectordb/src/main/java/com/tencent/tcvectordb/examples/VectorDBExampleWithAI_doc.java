@@ -67,17 +67,17 @@ public class VectorDBExampleWithAI_doc {
 //        loadAndSplitTextUseInputStream(client, new FileInputStream(System.getProperty("file_path")), file.length(), "腾讯云向量数据库.md", metaDataMap);
 
         // 使用文件路径上传文档
-         loadAndSplitText(client, System.getProperty("file_path"), "documentSetName", metaDataMap);
+         loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.md", metaDataMap);
         // support markdown, pdf, pptx, docx document
         // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pdf", metaDataMap);
         // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pptx", metaDataMap);
         // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.docx", metaDataMap);
 
         // 解析加载文件需要等待时间
-        Thread.sleep(1000 * 20);
+        Thread.sleep(1000 * 10);
 
         queryData(client);
-        GetFile(client, "tcvdb.pdf");
+        GetFile(client, "腾讯云向量数据库.md");
         updateAndDelete(client);
         deleteAndDrop(client);
     }
@@ -172,9 +172,9 @@ public class VectorDBExampleWithAI_doc {
         System.out.println("---------------------- query ----------------------");
         CollectionViewQueryParam queryParam = CollectionViewQueryParam.newBuilder().
                 withLimit(2).
-                withFilter(new Filter(Filter.in("author", Arrays.asList("Tencent", "tencent")))
-                        .and(Filter.include("tags", Arrays.asList("AI", "Embedding")))).
-                withDocumentSetNames(Arrays.asList("tcvdb.pdf"))
+//                withFilter(new Filter(Filter.in("author", Arrays.asList("Tencent", "tencent")))
+//                        .and(Filter.include("tags", Arrays.asList("AI", "Embedding")))).
+                withDocumentSetNames(Arrays.asList("腾讯云向量数据库.md"))
 //                .withOutputFields(Arrays.asList("textPrefix", "author", "tags"))
                 .build();
         List<DocumentSet> qdos = collectionView.query(queryParam);
@@ -184,7 +184,7 @@ public class VectorDBExampleWithAI_doc {
 
         System.out.println("---------------------- get chunks ----------------------");
         System.out.println("get chunks res :");
-        System.out.println(JsonUtils.toJsonString(collectionView.getChunks(null, "tcvdb.pdf", 60, 0)));
+        System.out.println(JsonUtils.toJsonString(collectionView.getChunks(null, "腾讯云向量数据库.md", 60, 0)));
 
         // search
         // 1. search 用于检索数据
@@ -202,7 +202,7 @@ public class VectorDBExampleWithAI_doc {
                 .withSearchContentOption(option)
                 .withFilter(new Filter(Filter.in("author", Arrays.asList("Tencent", "tencent")))
                         .and(Filter.include("tags", Arrays.asList("AI", "Embedding"))).getCond())
-                .withDocumentSetName(Arrays.asList("tcvdb.pdf"))
+                .withDocumentSetName(Arrays.asList("腾讯云向量数据库.md"))
                 .build();
 //        System.out.println(qdos.get(0).search(searchByContentsParam).toString());
         List<SearchContentInfo> searchRes = collectionView.search(searchByContentsParam);
@@ -222,7 +222,7 @@ public class VectorDBExampleWithAI_doc {
         Filter filterParam = new Filter("author=\"Tencent\"");
         CollectionViewConditionParam updateParam = CollectionViewConditionParam
                 .newBuilder()
-                .withDocumentSetNames(Arrays.asList("tcvdb.pdf"))
+                .withDocumentSetNames(Arrays.asList("腾讯云向量数据库.md"))
                 .withFilter(filterParam)
                 .build();
         Map<String, Object> updateFieldValues = new HashMap<>();
@@ -240,7 +240,7 @@ public class VectorDBExampleWithAI_doc {
         Filter filterParam1 = new Filter("author=\"tencent\"");
         CollectionViewConditionParam build = CollectionViewConditionParam
                 .newBuilder()
-                .withDocumentSetNames(Arrays.asList("tcvdb.pdf"))
+                .withDocumentSetNames(Arrays.asList("腾讯云向量数据库.md"))
                 .withFilter(filterParam1)
                 .build();
         AffectRes affectRes = collectionView.deleteDocumentSets(build);

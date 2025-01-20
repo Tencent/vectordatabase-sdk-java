@@ -28,14 +28,10 @@ import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
-import com.tencent.tcvectordb.utils.BinaryUtils;
 import com.tencent.tcvectordb.utils.JsonUtils;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum.BGE_BASE_ZH;
 
@@ -58,7 +54,7 @@ public class VectorDBWithAutoIdAndJsonExample {
         createDatabaseAndCollection(client);
         upsertData(client);
         queryData(client);
-        deleteAndDrop(client);
+//        deleteAndDrop(client);
 
     }
 
@@ -89,27 +85,47 @@ public class VectorDBWithAutoIdAndJsonExample {
                 Document.newBuilder()
                         .withVector(generateRandomVector(768))
                         .addDocField(new DocField("bookInfo",
-                                new JSONObject("{\"bookName\":\"三国演义\",\"author\":\"罗贯中\",\"page\":21}")))
-                        .build(),
-                Document.newBuilder()
-                        .withVector(generateRandomVector(768))
-                                .addDocField(new DocField("bookInfo",
-                                        new JSONObject("{\"bookName\":\"西游记\",\"author\":\"吴承恩\",\"page\":22}")))
-                        .build(),
-                Document.newBuilder()
-                        .withVector(generateRandomVector(768))
-                        .addDocField(new DocField("bookInfo",
-                                new JSONObject("{\"bookName\":\"红楼梦\",\"author\":\"曹雪芹\",\"page\":23}")))
+                                new JSONObject(new HashMap<Object,Object>(){{
+                                    put("bookName", "西游记");
+                                    put("page", 25);
+                                    put("author", "吴承恩");
+                                }})))
                         .build(),
                 Document.newBuilder()
                         .withVector(generateRandomVector(768))
                         .addDocField(new DocField("bookInfo",
-                                new JSONObject("{\"bookName\":\"红楼梦\",\"author\":\"曹雪芹\",\"page\":24}")))
+                                new JSONObject(new HashMap<Object,Object>(){{
+                                    put("bookName", "三国演义");
+                                    put("page", 25);
+                                    put("author", "罗贯中");
+                                }})))
                         .build(),
                 Document.newBuilder()
                         .withVector(generateRandomVector(768))
                         .addDocField(new DocField("bookInfo",
-                                new JSONObject("{\"bookName\":\"水浒传\",\"author\":\"施耐庵\",\"page\":24}")))
+                                new JSONObject(new HashMap<Object,Object>(){{
+                                    put("bookName", "水浒传");
+                                    put("page", 25);
+                                    put("author", "施耐庵");
+                                }})))
+                        .build(),
+                Document.newBuilder()
+                        .withVector(generateRandomVector(768))
+                        .addDocField(new DocField("bookInfo",
+                                new JSONObject(new HashMap<Object,Object>(){{
+                                    put("bookName", "红楼梦");
+                                    put("page", 25);
+                                    put("author", "曹雪芹");
+                                }})))
+                        .build(),
+                Document.newBuilder()
+                        .withVector(generateRandomVector(768))
+                        .addDocField(new DocField("bookInfo",
+                                new JSONObject(new HashMap<Object,Object>(){{
+                                    put("bookName", "红楼梦");
+                                    put("page", 25);
+                                    put("author", "曹雪芹");
+                                }})))
                         .build()));
         System.out.println("---------------------- upsert ----------------------");
         InsertParam insertParam = InsertParam.newBuilder().withDocuments(documentList).build();
@@ -138,18 +154,18 @@ public class VectorDBWithAutoIdAndJsonExample {
 
         System.out.println("---------------------- query ----------------------");
         List<String> documentIds = Arrays.asList("0001", "0002", "0003", "0004", "0005");
-        List<String> outputFields = Arrays.asList("id", "bookName");
+        List<String> outputFields = Arrays.asList("id", "bookInfo");
         QueryParam queryParam = QueryParam.newBuilder()
-                .withDocumentIds(Arrays.asList("0001", "0002", "0003", "0004", "0005"))
+//                .withDocumentIds(Arrays.asList("0001", "0002", "0003", "0004", "0005"))
                 // limit 限制返回行数，1 到 16384 之间
                  .withLimit(5)
-                .withFilter("bookName=\"三国演义\"")
+                .withFilter("bookInfo.bookName=\"红楼梦\"")
                 // 偏移
                  .withOffset(0)
                 // 指定返回的 fields
-                .addAllOutputFields("id", "bookName")
+                .addAllOutputFields("id", "bookInfo")
                 // 是否返回 vector 数据
-                .withRetrieveVector(true)
+//                .withRetrieveVector(true)
                 .build();
         List<Document> qdos = collection.query(queryParam);
         for (Document doc : qdos) {
@@ -186,7 +202,7 @@ public class VectorDBWithAutoIdAndJsonExample {
         // 其他选项类似 search 接口
         System.out.println("---------------------- search ----------------------");
         SearchByVectorParam searchByVectorParam = SearchByVectorParam.newBuilder()
-                .addVector(BinaryUtils.binaryToUint8(Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0,  1, 1, 0, 1, 1, 1, 0, 1)))
+                .addVector(generateRandomVector(768))
                 // 若使用 HNSW 索引，则需要指定参数ef，ef越大，召回率越高，但也会影响检索速度
                 .withParams(new HNSWSearchParams(100))
                 // 指定 Top K 的 K 值
@@ -227,11 +243,11 @@ public class VectorDBWithAutoIdAndJsonExample {
                 .addField(new VectorIndex("vector", BGE_BASE_ZH.getDimension(), IndexType.HNSW,
                         MetricType.IP, new HNSWParams(16, 200)))
                 .addField(new FilterIndex("bookInfo", FieldType.Json, IndexType.FILTER))
-                .withFilterIndexConfig(FilterIndexConfig.newBuilder()
-                        .withFilterAll(true)
-                        .withFieldWithoutFilterIndex(Arrays.asList("test1", "test2"))
-                        .withMaxStrLen(64)
-                        .build())
+//                .withFilterIndexConfig(FilterIndexConfig.newBuilder()
+//                        .withFilterAll(true)
+//                        .withFieldWithoutFilterIndex(Arrays.asList("test1", "test2"))
+//                        .withMaxStrLen(64)
+//                        .build())
                 .build();
     }
 }

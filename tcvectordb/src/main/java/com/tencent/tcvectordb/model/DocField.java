@@ -23,6 +23,7 @@ package com.tencent.tcvectordb.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.param.collection.FieldType;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -63,6 +64,9 @@ public class DocField {
         }
         if (this.value instanceof List) {
             return FieldType.Array;
+        }
+        if (this.value instanceof JSONObject) {
+            return FieldType.Json;
         }
         return FieldType.String;
     }

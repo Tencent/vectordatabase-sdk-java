@@ -42,8 +42,8 @@ public class CommonService {
      * @return {@link ConnectParam}
      */
     private static ConnectParam initConnectParam() {
-        String vdbURL = "";
-        String vdbKey = "";
+        String vdbURL = "http://21.0.179.167:8100";
+        String vdbKey = "L2eOXq0MzxQ6FHBZEBh1XiGBbf00XnxKE6yQaUeH";
         System.out.println("\tvdb_url: " + vdbURL);
         System.out.println("\tvdb_key: " + vdbKey);
         return ConnectParam.newBuilder()
@@ -61,9 +61,9 @@ public class CommonService {
      */
     public static VectorDBClient initClient() {
         // 创建http client
-//        return new VectorDBClient(initConnectParam(), ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
+        return new VectorDBClient(initConnectParam(), ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
         // 创建rpc client
-        return new RPCVectorDBClient(initConnectParam(), ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
+//        return new RPCVectorDBClient(initConnectParam(), ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
     }
 
     /**

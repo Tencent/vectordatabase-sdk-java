@@ -1255,7 +1255,7 @@ public class GrpcStub extends HttpStub{
                 fieldBuilder.setValStrArr(Olama.Field.StringArray.newBuilder().addAllStrArr(
                         ((List<?>) docField.getValue()).stream().map(ele-> ByteString.copyFromUtf8((String)ele)).collect(Collectors.toList())));
             }else if(docField.getValue() instanceof JSONObject){
-                fieldBuilder.setValStr(ByteString.copyFromUtf8(docField.getValue().toString()));
+                fieldBuilder.setValJson(ByteString.copyFromUtf8(docField.getValue().toString()));
             }else {
                 throw new VectorDBException("Unsupported field type,  field key:" + docField.getName() + " type:"+ docField.getValue().getClass() +"\n" +
                         "supported field type is:  Integer,Long,Double,Float,String,List<String>");
@@ -1322,7 +1322,7 @@ public class GrpcStub extends HttpStub{
                     builder.addDocField(new DocField(stringFieldEntry.getKey(), stringFieldEntry.getValue().getValStr().toString(StandardCharsets.UTF_8)));
                 }
                 if (stringFieldEntry.getValue().hasValJson()){
-                    builder.addDocField(new DocField(stringFieldEntry.getKey(), new JSONObject(stringFieldEntry.getValue().getValStr().toString(StandardCharsets.UTF_8))));
+                    builder.addDocField(new DocField(stringFieldEntry.getKey(), new JSONObject(stringFieldEntry.getValue().getValJson().toString(StandardCharsets.UTF_8))));
                 }
                 if (stringFieldEntry.getValue().hasValStrArr()){
                     builder.addDocField(new DocField(stringFieldEntry.getKey(),

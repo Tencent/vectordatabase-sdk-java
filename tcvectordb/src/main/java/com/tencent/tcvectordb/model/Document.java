@@ -23,6 +23,8 @@ package com.tencent.tcvectordb.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -31,6 +33,7 @@ import com.tencent.tcvectordb.utils.ConvertUtils;
 import com.tencent.tcvectordb.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.json.JSONObject;
 
 import java.util.*;
 
@@ -176,6 +179,11 @@ public class Document {
                         strValues.forEach(strNode::add);
                         node.set(field.getName(), strNode);
                         break;
+                    case Json:
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        Map<String, Object> map = objectMapper.convertValue(field.getValue(), Map.class);
+                        JsonNode jsonNode = objectMapper.valueToTree(map);
+                        node.put(field.getName(), jsonNode);
                     default:
                         node.put(field.getName(), field.getStringValue());
                 }

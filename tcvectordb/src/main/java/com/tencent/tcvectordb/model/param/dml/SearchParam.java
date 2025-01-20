@@ -134,5 +134,10 @@ public abstract class SearchParam {
             this.radius = radius;
             return self();
         }
+
+        public T withRadius(Number radius) {
+            this.radius = radius.floatValue();
+            return self();
+        }
     }
 }

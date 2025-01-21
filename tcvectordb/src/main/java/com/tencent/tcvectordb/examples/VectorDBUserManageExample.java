@@ -1,5 +1,6 @@
 package com.tencent.tcvectordb.examples;
 
+import com.tencent.tcvectordb.client.RPCVectorDBClient;
 import com.tencent.tcvectordb.client.VectorDBClient;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.entity.BaseRes;
@@ -16,16 +17,7 @@ public class VectorDBUserManageExample {
 
     public static String user_test = "java_sdk_test_user";
     public static void main(String[] args) {
-        String vdbURL = "";
-        String vdbKey = "";
-        System.out.println("\tvdb_url: " + vdbURL);
-        System.out.println("\tvdb_key: " + vdbKey);
-        VectorDBClient client = new VectorDBClient(ConnectParam.newBuilder()
-                .withUrl(vdbURL)
-                .withUsername("root")
-                .withKey(vdbKey)
-                .withTimeout(30)
-                .build(),  ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
+        VectorDBClient client =CommonService.initClient();
 
         client.createDatabaseIfNotExists(db_test);
         CommonService.anySafe(() -> client.dropUser(user_test));

@@ -4,6 +4,15 @@ public class AIStatus {
     private long indexedDocumentSets;
     private long totalDocumentSets;
     private long unIndexedDocumentSets;
+    private long failIndexedDocumentSets;
+
+    public long getFailIndexedDocumentSets() {
+        return failIndexedDocumentSets;
+    }
+
+    public void setFailIndexedDocumentSets(long failIndexedDocumentSets) {
+        this.failIndexedDocumentSets = failIndexedDocumentSets;
+    }
 
     public long getIndexedDocumentSets() {
         return indexedDocumentSets;

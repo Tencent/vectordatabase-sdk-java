@@ -32,29 +32,29 @@ import java.util.stream.Collectors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Filter {
 
-    private StringBuffer condBuffer;
+    private String cond;
 
     public Filter(String cond) {
-        this.condBuffer = new StringBuffer(cond);
+        this.cond = cond;
     }
 
     public Filter and(String cond) {
-        this.condBuffer.append(String.format(" and ( %s )", cond));
+        this.cond =  String.format("( %s ) and ( %s )", this.cond, cond);
         return this;
     }
 
     public Filter or(String cond) {
-        this.condBuffer.append(String.format(" or ( %s )", cond));
+        this.cond =  String.format("( %s ) or ( %s )", this.cond, cond);
         return this;
     }
 
     public Filter andNot(String cond) {
-        this.condBuffer.append(String.format(" and not ( %s )", cond));
+        this.cond = String.format("( %s ) and not ( %s )", this.cond, cond);
         return this;
     }
 
     public Filter orNot(String cond) {
-        this.condBuffer.append(String.format(" or not ( %s )", cond));
+        this.cond = String.format("( %s ) or not ( %s )",this.cond, cond);
         return this;
     }
 
@@ -109,6 +109,6 @@ public class Filter {
     }
 
     public String getCond() {
-        return condBuffer.toString();
+        return cond;
     }
 }

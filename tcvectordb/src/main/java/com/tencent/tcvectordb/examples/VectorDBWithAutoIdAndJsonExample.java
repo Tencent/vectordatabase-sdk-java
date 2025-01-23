@@ -20,6 +20,7 @@
 
 package com.tencent.tcvectordb.examples;
 
+import com.tencent.tcvdbtext.encoder.SparseVectorBm25Encoder;
 import com.tencent.tcvectordb.client.VectorDBClient;
 import com.tencent.tcvectordb.model.Collection;
 import com.tencent.tcvectordb.model.Database;
@@ -29,6 +30,7 @@ import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.utils.JsonUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.json.JSONObject;
 
 import java.util.*;
@@ -50,12 +52,108 @@ public class VectorDBWithAutoIdAndJsonExample {
 
 
         // 清理环境
-        CommonService.anySafe(() -> client.dropDatabase(DBNAME));
-        createDatabaseAndCollection(client);
-        upsertData(client);
-        queryData(client);
+//        CommonService.anySafe(() -> client.dropDatabase(DBNAME));
+//        createDatabaseAndCollection(client);
+//        upsertData(client);
+        hybridSearchData(client);
+//        updateAndDelete(client);
 //        deleteAndDrop(client);
 
+    }
+
+    private static void hybridSearchData(VectorDBClient client) {
+        System.out.println("---------------------- query ----------------------");
+        QueryParam queryParam = QueryParam.newBuilder()
+//                .withDocumentIds(Arrays.asList("0001", "0002", "0003", "0004", "0005"))
+                // limit 限制返回行数，1 到 16384 之间
+                .withLimit(6)
+                .withFilter("bookInfo.bookName=\"红楼梦\" and not bookInfo.page=24")
+                // 偏移
+                .withOffset(0)
+                // 指定返回的 fields
+//                .addAllOutputFields("id", "bookInfo")
+                // 是否返回 vector 数据
+//                .withRetrieveVector(true)
+                .build();
+        List<Document> qdos = client.query(DBNAME, COLL_NAME, queryParam);
+        for (Document doc : qdos) {
+            System.out.println("\tres: " + doc.toString());
+        }
+        System.out.println("---------------------- hybridSearch ----------------------");
+        SparseVectorBm25Encoder encoder = SparseVectorBm25Encoder.getBm25Encoder("zh");
+        HybridSearchParam hybridSearchParam = HybridSearchParam.newBuilder()
+                .withAnn(AnnOption.newBuilder().withFieldName("vector")
+                        .withData(generateRandomVector(768))
+                        .build())
+                .withMatch(MatchOption.newBuilder().withFieldName("sparse_vector")
+                        .withData(encoder.encodeQueries(Arrays.asList("向量数据库是什么？")))
+                        .build())
+                // 指定 Top K 的 K 值
+                .withRerank(new WeightRerankParam(Arrays.asList("vector","sparse_vector"), Arrays.asList(1, 1)))
+                .withLimit(3)
+                // 过滤获取到结果
+                .withFilter("bookInfo.bookName=\"水浒传\" and not bookInfo.page=24")
+                .withRetrieveVector(false)
+//                .withOutputFields(Arrays.asList("segment"))
+                .build();
+        List<Document> siDocs = client.hybridSearch(DBNAME, COLL_NAME, hybridSearchParam).getDocuments();
+        int i = 0;
+        for (Object docs : siDocs) {
+            System.out.println("\tres: " + (i++) + docs.toString());
+//            for (Document doc : (List<Document>)docs) {
+//                System.out.println("\tres: " + doc.toString());
+//            }
+        }
+    }
+
+
+    private static void updateAndDelete(VectorDBClient client) throws InterruptedException {
+        System.out.println("---------------------- query ----------------------");
+        QueryParam queryParam = QueryParam.newBuilder()
+//                .withDocumentIds(Arrays.asList("0001", "0002", "0003", "0004", "0005"))
+                // limit 限制返回行数，1 到 16384 之间
+                .withLimit(5)
+//                .withFilter("bookInfo.bookName=\"三国演义\"")
+                // 偏移
+                .withOffset(0)
+                // 指定返回的 fields
+                .addAllOutputFields("id", "bookInfo")
+                // 是否返回 vector 数据
+//                .withRetrieveVector(true)
+                .build();
+        List<Document> qdos = client.query(DBNAME, COLL_NAME, queryParam);
+        for (Document doc : qdos) {
+            System.out.println("\tres: " + doc.toString());
+        }
+
+        System.out.println("---------------------- update ----------------------");
+        // update
+        // 1. update 提供基于 [主键查询] 和 [Filter 过滤] 的部分字段更新或者非索引字段新增
+        List<String> documentIds = Arrays.asList("87F9375D-F35D-439F-746E-DE9020293E42", "5F7BC75F-0193-4CD9-0D68-2F829A69E332");
+        UpdateParam updateParam = UpdateParam
+                .newBuilder()
+                .addAllDocumentId(documentIds)
+                .withFilter("bookInfo.bookName=\"西游记\"")
+                .build();
+        Document updateDoc = Document
+                .newBuilder()
+                .addDocField(new DocField("page", 33))
+                // 支持添加新的内容
+                .addDocField(new DocField("extend", "extendContent_1"))
+                .addDocField(new DocField("array_test", Arrays.asList("extendContent", "extendContent1")))
+                .build();
+        AffectRes affectRes = client.update(DBNAME, COLL_NAME, updateParam, updateDoc);
+        System.out.println(affectRes.toString());
+
+        System.out.println("---------delete----------");
+        DeleteParam build = DeleteParam
+                .newBuilder()
+                .addAllDocumentId("5FF094B1-3CD8-C68F-F354-2E7341F291F3")
+                .withFilter("bookInfo.bookName=\"三国演义\"")
+//                .withLimit(1)
+                .build();
+        AffectRes deleteAffectRes = client.delete(DBNAME, COLL_NAME, build);
+        System.out.println(deleteAffectRes.toString());
     }
 
 
@@ -77,54 +175,86 @@ public class VectorDBWithAutoIdAndJsonExample {
         db.createCollection(collectionParam);
         System.out.println(COLL_NAME + " exists: "+ db.IsExistsCollection(COLL_NAME));
 
+        List<Collection> collectionInfos = client.listCollections(DBNAME);
+        System.out.println("-------list collection-------");
+        System.out.println(JsonUtils.toJsonString(collectionInfos));
+
     }
 
 
     private static void upsertData(VectorDBClient client) throws InterruptedException {
+        List<String> texts = Arrays.asList(
+                "腾讯云向量数据库（Tencent Cloud VectorDB）是一款全托管的自研企业级分布式数据库服务，专用于存储、索引、检索、管理由深度神经网络或其他机器学习模型生成的大量多维嵌入向量。",
+                "作为专门为处理输入向量查询而设计的数据库，它支持多种索引类型和相似度计算方法，单索引支持10亿级向量规模，高达百万级 QPS 及毫秒级查询延迟。",
+                "不仅能为大模型提供外部知识库，提高大模型回答的准确性，还可广泛应用于推荐系统、NLP 服务、计算机视觉、智能客服等 AI 领域。",
+                "腾讯云向量数据库（Tencent Cloud VectorDB）作为一种专门存储和检索向量数据的服务提供给用户， 在高性能、高可用、大规模、低成本、简单易用、稳定可靠等方面体现出显著优势。 ",
+                "腾讯云向量数据库可以和大语言模型 LLM 配合使用。企业的私域数据在经过文本分割、向量化后，可以存储在腾讯云向量数据库中，构建起企业专属的外部知识库，从而在后续的检索任务中，为大模型提供提示信息，辅助大模型生成更加准确的答案。");
+        List<List<Pair<Long, Float>>> sparseVectors = SparseVectorBm25Encoder.getDefaultBm25Encoder().encodeTexts(texts);
         List<Document> documentList = new ArrayList<>(Arrays.asList(
                 Document.newBuilder()
+                        .withId("0001")
                         .withVector(generateRandomVector(768))
+                        .withSparseVector(sparseVectors.get(0))
                         .addDocField(new DocField("bookInfo",
                                 new JSONObject(new HashMap<Object,Object>(){{
                                     put("bookName", "西游记");
-                                    put("page", 25);
+                                    put("page", 24);
                                     put("author", "吴承恩");
                                 }})))
                         .build(),
                 Document.newBuilder()
                         .withVector(generateRandomVector(768))
+                        .withSparseVector(sparseVectors.get(1))
+                        .addDocField(new DocField("bookInfo",
+                                new JSONObject(new HashMap<Object,Object>(){{
+                                    put("bookName", "西游记");
+                                    put("page", 24);
+                                    put("author", "吴承恩");
+                                    put("array", Arrays.asList("test_6", "test_7", "test_3"));
+                                }})))
+                        .build(),
+                Document.newBuilder()
+                        .withVector(generateRandomVector(768))
+                        .withSparseVector(sparseVectors.get(2))
                         .addDocField(new DocField("bookInfo",
                                 new JSONObject(new HashMap<Object,Object>(){{
                                     put("bookName", "三国演义");
                                     put("page", 25);
                                     put("author", "罗贯中");
+                                    put("array", Arrays.asList("test_1", "test_5", "test_3"));
                                 }})))
                         .build(),
                 Document.newBuilder()
                         .withVector(generateRandomVector(768))
+                        .withSparseVector(sparseVectors.get(3))
                         .addDocField(new DocField("bookInfo",
                                 new JSONObject(new HashMap<Object,Object>(){{
                                     put("bookName", "水浒传");
                                     put("page", 25);
                                     put("author", "施耐庵");
+                                    put("array", Arrays.asList("test_1", "test_2", "test_4"));
                                 }})))
                         .build(),
                 Document.newBuilder()
                         .withVector(generateRandomVector(768))
+                        .withSparseVector(sparseVectors.get(4))
                         .addDocField(new DocField("bookInfo",
                                 new JSONObject(new HashMap<Object,Object>(){{
                                     put("bookName", "红楼梦");
                                     put("page", 25);
                                     put("author", "曹雪芹");
+                                    put("array", Arrays.asList("test_1", "test_2", "test_3"));
                                 }})))
                         .build(),
                 Document.newBuilder()
                         .withVector(generateRandomVector(768))
+                        .withSparseVector(sparseVectors.get(0))
                         .addDocField(new DocField("bookInfo",
                                 new JSONObject(new HashMap<Object,Object>(){{
                                     put("bookName", "红楼梦");
                                     put("page", 25);
                                     put("author", "曹雪芹");
+                                    put("array", Arrays.asList("test_4", "test_2", "test_6"));
                                 }})))
                         .build()));
         System.out.println("---------------------- upsert ----------------------");
@@ -133,8 +263,6 @@ public class VectorDBWithAutoIdAndJsonExample {
 //        collection.upsert(insertParam);
         AffectRes affectRes = client.upsert(DBNAME,COLL_NAME, insertParam);
         System.out.println(JsonUtils.toJsonString(affectRes));
-        // notice：upsert 操作可用会有延迟
-        Thread.sleep(1000 * 5);
     }
 
     private static List<Double> generateRandomVector(int dim){
@@ -153,13 +281,11 @@ public class VectorDBWithAutoIdAndJsonExample {
         Collection collection = database.describeCollection(COLL_NAME);
 
         System.out.println("---------------------- query ----------------------");
-        List<String> documentIds = Arrays.asList("0001", "0002", "0003", "0004", "0005");
-        List<String> outputFields = Arrays.asList("id", "bookInfo");
         QueryParam queryParam = QueryParam.newBuilder()
 //                .withDocumentIds(Arrays.asList("0001", "0002", "0003", "0004", "0005"))
                 // limit 限制返回行数，1 到 16384 之间
                  .withLimit(5)
-                .withFilter("bookInfo.bookName=\"红楼梦\"")
+//                .withFilter("bookInfo.bookName=\"三国演义\"")
                 // 偏移
                  .withOffset(0)
                 // 指定返回的 fields
@@ -181,7 +307,7 @@ public class VectorDBWithAutoIdAndJsonExample {
 
         System.out.println("---------------------- searchById ----------------------");
         SearchByIdParam searchByIdParam = SearchByIdParam.newBuilder()
-                .withDocumentIds(Arrays.asList("0001"))
+                .withDocumentIds(Arrays.asList(qdos.get(1).getId(), "0001"))
                 // 若使用 HNSW 索引，则需要指定参数 ef，ef 越大，召回率越高，但也会影响检索速度
                 .withParams(new HNSWSearchParams(100))
                 // 指定 Top K 的 K 值
@@ -242,7 +368,9 @@ public class VectorDBWithAutoIdAndJsonExample {
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY, AutoIdType.UUID))
                 .addField(new VectorIndex("vector", BGE_BASE_ZH.getDimension(), IndexType.HNSW,
                         MetricType.IP, new HNSWParams(16, 200)))
+                .addField(new SparseVectorIndex("sparse_vector", IndexType.INVERTED, MetricType.IP))
                 .addField(new FilterIndex("bookInfo", FieldType.Json, IndexType.FILTER))
+                .addField(new FilterIndex("array_test", FieldType.Array, IndexType.FILTER))
 //                .withFilterIndexConfig(FilterIndexConfig.newBuilder()
 //                        .withFilterAll(true)
 //                        .withFieldWithoutFilterIndex(Arrays.asList("test1", "test2"))

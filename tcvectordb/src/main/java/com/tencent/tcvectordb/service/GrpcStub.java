@@ -1258,7 +1258,7 @@ public class GrpcStub extends HttpStub{
                 fieldBuilder.setValJson(ByteString.copyFromUtf8(docField.getValue().toString()));
             }else {
                 throw new VectorDBException("Unsupported field type,  field key:" + docField.getName() + " type:"+ docField.getValue().getClass() +"\n" +
-                        "supported field type is:  Integer,Long,Double,Float,String,List<String>");
+                        "supported field type is:  Integer,Long,Double,Float,String,List<String>,JSONObject");
             }
             docBuilder.putFields(docField.getName(), fieldBuilder.build());
         });
@@ -1292,7 +1292,7 @@ public class GrpcStub extends HttpStub{
                 }
                 else {
                     throw new VectorDBException("Unsupported field type, field:+"+ key +" type:"+ document.get(key).getClass()
-                            + "\nsupported field type is:  Integer,Long,Double,Float,String,JSONArray<String>");
+                            + "\nsupported field type is:  Integer,Long,Double,Float,String,JSONArray<String>,JSONObject");
                 }
                 docBuilder.putFields(key, fieldBuilder.build());
             }

@@ -52,12 +52,12 @@ public class VectorDBWithAutoIdAndJsonExample {
 
 
         // 清理环境
-//        CommonService.anySafe(() -> client.dropDatabase(DBNAME));
-//        createDatabaseAndCollection(client);
-//        upsertData(client);
+        CommonService.anySafe(() -> client.dropDatabase(DBNAME));
+        createDatabaseAndCollection(client);
+        upsertData(client);
         hybridSearchData(client);
-//        updateAndDelete(client);
-//        deleteAndDrop(client);
+        updateAndDelete(client);
+        deleteAndDrop(client);
 
     }
 

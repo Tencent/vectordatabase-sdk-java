@@ -109,7 +109,6 @@ public class Filter {
     }
 
     public String getCond() {
-        return this.cond;
+        return cond;
     }
-
 }

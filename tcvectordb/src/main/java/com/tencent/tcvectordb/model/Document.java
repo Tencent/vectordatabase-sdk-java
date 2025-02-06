@@ -20,20 +20,14 @@
 
 package com.tencent.tcvectordb.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.tencent.tcvectordb.model.param.collection.FieldType;
 import com.tencent.tcvectordb.utils.ConvertUtils;
 import com.tencent.tcvectordb.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.json.JSONObject;
 
 import java.util.*;
 
@@ -167,29 +161,7 @@ public class Document {
         if (StringUtils.isNotEmpty(doc)) {
             node.put("doc", doc);
         }
-        if (docFields != null && !docFields.isEmpty()) {
-            for (DocField field : docFields) {
-                switch (field.getFieldType()) {
-                    case Uint64:
-                        node.put(field.getName(), Long.valueOf(field.getStringValue()));
-                        break;
-                    case Array:
-                        List<String> strValues = (List<String>) ((List) field.getValue());
-                        ArrayNode strNode = JsonNodeFactory.instance.arrayNode();
-                        strValues.forEach(strNode::add);
-                        node.set(field.getName(), strNode);
-                        break;
-                    case Json:
-                        Map<String, Object> map = JsonUtils.parseObject(field.getValue().toString(), Map.class);
-                        JsonNode jsonNode = JsonUtils.toJsonNode(map);
-                        node.put(field.getName(), jsonNode);
-                        break;
-                    default:
-                        node.put(field.getName(), field.getStringValue());
-                }
-            }
-        }
-        return node.toString();
+        return DocField.fillDocFiledsJsonString(node, docFields);
     }
 
     private Document(Builder builder) {

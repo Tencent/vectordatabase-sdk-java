@@ -21,11 +21,17 @@
 package com.tencent.tcvectordb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.param.collection.FieldType;
+import com.tencent.tcvectordb.utils.JsonUtils;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Doc Field
@@ -71,5 +77,28 @@ public class DocField {
         return FieldType.String;
     }
 
-
+    public static String fillDocFiledsJsonString(ObjectNode node, List<DocField> docFields) {
+        if (docFields != null && !docFields.isEmpty()) {
+            for (DocField field : docFields) {
+                String valueClassName = field.getValue().getClass().getName();
+                if (valueClassName.equals("java.lang.Integer") || valueClassName.equals("java.lang.Long")) {
+                    node.put(field.getName(), Long.valueOf(field.getStringValue()));
+                }else if (valueClassName.equals("java.lang.Float") || valueClassName.equals("java.lang.Double")) {
+                    node.put(field.getName(), Double.valueOf(field.getStringValue()));
+                }else if (field.getValue() instanceof List){
+                    List<String> strValues = (List<String>) ((List) field.getValue());
+                    ArrayNode strNode = JsonNodeFactory.instance.arrayNode();
+                    strValues.forEach(strNode::add);
+                    node.set(field.getName(), strNode);
+                } else if (field.getValue() instanceof JSONObject) {
+                    Map<String, Object> map = JsonUtils.parseObject(field.getValue().toString(), Map.class);
+                    JsonNode jsonNode = JsonUtils.toJsonNode(map);
+                    node.put(field.getName(), jsonNode);
+                }else {
+                    node.put(field.getName(), field.getStringValue());
+                }
+            }
+        }
+        return node.toString();
+    }
 }

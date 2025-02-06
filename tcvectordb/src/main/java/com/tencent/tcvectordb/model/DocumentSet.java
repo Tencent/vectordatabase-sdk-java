@@ -22,6 +22,7 @@ package com.tencent.tcvectordb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -40,6 +41,7 @@ import com.tencent.tcvectordb.service.param.CollectionViewDeleteParamInner;
 import com.tencent.tcvectordb.service.param.SearchDocParamInner;
 import com.tencent.tcvectordb.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 
 import java.util.*;
 
@@ -229,24 +231,9 @@ public class DocumentSet {
             node.put("parsingProcess", JsonUtils.toJsonString(parsingProcess));
         }
 
-        if (docFields != null && !docFields.isEmpty()) {
-            for (DocField field : docFields) {
-                switch (field.getFieldType()) {
-                    case Uint64:
-                        node.put(field.getName(), Long.valueOf(field.getValue().toString()));
-                        break;
-                    case Array:
-                        List<String> strValues = (List<String>) ((List) field.getValue());
-                        ArrayNode strNode = JsonNodeFactory.instance.arrayNode();
-                        strValues.forEach(strNode::add);
-                        node.set(field.getName(), strNode);
-                    default:
-                        node.put(field.getName(), field.getStringValue());
-                }
-            }
-        }
-        return node.toString();
+        return DocField.fillDocFiledsJsonString(node, docFields);
     }
+
 
     private DocumentSet(Builder builder) {
         this.docFields = builder.docFields;

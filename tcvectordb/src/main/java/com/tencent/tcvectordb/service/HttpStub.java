@@ -36,6 +36,7 @@ import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.Collection;
 import com.tencent.tcvectordb.model.*;
+import com.tencent.tcvectordb.model.param.collection.CollectionLoadAndSplitTextParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.collectionView.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
@@ -561,6 +562,26 @@ public class HttpStub implements Stub {
         String body = JsonUtils.toJsonString(params);
         JsonNode jsonNode = this.post(url, body, true);
         return JsonUtils.parseObject(jsonNode.toString(), UploadUrlRes.class);
+    }
+
+
+    public CollectionUploadUrlRes getCollectionUploadUrl(String databaseName, String collection, CollectionLoadAndSplitTextParam loadAndSplitTextParam, String fileName) {
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_UPLOADER_URL);
+        Map<String, Object> params = new HashMap<>();
+        params.put("database", databaseName);
+        params.put("collection", collection);
+        if (fileName != null) {
+            params.put("fileName", fileName);
+        }
+        if (loadAndSplitTextParam.getParsingProcess()!=null){
+            params.put("parsingProcess",loadAndSplitTextParam.getParsingProcess());
+        }
+        if (loadAndSplitTextParam.getSplitterProcess()!=null){
+            params.put("splitterPreprocess",loadAndSplitTextParam.getSplitterProcess());
+        }
+        String body = JsonUtils.toJsonString(params);
+        JsonNode jsonNode = this.post(url, body, true);
+        return JsonUtils.parseObject(jsonNode.toString(), CollectionUploadUrlRes.class);
     }
 
     @Override

@@ -177,6 +177,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("segment", "富贵功名，前缘分定，为人切莫欺心。"))
                         .addDocField(new DocField("array_test", Arrays.asList("1","2","3")))
                         .addDocField(new DocField("owner", 2))
+                        .addDocField(new DocField("double_test", 3.3))
                         .build(),
                 Document.newBuilder()
                         .withId("0002")
@@ -188,6 +189,7 @@ public class VectorDBExample {
                                 "正大光明，忠良善果弥深。些些狂妄天加谴，眼前不遇待时临。"))
                         .addDocField(new DocField("array_test", Arrays.asList("4","5","6")))
                         .addDocField(new DocField("owner", 1))
+                        .addDocField(new DocField("double_test", 4.3))
                         .build(),
                 Document.newBuilder()
                         .withId("0003")
@@ -208,6 +210,7 @@ public class VectorDBExample {
                         .addDocField(new DocField("segment", "富贵功名，前缘分定，为人切莫欺心。"))
                         .addDocField(new DocField("array_test", Arrays.asList("10","11","12")))
                         .addDocField(new DocField("owner", 2))
+                        .addDocField(new DocField("double_test", 5.3))
                         // 24小时后过期
                         .addDocField(new DocField("expired_at", System.currentTimeMillis()/1000 + 24*60*60))
                         .build(),

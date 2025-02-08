@@ -25,7 +25,9 @@ import com.tencent.tcvectordb.model.AIDatabase;
 import com.tencent.tcvectordb.model.Collection;
 import com.tencent.tcvectordb.model.Database;
 import com.tencent.tcvectordb.model.Document;
+import com.tencent.tcvectordb.model.param.collection.CollectionLoadAndSplitTextParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
+import com.tencent.tcvectordb.model.param.collectionView.LoadAndSplitTextParam;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
@@ -40,6 +42,7 @@ import com.tencent.tcvectordb.service.Stub;
 import com.tencent.tcvectordb.service.param.*;
 import org.json.JSONObject;
 import java.util.List;
+import java.util.Map;
 
 /**
  * VectorDB Client
@@ -709,6 +712,11 @@ public class VectorDBClient {
      */
     public BaseRes changePassword(String user, String password) throws VectorDBException {
         return this.stub.changeUserPassword(UserChangePasswordParam.newBuilder().withUser(user).withPassword(password).build());
+    }
+
+
+    public void collectionUploadFile(String database, String collection, CollectionLoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
+        this.stub.collectionUpload(database, collection, loadAndSplitTextParam, metaDataMap);
     }
 
 }

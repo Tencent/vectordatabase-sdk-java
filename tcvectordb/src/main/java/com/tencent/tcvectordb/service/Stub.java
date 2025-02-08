@@ -20,6 +20,7 @@
 package com.tencent.tcvectordb.service;
 
 import com.tencent.tcvectordb.model.*;
+import com.tencent.tcvectordb.model.param.collection.CollectionLoadAndSplitTextParam;
 import com.tencent.tcvectordb.model.param.collectionView.CreateCollectionViewParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.collectionView.LoadAndSplitTextParam;
@@ -173,6 +174,8 @@ public interface Stub {
     AffectRes updateAIDocument(CollectionViewUpdateParamInner updateParamInner);
 
     void upload(String databaseName, String collectionName, LoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception;
+
+    void collectionUpload(String databaseName, String collection, CollectionLoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception;
 
     GetDocumentSetRes getFile(String databaseName, String collectionName, String fileName, String fileId);
 

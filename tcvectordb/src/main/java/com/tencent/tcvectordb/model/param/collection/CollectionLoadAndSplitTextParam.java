@@ -19,7 +19,7 @@ public class CollectionLoadAndSplitTextParam {
      */
     private String localFilePath;
     /**
-     * user input stream, when use this way,  documentSetName、inputStreamSize and fileType params must be specified
+     * user input stream, when use this way,  fileName、inputStreamSize and fileType params must be specified
      */
     private InputStream fileInputStream;
     private Long inputStreamSize;
@@ -32,12 +32,24 @@ public class CollectionLoadAndSplitTextParam {
 
     private String embeddingModel;
 
+    private String fileName;
+
     public CollectionLoadAndSplitTextParam(Builder builder) {
         this.localFilePath = builder.localFilePath;
         this.splitterProcess = builder.splitterProcess;
         this.fileInputStream = builder.fileInputStream;
         this.inputStreamSize = builder.InputStreamSize;
         this.parsingProcess = builder.parsingProcess;
+        this.fieldMappings = builder.fieldMappings;
+        this.embeddingModel = builder.embeddingModel;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public String getEmbeddingModel() {
@@ -106,6 +118,25 @@ public class CollectionLoadAndSplitTextParam {
         private InputStream fileInputStream;
         private Long InputStreamSize;
         private ParsingProcessParam parsingProcess;
+        private Map<String, String> fieldMappings;
+        private String embeddingModel;
+
+        private String fileName;
+
+        public Builder withFileName(String fileName){
+            this.fileName = fileName;
+            return this;
+        }
+
+        public Builder withEmbeddingModel(String embeddingModel){
+            this.embeddingModel = embeddingModel;
+            return this;
+        }
+
+        public Builder withFieldMappings(Map<String, String> fieldMappings){
+            this.fieldMappings = fieldMappings;
+            return this;
+        }
 
         public Builder withLocalFilePath(String localFilePath){
             this.localFilePath = localFilePath;

@@ -895,6 +895,12 @@ public class GrpcStub extends HttpStub{
     }
 
     @Override
+    public void collectionUpload(String databaseName, String collectionName, CollectionLoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
+        super.initHttpStub(this.connectParam);
+        super.collectionUpload(databaseName, collectionName, loadAndSplitTextParam, metaDataMap);
+    }
+
+    @Override
     public GetDocumentSetRes getFile(String databaseName, String collectionName, String fileName, String fileId) {
         super.initHttpStub(this.connectParam);
         return super.getFile(databaseName, collectionName, fileName, fileId);

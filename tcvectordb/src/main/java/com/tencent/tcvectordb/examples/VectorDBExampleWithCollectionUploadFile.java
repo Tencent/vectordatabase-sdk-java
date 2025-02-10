@@ -51,24 +51,24 @@ public class VectorDBExampleWithCollectionUploadFile {
         VectorDBClient client = CommonService.initClient();
 
         // 清理环境
-//        CommonService.anySafe(() -> client.dropDatabase(DBNAME));
-//        createDatabaseAndCollection(client);
-//        Map<String, Object> metaDataMap = new HashMap<>();
-//        metaDataMap.put("author", "Tencent");
-//        metaDataMap.put("tags", Arrays.asList("Embedding", "向量", "AI"));
-//        // 使用输入流上传文档， 需指定输入流数据大小
-////        File file = new File(System.getProperty("file_path"));
-////        loadAndSplitTextUseInputStream(client, new FileInputStream(System.getProperty("file_path")), file.length(), "腾讯云向量数据库.md", metaDataMap);
-//
-////        // 使用文件路径上传文档
-//         loadAndSplitText(client, "/data/home/yihaoan/tcvdb.pdf", "tcvdb.pdf", metaDataMap);
-//        // support markdown, pdf, pptx, docx document
-//        // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pdf", metaDataMap);
-//        // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pptx", metaDataMap);
-//        // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.docx", metaDataMap);
-//
-//        // 解析加载文件需要等待时间
-//        Thread.sleep(1000 * 10);
+        CommonService.anySafe(() -> client.dropAIDatabase(DBNAME));
+        createDatabaseAndCollection(client);
+        Map<String, Object> metaDataMap = new HashMap<>();
+        metaDataMap.put("author", "Tencent");
+        metaDataMap.put("tags", Arrays.asList("Embedding", "向量", "AI"));
+        // 使用输入流上传文档， 需指定输入流数据大小
+//        File file = new File(System.getProperty("file_path"));
+//        loadAndSplitTextUseInputStream(client, new FileInputStream(System.getProperty("file_path")), file.length(), "腾讯云向量数据库.md", metaDataMap);
+
+        // 使用文件路径上传文档
+         loadAndSplitText(client, System.getProperty("file_path"), "tcvdb.pdf", metaDataMap);
+        // support markdown, pdf, pptx, docx document
+        // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pdf", metaDataMap);
+        // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pptx", metaDataMap);
+        // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.docx", metaDataMap);
+
+        // 解析加载文件需要等待时间
+        Thread.sleep(1000 * 10);
 
         queryData(client);
     }
@@ -144,7 +144,7 @@ public class VectorDBExampleWithCollectionUploadFile {
         QueryParam queryParam = QueryParam.newBuilder()
                 .withFilter("file_name=\"tcvdb.pdf\"")
                 // limit 限制返回行数，1 到 16384 之间
-                .withLimit(200)
+                .withLimit(10)
                 // 偏移
                 .withOffset(0)
                 // 是否返回 vector 数据

@@ -41,6 +41,7 @@ import com.tencent.tcvectordb.model.param.collection.CollectionLoadAndSplitTextP
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.collectionView.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
+import com.tencent.tcvectordb.model.param.dml.GetImageUrlParam;
 import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.user.*;
@@ -914,6 +915,14 @@ public class HttpStub implements Stub {
         JsonNode jsonNode = this.post(url, build.toString(), false);
         return JsonUtils.parseObject(jsonNode.toString(), BaseRes.class);
     }
+
+    @Override
+    public GetImageUrlRes GetImageUrl(GetImageUrlParamInner param) {
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.GET_IMAGE_URL);
+        JsonNode jsonNode = this.post(url, JsonUtils.toJsonString(param), false);
+        return JsonUtils.parseObject(jsonNode.toString(), GetImageUrlRes.class);
+    }
+
 
     private JsonNode get(String url, boolean ai) {
         Request request = new Request.Builder()

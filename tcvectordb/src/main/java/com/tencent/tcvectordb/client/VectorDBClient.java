@@ -719,4 +719,14 @@ public class VectorDBClient {
         this.stub.collectionUpload(database, collection, loadAndSplitTextParam, metaDataMap);
     }
 
+    public void GetImageUrl(String database, String collection, GetImageUrlParam param) throws Exception {
+        GetImageUrlParamInner paramInner = new GetImageUrlParamInner();
+        paramInner.setDatabase(database);
+        paramInner.setCollection(collection);
+        paramInner.setFileName(param.getFileName());
+        paramInner.setDocumentIds(param.getDocumentIds());
+
+        this.stub.GetImageUrl(paramInner);
+    }
+
 }

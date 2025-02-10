@@ -74,4 +74,5 @@ public class ApiPath {
     public final static String USER_CHANGE_PASSWORD = "user/changePassword";
 
 
+    public static final Object GET_IMAGE_URL = "ai/document/getImageUrl";
 }

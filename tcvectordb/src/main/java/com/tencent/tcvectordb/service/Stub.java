@@ -24,6 +24,7 @@ import com.tencent.tcvectordb.model.param.collection.CollectionLoadAndSplitTextP
 import com.tencent.tcvectordb.model.param.collectionView.CreateCollectionViewParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.collectionView.LoadAndSplitTextParam;
+import com.tencent.tcvectordb.model.param.dml.GetImageUrlParam;
 import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.user.*;
@@ -205,4 +206,6 @@ public interface Stub {
     BaseRes dropUser(UserDropParam userDropParam);
 
     BaseRes changeUserPassword(UserChangePasswordParam build);
+
+    GetImageUrlRes GetImageUrl(GetImageUrlParamInner param);
 }

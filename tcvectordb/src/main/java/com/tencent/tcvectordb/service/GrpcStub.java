@@ -913,6 +913,12 @@ public class GrpcStub extends HttpStub{
     }
 
     @Override
+    public GetImageUrlRes GetImageUrl(GetImageUrlParamInner param) {
+        super.initHttpStub(this.connectParam);
+        return super.GetImageUrl(param);
+    }
+
+    @Override
     public BaseRes rebuildAIIndex(RebuildIndexParamInner param) {
         super.initHttpStub(this.connectParam);
         return super.rebuildAIIndex(param);

@@ -41,8 +41,8 @@ import java.util.*;
  */
 public class VectorDBExampleWithCollectionUploadFile {
 
-    private static final String DBNAME = "db_test-ai";
-    private static final String COLL_NAME = "coll-files";
+    private static final String DBNAME = "db-test";
+    private static final String COLL_NAME = "coll-file_parse_final-1";
     private static final String COLL_NAME_ALIAS = "alias-coll-ai-files";
 
     public static void main(String[] args) throws Exception {
@@ -51,24 +51,24 @@ public class VectorDBExampleWithCollectionUploadFile {
         VectorDBClient client = CommonService.initClient();
 
         // 清理环境
-        CommonService.anySafe(() -> client.dropAIDatabase(DBNAME));
-        createDatabaseAndCollection(client);
-        Map<String, Object> metaDataMap = new HashMap<>();
-        metaDataMap.put("author", "Tencent");
-        metaDataMap.put("tags", Arrays.asList("Embedding", "向量", "AI"));
-        // 使用输入流上传文档， 需指定输入流数据大小
-//        File file = new File(System.getProperty("file_path"));
-//        loadAndSplitTextUseInputStream(client, new FileInputStream(System.getProperty("file_path")), file.length(), "腾讯云向量数据库.md", metaDataMap);
-
-        // 使用文件路径上传文档
-         loadAndSplitText(client, System.getProperty("file_path"), "tcvdb.pdf", metaDataMap);
-        // support markdown, pdf, pptx, docx document
-        // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pdf", metaDataMap);
-        // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pptx", metaDataMap);
-        // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.docx", metaDataMap);
-
-        // 解析加载文件需要等待时间
-        Thread.sleep(1000 * 10);
+//        CommonService.anySafe(() -> client.dropDatabase(DBNAME));
+//        createDatabaseAndCollection(client);
+//        Map<String, Object> metaDataMap = new HashMap<>();
+//        metaDataMap.put("author", "Tencent");
+//        metaDataMap.put("tags", Arrays.asList("Embedding", "向量", "AI"));
+//        // 使用输入流上传文档， 需指定输入流数据大小
+////        File file = new File(System.getProperty("file_path"));
+////        loadAndSplitTextUseInputStream(client, new FileInputStream(System.getProperty("file_path")), file.length(), "腾讯云向量数据库.md", metaDataMap);
+//
+////        // 使用文件路径上传文档
+//         loadAndSplitText(client, "/data/home/yihaoan/tcvdb.pdf", "tcvdb.pdf", metaDataMap);
+//        // support markdown, pdf, pptx, docx document
+//        // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pdf", metaDataMap);
+//        // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pptx", metaDataMap);
+//        // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.docx", metaDataMap);
+//
+//        // 解析加载文件需要等待时间
+//        Thread.sleep(1000 * 10);
 
         queryData(client);
     }
@@ -76,7 +76,7 @@ public class VectorDBExampleWithCollectionUploadFile {
     private static void createDatabaseAndCollection(VectorDBClient client) throws InterruptedException {
         // 1. 创建数据库
         System.out.println("---------------------- create AI Database ----------------------");
-        AIDatabase db = client.createAIDatabase(DBNAME);
+        Database db = client.createDatabase(DBNAME);
 
         // 2. 列出所有数据库
         System.out.println("---------------------- listDatabase ----------------------");
@@ -144,7 +144,7 @@ public class VectorDBExampleWithCollectionUploadFile {
         QueryParam queryParam = QueryParam.newBuilder()
                 .withFilter("file_name=\"tcvdb.pdf\"")
                 // limit 限制返回行数，1 到 16384 之间
-                .withLimit(10)
+                .withLimit(200)
                 // 偏移
                 .withOffset(0)
                 // 是否返回 vector 数据
@@ -164,7 +164,7 @@ public class VectorDBExampleWithCollectionUploadFile {
                 .addVector(generateRandomVector(768))
                 // 若使用 HNSW 索引，则需要指定参数ef，ef越大，召回率越高，但也会影响检索速度
                 .withParams(new HNSWSearchParams(100))
-                .withRadius(0.5)
+//                .withRadius(0.5)
                 // 指定 Top K 的 K 值
                 .withLimit(10)
                 // 过滤获取到结果
@@ -196,6 +196,7 @@ public class VectorDBExampleWithCollectionUploadFile {
                 .addField(new FilterIndex("file_name", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("text", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("image_list", FieldType.Array, IndexType.FILTER))
+                .withEmbedding(Embedding.newBuilder().withModelName(EmbeddingModelEnum.BGE_BASE_ZH.getModelName()).withField("text").withVectorField("vector").build())
                 .build();
     }
 }

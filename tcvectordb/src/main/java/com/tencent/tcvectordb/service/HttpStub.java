@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.auth.BasicSessionCredentials;
+import com.qcloud.cos.endpoint.EndpointBuilder;
 import com.qcloud.cos.model.ObjectMetadata;
 import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.model.PutObjectResult;
@@ -566,7 +567,7 @@ public class HttpStub implements Stub {
 
 
     public CollectionUploadUrlRes getCollectionUploadUrl(String databaseName, String collection, CollectionLoadAndSplitTextParam loadAndSplitTextParam, String fileName) {
-        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_UPLOADER_URL);
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_COLLECTION_UPLOADER_URL);
         Map<String, Object> params = new HashMap<>();
         params.put("database", databaseName);
         params.put("collection", collection);
@@ -637,6 +638,8 @@ public class HttpStub implements Stub {
         BasicSessionCredentials cred = new BasicSessionCredentials(uploadUrlRes.getCredentials().getTmpSecretId(),
                 uploadUrlRes.getCredentials().getTmpSecretKey(), uploadUrlRes.getCredentials().getToken());
         ClientConfig cosClientConfig = new ClientConfig(new Region(region));
+        String cosEndPoint = uploadUrlRes.getCosEndpoint().split("\\.",2)[1];
+        cosClientConfig.setEndpointBuilder(new CosEndpointBuilder(cosEndPoint));
         COSClient cosClient = new COSClient(cred, cosClientConfig);
         PutObjectRequest putObjectRequest = null;
         ObjectMetadata metadata = new ObjectMetadata();
@@ -737,6 +740,8 @@ public class HttpStub implements Stub {
         BasicSessionCredentials cred = new BasicSessionCredentials(uploadUrlRes.getCredentials().getTmpSecretId(),
                 uploadUrlRes.getCredentials().getTmpSecretKey(), uploadUrlRes.getCredentials().getToken());
         ClientConfig cosClientConfig = new ClientConfig(new Region(region));
+        String cosEndPoint = uploadUrlRes.getCosEndpoint().split("\\.",2)[1];
+        cosClientConfig.setEndpointBuilder(new CosEndpointBuilder(cosEndPoint));
         COSClient cosClient = new COSClient(cred, cosClientConfig);
         PutObjectRequest putObjectRequest = null;
         ObjectMetadata metadata = new ObjectMetadata();

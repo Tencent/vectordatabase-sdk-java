@@ -108,7 +108,7 @@ public class VectorDBExample {
         Database db = client.createDatabase(DBNAME);
         // 可以使用这种方式创建db
 //        Database db = client.createDatabaseIfNotExists(DBNAME);
-        Boolean isExisted = client.IsExistsDatabase("test_db");
+        Boolean isExisted = client.IsExistsDatabase(DBNAME);
 
         // 2. 列出所有数据库
         System.out.println("---------------------- listCollections ----------------------");

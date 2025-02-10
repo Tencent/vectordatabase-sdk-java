@@ -116,10 +116,10 @@ public class CreateCollectionParam extends Collection {
 
         public CreateCollectionParam build() throws ParamException {
             if (StringUtils.isEmpty(this.name)) {
-                throw new ParamException("ConnectParam error: name is null");
+                throw new ParamException("CreateCollectionParam error: name is null");
             }
             if (this.indexes.isEmpty()) {
-                throw new ParamException("ConnectParam error: indexes is empty");
+                throw new ParamException("CreateCollectionParam error: indexes is empty");
             }
             return new CreateCollectionParam(this);
         }

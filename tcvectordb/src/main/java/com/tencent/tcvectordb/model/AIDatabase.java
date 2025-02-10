@@ -1,6 +1,8 @@
 package com.tencent.tcvectordb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.param.collectionView.CreateCollectionViewParam;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
@@ -8,6 +10,7 @@ import com.tencent.tcvectordb.model.param.entity.DataBaseType;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.Stub;
+import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -15,8 +18,11 @@ import java.util.Map;
 /**
  * AIDatabase and about CollectionView operating.
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AIDatabase {
+    @JsonIgnore
     private final Stub stub;
+    @JsonProperty("database")
     private final String databaseName;
     @JsonIgnore
     private final ReadConsistencyEnum readConsistency;
@@ -139,6 +145,6 @@ public class AIDatabase {
 
     @Override
     public String toString() {
-        return String.format("{\"database\":\"%s\"}", this.databaseName);
+        return JsonUtils.toJsonString(this);
     }
 }

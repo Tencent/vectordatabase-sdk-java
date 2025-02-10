@@ -110,7 +110,7 @@ public class CreateCollectionViewParam extends CollectionView {
 
         public CreateCollectionViewParam build() throws ParamException {
             if (StringUtils.isEmpty(this.name)) {
-                throw new ParamException("ConnectParam error: name is null");
+                throw new ParamException("CreateCollectionViewParam error: name is null");
             }
             return new CreateCollectionViewParam(this);
         }

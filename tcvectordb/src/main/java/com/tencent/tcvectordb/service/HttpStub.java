@@ -567,13 +567,13 @@ public class HttpStub implements Stub {
     }
 
 
-    public CollectionUploadUrlRes getCollectionUploadUrl(String databaseName, String collection, CollectionLoadAndSplitTextParam loadAndSplitTextParam, String fileName) {
+    public CollectionUploadUrlRes getCollectionUploadUrl(String databaseName, String collection, CollectionLoadAndSplitTextParam loadAndSplitTextParam) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_COLLECTION_UPLOADER_URL);
         Map<String, Object> params = new HashMap<>();
         params.put("database", databaseName);
         params.put("collection", collection);
-        if (fileName != null) {
-            params.put("fileName", fileName);
+        if (loadAndSplitTextParam.getFileName() != null) {
+            params.put("fileName", loadAndSplitTextParam.getFileName());
         }
         if (loadAndSplitTextParam.getParsingProcess()!=null){
             params.put("parsingProcess",loadAndSplitTextParam.getParsingProcess());
@@ -615,7 +615,7 @@ public class HttpStub implements Stub {
             }
         }
 
-        CollectionUploadUrlRes uploadUrlRes = getCollectionUploadUrl(databaseName, collectionName, loadAndSplitTextParam, fileName);
+        CollectionUploadUrlRes uploadUrlRes = getCollectionUploadUrl(databaseName, collectionName, loadAndSplitTextParam);
 
         if (Code.isFailed(uploadUrlRes.getCode()) ||
                 uploadUrlRes.getCredentials() == null ||

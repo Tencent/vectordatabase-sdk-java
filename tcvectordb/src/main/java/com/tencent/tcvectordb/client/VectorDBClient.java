@@ -27,7 +27,6 @@ import com.tencent.tcvectordb.model.Database;
 import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.collection.CollectionLoadAndSplitTextParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
-import com.tencent.tcvectordb.model.param.collectionView.LoadAndSplitTextParam;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.*;
@@ -712,7 +711,7 @@ public class VectorDBClient {
     }
 
 
-    public void collectionUploadFile(String database, String collection, CollectionLoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
+    public void UploadFile(String database, String collection, CollectionLoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
         this.stub.collectionUpload(database, collection, loadAndSplitTextParam, metaDataMap);
     }
 

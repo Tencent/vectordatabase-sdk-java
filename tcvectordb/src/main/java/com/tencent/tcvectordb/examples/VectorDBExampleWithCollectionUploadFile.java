@@ -26,16 +26,11 @@ import com.tencent.tcvectordb.model.Collection;
 import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.collectionView.*;
 import com.tencent.tcvectordb.model.param.dml.*;
-import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.GetImageUrlRes;
-import com.tencent.tcvectordb.model.param.entity.SearchContentInfo;
 import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
-import com.tencent.tcvectordb.model.param.enums.OrderEnum;
 import com.tencent.tcvectordb.model.param.enums.ParsingTypeEnum;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -47,14 +42,13 @@ public class VectorDBExampleWithCollectionUploadFile {
 
     private static final String DBNAME = "db-test-java-sdk";
     private static final String COLL_NAME = "coll-file_parse_java-sdk";
-    private static final String COLL_NAME_ALIAS = "alias-coll-ai-files";
 
     public static void main(String[] args) throws Exception {
 
         // 创建 VectorDB Client
         VectorDBClient client = CommonService.initClient();
 
-        // 清理环境
+//         清理环境
         CommonService.anySafe(() -> client.dropDatabase(DBNAME));
         createDatabaseAndCollection(client);
         Map<String, Object> metaDataMap = new HashMap<>();
@@ -72,7 +66,7 @@ public class VectorDBExampleWithCollectionUploadFile {
 //        // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.docx", metaDataMap);
 //
 //        // 解析加载文件需要等待时间
-        Thread.sleep(1000 * 20);
+        Thread.sleep(1000 * 30);
 
         queryData(client);
     }
@@ -116,7 +110,7 @@ public class VectorDBExampleWithCollectionUploadFile {
                 .withFieldMappings(columnMap)
                 .withEmbeddingModel(EmbeddingModelEnum.BGE_BASE_ZH.getModelName())
                 .Build();
-        client.collectionUploadFile(DBNAME, COLL_NAME, param, metaDataMap);
+        client.UploadFile(DBNAME, COLL_NAME, param, metaDataMap);
     }
 
     private static void loadAndSplitTextUseInputStream(VectorDBClient client, InputStream inputStream, Long inputStreamSize, String fileName, Map<String, Object> metaDataMap) throws Exception {
@@ -132,7 +126,7 @@ public class VectorDBExampleWithCollectionUploadFile {
                 .withFieldMappings(columnMap)
                 .withEmbeddingModel(EmbeddingModelEnum.BGE_BASE_ZH.getModelName())
                 .Build();
-        client.collectionUploadFile(DBNAME,COLL_NAME, param, metaDataMap);
+        client.UploadFile(DBNAME,COLL_NAME, param, metaDataMap);
     }
 
     private static List<Double> generateRandomVector(int dim){

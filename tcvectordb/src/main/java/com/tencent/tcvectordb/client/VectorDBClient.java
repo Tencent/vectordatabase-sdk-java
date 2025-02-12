@@ -27,13 +27,9 @@ import com.tencent.tcvectordb.model.Database;
 import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.collection.CollectionLoadAndSplitTextParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
-import com.tencent.tcvectordb.model.param.collectionView.LoadAndSplitTextParam;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
-import com.tencent.tcvectordb.model.param.entity.AffectRes;
-import com.tencent.tcvectordb.model.param.entity.BaseRes;
-import com.tencent.tcvectordb.model.param.entity.HybridSearchRes;
-import com.tencent.tcvectordb.model.param.entity.SearchRes;
+import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.model.param.user.*;
@@ -715,18 +711,18 @@ public class VectorDBClient {
     }
 
 
-    public void collectionUploadFile(String database, String collection, CollectionLoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
+    public void UploadFile(String database, String collection, CollectionLoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
         this.stub.collectionUpload(database, collection, loadAndSplitTextParam, metaDataMap);
     }
 
-    public void GetImageUrl(String database, String collection, GetImageUrlParam param) throws Exception {
+    public GetImageUrlRes GetImageUrl(String database, String collection, GetImageUrlParam param) {
         GetImageUrlParamInner paramInner = new GetImageUrlParamInner();
         paramInner.setDatabase(database);
         paramInner.setCollection(collection);
         paramInner.setFileName(param.getFileName());
         paramInner.setDocumentIds(param.getDocumentIds());
 
-        this.stub.GetImageUrl(paramInner);
+        return this.stub.GetImageUrl(paramInner);
     }
 
 }

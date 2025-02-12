@@ -42,6 +42,7 @@ public class CollectionLoadAndSplitTextParam {
         this.parsingProcess = builder.parsingProcess;
         this.fieldMappings = builder.fieldMappings;
         this.embeddingModel = builder.embeddingModel;
+        this.fileName = builder.fileName;
     }
 
     public String getFileName() {

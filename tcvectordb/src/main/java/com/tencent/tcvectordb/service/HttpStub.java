@@ -27,7 +27,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.auth.BasicSessionCredentials;
-import com.qcloud.cos.endpoint.EndpointBuilder;
 import com.qcloud.cos.model.ObjectMetadata;
 import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.model.PutObjectResult;
@@ -41,11 +40,9 @@ import com.tencent.tcvectordb.model.param.collection.CollectionLoadAndSplitTextP
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.collectionView.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
-import com.tencent.tcvectordb.model.param.dml.GetImageUrlParam;
 import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.user.*;
-import com.tencent.tcvectordb.rpc.proto.Olama;
 import com.tencent.tcvectordb.service.param.*;
 import com.tencent.tcvectordb.utils.FileUtils;
 import com.tencent.tcvectordb.utils.JsonUtils;
@@ -550,7 +547,7 @@ public class HttpStub implements Stub {
     }
 
     public UploadUrlRes getUploadUrl(String databaseName, String collectionViewName, LoadAndSplitTextParam loadAndSplitTextParam, String fileName) {
-        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_UPLOADER_URL);
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_SET_UPLOADER_URL);
         Map<String, Object> params = new HashMap<>();
         params.put("database", databaseName);
         params.put("collectionView", collectionViewName);
@@ -568,13 +565,13 @@ public class HttpStub implements Stub {
     }
 
 
-    public CollectionUploadUrlRes getCollectionUploadUrl(String databaseName, String collection, CollectionLoadAndSplitTextParam loadAndSplitTextParam, String fileName) {
-        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_COLLECTION_UPLOADER_URL);
+    public CollectionUploadUrlRes getCollectionUploadUrl(String databaseName, String collection, CollectionLoadAndSplitTextParam loadAndSplitTextParam) {
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_UPLOADER_URL);
         Map<String, Object> params = new HashMap<>();
         params.put("database", databaseName);
         params.put("collection", collection);
-        if (fileName != null) {
-            params.put("fileName", fileName);
+        if (loadAndSplitTextParam.getFileName() != null) {
+            params.put("fileName", loadAndSplitTextParam.getFileName());
         }
         if (loadAndSplitTextParam.getParsingProcess()!=null){
             params.put("parsingProcess",loadAndSplitTextParam.getParsingProcess());
@@ -597,8 +594,6 @@ public class HttpStub implements Stub {
     @Override
     public void collectionUpload(String databaseName, String collectionName, CollectionLoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
         File file = null;
-        String fileName = "";
-        String fileType = "";
         if (loadAndSplitTextParam.getLocalFilePath() != null){
             file = new File(loadAndSplitTextParam.getLocalFilePath());
             if (!file.exists() || !file.isFile()) {
@@ -608,15 +603,13 @@ public class HttpStub implements Stub {
             if (file.length() <= 0) {
                 throw new VectorDBException("file is empty");
             }
-            fileName = file.getName();
-            fileType = FileUtils.getFileType(file);
         }else if(loadAndSplitTextParam.getFileInputStream()!=null){
             if (loadAndSplitTextParam.getFileName()==null ||loadAndSplitTextParam.getInputStreamSize()==null){
                 throw new VectorDBException("use input stream, fileName and inputStreamSize  can not be null");
             }
         }
 
-        CollectionUploadUrlRes uploadUrlRes = getCollectionUploadUrl(databaseName, collectionName, loadAndSplitTextParam, fileName);
+        CollectionUploadUrlRes uploadUrlRes = getCollectionUploadUrl(databaseName, collectionName, loadAndSplitTextParam);
 
         if (Code.isFailed(uploadUrlRes.getCode()) ||
                 uploadUrlRes.getCredentials() == null ||
@@ -919,7 +912,7 @@ public class HttpStub implements Stub {
 
     @Override
     public GetImageUrlRes GetImageUrl(GetImageUrlParamInner param) {
-        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.GET_IMAGE_URL);
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_IMAGE_URL);
         JsonNode jsonNode = this.post(url, JsonUtils.toJsonString(param), false);
         return JsonUtils.parseObject(jsonNode.toString(), GetImageUrlRes.class);
     }

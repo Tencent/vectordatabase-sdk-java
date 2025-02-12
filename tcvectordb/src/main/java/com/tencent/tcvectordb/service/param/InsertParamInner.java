@@ -7,7 +7,10 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.tencent.tcvectordb.exception.ParamException;
+import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.dml.InsertParam;
+import com.tencent.tcvectordb.utils.JsonUtils;
+import org.json.JSONObject;
 
 import java.util.List;
 

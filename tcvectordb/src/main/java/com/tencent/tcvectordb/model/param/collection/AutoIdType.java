@@ -23,44 +23,17 @@ package com.tencent.tcvectordb.model.param.collection;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * FieldType
+ * IndexType
  */
-public enum FieldType {
+public enum AutoIdType {
     /**
-     * uint64
+     * scalar index type: filter
      */
-    Uint64("uint64"),
-    /**
-     * string
-     */
-    String("string"),
-    /**
-     * vector
-     */
-    Vector("vector"),
-
-    /**
-     * binary vector
-     */
-    BinaryVector("binary_vector"),
-
-    /**
-     * array 类型
-     */
-    Array("array"),
-    /**
-     * sparse vector
-     */
-    SparseVector("sparseVector"),
-
-    /**
-     * Json 类型
-     */
-    Json("json");
+    UUID("uuid");
 
     private final String value;
 
-    private FieldType(String value) {
+    private AutoIdType(String value) {
         this.value = value;
     }
 
@@ -69,10 +42,10 @@ public enum FieldType {
         return value;
     }
 
-    public static FieldType fromValue(String value) {
-        for (FieldType fieldType : FieldType.values()) {
-            if (fieldType.getValue().equals(value)) {
-                return fieldType;
+    public static AutoIdType fromValue(String value) {
+        for (AutoIdType indexType : AutoIdType.values()) {
+            if (indexType.getValue().equals(value)) {
+                return indexType;
             }
         }
         return null; // 或者抛出一个异常，如果value不合法

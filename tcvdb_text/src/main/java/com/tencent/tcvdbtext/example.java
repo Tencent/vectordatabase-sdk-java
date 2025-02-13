@@ -40,12 +40,17 @@ public class example {
         quickStart();
         fitStart();
         userDict();
+        cutAll();
     }
     public static void quickStart() {
         SparseVectorBm25Encoder encoder = SparseVectorBm25Encoder.getBm25Encoder("zh");
         List<String> texts = Arrays.asList("腾讯云向量数据库（Tencent Cloud VectorDB）是一款全托管的自研企业级分布式数据库服务，专用于存储、索引、检索、管理由深度神经网络或其他机器学习模型生成的大量多维嵌入向量。",
                 "作为专门为处理输入向量查询而设计的数据库，它支持多种索引类型和相似度计算方法，单索引支持10亿级向量规模，高达百万级 QPS 及毫秒级查询延迟。",
                    "不仅能为大模型提供外部知识库，提高大模型回答的准确性，还可广泛应用于推荐系统、NLP 服务、计算机视觉、智能客服等 AI 领域。");
+        System.out.println("cut all true:" + encoder.getTokenizer().getCutAll());
+        System.out.println("encode texts: "+ encoder.encodeTexts(texts));
+        encoder.setCutAll(true);
+        System.out.println("cut all:" + encoder.getTokenizer().getCutAll());
         System.out.println("encode texts: "+ encoder.encodeTexts(texts));
 
         System.out.println("encode multiple quires: "+ encoder.encodeQueries(Arrays.asList("什么是腾讯云向量数据库？", "腾讯云向量数据库有什么优势？", "腾讯云向量数据库能做些什么？")));
@@ -74,6 +79,7 @@ public class example {
         String path = projectAbsolutePath.replace("target/classes", "") +
                 "src/main/resources/data/user_dict/userdict_example.txt";
         System.out.println(tokenizer.tokenize("腾讯云向量数据库（Tencent Cloud VectorDB）是一款全托管的自研企业级分布式数据库服务，专用于存储、索引、检索、管理由深度神经网络或其他机器学习模型生成的大量多维嵌入向量。"));
+
         tokenizer.loadDict(path);
         System.out.println(tokenizer.tokenize("腾讯云向量数据库（Tencent Cloud VectorDB）是一款全托管的自研企业级分布式数据库服务，专用于存储、索引、检索、管理由深度神经网络或其他机器学习模型生成的大量多维嵌入向量。"));
 
@@ -82,5 +88,16 @@ public class example {
         tokenizer.loadDict(path);
         System.out.println(tokenizer.tokenize("腾讯云向量数据库（Tencent Cloud VectorDB）是一款全托管的自研企业级分布式数据库服务，专用于存储、索引、检索、管理由深度神经网络或其他机器学习模型生成的大量多维嵌入向量。"));
 
+    }
+
+
+    public static void cutAll(){
+        JiebaTokenizer tokenizer = new JiebaTokenizer();
+        System.out.println("cut all false: ");
+        System.out.println(tokenizer.tokenize("腾讯云向量数据库（Tencent Cloud VectorDB）是一款全托管的自研企业级分布式数据库服务，专用于存储、索引、检索、管理由深度神经网络或其他机器学习模型生成的大量多维嵌入向量。"));
+
+        tokenizer.setCutAll(true);
+        System.out.println("cut all true: ");
+        System.out.println(tokenizer.tokenize("腾讯云向量数据库（Tencent Cloud VectorDB）是一款全托管的自研企业级分布式数据库服务，专用于存储、索引、检索、管理由深度神经网络或其他机器学习模型生成的大量多维嵌入向量。"));
     }
 }

@@ -346,6 +346,15 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
     public void setDict(String dictFile) {
         this.tokenizer.loadDict(dictFile);
     }
+
+    /**
+     * set tokenizer cutAll mode
+     * @param cutAll
+     */
+    public void setCutAll(Boolean cutAll) {
+        this.tokenizer.setCutAll(cutAll);
+    }
+
     // build模式
     public static class Builder {
         private BaseTokenizer tokenizer;

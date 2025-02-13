@@ -20,7 +20,6 @@
 
 package com.tencent.tcvectordb.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.MessageOrBuilder;
@@ -42,7 +41,6 @@ import com.tencent.tcvectordb.rpc.Interceptor.BackendServiceInterceptor;
 import com.tencent.tcvectordb.rpc.proto.Olama;
 import com.tencent.tcvectordb.rpc.proto.SearchEngineGrpc;
 import com.tencent.tcvectordb.service.param.*;
-import com.tencent.tcvectordb.utils.JsonUtils;
 import io.grpc.*;
 import io.grpc.okhttp.OkHttpChannelBuilder;
 import org.apache.commons.lang3.tuple.Pair;
@@ -965,7 +963,7 @@ public class GrpcStub extends HttpStub{
     }
 
     @Override
-    public void collectionUpload(String databaseName, String collectionName, CollectionLoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
+    public void collectionUpload(String databaseName, String collectionName, UploadFileParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
         super.initHttpStub(this.connectParam);
         super.collectionUpload(databaseName, collectionName, loadAndSplitTextParam, metaDataMap);
     }

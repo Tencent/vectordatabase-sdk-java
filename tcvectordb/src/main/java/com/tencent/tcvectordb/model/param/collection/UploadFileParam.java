@@ -1,7 +1,6 @@
 package com.tencent.tcvectordb.model.param.collection;
 
 
-import com.tencent.tcvectordb.model.param.collectionView.FileType;
 import com.tencent.tcvectordb.model.param.collectionView.ParsingProcessParam;
 import com.tencent.tcvectordb.model.param.collectionView.SplitterPreprocessParams;
 
@@ -10,10 +9,10 @@ import java.util.Map;
 
 
 /**
- * LoadAndSplitTextParam upload file param
+ * UploadFileParam upload file param
  *
  */
-public class CollectionLoadAndSplitTextParam {
+public class UploadFileParam {
     /**
      * use local file path
      */
@@ -34,7 +33,7 @@ public class CollectionLoadAndSplitTextParam {
 
     private String fileName;
 
-    public CollectionLoadAndSplitTextParam(Builder builder) {
+    public UploadFileParam(Builder builder) {
         this.localFilePath = builder.localFilePath;
         this.splitterProcess = builder.splitterProcess;
         this.fileInputStream = builder.fileInputStream;
@@ -164,8 +163,8 @@ public class CollectionLoadAndSplitTextParam {
             return this;
         }
 
-        public CollectionLoadAndSplitTextParam Build(){
-            return new CollectionLoadAndSplitTextParam(this);
+        public UploadFileParam Build(){
+            return new UploadFileParam(this);
         }
     }
 

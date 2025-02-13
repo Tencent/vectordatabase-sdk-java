@@ -56,14 +56,14 @@ public class VectorDBExampleWithCollectionUploadFile {
         metaDataMap.put("tags", Arrays.asList("Embedding", "向量", "AI"));
 //        // 使用输入流上传文档， 需指定输入流数据大小
 //        File file = new File("/data/home/yihaoan/DZ47SLES样本.pdf");
-//        loadAndSplitTextUseInputStream(client, new FileInputStream(file), file.length(), "DZ47SLES样本.pdf", metaDataMap);
+//        UploadFileUseInputStream(client, new FileInputStream(file), file.length(), "DZ47SLES样本.pdf", metaDataMap);
 //
 //        // 使用文件路径上传文档
-         loadAndSplitText(client, "/data/home/yihaoan/腾讯云向量数据库.md", "腾讯云向量数据库.md", metaDataMap);
+        UploadFile(client, "/Users/anyihao/Downloads/DZ47SLES样本.pdf", "DZ47SLES样本.pdf", metaDataMap);
 //        // support markdown, pdf, pptx, docx document
-//        // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pdf", metaDataMap);
-//        // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pptx", metaDataMap);
-//        // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.docx", metaDataMap);
+//        // UploadFile(client, System.getProperty("file_path"), "腾讯云向量数据库.pdf", metaDataMap);
+//        // UploadFile(client, System.getProperty("file_path"), "腾讯云向量数据库.pptx", metaDataMap);
+//        // UploadFile(client, System.getProperty("file_path"), "腾讯云向量数据库.docx", metaDataMap);
 //
 //        // 解析加载文件需要等待时间
         Thread.sleep(1000 * 30);
@@ -73,7 +73,7 @@ public class VectorDBExampleWithCollectionUploadFile {
 
     private static void createDatabaseAndCollection(VectorDBClient client) throws InterruptedException {
         // 1. 创建数据库
-        System.out.println("---------------------- create AI Database ----------------------");
+        System.out.println("---------------------- create Database ----------------------");
         Database db = client.createDatabase(DBNAME);
 
         // 2. 列出所有数据库
@@ -95,17 +95,17 @@ public class VectorDBExampleWithCollectionUploadFile {
 
     }
 
-    private static void loadAndSplitText(VectorDBClient client, String filePath, String fileName, Map<String, Object> metaDataMap) throws Exception {
+    private static void UploadFile(VectorDBClient client, String filePath, String fileName, Map<String, Object> metaDataMap) throws Exception {
         Map<String,String> columnMap = new HashMap<>();
         columnMap.put("filename", "file_name");
         columnMap.put("text", "text");
         columnMap.put("imageList", "image_list");
 
-        CollectionLoadAndSplitTextParam param = CollectionLoadAndSplitTextParam.newBuilder()
+        UploadFileParam param = UploadFileParam.newBuilder()
                 .withLocalFilePath(filePath)
                 .withSplitterProcess(SplitterPreprocessParams.newBuilder().withAppendKeywordsToChunkEnum(true).Build())
                 // parsingProcess is used for parsing pdf file by vision model
-                .withParsingProcess(ParsingProcessParam.newBuilder().withParsingType(ParsingTypeEnum.AlgorithmParsing).build())
+                .withParsingProcess(ParsingProcessParam.newBuilder().withParsingType(ParsingTypeEnum.VisionModel).build())
                 .withFileName(fileName)
                 .withFieldMappings(columnMap)
                 .withEmbeddingModel(EmbeddingModelEnum.BGE_BASE_ZH.getModelName())
@@ -113,18 +113,18 @@ public class VectorDBExampleWithCollectionUploadFile {
         client.UploadFile(DBNAME, COLL_NAME, param, metaDataMap);
     }
 
-    private static void loadAndSplitTextUseInputStream(VectorDBClient client, InputStream inputStream, Long inputStreamSize, String fileName, Map<String, Object> metaDataMap) throws Exception {
+    private static void UploadFileUseInputStream(VectorDBClient client, InputStream inputStream, Long inputStreamSize, String fileName, Map<String, Object> metaDataMap) throws Exception {
         Map<String,String> columnMap = new HashMap<>();
         columnMap.put("filename", "file_name");
         columnMap.put("text", "text");
         columnMap.put("imageList", "image_list");
-        CollectionLoadAndSplitTextParam param = CollectionLoadAndSplitTextParam.newBuilder()
+        UploadFileParam param = UploadFileParam.newBuilder()
                 .withFileInputStream(inputStream).withInputStreamDataSize(inputStreamSize)
                 .withFileName(fileName)
                 .withSplitterProcess(SplitterPreprocessParams.newBuilder().withAppendKeywordsToChunkEnum(true).Build())
                 .withParsingProcess(ParsingProcessParam.newBuilder().withParsingType(ParsingTypeEnum.AlgorithmParsing).build())
                 .withFieldMappings(columnMap)
-                .withEmbeddingModel(EmbeddingModelEnum.BGE_BASE_ZH.getModelName())
+                .withEmbeddingModel(EmbeddingModelEnum.E5_LARGE_V2.getModelName())
                 .Build();
         client.UploadFile(DBNAME,COLL_NAME, param, metaDataMap);
     }
@@ -146,7 +146,7 @@ public class VectorDBExampleWithCollectionUploadFile {
 
         System.out.println("---------------------- query ----------------------");
         QueryParam queryParam = QueryParam.newBuilder()
-                .withFilter("file_name=\"腾讯云向量数据库.md\"")
+                .withFilter("file_name=\"DZ47SLES样本.pdf\"")
                 // limit 限制返回行数，1 到 16384 之间
                 .withLimit(200)
                 // 偏移
@@ -161,7 +161,7 @@ public class VectorDBExampleWithCollectionUploadFile {
 
         System.out.println("---------------------- get image url ----------------------");
         GetImageUrlRes getImageUrlRes = client.GetImageUrl(DBNAME, COLL_NAME,
-                GetImageUrlParam.newBuilder().setFileName("腾讯云向量数据库.md")
+                GetImageUrlParam.newBuilder().setFileName("DZ47SLES样本.pdf")
                         .setDocumentIds(qdos.stream().map(doc->doc.getId()).collect(Collectors.toList()))
                         .build());
         System.out.println("get image url res:");
@@ -180,7 +180,7 @@ public class VectorDBExampleWithCollectionUploadFile {
                 // 指定 Top K 的 K 值
                 .withLimit(10)
                 // 过滤获取到结果
-                .withFilter("file_name=\"腾讯云向量数据库.md\"")
+                .withFilter("file_name=\"DZ47SLES样本.pdf\"")
                 .build();
         // 输出相似性检索结果，检索结果为二维数组，每一位为一组返回结果，分别对应 search 时指定的多个向量
         List<List<Document>> svDocs = client.search(DBNAME, COLL_NAME, searchByVectorParam);

@@ -36,7 +36,7 @@ import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.Collection;
 import com.tencent.tcvectordb.model.*;
-import com.tencent.tcvectordb.model.param.collection.CollectionLoadAndSplitTextParam;
+import com.tencent.tcvectordb.model.param.collection.UploadFileParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.collectionView.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
@@ -565,7 +565,7 @@ public class HttpStub implements Stub {
     }
 
 
-    public CollectionUploadUrlRes getCollectionUploadUrl(String databaseName, String collection, CollectionLoadAndSplitTextParam loadAndSplitTextParam) {
+    public CollectionUploadUrlRes getCollectionUploadUrl(String databaseName, String collection, UploadFileParam loadAndSplitTextParam) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_UPLOADER_URL);
         Map<String, Object> params = new HashMap<>();
         params.put("database", databaseName);
@@ -592,7 +592,7 @@ public class HttpStub implements Stub {
 
 
     @Override
-    public void collectionUpload(String databaseName, String collectionName, CollectionLoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
+    public void collectionUpload(String databaseName, String collectionName, UploadFileParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
         File file = null;
         if (loadAndSplitTextParam.getLocalFilePath() != null){
             file = new File(loadAndSplitTextParam.getLocalFilePath());

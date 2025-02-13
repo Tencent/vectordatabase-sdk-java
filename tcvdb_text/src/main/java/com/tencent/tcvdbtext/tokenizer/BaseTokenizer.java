@@ -44,6 +44,8 @@ public abstract class BaseTokenizer {
 
     protected Boolean cutAll;
 
+    protected String stopWordsFile;
+
 
     public BaseTokenizer(BaseHash hash, Boolean enableStopWords, Set<String> stopWords, Boolean lowerCase, String dictFilePath) {
         this.hash = hash;
@@ -124,4 +126,6 @@ public abstract class BaseTokenizer {
     public abstract void loadDict(String dictFile);
 
     public abstract  void setLowerCase(Boolean lowerCase);
+
+    public abstract void setStopWords(String stopWordsFile);
 }

@@ -81,6 +81,7 @@ public class JiebaTokenizer extends BaseTokenizer{
         }
     }
 
+    @Override
     public void setStopWords(String stopWordsFile) {
         if (!stopWordsFile.isEmpty()) {
             this.stopWords = StopWords.getStopWordsFromFile(stopWordsFile);

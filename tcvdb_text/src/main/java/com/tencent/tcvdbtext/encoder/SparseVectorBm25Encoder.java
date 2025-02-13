@@ -355,6 +355,14 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
         this.tokenizer.setCutAll(cutAll);
     }
 
+    /**
+     * set stop words file
+     * @param stopWordsFile
+     */
+    public void setStopWords(String stopWordsFile)  {
+        this.tokenizer.setStopWords(stopWordsFile);
+    }
+
     // build模式
     public static class Builder {
         private BaseTokenizer tokenizer;

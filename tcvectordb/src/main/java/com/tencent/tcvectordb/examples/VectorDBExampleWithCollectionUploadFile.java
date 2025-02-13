@@ -69,6 +69,7 @@ public class VectorDBExampleWithCollectionUploadFile {
         Thread.sleep(1000 * 30);
 
         queryData(client);
+        client.dropDatabase(DBNAME);
     }
 
     private static void createDatabaseAndCollection(VectorDBClient client) throws InterruptedException {

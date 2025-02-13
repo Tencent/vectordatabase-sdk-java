@@ -41,13 +41,14 @@ public class example {
         fitStart();
         userDict();
         cutAll();
+        stopWord();
     }
     public static void quickStart() {
         SparseVectorBm25Encoder encoder = SparseVectorBm25Encoder.getBm25Encoder("zh");
         List<String> texts = Arrays.asList("腾讯云向量数据库（Tencent Cloud VectorDB）是一款全托管的自研企业级分布式数据库服务，专用于存储、索引、检索、管理由深度神经网络或其他机器学习模型生成的大量多维嵌入向量。",
                 "作为专门为处理输入向量查询而设计的数据库，它支持多种索引类型和相似度计算方法，单索引支持10亿级向量规模，高达百万级 QPS 及毫秒级查询延迟。",
                    "不仅能为大模型提供外部知识库，提高大模型回答的准确性，还可广泛应用于推荐系统、NLP 服务、计算机视觉、智能客服等 AI 领域。");
-        System.out.println("cut all true:" + encoder.getTokenizer().getCutAll());
+        System.out.println("cut all:" + encoder.getTokenizer().getCutAll());
         System.out.println("encode texts: "+ encoder.encodeTexts(texts));
         encoder.setCutAll(true);
         System.out.println("cut all:" + encoder.getTokenizer().getCutAll());
@@ -92,12 +93,32 @@ public class example {
 
 
     public static void cutAll(){
-        JiebaTokenizer tokenizer = new JiebaTokenizer();
-        System.out.println("cut all false: ");
-        System.out.println(tokenizer.tokenize("腾讯云向量数据库（Tencent Cloud VectorDB）是一款全托管的自研企业级分布式数据库服务，专用于存储、索引、检索、管理由深度神经网络或其他机器学习模型生成的大量多维嵌入向量。"));
+        SparseVectorBm25Encoder encoder = SparseVectorBm25Encoder.getBm25Encoder("zh");
+        System.out.println("cut all : " + encoder.getTokenizer().getCutAll());
+        System.out.println(encoder.getTokenizer().tokenize("腾讯云向量数据库（Tencent Cloud VectorDB）是一款全托管的自研企业级分布式数据库服务，专用于存储、索引、检索、管理由深度神经网络或其他机器学习模型生成的大量多维嵌入向量。"));
 
-        tokenizer.setCutAll(true);
-        System.out.println("cut all true: ");
-        System.out.println(tokenizer.tokenize("腾讯云向量数据库（Tencent Cloud VectorDB）是一款全托管的自研企业级分布式数据库服务，专用于存储、索引、检索、管理由深度神经网络或其他机器学习模型生成的大量多维嵌入向量。"));
+        encoder.setCutAll(true);
+        System.out.println("cut all: " + encoder.getTokenizer().getCutAll());
+        System.out.println(encoder.getTokenizer().tokenize("腾讯云向量数据库（Tencent Cloud VectorDB）是一款全托管的自研企业级分布式数据库服务，专用于存储、索引、检索、管理由深度神经网络或其他机器学习模型生成的大量多维嵌入向量。"));
+    }
+
+    public static void stopWord(){
+        SparseVectorBm25Encoder encoder = SparseVectorBm25Encoder.getBm25Encoder("zh");
+        //System.out.println("cut all false: ");
+        System.out.println(encoder.getTokenizer().tokenize("什么是腾讯云向量数据库。"));
+
+        encoder.setEnableStopWords(false);
+        System.out.println(encoder.getTokenizer().tokenize("什么是腾讯云向量数据库。"));
+        String projectPath = example.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+
+        // 创建一个 File 对象来表示工程路径
+        File projectDirectory = new File(projectPath);
+        String projectAbsolutePath = projectDirectory.getAbsolutePath();
+        String path = projectAbsolutePath.replace("target/classes", "") +
+                "src/main/resources/data/user_stopwords.txt";
+        encoder.setStopWords(path);
+        encoder.setEnableStopWords(true);
+        System.out.println(encoder.getTokenizer().tokenize("什么是腾讯云向量数据库。"));
+
     }
 }

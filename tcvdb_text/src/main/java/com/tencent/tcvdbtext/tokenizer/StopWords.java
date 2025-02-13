@@ -46,4 +46,19 @@ public class StopWords {
         }
         return lines;
     }
+
+    public static Set<String> getStopWordsFromFilePath(String filePath) {
+        Set<String> lines = new HashSet<>();
+        try {
+            InputStream inputStream = new FileInputStream(filePath);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return lines;
+    }
 }

@@ -69,7 +69,6 @@ public class example {
     }
     public static void userDict(){
         JiebaTokenizer tokenizer = new JiebaTokenizer();
-        tokenizer.setEnableStopWords(true);
         String projectPath = example.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 
         // 创建一个 File 对象来表示工程路径
@@ -104,7 +103,6 @@ public class example {
 
     public static void stopWord(){
         SparseVectorBm25Encoder encoder = SparseVectorBm25Encoder.getBm25Encoder("zh");
-        //System.out.println("cut all false: ");
         System.out.println(encoder.getTokenizer().tokenize("什么是腾讯云向量数据库。"));
 
         encoder.setEnableStopWords(false);

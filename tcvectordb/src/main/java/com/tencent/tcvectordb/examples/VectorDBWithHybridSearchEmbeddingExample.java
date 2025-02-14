@@ -136,7 +136,7 @@ public class VectorDBWithHybridSearchEmbeddingExample {
         System.out.println("---------------------- hybridSearch ----------------------");
         SparseVectorBm25Encoder encoder = SparseVectorBm25Encoder.getBm25Encoder("zh");
         HybridSearchParam hybridSearchParam = HybridSearchParam.newBuilder()
-                .withAnn(AnnOption.newBuilder().withFieldName("text")
+                .withAnn(AnnOption.newBuilder().withFieldName("vector")
                         .withTextData("什么是腾讯云向量数据库")
                         .build())
                 .withMatch(MatchOption.newBuilder().withFieldName("sparse_vector")

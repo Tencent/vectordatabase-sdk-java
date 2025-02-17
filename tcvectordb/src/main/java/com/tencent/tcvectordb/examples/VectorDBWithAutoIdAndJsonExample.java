@@ -130,7 +130,7 @@ public class VectorDBWithAutoIdAndJsonExample {
 //                .withDocumentIds(Arrays.asList("0001", "0002", "0003", "0004", "0005"))
                 // limit 限制返回行数，1 到 16384 之间
                 .withLimit(5)
-//                .withFilter("bookInfo.bookName=\"三国演义\"")
+                .withFilter("bookInfo.bookName=\"三国演义\"")
                 // 偏移
                 .withOffset(0)
                 // 指定返回的 fields

@@ -31,6 +31,8 @@ import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
 import com.tencent.tcvectordb.model.param.enums.ParsingTypeEnum;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -55,11 +57,11 @@ public class VectorDBExampleWithCollectionUploadFile {
         metaDataMap.put("author", "Tencent");
         metaDataMap.put("tags", Arrays.asList("Embedding", "向量", "AI"));
 //        // 使用输入流上传文档， 需指定输入流数据大小
-//        File file = new File("/data/home/yihaoan/DZ47SLES样本.pdf");
-//        UploadFileUseInputStream(client, new FileInputStream(file), file.length(), "DZ47SLES样本.pdf", metaDataMap);
-//
+//        File file = new File(System.getProperty("file_path"));
+//        UploadFileUseInputStream(client, new FileInputStream(file), file.length(), "tcvdb.pdf", metaDataMap);
+
 //        // 使用文件路径上传文档
-        UploadFile(client, "/Users/anyihao/Downloads/DZ47SLES样本.pdf", "DZ47SLES样本.pdf", metaDataMap);
+        UploadFile(client, System.getProperty("file_path"), "tcvdb.pdf", metaDataMap);
 //        // support markdown, pdf, pptx, docx document
 //        // UploadFile(client, System.getProperty("file_path"), "腾讯云向量数据库.pdf", metaDataMap);
 //        // UploadFile(client, System.getProperty("file_path"), "腾讯云向量数据库.pptx", metaDataMap);
@@ -125,7 +127,7 @@ public class VectorDBExampleWithCollectionUploadFile {
                 .withSplitterProcess(SplitterPreprocessParams.newBuilder().withAppendKeywordsToChunkEnum(true).Build())
                 .withParsingProcess(ParsingProcessParam.newBuilder().withParsingType(ParsingTypeEnum.AlgorithmParsing).build())
                 .withFieldMappings(columnMap)
-                .withEmbeddingModel(EmbeddingModelEnum.E5_LARGE_V2.getModelName())
+                .withEmbeddingModel(EmbeddingModelEnum.BGE_BASE_ZH.getModelName())
                 .Build();
         client.UploadFile(DBNAME,COLL_NAME, param, metaDataMap);
     }
@@ -147,7 +149,7 @@ public class VectorDBExampleWithCollectionUploadFile {
 
         System.out.println("---------------------- query ----------------------");
         QueryParam queryParam = QueryParam.newBuilder()
-                .withFilter("file_name=\"DZ47SLES样本.pdf\"")
+                .withFilter("file_name=\"tcvdb.pdf\"")
                 // limit 限制返回行数，1 到 16384 之间
                 .withLimit(200)
                 // 偏移
@@ -162,7 +164,7 @@ public class VectorDBExampleWithCollectionUploadFile {
 
         System.out.println("---------------------- get image url ----------------------");
         GetImageUrlRes getImageUrlRes = client.GetImageUrl(DBNAME, COLL_NAME,
-                GetImageUrlParam.newBuilder().setFileName("DZ47SLES样本.pdf")
+                GetImageUrlParam.newBuilder().setFileName("tcvdb.pdf")
                         .setDocumentIds(qdos.stream().map(doc->doc.getId()).collect(Collectors.toList()))
                         .build());
         System.out.println("get image url res:");
@@ -181,7 +183,7 @@ public class VectorDBExampleWithCollectionUploadFile {
                 // 指定 Top K 的 K 值
                 .withLimit(10)
                 // 过滤获取到结果
-                .withFilter("file_name=\"DZ47SLES样本.pdf\"")
+                .withFilter("file_name=\"tcvdb.pdf\"")
                 .build();
         // 输出相似性检索结果，检索结果为二维数组，每一位为一组返回结果，分别对应 search 时指定的多个向量
         List<List<Document>> svDocs = client.search(DBNAME, COLL_NAME, searchByVectorParam);

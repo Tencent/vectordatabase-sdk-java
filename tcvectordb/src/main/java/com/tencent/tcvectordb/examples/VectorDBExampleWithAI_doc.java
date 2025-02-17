@@ -67,7 +67,7 @@ public class VectorDBExampleWithAI_doc {
 //        loadAndSplitTextUseInputStream(client, new FileInputStream(System.getProperty("file_path")), file.length(), "腾讯云向量数据库.md", metaDataMap);
 
         // 使用文件路径上传文档
-         loadAndSplitText(client, "/Users/anyihao/Downloads/腾讯云向量数据库.md", "腾讯云向量数据库.md", metaDataMap);
+         loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.md", metaDataMap);
         // support markdown, pdf, pptx, docx document
         // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pdf", metaDataMap);
         // loadAndSplitText(client, System.getProperty("file_path"), "腾讯云向量数据库.pptx", metaDataMap);

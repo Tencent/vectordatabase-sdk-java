@@ -55,6 +55,7 @@ public class VectorDBWithAutoIdAndJsonExample {
         CommonService.anySafe(() -> client.dropDatabase(DBNAME));
         createDatabaseAndCollection(client);
         upsertData(client);
+        queryData(client);
         updateAndDelete(client);
         deleteAndDrop(client);
 
@@ -170,18 +171,18 @@ public class VectorDBWithAutoIdAndJsonExample {
 
 
     private static void upsertData(VectorDBClient client) throws InterruptedException {
-//        List<String> texts = Arrays.asList(
-//                "腾讯云向量数据库（Tencent Cloud VectorDB）是一款全托管的自研企业级分布式数据库服务，专用于存储、索引、检索、管理由深度神经网络或其他机器学习模型生成的大量多维嵌入向量。",
-//                "作为专门为处理输入向量查询而设计的数据库，它支持多种索引类型和相似度计算方法，单索引支持10亿级向量规模，高达百万级 QPS 及毫秒级查询延迟。",
-//                "不仅能为大模型提供外部知识库，提高大模型回答的准确性，还可广泛应用于推荐系统、NLP 服务、计算机视觉、智能客服等 AI 领域。",
-//                "腾讯云向量数据库（Tencent Cloud VectorDB）作为一种专门存储和检索向量数据的服务提供给用户， 在高性能、高可用、大规模、低成本、简单易用、稳定可靠等方面体现出显著优势。 ",
-//                "腾讯云向量数据库可以和大语言模型 LLM 配合使用。企业的私域数据在经过文本分割、向量化后，可以存储在腾讯云向量数据库中，构建起企业专属的外部知识库，从而在后续的检索任务中，为大模型提供提示信息，辅助大模型生成更加准确的答案。");
-//        List<List<Pair<Long, Float>>> sparseVectors = SparseVectorBm25Encoder.getDefaultBm25Encoder().encodeTexts(texts);
+        List<String> texts = Arrays.asList(
+                "腾讯云向量数据库（Tencent Cloud VectorDB）是一款全托管的自研企业级分布式数据库服务，专用于存储、索引、检索、管理由深度神经网络或其他机器学习模型生成的大量多维嵌入向量。",
+                "作为专门为处理输入向量查询而设计的数据库，它支持多种索引类型和相似度计算方法，单索引支持10亿级向量规模，高达百万级 QPS 及毫秒级查询延迟。",
+                "不仅能为大模型提供外部知识库，提高大模型回答的准确性，还可广泛应用于推荐系统、NLP 服务、计算机视觉、智能客服等 AI 领域。",
+                "腾讯云向量数据库（Tencent Cloud VectorDB）作为一种专门存储和检索向量数据的服务提供给用户， 在高性能、高可用、大规模、低成本、简单易用、稳定可靠等方面体现出显著优势。 ",
+                "腾讯云向量数据库可以和大语言模型 LLM 配合使用。企业的私域数据在经过文本分割、向量化后，可以存储在腾讯云向量数据库中，构建起企业专属的外部知识库，从而在后续的检索任务中，为大模型提供提示信息，辅助大模型生成更加准确的答案。");
+        List<List<Pair<Long, Float>>> sparseVectors = SparseVectorBm25Encoder.getDefaultBm25Encoder().encodeTexts(texts);
         List<Document> documentList = new ArrayList<>(Arrays.asList(
                 Document.newBuilder()
                         .withId("0001")
                         .withVector(generateRandomVector(768))
-//                        .withSparseVector(sparseVectors.get(0))
+                        .withSparseVector(sparseVectors.get(0))
                         .addDocField(new DocField("bookInfo",
                                 new JSONObject(new HashMap<Object,Object>(){{
                                     put("bookName", "西游记");
@@ -191,7 +192,7 @@ public class VectorDBWithAutoIdAndJsonExample {
                         .build(),
                 Document.newBuilder()
                         .withVector(generateRandomVector(768))
-//                        .withSparseVector(sparseVectors.get(1))
+                        .withSparseVector(sparseVectors.get(1))
                         .addDocField(new DocField("bookInfo",
                                 new JSONObject(new HashMap<Object,Object>(){{
                                     put("bookName", "西游记");
@@ -202,7 +203,7 @@ public class VectorDBWithAutoIdAndJsonExample {
                         .build(),
                 Document.newBuilder()
                         .withVector(generateRandomVector(768))
-//                        .withSparseVector(sparseVectors.get(2))
+                        .withSparseVector(sparseVectors.get(2))
                         .addDocField(new DocField("bookInfo",
                                 new JSONObject(new HashMap<Object,Object>(){{
                                     put("bookName", "三国演义");
@@ -213,7 +214,7 @@ public class VectorDBWithAutoIdAndJsonExample {
                         .build(),
                 Document.newBuilder()
                         .withVector(generateRandomVector(768))
-//                        .withSparseVector(sparseVectors.get(3))
+                        .withSparseVector(sparseVectors.get(3))
                         .addDocField(new DocField("bookInfo",
                                 new JSONObject(new HashMap<Object,Object>(){{
                                     put("bookName", "水浒传");
@@ -224,7 +225,7 @@ public class VectorDBWithAutoIdAndJsonExample {
                         .build(),
                 Document.newBuilder()
                         .withVector(generateRandomVector(768))
-//                        .withSparseVector(sparseVectors.get(4))
+                        .withSparseVector(sparseVectors.get(4))
                         .addDocField(new DocField("bookInfo",
                                 new JSONObject(new HashMap<Object,Object>(){{
                                     put("bookName", "红楼梦");
@@ -235,7 +236,7 @@ public class VectorDBWithAutoIdAndJsonExample {
                         .build(),
                 Document.newBuilder()
                         .withVector(generateRandomVector(768))
-//                        .withSparseVector(sparseVectors.get(0))
+                        .withSparseVector(sparseVectors.get(0))
                         .addDocField(new DocField("bookInfo",
                                 new JSONObject(new HashMap<Object,Object>(){{
                                     put("bookName", "红楼梦");
@@ -274,7 +275,7 @@ public class VectorDBWithAutoIdAndJsonExample {
 //                .withDocumentIds(Arrays.asList("0001", "0002", "0003", "0004", "0005"))
                 // limit 限制返回行数，1 到 16384 之间
                  .withLimit(5)
-//                .withFilter("bookInfo.bookName=\"三国演义\"")
+                .withFilter("bookInfo.bookName=\"三国演义\"")
                 // 偏移
                  .withOffset(0)
                 // 指定返回的 fields
@@ -296,7 +297,7 @@ public class VectorDBWithAutoIdAndJsonExample {
 
         System.out.println("---------------------- searchById ----------------------");
         SearchByIdParam searchByIdParam = SearchByIdParam.newBuilder()
-                .withDocumentIds(Arrays.asList(qdos.get(1).getId(), "0001"))
+                .withDocumentIds(Arrays.asList(qdos.get(0).getId(), "0001"))
                 // 若使用 HNSW 索引，则需要指定参数 ef，ef 越大，召回率越高，但也会影响检索速度
                 .withParams(new HNSWSearchParams(100))
                 // 指定 Top K 的 K 值

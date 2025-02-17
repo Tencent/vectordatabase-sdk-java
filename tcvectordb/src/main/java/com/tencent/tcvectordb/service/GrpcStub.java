@@ -1305,7 +1305,7 @@ public class GrpcStub extends HttpStub{
             if(indexField.getFieldType()== FieldType.Array){
                 indexField.setFieldElementType(FieldElementType.fromValue(entry.getValue().getFieldElementType()));
             }
-            if(!entry.getValue().getAutoId().equals("")){
+            if(entry.getValue().getAutoId()!=null && !entry.getValue().getAutoId().equals("")){
                 indexField.setAutoId(entry.getValue().getAutoId());
             }
             return indexField;

@@ -717,8 +717,8 @@ public class VectorDBClient {
      * @param collection: collection name
      * @param collectionLoadAndSplitTextParam:
      *             localFilePath  : File path to load
-     *             fileName: File name as DocumentSet
-     *             splitterProcess : Args for splitter process
+     *             fileName: File name
+     *             splitterProcess : params for splitter process
      *             parsingProcess  : Document parsing parameters
      *             fileInputStream: file input stream; user input stream, when use this way、inputStreamSize and fileType params must be specified
      *             inputStreamSize : input stream size

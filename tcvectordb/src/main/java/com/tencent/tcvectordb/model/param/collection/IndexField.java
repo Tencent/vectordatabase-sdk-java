@@ -38,6 +38,9 @@ public class IndexField {
     private Integer dimension;
     private Integer indexedCount;
 
+    //autoId is used to generate a id for each document
+    private String autoId;
+
     public IndexField() {
     }
 
@@ -128,5 +131,13 @@ public class IndexField {
 
     public void setFieldElementType(FieldElementType fieldElementType) {
         this.fieldElementType = fieldElementType;
+    }
+
+    public String getAutoId() {
+        return autoId;
+    }
+
+    public void setAutoId(String autoId) {
+        this.autoId = autoId;
     }
 }

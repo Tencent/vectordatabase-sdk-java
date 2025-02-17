@@ -20,7 +20,6 @@
 
 package com.tencent.tcvectordb.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.MessageOrBuilder;
@@ -42,7 +41,6 @@ import com.tencent.tcvectordb.rpc.Interceptor.BackendServiceInterceptor;
 import com.tencent.tcvectordb.rpc.proto.Olama;
 import com.tencent.tcvectordb.rpc.proto.SearchEngineGrpc;
 import com.tencent.tcvectordb.service.param.*;
-import com.tencent.tcvectordb.utils.JsonUtils;
 import io.grpc.*;
 import io.grpc.okhttp.OkHttpChannelBuilder;
 import org.apache.commons.lang3.tuple.Pair;
@@ -331,6 +329,9 @@ public class GrpcStub extends HttpStub{
         }
         if(index.getFieldType()==FieldType.Array){
             indexBuilder.setFieldElementType(FieldElementType.String.getValue());
+        }
+        if(index.getAutoId()!=null){
+            indexBuilder.setAutoId(index.getAutoId());
         }
         return indexBuilder;
     }
@@ -962,6 +963,12 @@ public class GrpcStub extends HttpStub{
     }
 
     @Override
+    public void collectionUpload(String databaseName, String collectionName, UploadFileParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
+        super.initHttpStub(this.connectParam);
+        super.collectionUpload(databaseName, collectionName, loadAndSplitTextParam, metaDataMap);
+    }
+
+    @Override
     public GetDocumentSetRes getFile(String databaseName, String collectionName, String fileName, String fileId) {
         super.initHttpStub(this.connectParam);
         return super.getFile(databaseName, collectionName, fileName, fileId);
@@ -971,6 +978,12 @@ public class GrpcStub extends HttpStub{
     public GetChunksRes getChunks(String databaseName, String collectionName, String documentSetName, String documentSetId, Integer limit, Integer offset) {
         super.initHttpStub(this.connectParam);
         return super.getChunks(databaseName, collectionName, documentSetName, documentSetId, limit, offset);
+    }
+
+    @Override
+    public GetImageUrlRes GetImageUrl(GetImageUrlParamInner param) {
+        super.initHttpStub(this.connectParam);
+        return super.GetImageUrl(param);
     }
 
     @Override
@@ -1292,6 +1305,9 @@ public class GrpcStub extends HttpStub{
             if(indexField.getFieldType()== FieldType.Array){
                 indexField.setFieldElementType(FieldElementType.fromValue(entry.getValue().getFieldElementType()));
             }
+            if(entry.getValue().getAutoId()!=null && !entry.getValue().getAutoId().equals("")){
+                indexField.setAutoId(entry.getValue().getAutoId());
+            }
             return indexField;
         }).collect(Collectors.toList()));
         return collectionInner;
@@ -1327,9 +1343,11 @@ public class GrpcStub extends HttpStub{
             }else if (docField.getValue() instanceof List && ((List<?>) docField.getValue()).get(0) instanceof String ){
                 fieldBuilder.setValStrArr(Olama.Field.StringArray.newBuilder().addAllStrArr(
                         ((List<?>) docField.getValue()).stream().map(ele-> ByteString.copyFromUtf8((String)ele)).collect(Collectors.toList())));
+            }else if(docField.getValue() instanceof JSONObject){
+                fieldBuilder.setValJson(ByteString.copyFromUtf8(docField.getValue().toString()));
             }else {
                 throw new VectorDBException("Unsupported field type,  field key:" + docField.getName() + " type:"+ docField.getValue().getClass() +"\n" +
-                        "supported field type is:  Integer,Long,Double,Float,String,List<String>");
+                        "supported field type is:  Integer,Long,Double,Float,String,List<String>,JSONObject");
             }
             docBuilder.putFields(docField.getName(), fieldBuilder.build());
         });
@@ -1358,9 +1376,12 @@ public class GrpcStub extends HttpStub{
                     fieldBuilder.setValStr(ByteString.copyFromUtf8(document.get(key).toString()));
                 }else if(document.get(key) instanceof JSONArray && ((JSONArray)document.get(key)).get(0) instanceof String){
                     fieldBuilder.setValStrArr(Olama.Field.StringArray.newBuilder().addAllStrArr(((JSONArray)document.get(key)).toList().stream().map(ele-> ByteString.copyFromUtf8((String)ele)).collect(Collectors.toList())));
-                }else {
+                }else if(document.get(key) instanceof JSONObject){
+                    fieldBuilder.setValJson(ByteString.copyFromUtf8(document.get(key).toString()));
+                }
+                else {
                     throw new VectorDBException("Unsupported field type, field:+"+ key +" type:"+ document.get(key).getClass()
-                            + "\nsupported field type is:  Integer,Long,Double,Float,String,JSONArray<String>");
+                            + "\nsupported field type is:  Integer,Long,Double,Float,String,JSONArray<String>,JSONObject");
                 }
                 docBuilder.putFields(key, fieldBuilder.build());
             }
@@ -1378,7 +1399,7 @@ public class GrpcStub extends HttpStub{
             builder.withSparseVector(document.getSparseVectorList().stream().map(sparseVecItem->
                     Pair.of(sparseVecItem.getTermId(),sparseVecItem.getScore())).collect(Collectors.toList()));
         }
-        if(document.getFieldsMap()!=null){
+        if(document.getFieldsMap()!=null && document.getFieldsMap().size()>0){
             for (Map.Entry<String, Olama.Field> stringFieldEntry : document.getFieldsMap().entrySet()) {
                 if (stringFieldEntry.getValue().hasValDouble()){
                     builder.addDocField(new DocField(stringFieldEntry.getKey(), stringFieldEntry.getValue().getValDouble()));
@@ -1388,6 +1409,9 @@ public class GrpcStub extends HttpStub{
                 }
                 if (stringFieldEntry.getValue().hasValStr()){
                     builder.addDocField(new DocField(stringFieldEntry.getKey(), stringFieldEntry.getValue().getValStr().toString(StandardCharsets.UTF_8)));
+                }
+                if (stringFieldEntry.getValue().hasValJson()){
+                    builder.addDocField(new DocField(stringFieldEntry.getKey(), new JSONObject(stringFieldEntry.getValue().getValJson().toString(StandardCharsets.UTF_8))));
                 }
                 if (stringFieldEntry.getValue().hasValStrArr()){
                     builder.addDocField(new DocField(stringFieldEntry.getKey(),

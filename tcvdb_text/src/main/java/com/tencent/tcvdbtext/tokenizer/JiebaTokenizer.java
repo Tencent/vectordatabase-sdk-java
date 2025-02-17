@@ -51,6 +51,15 @@ public class JiebaTokenizer extends BaseTokenizer{
         this.segmenter = new JiebaSegmenter();
 
     }
+
+    public JiebaTokenizer(BaseHash hash, Boolean enableStopWords, Set<String> stopWords, Boolean lowerCase, Boolean cutAll, String dictFilePath) {
+        super(hash, enableStopWords, stopWords, lowerCase, cutAll, dictFilePath);
+        if (!dictFilePath.isEmpty()) {
+            WordDictionary.getInstance().init(Paths.get(dictFilePath));
+        }
+        this.segmenter = new JiebaSegmenter();
+
+    }
     public JiebaTokenizer(){
         super();
         this.hash = new Mm3BaseHash();
@@ -72,6 +81,12 @@ public class JiebaTokenizer extends BaseTokenizer{
         }
     }
 
+    @Override
+    public void setStopWords(String stopWordsFile) {
+        if (!stopWordsFile.isEmpty()) {
+            this.stopWords = StopWords.getStopWordsFromFilePath(stopWordsFile);
+        }
+    }
 
     @Override
     public List<String> tokenize(String sentence) {
@@ -82,7 +97,12 @@ public class JiebaTokenizer extends BaseTokenizer{
             sentence = sentence.toLowerCase();
         }
         List<String> words;
-        words = segmenter.sentenceProcess(sentence);
+        if (this.cutAll!=null && this.cutAll) {
+            words = segmenter.process(sentence, JiebaSegmenter.SegMode.INDEX).stream().map(word -> word.word).collect(Collectors.toList());
+        }else{
+            words = segmenter.process(sentence, JiebaSegmenter.SegMode.SEARCH).stream().map(word -> word.word).collect(Collectors.toList());
+        }
+
         words = words.stream().filter(word -> {
             if(word.equals(" ") || word.equals("　")) {
                 return false;
@@ -136,6 +156,7 @@ public class JiebaTokenizer extends BaseTokenizer{
         private Boolean lowerCase;
         private String dictFilePath;
         private Boolean enableStopWords;
+        private Boolean cutAll;
         public Builder withHash(BaseHash hash){
             this.hash = hash;
             return this;
@@ -156,8 +177,12 @@ public class JiebaTokenizer extends BaseTokenizer{
             this.enableStopWords = enableStopWords;
             return this;
         }
+        public Builder withCutAll(Boolean cutAll){
+            this.cutAll = cutAll;
+            return this;
+        }
         public JiebaTokenizer build(){
-            return new JiebaTokenizer(hash, enableStopWords, stopWords, lowerCase, dictFilePath);
+            return new JiebaTokenizer(hash, enableStopWords, stopWords, lowerCase, cutAll, dictFilePath);
         }
     }
 

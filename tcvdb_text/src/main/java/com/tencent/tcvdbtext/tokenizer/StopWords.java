@@ -43,6 +43,38 @@ public class StopWords {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            if(inputStream != null){
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return lines;
+    }
+
+    public static Set<String> getStopWordsFromFilePath(String filePath) {
+        Set<String> lines = new HashSet<>();
+        InputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(filePath);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if(inputStream != null){
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return lines;
     }

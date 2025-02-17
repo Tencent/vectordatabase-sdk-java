@@ -25,13 +25,11 @@ import com.tencent.tcvectordb.model.AIDatabase;
 import com.tencent.tcvectordb.model.Collection;
 import com.tencent.tcvectordb.model.Database;
 import com.tencent.tcvectordb.model.Document;
+import com.tencent.tcvectordb.model.param.collection.UploadFileParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.*;
-import com.tencent.tcvectordb.model.param.entity.AffectRes;
-import com.tencent.tcvectordb.model.param.entity.BaseRes;
-import com.tencent.tcvectordb.model.param.entity.HybridSearchRes;
-import com.tencent.tcvectordb.model.param.entity.SearchRes;
+import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.model.param.user.*;
@@ -40,6 +38,7 @@ import com.tencent.tcvectordb.service.Stub;
 import com.tencent.tcvectordb.service.param.*;
 import org.json.JSONObject;
 import java.util.List;
+import java.util.Map;
 
 /**
  * VectorDB Client
@@ -709,6 +708,49 @@ public class VectorDBClient {
      */
     public BaseRes changePassword(String user, String password) throws VectorDBException {
         return this.stub.changeUserPassword(UserChangePasswordParam.newBuilder().withUser(user).withPassword(password).build());
+    }
+
+
+    /**
+     * Upload local file or file input stream, parse and save it remotely.
+     * @param database: database name
+     * @param collection: collection name
+     * @param collectionLoadAndSplitTextParam:
+     *             localFilePath  : File path to load
+     *             fileName: File name
+     *             splitterProcess : params for splitter process
+     *             parsingProcess  : Document parsing parameters
+     *             fileInputStream: file input stream; user input stream, when use this way、inputStreamSize and fileType params must be specified
+     *             inputStreamSize : input stream size
+     *             embeddingModel: embedding model name
+     *             metadata (map): Extra properties to save
+     *             field_mappings (map): Field mappings for Collection to save. filename must be a filter index
+     *                 For example: {"filename": "file_name", "text": "text", "imageList": "images"}
+     * @param metaDataMap: extra properties to save
+     * @throws Exception
+     */
+    public void UploadFile(String database, String collection, UploadFileParam collectionLoadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
+        this.stub.collectionUpload(database, collection, collectionLoadAndSplitTextParam, metaDataMap);
+    }
+
+    /**
+     * Get image urls for document.
+     * @param database  database name
+     * @param collection  collection name
+     * @param param  GetImageUrlParam.class:
+     *                fileName: file name
+     *                documentIds: Document ids
+     * @return GetImageUrlRes.class:
+     *        images: List<List<ImageUrlInfo>: Image info list
+     */
+    public GetImageUrlRes GetImageUrl(String database, String collection, GetImageUrlParam param) {
+        GetImageUrlParamInner paramInner = new GetImageUrlParamInner();
+        paramInner.setDatabase(database);
+        paramInner.setCollection(collection);
+        paramInner.setFileName(param.getFileName());
+        paramInner.setDocumentIds(param.getDocumentIds());
+
+        return this.stub.GetImageUrl(paramInner);
     }
 
 }

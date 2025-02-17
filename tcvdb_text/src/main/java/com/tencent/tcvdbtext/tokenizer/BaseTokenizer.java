@@ -42,6 +42,10 @@ public abstract class BaseTokenizer {
 
     protected Boolean enableStopWords;
 
+    protected Boolean cutAll;
+
+    protected String stopWordsFile;
+
 
     public BaseTokenizer(BaseHash hash, Boolean enableStopWords, Set<String> stopWords, Boolean lowerCase, String dictFilePath) {
         this.hash = hash;
@@ -51,6 +55,14 @@ public abstract class BaseTokenizer {
         this.enableStopWords = enableStopWords;
     }
 
+    public BaseTokenizer(BaseHash hash, Boolean enableStopWords, Set<String> stopWords, Boolean lowerCase,Boolean cutAll, String dictFilePath) {
+        this.hash = hash;
+        this.stopWords = stopWords;
+        this.lowerCase = lowerCase;
+        this.dictFilePath = dictFilePath;
+        this.enableStopWords = enableStopWords;
+        this.cutAll = cutAll;
+    }
     public BaseTokenizer() {
     }
 
@@ -73,6 +85,7 @@ public abstract class BaseTokenizer {
         param.put("lowerCase", lowerCase);
         param.put("dictFilePath", dictFilePath);
         param.put("enableStopWords", enableStopWords);
+        param.put("cutAll", cutAll);
         return param;
     }
 
@@ -84,11 +97,35 @@ public abstract class BaseTokenizer {
         this.enableStopWords = enableStopWords;
     }
 
+    public void updateParameter(BaseHash hash, Set<String> stopWords, Boolean enableStopWords, Boolean lowerCase,Boolean cutAll,  String dictFilePath){
+        this.hash = hash;
+        this.stopWords = stopWords;
+        this.lowerCase = lowerCase;
+        this.dictFilePath = dictFilePath;
+        this.enableStopWords = enableStopWords;
+        this.cutAll = cutAll;
+    }
+
     public boolean isStopWord(String word){
         if (stopWords.isEmpty()) return false;
         return stopWords.contains(word);
     }
+
+    public Boolean getCutAll() {
+        return cutAll;
+    }
+
+    public void setCutAll(Boolean cutAll) {
+        this.cutAll = cutAll;
+    }
+
+    public void setStopWords(Set<String> stopWords) {
+        this.stopWords = stopWords;
+    }
+
     public abstract void loadDict(String dictFile);
 
     public abstract  void setLowerCase(Boolean lowerCase);
+
+    public abstract void setStopWords(String stopWordsFile);
 }

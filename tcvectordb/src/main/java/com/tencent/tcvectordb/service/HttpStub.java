@@ -36,18 +36,19 @@ import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.Collection;
 import com.tencent.tcvectordb.model.*;
+import com.tencent.tcvectordb.model.param.collection.UploadFileParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.collectionView.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.user.*;
-import com.tencent.tcvectordb.rpc.proto.Olama;
 import com.tencent.tcvectordb.service.param.*;
 import com.tencent.tcvectordb.utils.FileUtils;
 import com.tencent.tcvectordb.utils.JsonUtils;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -546,7 +547,7 @@ public class HttpStub implements Stub {
     }
 
     public UploadUrlRes getUploadUrl(String databaseName, String collectionViewName, LoadAndSplitTextParam loadAndSplitTextParam, String fileName) {
-        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_UPLOADER_URL);
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_SET_UPLOADER_URL);
         Map<String, Object> params = new HashMap<>();
         params.put("database", databaseName);
         params.put("collectionView", collectionViewName);
@@ -561,6 +562,129 @@ public class HttpStub implements Stub {
         String body = JsonUtils.toJsonString(params);
         JsonNode jsonNode = this.post(url, body, true);
         return JsonUtils.parseObject(jsonNode.toString(), UploadUrlRes.class);
+    }
+
+
+    public CollectionUploadUrlRes getCollectionUploadUrl(String databaseName, String collection, UploadFileParam loadAndSplitTextParam) {
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_UPLOADER_URL);
+        Map<String, Object> params = new HashMap<>();
+        params.put("database", databaseName);
+        params.put("collection", collection);
+        if (loadAndSplitTextParam.getFileName() != null) {
+            params.put("fileName", loadAndSplitTextParam.getFileName());
+        }
+        if (loadAndSplitTextParam.getParsingProcess()!=null){
+            params.put("parsingProcess",loadAndSplitTextParam.getParsingProcess());
+        }
+        if (loadAndSplitTextParam.getSplitterProcess()!=null){
+            params.put("splitterPreprocess",loadAndSplitTextParam.getSplitterProcess());
+        }
+        if (loadAndSplitTextParam.getEmbeddingModel()!=null){
+            params.put("embeddingModel",loadAndSplitTextParam.getEmbeddingModel());
+        }
+        if (loadAndSplitTextParam.getFieldMappings()!=null){
+            params.put("fieldMappings",loadAndSplitTextParam.getFieldMappings());
+        }
+        String body = JsonUtils.toJsonString(params);
+        JsonNode jsonNode = this.post(url, body, true);
+        return JsonUtils.parseObject(jsonNode.toString(), CollectionUploadUrlRes.class);
+    }
+
+
+    @Override
+    public void collectionUpload(String databaseName, String collectionName, UploadFileParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
+        File file = null;
+        if (loadAndSplitTextParam.getLocalFilePath() != null){
+            file = new File(loadAndSplitTextParam.getLocalFilePath());
+            if (!file.exists() || !file.isFile()) {
+                throw new VectorDBException("file is not existed");
+            }
+
+            if (file.length() <= 0) {
+                throw new VectorDBException("file is empty");
+            }
+        }else if(loadAndSplitTextParam.getFileInputStream()!=null){
+            if (loadAndSplitTextParam.getFileName()==null ||loadAndSplitTextParam.getInputStreamSize()==null){
+                throw new VectorDBException("use input stream, fileName and inputStreamSize  can not be null");
+            }
+        }
+
+        CollectionUploadUrlRes uploadUrlRes = getCollectionUploadUrl(databaseName, collectionName, loadAndSplitTextParam);
+
+        if (Code.isFailed(uploadUrlRes.getCode()) ||
+                uploadUrlRes.getCredentials() == null ||
+                uploadUrlRes.getCredentials().getTmpSecretId().equals("") ||
+                uploadUrlRes.getUploadCondition() == null ||
+                uploadUrlRes.getUploadCondition().getMaxSupportContentLength() == 0) {
+            String msg = StringUtils.isNotBlank(uploadUrlRes.getMsg()) ? ", " + uploadUrlRes.getMsg() : "";
+            throw new VectorDBException("get file upload url failed" + msg);
+        }
+
+        String filePath = loadAndSplitTextParam.getLocalFilePath();
+        int maxLength = uploadUrlRes.getUploadCondition().getMaxSupportContentLength();
+
+        if (file !=null && file.length() > maxLength) {
+            throw new ParamException(String.format("%s file is too large, max size is %d bytes", filePath, maxLength));
+        }
+
+        String uploadPath = uploadUrlRes.getUploadPath();
+        String bucket = uploadUrlRes.getCosBucket();
+        String region = uploadUrlRes.getCosRegion();
+        BasicSessionCredentials cred = new BasicSessionCredentials(uploadUrlRes.getCredentials().getTmpSecretId(),
+                uploadUrlRes.getCredentials().getTmpSecretKey(), uploadUrlRes.getCredentials().getToken());
+        ClientConfig cosClientConfig = new ClientConfig(new Region(region));
+        String cosEndPoint = uploadUrlRes.getCosEndpoint().split("\\.",2)[1];
+        cosClientConfig.setEndpointBuilder(new CosEndpointBuilder(cosEndPoint));
+        COSClient cosClient = new COSClient(cred, cosClientConfig);
+        PutObjectRequest putObjectRequest = null;
+        ObjectMetadata metadata = new ObjectMetadata();
+
+        if (file!=null && file.exists()){
+            putObjectRequest = new PutObjectRequest(bucket, uploadPath, file);
+        }else if (loadAndSplitTextParam.getFileInputStream()!=null){
+            metadata.setContentLength(loadAndSplitTextParam.getInputStreamSize());
+            putObjectRequest = new PutObjectRequest(bucket, uploadPath, loadAndSplitTextParam.getFileInputStream(), null);
+        }else {
+            throw new VectorDBException("file or inputStream not exist ");
+        }
+
+        if (metaDataMap == null || metaDataMap.isEmpty()) {
+            metaDataMap = new HashMap<>();
+        }
+        String metaJson = URLEncoder.encode(Base64.getEncoder().encodeToString(JsonUtils.toJsonString(metaDataMap).getBytes(StandardCharsets.UTF_8)),
+                String.valueOf(StandardCharsets.UTF_8));
+        metadata.addUserMetadata("data", metaJson);
+
+        Map<String, Object> config = new HashMap<>();
+        if (loadAndSplitTextParam.getSplitterProcess() != null) {
+
+            config.put("appendTitleToChunk", loadAndSplitTextParam.getSplitterProcess().isAppendTitleToChunk());
+            config.put("appendKeywordsToChunk", loadAndSplitTextParam.getSplitterProcess().isAppendKeywordsToChunk());
+            if (loadAndSplitTextParam.getSplitterProcess().getChunkSplitter() != null) {
+                config.put("chunkSplitter", loadAndSplitTextParam.getSplitterProcess().getChunkSplitter());
+            }
+        }
+        if (loadAndSplitTextParam.getParsingProcess() != null){
+            config.put("parsingProcess", loadAndSplitTextParam.getParsingProcess());
+        }
+
+        if(config.size() > 0){
+            metadata.addUserMetadata("config", URLEncoder.encode(Base64.getEncoder().encodeToString(JsonUtils.toJsonString(config).getBytes(StandardCharsets.UTF_8)),
+                    String.valueOf(StandardCharsets.UTF_8)));
+        }
+
+
+        if (JsonUtils.toJsonString(metadata).length() > 2048) {
+            throw new VectorDBException("cos header for param MetaData is too large, it can not be more than 2k");
+        }
+        putObjectRequest.withMetadata(metadata);
+
+        putObjectRequest.withKey(uploadPath);
+
+        PutObjectResult putObjectResult = cosClient.putObject(putObjectRequest);
+
+        logger.debug("upload file, response:%s", JsonUtils.toJsonString(putObjectResult));
+        cosClient.shutdown();
     }
 
     @Override
@@ -611,6 +735,8 @@ public class HttpStub implements Stub {
         BasicSessionCredentials cred = new BasicSessionCredentials(uploadUrlRes.getCredentials().getTmpSecretId(),
                 uploadUrlRes.getCredentials().getTmpSecretKey(), uploadUrlRes.getCredentials().getToken());
         ClientConfig cosClientConfig = new ClientConfig(new Region(region));
+        String cosEndPoint = uploadUrlRes.getCosEndpoint().split("\\.",2)[1];
+        cosClientConfig.setEndpointBuilder(new CosEndpointBuilder(cosEndPoint));
         COSClient cosClient = new COSClient(cred, cosClientConfig);
         PutObjectRequest putObjectRequest = null;
         ObjectMetadata metadata = new ObjectMetadata();
@@ -784,6 +910,14 @@ public class HttpStub implements Stub {
         return JsonUtils.parseObject(jsonNode.toString(), BaseRes.class);
     }
 
+    @Override
+    public GetImageUrlRes GetImageUrl(GetImageUrlParamInner param) {
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_IMAGE_URL);
+        JsonNode jsonNode = this.post(url, JsonUtils.toJsonString(param), false);
+        return JsonUtils.parseObject(jsonNode.toString(), GetImageUrlRes.class);
+    }
+
+
     private JsonNode get(String url, boolean ai) {
         Request request = new Request.Builder()
                 .url(url)
@@ -925,6 +1059,10 @@ public class HttpStub implements Stub {
                 } else if (ele.isArray()) {
                     List values = JsonUtils.parseObject(ele.toString(), List.class);
                     builder.addFilterField(new DocField(name, values));
+                } else if(ele.isObject()){
+                    builder.addFilterField(new DocField(name, new JSONObject(ele.toString())));
+                } else if (ele.isDouble() || ele.isFloat()) {
+                    builder.addFilterField(new DocField(name, ele.asDouble()));
                 } else {
                     builder.addFilterField(new DocField(name, ele.asText()));
                 }
@@ -959,10 +1097,13 @@ public class HttpStub implements Stub {
                     builder.addFilterField(new DocField(name, ele.asInt()));
                 } else if (ele.isLong()) {
                     builder.addFilterField(new DocField(name, ele.asLong()));
-                    builder.addFilterField(new DocField(name, ele.isLong()));
                 } else if (ele.isArray()) {
                     List values = JsonUtils.parseObject(ele.toString(), List.class);
                     builder.addFilterField(new DocField(name, values));
+                } else if (ele.isDouble() || ele.isFloat()) {
+                    builder.addFilterField(new DocField(name, ele.asDouble()));
+                } else if (ele.isObject()) {
+                    builder.addFilterField(new DocField(name, new JSONObject(ele.toString())));
                 } else {
                     builder.addFilterField(new DocField(name, ele.asText()));
                 }

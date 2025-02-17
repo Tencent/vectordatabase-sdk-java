@@ -20,6 +20,7 @@
 package com.tencent.tcvectordb.service;
 
 import com.tencent.tcvectordb.model.*;
+import com.tencent.tcvectordb.model.param.collection.UploadFileParam;
 import com.tencent.tcvectordb.model.param.collectionView.CreateCollectionViewParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.collectionView.LoadAndSplitTextParam;
@@ -174,6 +175,8 @@ public interface Stub {
 
     void upload(String databaseName, String collectionName, LoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception;
 
+    void collectionUpload(String databaseName, String collection, UploadFileParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception;
+
     GetDocumentSetRes getFile(String databaseName, String collectionName, String fileName, String fileId);
 
     GetChunksRes getChunks(String databaseName, String collectionName, String documentSetName, String documentSetId,
@@ -202,4 +205,6 @@ public interface Stub {
     BaseRes dropUser(UserDropParam userDropParam);
 
     BaseRes changeUserPassword(UserChangePasswordParam build);
+
+    GetImageUrlRes GetImageUrl(GetImageUrlParamInner param);
 }

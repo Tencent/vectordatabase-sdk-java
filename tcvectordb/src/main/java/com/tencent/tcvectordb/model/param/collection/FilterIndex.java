@@ -37,4 +37,19 @@ public class FilterIndex extends IndexField {
         setIndexType(indexType);
         setMetricType(metricType);
     }
+
+    // autoId is used to generate a id for each document
+    public FilterIndex(String fieldName, FieldType fieldType, IndexType indexType, String autoId) {
+        setFieldName(fieldName);
+        setFieldType(fieldType);
+        setIndexType(indexType);
+        setAutoId(autoId);
+    }
+
+    public FilterIndex(String fieldName, FieldType fieldType, IndexType indexType, AutoIdType autoIdType) {
+        setFieldName(fieldName);
+        setFieldType(fieldType);
+        setIndexType(indexType);
+        setAutoId(autoIdType.getValue());
+    }
 }

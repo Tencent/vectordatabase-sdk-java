@@ -66,7 +66,6 @@ public class HttpStub implements Stub {
     private  ConnectParam connectParam;
     private  OkHttpClient client;
     private  Headers.Builder headersBuilder;
-    private  ObjectMapper mapper = new ObjectMapper();
     private static final MediaType JSON =
             MediaType.parse("application/json; charset=utf-8");
     private static final Logger logger = LoggerFactory.getLogger(HttpStub.class.getName());
@@ -140,13 +139,7 @@ public class HttpStub implements Stub {
         if (dbsJson == null) {
             return new ArrayList<>();
         }
-        try {
-            return mapper.readValue(dbsJson.toString(), new TypeReference<List<String>>() {
-            });
-        } catch (JsonProcessingException ex) {
-            throw new VectorDBException(String.format(
-                    "VectorDBServer response error: can't parse databases=%s", dbsJson));
-        }
+        return JsonUtils.collectionDeserializer(dbsJson.toString(), new TypeReference<List<String>>(){});
     }
 
     @Override
@@ -157,13 +150,8 @@ public class HttpStub implements Stub {
         if (dbsJson == null) {
             return new HashMap<>();
         }
-        try {
-            return mapper.readValue(dbsJson.toString(), new TypeReference<Map<String, DataBaseType>>() {
-            });
-        } catch (JsonProcessingException ex) {
-            throw new VectorDBException(String.format(
-                    "VectorDBServer response error: can't parse databases=%s", dbsJson));
-        }
+        return JsonUtils.collectionDeserializer(dbsJson.toString(), new TypeReference<Map<String, DataBaseType>>() {
+        });
     }
 
     @Override
@@ -979,7 +967,7 @@ public class HttpStub implements Stub {
                     "VectorDBServer error: not Successful, http code=%s, message=%s, result=%s",
                     response.code(), response.message(), resStr));
         }
-        JsonNode jsonNode = mapper.readTree(resStr);
+        JsonNode jsonNode = JsonUtils.parseToJsonNode(resStr);
         int code = jsonNode.get("code").asInt();
         if (code != 0) {
             throw new VectorDBException(String.format(

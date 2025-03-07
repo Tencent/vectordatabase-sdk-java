@@ -38,19 +38,17 @@ public class JsonUtils {
 
     private static final String DATE_FORMAT_STR_ISO8601_CH = "yyyy-MM-dd HH:mm:ss";
     private static final ObjectMapper DESERIALIZE_IGNORE_KEY_MAPPER = new ObjectMapper();
-    private static final ObjectMapper PARAMS_DESERIALIZE_MAPPER = new ObjectMapper();
     private static final ObjectMapper SERIALIZE_MAPPER = new ObjectMapper();
 
 
     static {
         DESERIALIZE_IGNORE_KEY_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         DESERIALIZE_IGNORE_KEY_MAPPER.setDateFormat(new SimpleDateFormat(DATE_FORMAT_STR_ISO8601_CH));
-        PARAMS_DESERIALIZE_MAPPER.setDateFormat(new SimpleDateFormat(DATE_FORMAT_STR_ISO8601_CH));
 
         SimpleModule module = new SimpleModule();
         module.addDeserializer(ParamsSerializer.class, new ParamsDeserialize());
         module.addDeserializer(Embedding.class, new EmbeddingDeserialize());
-        PARAMS_DESERIALIZE_MAPPER.registerModule(module);
+        DESERIALIZE_IGNORE_KEY_MAPPER.registerModule(module);
     }
 
     /**
@@ -119,7 +117,7 @@ public class JsonUtils {
      */
     public static <T> T collectionDeserializer(String jsonStr, TypeReference<T> clz) {
         try {
-            return PARAMS_DESERIALIZE_MAPPER.readValue(jsonStr, clz);
+            return DESERIALIZE_IGNORE_KEY_MAPPER.readValue(jsonStr, clz);
         } catch (JsonProcessingException e) {
             throw new ParamException(String.format(
                     "can't parse content=%s", jsonStr), e);

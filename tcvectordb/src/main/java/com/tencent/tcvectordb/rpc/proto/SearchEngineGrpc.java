@@ -1072,6 +1072,37 @@ public final class SearchEngineGrpc {
     return getUserDescribeMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.DropIndexRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.DropIndexResponse> getDropIndexMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "dropIndex",
+      requestType = com.tencent.tcvectordb.rpc.proto.Olama.DropIndexRequest.class,
+      responseType = com.tencent.tcvectordb.rpc.proto.Olama.DropIndexResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.DropIndexRequest,
+      com.tencent.tcvectordb.rpc.proto.Olama.DropIndexResponse> getDropIndexMethod() {
+    io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.DropIndexRequest, com.tencent.tcvectordb.rpc.proto.Olama.DropIndexResponse> getDropIndexMethod;
+    if ((getDropIndexMethod = SearchEngineGrpc.getDropIndexMethod) == null) {
+      synchronized (SearchEngineGrpc.class) {
+        if ((getDropIndexMethod = SearchEngineGrpc.getDropIndexMethod) == null) {
+          SearchEngineGrpc.getDropIndexMethod = getDropIndexMethod =
+              io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.DropIndexRequest, com.tencent.tcvectordb.rpc.proto.Olama.DropIndexResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "dropIndex"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.DropIndexRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.tencent.tcvectordb.rpc.proto.Olama.DropIndexResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("dropIndex"))
+              .build();
+        }
+      }
+    }
+    return getDropIndexMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -1456,6 +1487,16 @@ public final class SearchEngineGrpc {
     default void userDescribe(com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeRequest request,
         io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getUserDescribeMethod(), responseObserver);
+    }
+
+    /**
+     * <pre>
+     * drop 索引
+     * </pre>
+     */
+    default void dropIndex(com.tencent.tcvectordb.rpc.proto.Olama.DropIndexRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.DropIndexResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getDropIndexMethod(), responseObserver);
     }
   }
 
@@ -1857,6 +1898,17 @@ public final class SearchEngineGrpc {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getUserDescribeMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     * <pre>
+     * drop 索引
+     * </pre>
+     */
+    public void dropIndex(com.tencent.tcvectordb.rpc.proto.Olama.DropIndexRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.DropIndexResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getDropIndexMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -2211,6 +2263,16 @@ public final class SearchEngineGrpc {
     public com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeResponse userDescribe(com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getUserDescribeMethod(), getCallOptions(), request);
+    }
+
+    /**
+     * <pre>
+     * drop 索引
+     * </pre>
+     */
+    public com.tencent.tcvectordb.rpc.proto.Olama.DropIndexResponse dropIndex(com.tencent.tcvectordb.rpc.proto.Olama.DropIndexRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getDropIndexMethod(), getCallOptions(), request);
     }
   }
 
@@ -2601,6 +2663,17 @@ public final class SearchEngineGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getUserDescribeMethod(), getCallOptions()), request);
     }
+
+    /**
+     * <pre>
+     * drop 索引
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.tencent.tcvectordb.rpc.proto.Olama.DropIndexResponse> dropIndex(
+        com.tencent.tcvectordb.rpc.proto.Olama.DropIndexRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getDropIndexMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_SET_ALIAS = 0;
@@ -2637,6 +2710,7 @@ public final class SearchEngineGrpc {
   private static final int METHODID_USER_REVOKE = 31;
   private static final int METHODID_USER_LIST = 32;
   private static final int METHODID_USER_DESCRIBE = 33;
+  private static final int METHODID_DROP_INDEX = 34;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -2790,6 +2864,10 @@ public final class SearchEngineGrpc {
         case METHODID_USER_DESCRIBE:
           serviceImpl.userDescribe((com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeRequest) request,
               (io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeResponse>) responseObserver);
+          break;
+        case METHODID_DROP_INDEX:
+          serviceImpl.dropIndex((com.tencent.tcvectordb.rpc.proto.Olama.DropIndexRequest) request,
+              (io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.DropIndexResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -3047,6 +3125,13 @@ public final class SearchEngineGrpc {
               com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeRequest,
               com.tencent.tcvectordb.rpc.proto.Olama.UserDescribeResponse>(
                 service, METHODID_USER_DESCRIBE)))
+        .addMethod(
+          getDropIndexMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.tencent.tcvectordb.rpc.proto.Olama.DropIndexRequest,
+              com.tencent.tcvectordb.rpc.proto.Olama.DropIndexResponse>(
+                service, METHODID_DROP_INDEX)))
         .build();
   }
 
@@ -3129,6 +3214,7 @@ public final class SearchEngineGrpc {
               .addMethod(getUserRevokeMethod())
               .addMethod(getUserListMethod())
               .addMethod(getUserDescribeMethod())
+              .addMethod(getDropIndexMethod())
               .build();
         }
       }

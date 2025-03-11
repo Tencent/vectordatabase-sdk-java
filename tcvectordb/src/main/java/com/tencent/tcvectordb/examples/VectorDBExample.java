@@ -52,7 +52,7 @@ public class VectorDBExample {
         createDatabaseAndCollection(client);
         upsertData(client);
         queryData(client);
-//        addIndex(client);
+        addIndex(client);
         modifyVectorIndex(client);
         updateAndDelete(client);
         deleteAndDrop(client);

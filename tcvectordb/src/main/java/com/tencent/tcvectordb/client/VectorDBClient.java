@@ -547,6 +547,20 @@ public class VectorDBClient {
                 new AddIndexParamInner(database, collection, addIndexParam));
     }
 
+    /**
+     * Used to drop a scalar field index to an existing collection
+     * (the scalar field may contain historical data or a newly added empty field)
+     * @param database
+     * @param collection
+     * @param filedNames: the list of filed name to be dropped
+     * @return
+     * @throws VectorDBException
+     */
+    public BaseRes dropIndex(String database, String collection, List<String> filedNames) throws VectorDBException {
+        return this.stub.dropIndex(
+                new DropIndexParamInner(database, collection, filedNames));
+    }
+
 
     /**
      * Used to query the number of documents that match the query, if countQueryParam is null,

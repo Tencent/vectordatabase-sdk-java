@@ -29,6 +29,7 @@ import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.BaseRes;
 import com.tencent.tcvectordb.model.param.enums.OrderEnum;
+import com.tencent.tcvectordb.service.param.DropIndexParamInner;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.*;
@@ -53,6 +54,7 @@ public class VectorDBExample {
         upsertData(client);
         queryData(client);
         addIndex(client);
+        dropIndex(client);
         modifyVectorIndex(client);
         updateAndDelete(client);
         deleteAndDrop(client);
@@ -61,7 +63,7 @@ public class VectorDBExample {
     }
 
     private static void addIndex(VectorDBClient client) throws InterruptedException{
-        BaseRes baseRes = client.AddIndex(DBNAME, COLL_NAME, AddIndexParam.newBuilder()
+        BaseRes baseRes = client.addIndex(DBNAME, COLL_NAME, AddIndexParam.newBuilder()
                 .withIndexes(Arrays.asList(new FilterIndex("owner", FieldType.Uint64, IndexType.FILTER))).build());
         System.out.println("--------add index-------");
         System.out.println("\t res: "+ JsonUtils.toJsonString(baseRes));
@@ -99,6 +101,18 @@ public class VectorDBExample {
         for (int i = 0; i < docs.size(); i++) {
             System.out.println("res "+i+" "+ JsonUtils.toJsonString(docs.get(i)));
         }
+    }
+
+    private static void dropIndex(VectorDBClient client) throws InterruptedException{
+        System.out.println("--------describe collection, before drop index-------");
+        Collection collection = client.describeCollection(DBNAME, COLL_NAME);
+        System.out.println("\t collection describe: "+ JsonUtils.toJsonString(collection));
+        BaseRes baseRes = client.dropIndex(DBNAME, COLL_NAME, Arrays.asList("owner"));
+        System.out.println("--------drop index-------");
+        System.out.println("\t res: "+ JsonUtils.toJsonString(baseRes));
+        Thread.sleep(1000);
+        System.out.println("--------describe collection, after drop index-------");
+        System.out.println("\t collection describe: "+ JsonUtils.toJsonString(client.describeCollection(DBNAME, COLL_NAME);));
     }
 
 

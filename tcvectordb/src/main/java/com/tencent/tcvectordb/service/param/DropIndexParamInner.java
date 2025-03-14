@@ -1,8 +1,6 @@
 package com.tencent.tcvectordb.service.param;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.tencent.tcvectordb.model.param.collection.IndexField;
-import com.tencent.tcvectordb.model.param.dml.AddIndexParam;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.List;
@@ -11,13 +9,13 @@ import java.util.List;
 public class DropIndexParamInner {
     private String database;
     private String collection;
-    private List<String> filedNames;
+    private List<String> fieldNames;
 
 
-    public DropIndexParamInner(String database, String collection, List<String> filedNames) {
+    public DropIndexParamInner(String database, String collection, List<String> fieldNames) {
         this.database = database;
         this.collection = collection;
-        this.filedNames = filedNames;
+        this.fieldNames = fieldNames;
     }
 
     public String getDatabase() {
@@ -28,8 +26,8 @@ public class DropIndexParamInner {
         return collection;
     }
 
-    public List<String> getFiledNames() {
-        return filedNames;
+    public List<String> getFieldNames() {
+        return fieldNames;
     }
 
     @Override

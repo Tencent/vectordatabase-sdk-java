@@ -552,13 +552,13 @@ public class VectorDBClient {
      * (the scalar field may contain historical data or a newly added empty field)
      * @param database
      * @param collection
-     * @param filedNames: the list of filed name to be dropped
+     * @param fieldNames: the list of filed name to be dropped
      * @return
      * @throws VectorDBException
      */
-    public BaseRes dropIndex(String database, String collection, List<String> filedNames) throws VectorDBException {
+    public BaseRes dropIndex(String database, String collection, List<String> fieldNames) throws VectorDBException {
         return this.stub.dropIndex(
-                new DropIndexParamInner(database, collection, filedNames));
+                new DropIndexParamInner(database, collection, fieldNames));
     }
 
 

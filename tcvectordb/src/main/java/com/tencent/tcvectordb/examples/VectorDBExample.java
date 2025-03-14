@@ -112,7 +112,7 @@ public class VectorDBExample {
         System.out.println("\t res: "+ JsonUtils.toJsonString(baseRes));
         Thread.sleep(1000);
         System.out.println("--------describe collection, after drop index-------");
-        System.out.println("\t collection describe: "+ JsonUtils.toJsonString(client.describeCollection(DBNAME, COLL_NAME);));
+        System.out.println("\t collection describe: "+ JsonUtils.toJsonString(client.describeCollection(DBNAME, COLL_NAME)));
     }
 
 

@@ -1076,7 +1076,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvectordb.rpc.proto.Olama.DropIndexResponse> getDropIndexMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "dropIndex",
+      fullMethodName = ApiPath.DROP_INDEX,
       requestType = com.tencent.tcvectordb.rpc.proto.Olama.DropIndexRequest.class,
       responseType = com.tencent.tcvectordb.rpc.proto.Olama.DropIndexResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -1089,13 +1089,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getDropIndexMethod = getDropIndexMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.DropIndexRequest, com.tencent.tcvectordb.rpc.proto.Olama.DropIndexResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "dropIndex"))
+              .setFullMethodName(ApiPath.DROP_INDEX)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvectordb.rpc.proto.Olama.DropIndexRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvectordb.rpc.proto.Olama.DropIndexResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("dropIndex"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.DROP_INDEX))
               .build();
         }
       }

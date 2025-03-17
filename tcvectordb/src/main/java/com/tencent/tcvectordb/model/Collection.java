@@ -98,6 +98,12 @@ public class Collection{
 
     protected FilterIndexConfig filterIndexConfig;
 
+    @JsonIgnore
+    private String connectCollectionName;
+
+    public void setConnectCollectionName(String connectCollectionName) {
+        this.connectCollectionName = connectCollectionName;
+    }
     public TTLConfig getTtlConfig() {
         return ttlConfig;
     }
@@ -238,6 +244,10 @@ public class Collection{
      * @throws VectorDBException
      */
     public AffectRes upsert(InsertParam param) throws VectorDBException {
+        String collection = this.collection;
+        if (this.connectCollectionName != null){
+            collection = this.connectCollectionName;
+        }
         InsertParamInner insertParam = new InsertParamInner(
                 database, collection, param);
         boolean ai = false;
@@ -269,6 +279,10 @@ public class Collection{
      * @throws VectorDBException
      */
     public List<Document> query(QueryParam param) throws VectorDBException {
+        String collection = this.collection;
+        if (this.connectCollectionName != null){
+            collection = this.connectCollectionName;
+        }
         boolean ai = false;
         return this.stub.queryDocument(
                 new QueryParamInner(database, collection, param, this.readConsistency), ai);
@@ -288,6 +302,10 @@ public class Collection{
      * @throws VectorDBException
      */
     public List<List<Document>> search(SearchByVectorParam param) throws VectorDBException {
+        String collection = this.collection;
+        if (this.connectCollectionName != null){
+            collection = this.connectCollectionName;
+        }
         return this.stub.searchDocument(new SearchParamInner(
                 database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE).getDocuments();
     }
@@ -306,6 +324,10 @@ public class Collection{
      * @throws VectorDBException
      */
     public List<List<Document>> searchById(SearchByIdParam param) throws VectorDBException {
+        String collection = this.collection;
+        if (this.connectCollectionName != null){
+            collection = this.connectCollectionName;
+        }
         return this.stub.searchDocument(new SearchParamInner(
                 database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE).getDocuments();
     }
@@ -324,6 +346,10 @@ public class Collection{
      * @throws VectorDBException
      */
     public SearchRes searchByEmbeddingItems(SearchByEmbeddingItemsParam param) throws VectorDBException {
+        String collection = this.collection;
+        if (this.connectCollectionName != null){
+            collection = this.connectCollectionName;
+        }
         return this.stub.searchDocument(new SearchParamInner(
                 database, collection, param, this.readConsistency), DataBaseTypeEnum.BASE);
     }
@@ -349,6 +375,10 @@ public class Collection{
                 && param.getAnn().get(0).getData().get(0) instanceof String){
             ai = true;
         }
+        String collection = this.collection;
+        if (this.connectCollectionName != null){
+            collection = this.connectCollectionName;
+        }
         return this.stub.hybridSearchDocument(new HybridSearchParamInner(
                 database, collection, param, this.readConsistency), ai);
     }
@@ -361,6 +391,10 @@ public class Collection{
      * @throws VectorDBException
      */
     public AffectRes delete(DeleteParam param) throws VectorDBException {
+        String collection = this.collection;
+        if (this.connectCollectionName != null){
+            collection = this.connectCollectionName;
+        }
         return this.stub.deleteDocument(
                 new DeleteParamInner(database, collection, param));
     }
@@ -373,6 +407,10 @@ public class Collection{
      * @throws VectorDBException
      */
     public AffectRes update(UpdateParam param, Document document) throws VectorDBException {
+        String collection = this.collection;
+        if (this.connectCollectionName != null){
+            collection = this.connectCollectionName;
+        }
         boolean ai = false;
         if (document.getVector() instanceof String){
             ai = true;
@@ -389,6 +427,10 @@ public class Collection{
      * @throws VectorDBException
      */
     public AffectRes update(UpdateParam param, JSONObject document) throws VectorDBException {
+        String collection = this.collection;
+        if (this.connectCollectionName != null){
+            collection = this.connectCollectionName;
+        }
         boolean ai = false;
         if (document.get("vector") instanceof String){
             ai = true;
@@ -403,6 +445,10 @@ public class Collection{
      * @return BaseRes
      */
     public BaseRes rebuildIndex(RebuildIndexParam rebuildIndexParam) {
+        String collection = this.collection;
+        if (this.connectCollectionName != null){
+            collection = this.connectCollectionName;
+        }
         return this.stub.rebuildIndex(new RebuildIndexParamInner(database, collection, rebuildIndexParam));
     }
 
@@ -438,6 +484,22 @@ public class Collection{
     }
 
     /**
+     * Used to add a scalar field index to an existing collection
+     * (the scalar field may contain historical data or a newly added empty field)
+     * @param addIndexParam:
+     * @return
+     * @throws VectorDBException
+     */
+    public BaseRes addIndex(AddIndexParam addIndexParam) throws VectorDBException {
+        String collection = this.collection;
+        if (this.connectCollectionName != null){
+            collection = this.connectCollectionName;
+        }
+        return this.stub.addIndex(
+                new AddIndexParamInner(database, collection, addIndexParam));
+    }
+
+    /**
      * Used to query the number of documents that match the query, if countQueryParam is null,
      * return all rows number of the collection
      * @param countQueryParam:
@@ -445,6 +507,10 @@ public class Collection{
      * @throws VectorDBException
      */
     public BaseRes count(CountQueryParam countQueryParam) throws VectorDBException {
+        String collection = this.collection;
+        if (this.connectCollectionName != null){
+            collection = this.connectCollectionName;
+        }
         return this.stub.countDocument(
                 new QueryCountParamInner(database, collection, countQueryParam, this.readConsistency), false);
     }
@@ -460,6 +526,10 @@ public class Collection{
      * @throws VectorDBException
      */
     public BaseRes modifyVectorIndex(ModifyVectorIndexParam modifyVectorIndexParam) throws VectorDBException {
+        String collection = this.collection;
+        if (this.connectCollectionName != null){
+            collection = this.connectCollectionName;
+        }
         return this.stub.modifyVectorIndex(
                 new ModifyIndexParamInner(database, collection, modifyVectorIndexParam), false);
     }

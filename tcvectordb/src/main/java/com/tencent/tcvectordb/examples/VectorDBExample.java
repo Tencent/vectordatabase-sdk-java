@@ -64,7 +64,8 @@ public class VectorDBExample {
 
     private static void addIndex(VectorDBClient client) throws InterruptedException{
         BaseRes baseRes = client.addIndex(DBNAME, COLL_NAME, AddIndexParam.newBuilder()
-                .withIndexes(Arrays.asList(new FilterIndex("owner", FieldType.Uint64, IndexType.FILTER))).build());
+                        .withBuildExistedData(true)
+                        .withIndexes(Arrays.asList(new FilterIndex("owner", FieldType.Uint64, IndexType.FILTER))).build());
         System.out.println("--------add index-------");
         System.out.println("\t res: "+ JsonUtils.toJsonString(baseRes));
         Thread.sleep(1000);

@@ -698,6 +698,9 @@ public class GrpcStub extends HttpStub{
                                         .collect(Collectors.toList()));
                             }
                         }
+                        if (annOption.getLimit()!=null){
+                            annBuilder.setLimit(annOption.getLimit());
+                        }
                         if (annOption.getParams()!=null){
                             if (annOption.getParams() instanceof GeneralParams){
                                 GeneralParams params = (GeneralParams) annOption.getParams();

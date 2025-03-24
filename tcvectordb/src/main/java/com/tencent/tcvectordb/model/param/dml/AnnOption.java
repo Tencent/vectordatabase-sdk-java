@@ -23,6 +23,8 @@ public class AnnOption {
     private List<String> documentIds;
     private Params params;
 
+    private  Integer limit;
+
     public String getFieldName() {
         return fieldName;
     }
@@ -55,11 +57,20 @@ public class AnnOption {
         this.documentIds = documentIds;
     }
 
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
+
     public AnnOption(Builder builder) {
         this.fieldName = builder.fieldName;
         this.data = builder.data;
         this.params = builder.params;
         this.documentIds = builder.documentIds;
+        this.limit = builder.limit;
     }
 
     public static Builder newBuilder() {
@@ -72,6 +83,8 @@ public class AnnOption {
         private Params params;
 
         private List<String> documentIds;
+
+        private Integer limit;
 
         private Builder() {
 
@@ -105,6 +118,10 @@ public class AnnOption {
             return this;
         }
 
+        public Builder withLimit(Integer limit){
+            this.limit = limit;
+            return this;
+        }
         public AnnOption build() {
             return new AnnOption(this);
         }

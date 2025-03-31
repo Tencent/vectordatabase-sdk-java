@@ -55,10 +55,10 @@ public class VectorDBExample {
         queryData(client);
         addIndex(client);
         dropIndex(client);
-//        modifyVectorIndex(client);
-//        updateAndDelete(client);
-//        deleteAndDrop(client);
-//        testFilter();
+        modifyVectorIndex(client);
+        updateAndDelete(client);
+        deleteAndDrop(client);
+        testFilter();
 
     }
 

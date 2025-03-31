@@ -110,6 +110,7 @@ public class AIDatabase {
         CollectionView collection = stub.describeCollectionView(this.databaseName, collectionView);
         collection.setStub(stub);
         collection.setReadConsistency(readConsistency);
+        collection.setConnectCollectionName(collectionView);
         return collection;
     }
 

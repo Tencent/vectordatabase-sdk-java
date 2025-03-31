@@ -29,6 +29,7 @@ import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.BaseRes;
 import com.tencent.tcvectordb.model.param.enums.OrderEnum;
+import com.tencent.tcvectordb.service.param.DropIndexParamInner;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.*;
@@ -37,9 +38,9 @@ import java.util.*;
  */
 public class VectorDBExample {
 
-    private static final String DBNAME = "book";
-    private static final String COLL_NAME = "book_segments_9";
-    private static final String COLL_NAME_ALIAS = "collection_alias_1";
+    private static final String DBNAME = "java_sdk_book";
+    private static final String COLL_NAME = "java_sdk_book_segments";
+    private static final String COLL_NAME_ALIAS = "java_sdk_collection_alias";
 
     public static void main(String[] args) throws InterruptedException {
 
@@ -52,7 +53,8 @@ public class VectorDBExample {
         createDatabaseAndCollection(client);
         upsertData(client);
         queryData(client);
-//        addIndex(client);
+        addIndex(client);
+        dropIndex(client);
         modifyVectorIndex(client);
         updateAndDelete(client);
         deleteAndDrop(client);
@@ -61,8 +63,9 @@ public class VectorDBExample {
     }
 
     private static void addIndex(VectorDBClient client) throws InterruptedException{
-        BaseRes baseRes = client.AddIndex(DBNAME, COLL_NAME, AddIndexParam.newBuilder()
-                .withIndexes(Arrays.asList(new FilterIndex("owner", FieldType.Uint64, IndexType.FILTER))).build());
+        BaseRes baseRes = client.addIndex(DBNAME, COLL_NAME, AddIndexParam.newBuilder()
+                        .withBuildExistedData(true)
+                        .withIndexes(Arrays.asList(new FilterIndex("owner", FieldType.Uint64, IndexType.FILTER))).build());
         System.out.println("--------add index-------");
         System.out.println("\t res: "+ JsonUtils.toJsonString(baseRes));
         Thread.sleep(1000);
@@ -101,11 +104,23 @@ public class VectorDBExample {
         }
     }
 
+    private static void dropIndex(VectorDBClient client) throws InterruptedException{
+        System.out.println("--------describe collection, before drop index-------");
+        Collection collection = client.describeCollection(DBNAME, COLL_NAME);
+        System.out.println("\t collection describe: "+ JsonUtils.toJsonString(collection));
+        BaseRes baseRes = client.dropIndex(DBNAME, COLL_NAME, Arrays.asList("owner"));
+        System.out.println("--------drop index-------");
+        System.out.println("\t res: "+ JsonUtils.toJsonString(baseRes));
+        Thread.sleep(1000);
+        System.out.println("--------describe collection, after drop index-------");
+        System.out.println("\t collection describe: "+ JsonUtils.toJsonString(client.describeCollection(DBNAME, COLL_NAME)));
+    }
+
 
     private static void createDatabaseAndCollection(VectorDBClient client) {
         // 1. 创建数据库
         System.out.println("---------------------- createDatabase ----------------------");
-        Database db = client.createDatabase(DBNAME);
+        Database db = client.createDatabaseIfNotExists(DBNAME);
         // 可以使用这种方式创建db
 //        Database db = client.createDatabaseIfNotExists(DBNAME);
         Boolean isExisted = client.IsExistsDatabase(DBNAME);
@@ -121,7 +136,7 @@ public class VectorDBExample {
         // 3. 创建 collection
         System.out.println("---------------------- createCollection ----------------------");
         CreateCollectionParam collectionParam = initCreateCollectionParam(COLL_NAME);
-        db.createCollection(collectionParam);
+        client.createCollectionIfNotExists(DBNAME, collectionParam);
 
 //        可以使用下面方式创建collection
 //        db.createCollectionIfNotExists(collectionParam);
@@ -131,7 +146,7 @@ public class VectorDBExample {
         // 4. 列出所有 collection
 //        Database db = client.database(DBNAME);
         System.out.println("---------------------- listCollections ----------------------");
-        List<Collection> cols = db.listCollections();
+        List<Collection> cols = client.listCollections(DBNAME);
         for (Collection col : cols) {
             System.out.println("\tres: " + col.toString());
         }

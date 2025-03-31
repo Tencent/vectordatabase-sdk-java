@@ -184,6 +184,7 @@ public class Database {
     public Collection describeCollection(String collectionName) throws VectorDBException {
         Collection collection = stub.describeCollection(this.databaseName, collectionName);
         collection.setStub(stub);
+        collection.setConnectCollectionName(collectionName);
         collection.setReadConsistency(readConsistency);
         return collection;
     }

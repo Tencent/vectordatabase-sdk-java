@@ -1247,6 +1247,30 @@ public class GrpcStub extends HttpStub{
         return new BaseRes(response.getCode(), response.getMsg(), "");
     }
 
+    @Override
+    public BaseRes dropIndex(DropIndexParamInner dropIndexParamInner) {
+        Olama.DropIndexRequest.Builder builder = Olama.DropIndexRequest
+                .newBuilder();
+        if (dropIndexParamInner.getDatabase()!=null){
+            builder.setDatabase(dropIndexParamInner.getDatabase());
+        }
+        if (dropIndexParamInner.getCollection()!=null){
+            builder.setCollection(dropIndexParamInner.getCollection());
+        }
+        if (dropIndexParamInner.getFieldNames()!=null && !dropIndexParamInner.getFieldNames().isEmpty()){
+            builder.addAllFieldNames(dropIndexParamInner.getFieldNames());
+        }
+        logQuery(ApiPath.DROP_INDEX, builder.build());
+        Olama.DropIndexResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).dropIndex(builder.build());
+        logResponse(ApiPath.USER_CHANGE_PASSWORD, response);
+        if (response.getCode()!=0){
+            throw new VectorDBException(String.format(
+                    "VectorDBServer error: drop user index error, body code=%s, message=%s",
+                    response.getCode(), response.getMsg()));
+        }
+        return new BaseRes(response.getCode(), response.getMsg(), "");
+    }
+
     private static Collection convertRpcToCollection(Olama.CreateCollectionRequest collection) {
         Collection collectionInner = new Collection();
         collectionInner.setDatabase(collection.getDatabase());

@@ -905,6 +905,13 @@ public class HttpStub implements Stub {
         return JsonUtils.parseObject(jsonNode.toString(), GetImageUrlRes.class);
     }
 
+    @Override
+    public BaseRes dropIndex(DropIndexParamInner dropIndexParamInner) {
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DROP_INDEX);
+        JsonNode jsonNode = this.post(url, JsonUtils.toJsonString(dropIndexParamInner), false);
+        return JsonUtils.parseObject(jsonNode.toString(), BaseRes.class);
+    }
+
 
     private JsonNode get(String url, boolean ai) {
         Request request = new Request.Builder()

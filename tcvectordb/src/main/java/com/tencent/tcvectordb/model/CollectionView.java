@@ -78,6 +78,13 @@ public class CollectionView {
 
     protected ParsingProcessParam parsingProcess;
 
+    @JsonIgnore
+    private String connectCollectionName;
+
+    public void setConnectCollectionName(String connectCollectionName) {
+        this.connectCollectionName = connectCollectionName;
+    }
+
     public List<IndexField> getIndexes() {
         return indexes;
     }
@@ -189,13 +196,18 @@ public class CollectionView {
      * @throws VectorDBException
      */
     public List<DocumentSet> query(CollectionViewQueryParam param) throws VectorDBException {
+        String collectionView = this.collectionView;
+        if (this.connectCollectionName != null) {
+            collectionView = this.connectCollectionName;
+        }
+
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
                 new CollectionViewQueryParamInner(database, collectionView, param, this.readConsistency));
-        documentSets.forEach(documentSet -> {
+        for (DocumentSet documentSet : documentSets) {
             documentSet.setCollectionViewName(collectionView);
             documentSet.setStub(stub);
             documentSet.setDatabase(database);
-        });
+        }
         return documentSets;
     }
 
@@ -205,15 +217,19 @@ public class CollectionView {
      * @throws VectorDBException
      */
     public List<DocumentSet> query() throws VectorDBException {
+        String collectionView = this.collectionView;
+        if (this.connectCollectionName != null) {
+            collectionView = this.connectCollectionName;
+        }
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
                 new CollectionViewQueryParamInner(database, collectionView,
                         CollectionViewQueryParam.newBuilder().build(), this.readConsistency));
 
-        documentSets.forEach(documentSet -> {
+        for (DocumentSet documentSet : documentSets) {
             documentSet.setCollectionViewName(collectionView);
             documentSet.setStub(stub);
             documentSet.setDatabase(database);
-        });
+        }
         return documentSets;
     }
 
@@ -224,15 +240,19 @@ public class CollectionView {
      * @throws VectorDBException
      */
     public List<DocumentSet> query(int limit) throws VectorDBException {
+        String collectionView = this.collectionView;
+        if (this.connectCollectionName != null) {
+            collectionView = this.connectCollectionName;
+        }
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
                 new CollectionViewQueryParamInner(database, collectionView,
                         CollectionViewQueryParam.newBuilder().withLimit(limit).build(),
                         this.readConsistency));
-        documentSets.forEach(documentSet -> {
+        for (DocumentSet documentSet : documentSets) {
             documentSet.setCollectionViewName(collectionView);
             documentSet.setStub(stub);
             documentSet.setDatabase(database);
-        });
+        }
         return documentSets;
     }
 
@@ -244,16 +264,20 @@ public class CollectionView {
      * @throws VectorDBException
      */
     public List<DocumentSet> query(int limit, int offset) throws VectorDBException {
+        String collectionView = this.collectionView;
+        if (this.connectCollectionName != null) {
+            collectionView = this.connectCollectionName;
+        }
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
                 new CollectionViewQueryParamInner(database, collectionView,
                         CollectionViewQueryParam.newBuilder().withLimit(limit).withOffset(offset).build(),
                         this.readConsistency));
 
-        documentSets.forEach(documentSet -> {
+        for (DocumentSet documentSet : documentSets) {
             documentSet.setCollectionViewName(collectionView);
             documentSet.setStub(stub);
             documentSet.setDatabase(database);
-        });
+        }
         return documentSets;
     }
 
@@ -264,6 +288,10 @@ public class CollectionView {
      * @throws VectorDBException
      */
     public DocumentSet getDocumentSetByName(String documentSetName) throws VectorDBException {
+        String collectionView = this.collectionView;
+        if (this.connectCollectionName != null) {
+            collectionView = this.connectCollectionName;
+        }
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
                 new CollectionViewQueryParamInner(database, collectionView,
                         CollectionViewQueryParam.newBuilder().withDocumentSetNames(Arrays.asList(documentSetName)).build(),
@@ -285,6 +313,10 @@ public class CollectionView {
      * @throws VectorDBException
      */
     public DocumentSet getDocumentSetById(String documentSetId) throws VectorDBException {
+        String collectionView = this.collectionView;
+        if (this.connectCollectionName != null) {
+            collectionView = this.connectCollectionName;
+        }
         List<DocumentSet> documentSets = this.stub.queryAIDocument(
                 new CollectionViewQueryParamInner(database, collectionView,
                         CollectionViewQueryParam.newBuilder().withDocumentSetIds(Arrays.asList(documentSetId)).build(),
@@ -313,6 +345,10 @@ public class CollectionView {
      * @throws VectorDBException
      */
     public List<SearchContentInfo> search(SearchByContentsParam param) throws VectorDBException {
+        String collectionView = this.collectionView;
+        if (this.connectCollectionName != null) {
+            collectionView = this.connectCollectionName;
+        }
         return this.stub.searchAIDocument(new SearchDocParamInner(
                 database, collectionView, param, this.readConsistency)).getDocuments();
     }
@@ -328,6 +364,10 @@ public class CollectionView {
      * @throws VectorDBException
      */
     public AffectRes deleteDocumentSets(CollectionViewConditionParam param) throws VectorDBException {
+        String collectionView = this.collectionView;
+        if (this.connectCollectionName != null) {
+            collectionView = this.connectCollectionName;
+        }
         return this.stub.deleteAIDocument(
                 new CollectionViewDeleteParamInner(database, collectionView, param));
     }
@@ -339,6 +379,10 @@ public class CollectionView {
      * @throws VectorDBException
      */
     public AffectRes deleteByDocumentSetName(String documentSetName) throws VectorDBException {
+        String collectionView = this.collectionView;
+        if (this.connectCollectionName != null) {
+            collectionView = this.connectCollectionName;
+        }
         return this.stub.deleteAIDocument(
                 new CollectionViewDeleteParamInner(database, collectionView,
                         CollectionViewConditionParam.newBuilder().withDocumentSetNames(Arrays.asList(documentSetName)).build()));
@@ -351,6 +395,10 @@ public class CollectionView {
      * @throws VectorDBException
      */
     public AffectRes deleteByDocumentSetId(String documentSetId) throws VectorDBException {
+        String collectionView = this.collectionView;
+        if (this.connectCollectionName != null) {
+            collectionView = this.connectCollectionName;
+        }
         return this.stub.deleteAIDocument(
                 new CollectionViewDeleteParamInner(database, collectionView,
                         CollectionViewConditionParam.newBuilder().withDocumentSetIds(Arrays.asList(documentSetId)).build()));
@@ -367,7 +415,10 @@ public class CollectionView {
      * @throws VectorDBException
      */
     public AffectRes update(CollectionViewConditionParam param, Map<String, Object> updateFieldValues) throws VectorDBException {
-
+        String collectionView = this.collectionView;
+        if (this.connectCollectionName != null) {
+            collectionView = this.connectCollectionName;
+        }
         return this.stub.updateAIDocument(
                 new CollectionViewUpdateParamInner(database, collectionView, param, updateFieldValues));
     }
@@ -386,6 +437,10 @@ public class CollectionView {
      * @throws Exception
      */
     public void loadAndSplitText(LoadAndSplitTextParam loadAndSplitTextParam, Map<String, Object> metaDataMap) throws Exception {
+        String collectionView = this.collectionView;
+        if (this.connectCollectionName != null) {
+            collectionView = this.connectCollectionName;
+        }
         this.stub.upload(database, collectionView,  loadAndSplitTextParam, metaDataMap);
     }
 
@@ -402,6 +457,10 @@ public class CollectionView {
      * @throws Exception
      */
     public void loadAndSplitText(LoadAndSplitTextParam loadAndSplitTextParam) throws Exception {
+        String collectionView = this.collectionView;
+        if (this.connectCollectionName != null) {
+            collectionView = this.connectCollectionName;
+        }
         this.stub.upload(database, collectionView,  loadAndSplitTextParam, Collections.EMPTY_MAP);
     }
 
@@ -412,6 +471,10 @@ public class CollectionView {
      * @return
      */
     public DocumentFileContent getFile(String fileName, String fileId) {
+        String collectionView = this.collectionView;
+        if (this.connectCollectionName != null) {
+            collectionView = this.connectCollectionName;
+        }
         return this.stub.getFile(database, collectionView, fileName, fileId).getDocumentSet();
     }
 
@@ -422,6 +485,10 @@ public class CollectionView {
      * @throws VectorDBException
      */
     public BaseRes rebuildIndex(RebuildIndexParam rebuildIndexParam) throws VectorDBException {
+        String collectionView = this.collectionView;
+        if (this.connectCollectionName != null) {
+            collectionView = this.connectCollectionName;
+        }
         return this.stub.rebuildAIIndex(new RebuildIndexParamInner(database, collectionView, rebuildIndexParam));
     }
 
@@ -433,6 +500,10 @@ public class CollectionView {
      * @return GetChunksRes
      */
     public GetChunksRes getChunks(String documentSetName, Integer limit, Integer offset) {
+        String collectionView = this.collectionView;
+        if (this.connectCollectionName != null) {
+            collectionView = this.connectCollectionName;
+        }
         return this.stub.getChunks(database, collectionView, documentSetName, null, limit, offset);
     }
 
@@ -442,6 +513,10 @@ public class CollectionView {
      * @return GetChunksRes
      */
     public GetChunksRes getChunks(String documentSetName) {
+        String collectionView = this.collectionView;
+        if (this.connectCollectionName != null) {
+            collectionView = this.connectCollectionName;
+        }
         return this.stub.getChunks(database, collectionView, documentSetName, null, null, null);
     }
 
@@ -454,6 +529,10 @@ public class CollectionView {
      * @return GetChunksRes
      */
     public GetChunksRes getChunks(String documentSetId, String documentSetName, Integer limit, Integer offset) {
+        String collectionView = this.collectionView;
+        if (this.connectCollectionName != null) {
+            collectionView = this.connectCollectionName;
+        }
         return this.stub.getChunks(database, collectionView, documentSetName, documentSetId, limit, offset);
     }
 

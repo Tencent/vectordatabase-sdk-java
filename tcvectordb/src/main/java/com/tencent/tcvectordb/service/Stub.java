@@ -207,4 +207,6 @@ public interface Stub {
     BaseRes changeUserPassword(UserChangePasswordParam build);
 
     GetImageUrlRes GetImageUrl(GetImageUrlParamInner param);
+
+    BaseRes dropIndex(DropIndexParamInner dropIndexParamInner);
 }

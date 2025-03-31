@@ -636,6 +636,7 @@ message CountRequest {
     string database         = 1;
     string collection       = 2;
     QueryCond query         = 3;
+    string readConsistency  = 4;
 };
 
 message CountResponse {

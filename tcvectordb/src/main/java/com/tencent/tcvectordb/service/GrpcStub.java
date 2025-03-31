@@ -1010,6 +1010,9 @@ public class GrpcStub extends HttpStub{
             }
             countCondBuilder.setQuery(queryBuilder.build());
         }
+        if (param.getReadConsistency()!=null){
+             countCondBuilder.setReadConsistency(param.getReadConsistency().getReadConsistency());
+        }
         Olama.CountRequest countRequest = countCondBuilder.build();
         logQuery(ApiPath.DOC_COUNT, countCondBuilder);
         Olama.CountResponse countResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).count(countRequest);

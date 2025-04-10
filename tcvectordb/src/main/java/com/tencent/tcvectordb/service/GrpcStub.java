@@ -38,6 +38,7 @@ import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
 import com.tencent.tcvectordb.model.param.user.*;
 import com.tencent.tcvectordb.rpc.Interceptor.AuthorityInterceptor;
 import com.tencent.tcvectordb.rpc.Interceptor.BackendServiceInterceptor;
+import com.tencent.tcvectordb.rpc.pool.ChannelPool;
 import com.tencent.tcvectordb.rpc.proto.Olama;
 import com.tencent.tcvectordb.rpc.proto.SearchEngineGrpc;
 import com.tencent.tcvectordb.service.param.*;
@@ -59,88 +60,84 @@ import java.util.stream.Collectors;
 
 public class GrpcStub extends HttpStub{
 
-    private ManagedChannel channel;
-    private SearchEngineGrpc.SearchEngineBlockingStub blockingStub;
-
-    private final int maxSendMessageSize = 100*1024*1024;
+//    private ManagedChannel channel;
+//    private SearchEngineGrpc.SearchEngineBlockingStub blockingStub;
     private final int maxReceiveMessageSize = 100*1024*1024;
     private String authorization;
     private int timeout = 10;
     private static final Logger logger = LoggerFactory.getLogger(GrpcStub.class.getName());
     private ConnectParam connectParam;
+
+    private final ChannelPool channelPool;
     public GrpcStub(ConnectParam param){
         super();
         connectParam = param;
         this.authorization = String.format("Bearer account=%s&api_key=%s",param.getUsername(), param.getKey());
 
-        this.channel = OkHttpChannelBuilder.forTarget(this.getAddress(param.getUrl())).
-                intercept(new AuthorityInterceptor(this.authorization)).
-                flowControlWindow(maxReceiveMessageSize).
-                maxInboundMessageSize(maxReceiveMessageSize).
-                usePlaintext().build();
+//        this.channel = OkHttpChannelBuilder.forTarget(this.getAddress(param.getUrl())).
+//                intercept(new AuthorityInterceptor(this.authorization)).
+//                flowControlWindow(maxReceiveMessageSize).
+//                maxInboundMessageSize(maxReceiveMessageSize).
+//                usePlaintext().build();
         if (param.getTimeout() > 0) {
             this.timeout = param.getTimeout();
         }
-        this.blockingStub = SearchEngineGrpc.newBlockingStub(this.channel);
-        this.blockingStub.withMaxInboundMessageSize(maxReceiveMessageSize);
-        this.blockingStub.withMaxOutboundMessageSize(maxSendMessageSize);
-
-    }
-
-    private String getAddress(String url){
-        URL _url = null;
-        try {
-            _url = new URL(url);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-        if (_url.getPort()<=0){
-            url = url + ":80";
-        }
-        return url.replaceFirst("http://", "").replaceFirst("https://", "");
+        channelPool = new ChannelPool(param, maxReceiveMessageSize, this.authorization);
+//        this.blockingStub = SearchEngineGrpc.newBlockingStub(this.channel);
     }
 
     @Override
     public synchronized void close() {
         super.close();
-        if (this.channel!=null){
-            this.channel.shutdown();
+        if (this.channelPool!=null){
+            this.channelPool.close();
         }
     }
 
 
     @Override
     public void createDatabase(Database database) {
-        Olama.DatabaseRequest.Builder databaseRequest = Olama.DatabaseRequest.newBuilder();
-        if (database.getDatabaseName()!=null){
-            databaseRequest.setDatabase(database.getDatabaseName());
+        ManagedChannel channel = channelPool.getChannel();
+        try {
+            Olama.DatabaseRequest.Builder databaseRequest = Olama.DatabaseRequest.newBuilder();
+            if (database.getDatabaseName()!=null){
+                databaseRequest.setDatabase(database.getDatabaseName());
+            }
+            logQuery(ApiPath.DB_CREATE, databaseRequest);
+            Olama.DatabaseResponse response = SearchEngineGrpc.newBlockingStub(channel).withInterceptors(new BackendServiceInterceptor(false))
+                    .withDeadlineAfter(this.timeout, TimeUnit.SECONDS).
+                    createDatabase(databaseRequest.build());
+            logResponse(ApiPath.DB_CREATE, response);
+            if (response.getCode()!=0){
+                throw new VectorDBException(String.format(
+                        "VectorDBServer create Database error: not Successful, body code=%s, message=%s",
+                        response.getCode(), response.getMsg()));
+            }
+        }finally {
+            channelPool.returnChannel(channel);
         }
-        logQuery(ApiPath.DB_CREATE, databaseRequest);
-        Olama.DatabaseResponse response = this.blockingStub.withInterceptors(new BackendServiceInterceptor(false))
-                .withDeadlineAfter(this.timeout, TimeUnit.SECONDS).
-                createDatabase(databaseRequest.build());
-        logResponse(ApiPath.DB_CREATE, response);
-        if (response.getCode()!=0){
-            throw new VectorDBException(String.format(
-                    "VectorDBServer create Database error: not Successful, body code=%s, message=%s",
-                    response.getCode(), response.getMsg()));
-        }
+
     }
 
     @Override
     public void dropDatabase(Database database) {
-        Olama.DatabaseRequest.Builder databaseRequest = Olama.DatabaseRequest.newBuilder();
-        if (database.getDatabaseName()!=null){
-            databaseRequest.setDatabase(database.getDatabaseName());
-        }
-        logQuery(ApiPath.DB_DROP, databaseRequest.build());
-        Olama.DatabaseResponse response =  this.blockingStub.withInterceptors(new BackendServiceInterceptor(false)).
-                withDeadlineAfter(this.timeout, TimeUnit.SECONDS).dropDatabase(databaseRequest.build());
-        logResponse(ApiPath.DB_DROP, response);
-        if (response.getCode()!=0){
-            throw new VectorDBException(String.format(
-                    "VectorDBServer drop Database error: not Successful, body code=%s, message=%s",
-                    response.getCode(), response.getMsg()));
+        ManagedChannel channel = channelPool.getChannel();
+        try {
+            Olama.DatabaseRequest.Builder databaseRequest = Olama.DatabaseRequest.newBuilder();
+            if (database.getDatabaseName()!=null){
+                databaseRequest.setDatabase(database.getDatabaseName());
+            }
+            logQuery(ApiPath.DB_DROP, databaseRequest.build());
+            Olama.DatabaseResponse response =  SearchEngineGrpc.newBlockingStub(channel).withInterceptors(new BackendServiceInterceptor(false)).
+                    withDeadlineAfter(this.timeout, TimeUnit.SECONDS).dropDatabase(databaseRequest.build());
+            logResponse(ApiPath.DB_DROP, response);
+            if (response.getCode()!=0){
+                throw new VectorDBException(String.format(
+                        "VectorDBServer drop Database error: not Successful, body code=%s, message=%s",
+                        response.getCode(), response.getMsg()));
+            }
+        }finally {
+            channelPool.returnChannel(channel);
         }
     }
 
@@ -152,27 +149,33 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public DataBaseTypeRes describeDatabase(Database database) {
-        Olama.DescribeDatabaseRequest.Builder databaseRequest = Olama.DescribeDatabaseRequest.newBuilder();
-        if (database.getDatabaseName()!=null){
-            databaseRequest.setDatabase(database.getDatabaseName());
-        }
-        logQuery(ApiPath.DB_DESCRIBE, databaseRequest.build());
-        Olama.DescribeDatabaseResponse response = this.blockingStub.withInterceptors(new BackendServiceInterceptor(false))
-                .withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
-                .describeDatabase(databaseRequest.build());
-        logResponse(ApiPath.DB_DESCRIBE, response);
-        if (response.getCode()!=0){
-            throw new VectorDBException(String.format(
-                    "VectorDBServer describeDatabase error: not Successful, body code=%s, message=%s",
-                    response.getCode(), response.getMsg()));
+        ManagedChannel channel = channelPool.getChannel();
+        try {
+            Olama.DescribeDatabaseRequest.Builder databaseRequest = Olama.DescribeDatabaseRequest.newBuilder();
+            if (database.getDatabaseName()!=null){
+                databaseRequest.setDatabase(database.getDatabaseName());
+            }
+            logQuery(ApiPath.DB_DESCRIBE, databaseRequest.build());
+            Olama.DescribeDatabaseResponse response = SearchEngineGrpc.newBlockingStub(channel).withInterceptors(new BackendServiceInterceptor(false))
+                    .withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
+                    .describeDatabase(databaseRequest.build());
+            logResponse(ApiPath.DB_DESCRIBE, response);
+            if (response.getCode()!=0){
+                throw new VectorDBException(String.format(
+                        "VectorDBServer describeDatabase error: not Successful, body code=%s, message=%s",
+                        response.getCode(), response.getMsg()));
+            }
+
+            Date date = new Date(response.getDatabase().getCreateTime());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            DataBaseType dataBaseType = new DataBaseType();
+            dataBaseType.setCreateTime(sdf.format(date));
+            dataBaseType.setDbType(response.getDatabase().getDbType().toString());
+            return new DataBaseTypeRes(response.getCode(), response.getMsg(), "", dataBaseType);
+        }finally {
+            channelPool.returnChannel(channel);
         }
 
-        Date date = new Date(response.getDatabase().getCreateTime());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        DataBaseType dataBaseType = new DataBaseType();
-        dataBaseType.setCreateTime(sdf.format(date));
-        dataBaseType.setDbType(response.getDatabase().getDbType().toString());
-        return new DataBaseTypeRes(response.getCode(), response.getMsg(), "", dataBaseType);
     }
 
     @Override
@@ -183,42 +186,52 @@ public class GrpcStub extends HttpStub{
 
     @Override
     public List<String> listDatabases() {
-
-        Olama.DatabaseRequest request = Olama.DatabaseRequest.newBuilder().build();
-        logQuery(ApiPath.DB_LIST, request);
-        Olama.DatabaseResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).listDatabases(request);
-        logResponse(ApiPath.DB_LIST, response);
-        if (response.getCode()!=0){
-            throw new VectorDBException(String.format(
-                    "VectorDBServer list Database error: not Successful, body code=%s, message=%s",
-                    response.getCode(), response.getMsg()));
+        ManagedChannel channel = channelPool.getChannel();
+        try {
+            Olama.DatabaseRequest request = Olama.DatabaseRequest.newBuilder().build();
+            logQuery(ApiPath.DB_LIST, request);
+            Olama.DatabaseResponse response = SearchEngineGrpc.newBlockingStub(channel).withInterceptors(new BackendServiceInterceptor(false))
+                    .withDeadlineAfter(this.timeout, TimeUnit.SECONDS).listDatabases(request);
+            logResponse(ApiPath.DB_LIST, response);
+            if (response.getCode()!=0){
+                throw new VectorDBException(String.format(
+                        "VectorDBServer list Database error: not Successful, body code=%s, message=%s",
+                        response.getCode(), response.getMsg()));
+            }
+            return response.getDatabasesList();
+        }finally {
+            channelPool.returnChannel(channel);
         }
-        return response.getDatabasesList();
     }
 
     @Override
     public Map<String, DataBaseType> listDatabaseInfos() {
-
-        Olama.DatabaseRequest request = Olama.DatabaseRequest.newBuilder().build();
-        logQuery(ApiPath.DB_LIST, request);
-        Olama.DatabaseResponse response =  this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).listDatabases(request);
-        logResponse(ApiPath.DB_LIST, response);
-        if (response.getCode()!=0){
-            throw new VectorDBException(String.format(
-                    "VectorDBServer list Database error: not Successful, body code=%s, message=%s",
-                    response.getCode(), response.getMsg()));
+        ManagedChannel channel = channelPool.getChannel();
+        try{
+            Olama.DatabaseRequest request = Olama.DatabaseRequest.newBuilder().build();
+            logQuery(ApiPath.DB_LIST, request);
+            Olama.DatabaseResponse response = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS).listDatabases(request);
+            logResponse(ApiPath.DB_LIST, response);
+            if (response.getCode()!=0){
+                throw new VectorDBException(String.format(
+                        "VectorDBServer list Database error: not Successful, body code=%s, message=%s",
+                        response.getCode(), response.getMsg()));
+            }
+            Map<String, DataBaseType> dataBaseTypeMap = new HashMap<>();
+            response.getInfoMap().entrySet().forEach(entry->
+            {
+                DataBaseType dataBaseType = new DataBaseType();
+                dataBaseType.setDbType(entry.getKey());
+                Date date = new Date(entry.getValue().getCreateTime());
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                dataBaseType.setCreateTime(sdf.format(date));
+                dataBaseTypeMap.put(entry.getKey(), dataBaseType);
+            });
+            return dataBaseTypeMap;
+        }finally {
+            channelPool.returnChannel(channel);
         }
-        Map<String, DataBaseType> dataBaseTypeMap = new HashMap<>();
-        response.getInfoMap().entrySet().forEach(entry->
-        {
-            DataBaseType dataBaseType = new DataBaseType();
-            dataBaseType.setDbType(entry.getKey());
-            Date date = new Date(entry.getValue().getCreateTime());
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            dataBaseType.setCreateTime(sdf.format(date));
-            dataBaseTypeMap.put(entry.getKey(), dataBaseType);
-        });
-        return dataBaseTypeMap;
+
     }
 
     @Override
@@ -251,8 +264,8 @@ public class GrpcStub extends HttpStub{
         }
         if (params.getTtlConfig()!=null){
             requestOrBuilder.setTtlConfig(Olama.TTLConfig.newBuilder()
-                            .setEnable(params.getTtlConfig().isEnable())
-                            .setTimeField(params.getTtlConfig().getTimeField())
+                    .setEnable(params.getTtlConfig().isEnable())
+                    .setTimeField(params.getTtlConfig().getTimeField())
                     .build());
         }
         if (params.getFilterIndexConfig()!=null){
@@ -275,9 +288,14 @@ public class GrpcStub extends HttpStub{
 
         }
         logQuery(ApiPath.COL_CREATE, requestOrBuilder);
-
-        Olama.CreateCollectionResponse response =  this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
-                .createCollection(requestOrBuilder.build());
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.CreateCollectionResponse response;
+        try{
+            response = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
+                    .createCollection(requestOrBuilder.build());
+        }finally {
+             channelPool.returnChannel(channel);
+        }
         logResponse(ApiPath.COL_CREATE, response);
         if(response==null){
             throw new VectorDBException("VectorDBServer error: CreateCollectionResponse not response");
@@ -350,8 +368,15 @@ public class GrpcStub extends HttpStub{
             requestBuilder.setDatabase(databaseName);
         }
         logQuery(ApiPath.COL_LIST, requestBuilder.build());
-        Olama.ListCollectionsResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
-                .listCollections(requestBuilder.build());
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.ListCollectionsResponse response;
+        try{
+            response = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
+                    .listCollections(requestBuilder.build());
+        }finally {
+             channelPool.returnChannel(channel);
+        }
+
         logResponse(ApiPath.COL_LIST, response);
         List<Collection> collections = new ArrayList<>();
         response.getCollectionsList().forEach(collection -> {
@@ -372,8 +397,14 @@ public class GrpcStub extends HttpStub{
             requestBuilder.setCollection(collectionName);
         }
         logQuery(ApiPath.COL_DESCRIBE, requestBuilder.build());
-        Olama.DescribeCollectionResponse describeCollectionResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
-                .describeCollection(requestBuilder.build());
+        Olama.DescribeCollectionResponse describeCollectionResponse;
+        ManagedChannel channel = channelPool.getChannel();
+        try{
+            describeCollectionResponse = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
+                    .describeCollection(requestBuilder.build());
+        }finally {
+             channelPool.returnChannel(channel);
+        }
         logResponse(ApiPath.COL_DESCRIBE, describeCollectionResponse);
         if(describeCollectionResponse==null){
             throw new VectorDBException("VectorDBServer error: describeCollection not response");
@@ -396,8 +427,14 @@ public class GrpcStub extends HttpStub{
             requestBuilder.setCollection(collectionName);
         }
         logQuery(ApiPath.COL_FLUSH, requestBuilder.build());
-        Olama.TruncateCollectionResponse truncateCollectionResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).
-                truncateCollection(requestBuilder.build());
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.TruncateCollectionResponse truncateCollectionResponse;
+         try{
+            truncateCollectionResponse = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
+                    .truncateCollection(requestBuilder.build());
+        }finally {
+             channelPool.returnChannel(channel);
+        }
         logResponse(ApiPath.COL_FLUSH, truncateCollectionResponse);
         if (truncateCollectionResponse==null){
             throw new VectorDBException("VectorDBServer error: truncateCollectionResponse not response");
@@ -427,8 +464,14 @@ public class GrpcStub extends HttpStub{
             requestBuilder.setCollection(collectionName);
         }
         logQuery(ApiPath.COL_DROP, requestBuilder.build());
-        Olama.DropCollectionResponse dropCollectionResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).
-                dropCollection(requestBuilder.build());
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.DropCollectionResponse dropCollectionResponse;
+         try{
+            dropCollectionResponse = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
+                    .dropCollection(requestBuilder.build());
+        }finally {
+             channelPool.returnChannel(channel);
+        }
         logResponse(ApiPath.COL_DROP, dropCollectionResponse);
         if(dropCollectionResponse==null){
             throw new VectorDBException("VectorDBServer error: dropCollection not response");
@@ -453,8 +496,14 @@ public class GrpcStub extends HttpStub{
             requestBuilder.setAlias(aliasName);
         }
         logQuery(ApiPath.AI_ALIAS_SET, requestBuilder.build());
-        Olama.UpdateAliasResponse setAliasResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).
-                setAlias(requestBuilder.build());
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.UpdateAliasResponse setAliasResponse;
+        try{
+            setAliasResponse = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
+                    .setAlias(requestBuilder.build());
+        }finally {
+             channelPool.returnChannel(channel);
+        }
         logResponse(ApiPath.AI_ALIAS_SET, setAliasResponse);
         if(setAliasResponse==null){
             throw new VectorDBException("VectorDBServer error: dropCollection not response");
@@ -480,19 +529,25 @@ public class GrpcStub extends HttpStub{
         }
         Olama.RemoveAliasRequest request = requestBuilder.build();
         logQuery(ApiPath.AI_ALIAS_DELETE, request);
-        Olama.UpdateAliasResponse deleteResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
-                .deleteAlias(request);
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.UpdateAliasResponse deleteAliasResponse;
+        try{
+            deleteAliasResponse = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
+                    .deleteAlias(request);
+        }finally {
+             channelPool.returnChannel(channel);
+        }
         logQuery(ApiPath.AI_ALIAS_DELETE, request);
-        if(deleteResponse==null){
+        if(deleteAliasResponse==null){
             throw new VectorDBException("VectorDBServer error: dropCollection not response");
         }
-        if (deleteResponse.getCode()!=0){
+        if (deleteAliasResponse.getCode()!=0){
             throw new VectorDBException(String.format(
                     "VectorDBServer error: deleteAlias not Success, body code=%s, message=%s",
-                    deleteResponse.getCode(), deleteResponse.getMsg()));
+                    deleteAliasResponse.getCode(), deleteAliasResponse.getMsg()));
         }
-        return new AffectRes(deleteResponse.getCode(), deleteResponse.getMsg(),
-                "", deleteResponse.getAffectedCount());
+        return new AffectRes(deleteAliasResponse.getCode(), deleteAliasResponse.getMsg(),
+                "", deleteAliasResponse.getAffectedCount());
     }
 
     @Override
@@ -526,8 +581,15 @@ public class GrpcStub extends HttpStub{
             }
         }
         logQuery(ApiPath.DOC_UPSERT, builder);
-        Olama.UpsertResponse response = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai))
-                .withDeadlineAfter(this.timeout, TimeUnit.SECONDS).upsert(builder.build());
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.UpsertResponse response;
+        try{
+            response = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
+                    .withInterceptors(new BackendServiceInterceptor(ai))
+                    .upsert(builder.build());
+        }finally {
+             channelPool.returnChannel(channel);
+        }
         logResponse(ApiPath.DOC_UPSERT, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
@@ -569,7 +631,15 @@ public class GrpcStub extends HttpStub{
         }
         queryBuilder.setQuery(queryCondBuilder.build());
         logQuery(ApiPath.DOC_QUERY, queryBuilder);
-        Olama.QueryResponse queryResponse = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai)).withDeadlineAfter(this.timeout, TimeUnit.SECONDS).query(queryBuilder.build());
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.QueryResponse queryResponse;
+        try{
+            queryResponse = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
+                    .withInterceptors(new BackendServiceInterceptor(ai))
+                    .query(queryBuilder.build());
+        }finally {
+             channelPool.returnChannel(channel);
+        }
         logResponse(ApiPath.DOC_QUERY, queryResponse);
         if(queryResponse==null){
             throw new VectorDBException("VectorDBServer error: query not response");
@@ -643,7 +713,14 @@ public class GrpcStub extends HttpStub{
         }
         builder.setSearch(searchConBuilder.build());
         logQuery(ApiPath.DOC_SEARCH, builder);
-        Olama.SearchResponse searchResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).search(builder.build());
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.SearchResponse searchResponse;
+        try{
+            searchResponse = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
+                    .search(builder.build());
+        }finally {
+             channelPool.returnChannel(channel);
+        }
         logResponse(ApiPath.DOC_SEARCH, searchResponse);
         if(searchResponse==null){
             throw new VectorDBException("VectorDBServer error: search not response");
@@ -759,8 +836,14 @@ public class GrpcStub extends HttpStub{
         }
         builder.setSearch(searchConBuilder);
         logQuery(ApiPath.DOC_HYBRID_SEARCH, builder);
-        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai));
-        Olama.SearchResponse searchResponse = searchEngineBlockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).hybridSearch(builder.build());
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.SearchResponse searchResponse;
+        try {
+            SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = SearchEngineGrpc.newBlockingStub(channel).withInterceptors(new BackendServiceInterceptor(ai));
+            searchResponse = searchEngineBlockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).hybridSearch(builder.build());
+        }finally {
+            channelPool.returnChannel(channel);
+        }
         logResponse(ApiPath.DOC_HYBRID_SEARCH, searchResponse);
 
         if(searchResponse==null){
@@ -823,7 +906,13 @@ public class GrpcStub extends HttpStub{
 
         Olama.DeleteRequest deleteRequest = deleteRequestBuilder.setQuery(queryCondBuilder.build()).build();
         logQuery(ApiPath.DOC_DELETE, deleteRequest);
-        Olama.DeleteResponse deleteResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).dele(deleteRequest);
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.DeleteResponse deleteResponse;
+        try {
+            deleteResponse = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS).dele(deleteRequest);
+        }finally {
+            channelPool.returnChannel(channel);
+        }
         logResponse(ApiPath.DOC_DELETE, deleteResponse);
         if(deleteResponse==null){
             throw new VectorDBException("VectorDBServer error: deleteResponse not response");
@@ -846,8 +935,7 @@ public class GrpcStub extends HttpStub{
         if (paramQuery.getFilter()!=null && !paramQuery.getFilter().isEmpty()){
             queryCondBuilder.setFilter(paramQuery.getFilter());
         }
-        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = this.blockingStub.withInterceptors(new BackendServiceInterceptor(ai));
-        Olama.UpdateResponse updateResponse=null;
+
         Olama.UpdateRequest.Builder updateRequestBuilder = Olama.UpdateRequest.newBuilder();
         if (param.getDatabase()!=null) {
             updateRequestBuilder.setDatabase(param.getDatabase());
@@ -864,8 +952,16 @@ public class GrpcStub extends HttpStub{
                     .setUpdate(convertDocumentJSON2OlamaDoc(param.getUpdateData()));
         }
         logQuery(ApiPath.DOC_UPDATE, updateRequestBuilder.build());
-        updateResponse = searchEngineBlockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
-                .update(updateRequestBuilder.build());
+        Olama.UpdateResponse updateResponse=null;
+        ManagedChannel channel = channelPool.getChannel();
+        try {
+            SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = SearchEngineGrpc.newBlockingStub(channel).withInterceptors(new BackendServiceInterceptor(ai));
+            updateResponse = searchEngineBlockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
+                    .update(updateRequestBuilder.build());
+        }finally {
+            channelPool.returnChannel(channel);
+        }
+
         logResponse(ApiPath.DOC_UPDATE, updateResponse);
         if(updateResponse==null){
             throw new VectorDBException("VectorDBServer error: update not response");
@@ -892,7 +988,13 @@ public class GrpcStub extends HttpStub{
                 .setDropBeforeRebuild(param.isDropBeforeRebuild())
                 .build();
         logQuery(ApiPath.REBUILD_INDEX, rebuildIndexRequest);
-        Olama.RebuildIndexResponse rebuildIndexResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).rebuildIndex(rebuildIndexRequest);
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.RebuildIndexResponse rebuildIndexResponse;
+        try {
+            rebuildIndexResponse = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS).rebuildIndex(rebuildIndexRequest);
+        }finally {
+            channelPool.returnChannel(channel);
+        }
         logResponse(ApiPath.REBUILD_INDEX, rebuildIndexResponse);
         if(rebuildIndexResponse==null){
             throw new VectorDBException("VectorDBServer error: rebuildIndex not response");
@@ -1015,7 +1117,13 @@ public class GrpcStub extends HttpStub{
         }
         Olama.CountRequest countRequest = countCondBuilder.build();
         logQuery(ApiPath.DOC_COUNT, countCondBuilder);
-        Olama.CountResponse countResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).count(countRequest);
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.CountResponse countResponse;
+        try {
+            countResponse = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS).count(countRequest);
+        }finally {
+            channelPool.returnChannel(channel);
+        }
         logResponse(ApiPath.DOC_COUNT, countResponse);
         if(countResponse==null){
             throw new VectorDBException("VectorDBServer error: count not response");
@@ -1047,8 +1155,13 @@ public class GrpcStub extends HttpStub{
                     .map(indexField -> getRpcIndexBuilder(indexField).build()).collect(Collectors.toMap(index -> index.getFieldName(), index -> index)));
         }
         logQuery(ApiPath.MODIFY_VECTOR_INDEX, builder);
-        Olama.ModifyVectorIndexResponse modifyVectorIndexResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS)
-                .modifyVectorIndex(builder.build());
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.ModifyVectorIndexResponse modifyVectorIndexResponse;
+        try {
+            modifyVectorIndexResponse = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS).modifyVectorIndex(builder.build());
+        }finally {
+            channelPool.returnChannel(channel);
+        }
         logResponse(ApiPath.MODIFY_VECTOR_INDEX, modifyVectorIndexResponse);
         if(modifyVectorIndexResponse==null){
             throw new VectorDBException("VectorDBServer error: modifyVectorIndex not response");
@@ -1077,7 +1190,13 @@ public class GrpcStub extends HttpStub{
                 .build();
 
         logQuery(ApiPath.ADD_INDEX, addIndexRequest);
-        Olama.AddIndexResponse addIndexResponse = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).addIndex(addIndexRequest);
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.AddIndexResponse addIndexResponse;
+        try {
+            addIndexResponse = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS).addIndex(addIndexRequest);
+        }finally {
+            channelPool.returnChannel(channel);
+        }
         logResponse(ApiPath.REBUILD_INDEX, addIndexResponse);
         if(addIndexResponse==null){
             throw new VectorDBException("VectorDBServer error: addIndex not response");
@@ -1101,7 +1220,13 @@ public class GrpcStub extends HttpStub{
             builder.setPassword(userCreateParam.getPassword()).build();
         }
         logQuery(ApiPath.USER_CREATE, builder.build());
-        Olama.UserAccountResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userCreate(builder.build());
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.UserAccountResponse response;
+        try {
+            response = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userCreate(builder.build());
+        }finally {
+            channelPool.returnChannel(channel);
+        }
         logResponse(ApiPath.USER_CREATE, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
@@ -1126,7 +1251,13 @@ public class GrpcStub extends HttpStub{
                             .addAllActions(privilege.getActions()).build()).collect(Collectors.toList()));
         }
         logQuery(ApiPath.USER_GRANT, builder);
-        Olama.UserPrivilegesResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userGrant(builder.build());
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.UserPrivilegesResponse response;
+        try {
+            response = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userGrant(builder.build());
+        }finally {
+            channelPool.returnChannel(channel);
+        }
         logResponse(ApiPath.USER_GRANT, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
@@ -1151,7 +1282,13 @@ public class GrpcStub extends HttpStub{
                             .addAllActions(privilege.getActions()).build()).collect(Collectors.toList()));
         }
         logQuery(ApiPath.USER_REVOKE, builder);
-        Olama.UserPrivilegesResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userRevoke(builder.build());
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.UserPrivilegesResponse response;
+        try {
+            response = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userRevoke(builder.build());
+        }finally {
+            channelPool.returnChannel(channel);
+        }
         logResponse(ApiPath.USER_REVOKE, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
@@ -1169,7 +1306,13 @@ public class GrpcStub extends HttpStub{
             builder.setUser(userDescribeParam.getUser());
         }
         logQuery(ApiPath.USER_DESCRIBE, builder.build());
-        Olama.UserDescribeResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userDescribe(builder.build());
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.UserDescribeResponse response;
+        try {
+            response = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userDescribe(builder.build());
+        }finally {
+            channelPool.returnChannel(channel);
+        }
         logResponse(ApiPath.USER_DESCRIBE, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
@@ -1190,7 +1333,13 @@ public class GrpcStub extends HttpStub{
     public UserListRes listUser() {
         Olama.UserListRequest request = Olama.UserListRequest.newBuilder().build();
         logQuery(ApiPath.USER_LIST, request);
-        Olama.UserListResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userList(request);
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.UserListResponse response;
+        try {
+            response = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userList(request);
+        }finally {
+            channelPool.returnChannel(channel);
+        }
         logResponse(ApiPath.USER_LIST, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
@@ -1219,7 +1368,13 @@ public class GrpcStub extends HttpStub{
         }
 
         logQuery(ApiPath.USER_DROP, builder.build());
-        Olama.UserAccountResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userDrop(builder.build());
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.UserAccountResponse response;
+        try {
+            response = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userDrop(builder.build());
+        }finally {
+            channelPool.returnChannel(channel);
+        }
         logResponse(ApiPath.USER_DROP, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
@@ -1240,7 +1395,13 @@ public class GrpcStub extends HttpStub{
             builder.setPassword(param.getPassword()).build();
         }
         logQuery(ApiPath.USER_CHANGE_PASSWORD, builder.build());
-        Olama.UserAccountResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userChangePassword(builder.build());
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.UserAccountResponse response;
+        try {
+            response = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS).userChangePassword(builder.build());
+        }finally {
+            channelPool.returnChannel(channel);
+        }
         logResponse(ApiPath.USER_CHANGE_PASSWORD, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(
@@ -1264,7 +1425,13 @@ public class GrpcStub extends HttpStub{
             builder.addAllFieldNames(dropIndexParamInner.getFieldNames());
         }
         logQuery(ApiPath.DROP_INDEX, builder.build());
-        Olama.DropIndexResponse response = this.blockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).dropIndex(builder.build());
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.DropIndexResponse response;
+        try {
+            response = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS).dropIndex(builder.build());
+        }finally {
+            channelPool.returnChannel(channel);
+        }
         logResponse(ApiPath.USER_CHANGE_PASSWORD, response);
         if (response.getCode()!=0){
             throw new VectorDBException(String.format(

@@ -44,6 +44,8 @@ public class CreateCollectionViewParam extends CollectionView {
         this.expectedFileNum = builder.expectedFileNum;
         this.averageFileSize = builder.averageFileSize;
         this.parsingProcess = builder.parsingProcess;
+        this.replicaNum = builder.replicaNum;
+        this.shardNum = builder.shardNum;
     }
     public SplitterPreprocessParams getSplitterPreprocess() {
         return splitterPreprocess;
@@ -62,6 +64,9 @@ public class CreateCollectionViewParam extends CollectionView {
         private EmbeddingParams embedding;
         private Integer expectedFileNum;
         private Integer averageFileSize;
+
+        private Integer replicaNum;
+        private Integer shardNum;
 
         private ParsingProcessParam parsingProcess;
 
@@ -105,6 +110,16 @@ public class CreateCollectionViewParam extends CollectionView {
 
         public Builder withParsingProcess(ParsingProcessParam parsingProcess) {
             this.parsingProcess = parsingProcess;
+            return this;
+        }
+
+        public Builder withReplicaNum(Integer replicaNum) {
+            this.replicaNum = replicaNum;
+            return this;
+        }
+
+        public Builder withShardNum(Integer shardNum) {
+            this.shardNum = shardNum;
             return this;
         }
 

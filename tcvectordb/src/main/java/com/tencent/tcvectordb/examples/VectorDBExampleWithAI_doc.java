@@ -278,7 +278,7 @@ public class VectorDBExampleWithAI_doc {
                 .withAverageFileSize(204800)
                 .withExpectedFileNum(10240)
                 .withReplicaNum(0)
-                .withShardNum(1)
+                .withShardNum(2)
                 .addField(new FilterIndex("author", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("tags", FieldType.Array, IndexType.FILTER))
                 .withSplitterPreprocess(SplitterPreprocessParams.newBuilder().

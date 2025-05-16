@@ -81,6 +81,9 @@ public class CollectionView {
     @JsonIgnore
     private String connectCollectionName;
 
+    protected Integer replicaNum;
+    protected Integer shardNum;
+
     public void setConnectCollectionName(String connectCollectionName) {
         this.connectCollectionName = connectCollectionName;
     }
@@ -176,6 +179,22 @@ public class CollectionView {
 
     public void setParsingProcess(ParsingProcessParam parsingProcess) {
         this.parsingProcess = parsingProcess;
+    }
+
+    public Integer getReplicaNum() {
+        return replicaNum;
+    }
+
+    public void setReplicaNum(Integer replicaNum) {
+        this.replicaNum = replicaNum;
+    }
+
+    public Integer getShardNum() {
+        return shardNum;
+    }
+
+    public void setShardNum(Integer shardNum) {
+        this.shardNum = shardNum;
     }
 
     public CollectionView() {

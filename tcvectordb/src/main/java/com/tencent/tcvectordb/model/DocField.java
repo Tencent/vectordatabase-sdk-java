@@ -93,7 +93,7 @@ public class DocField {
                 } else if (field.getValue() instanceof JSONObject) {
                     Map<String, Object> map = JsonUtils.parseObject(field.getValue().toString(), Map.class);
                     JsonNode jsonNode = JsonUtils.toJsonNode(map);
-                    node.put(field.getName(), jsonNode);
+                    node.set(field.getName(), jsonNode);
                 }else {
                     node.put(field.getName(), field.getStringValue());
                 }

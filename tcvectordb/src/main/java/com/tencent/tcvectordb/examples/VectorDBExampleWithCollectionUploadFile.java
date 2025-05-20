@@ -61,7 +61,7 @@ public class VectorDBExampleWithCollectionUploadFile {
 //        UploadFileUseInputStream(client, new FileInputStream(file), file.length(), "tcvdb.pdf", metaDataMap);
 
 //        // 使用文件路径上传文档
-        UploadFile(client, System.getProperty("file_path"), "tcvdb.pdf", metaDataMap);
+        UploadFile(client, "/Users/anyihao/Downloads/tcvdb.pdf", "tcvdb.pdf", metaDataMap);
 //        // support markdown, pdf, pptx, docx document
 //        // UploadFile(client, System.getProperty("file_path"), "腾讯云向量数据库.pdf", metaDataMap);
 //        // UploadFile(client, System.getProperty("file_path"), "腾讯云向量数据库.pptx", metaDataMap);
@@ -103,6 +103,8 @@ public class VectorDBExampleWithCollectionUploadFile {
         columnMap.put("filename", "file_name");
         columnMap.put("text", "text");
         columnMap.put("imageList", "image_list");
+        columnMap.put("chunkNum", "chunk_num");
+        columnMap.put("sectionNum", "section_num");
 
         UploadFileParam param = UploadFileParam.newBuilder()
                 .withLocalFilePath(filePath)
@@ -121,6 +123,8 @@ public class VectorDBExampleWithCollectionUploadFile {
         columnMap.put("filename", "file_name");
         columnMap.put("text", "text");
         columnMap.put("imageList", "image_list");
+        columnMap.put("chunkNum", "chunk_num");
+        columnMap.put("sectionNum", "section_num");
         UploadFileParam param = UploadFileParam.newBuilder()
                 .withFileInputStream(inputStream).withInputStreamDataSize(inputStreamSize)
                 .withFileName(fileName)
@@ -151,7 +155,7 @@ public class VectorDBExampleWithCollectionUploadFile {
         QueryParam queryParam = QueryParam.newBuilder()
                 .withFilter("file_name=\"tcvdb.pdf\"")
                 // limit 限制返回行数，1 到 16384 之间
-                .withLimit(200)
+                .withLimit(20)
                 // 偏移
                 .withOffset(0)
                 // 是否返回 vector 数据
@@ -161,6 +165,8 @@ public class VectorDBExampleWithCollectionUploadFile {
         for (Document doc : qdos) {
             System.out.println("\tres: " + doc.toString());
         }
+
+        queryChunkBySectionNumAndChunkNum(client, qdos);
 
         System.out.println("---------------------- get image url ----------------------");
         GetImageUrlRes getImageUrlRes = client.GetImageUrl(DBNAME, COLL_NAME,
@@ -197,13 +203,39 @@ public class VectorDBExampleWithCollectionUploadFile {
         }
     }
 
+    private static void queryChunkBySectionNumAndChunkNum(VectorDBClient client, List<Document> qdos) {
+        // 根据chunk_num 和 section_num 获取chunk文本
+        System.out.println("---------------------- get chunk text by chunk_num ----------------------");
+        Long chunkNum = (Long) qdos.get(1).getObject("chunk_num");
+        Long sectionNum = (Long) qdos.get(1).getObject("section_num");
+        if (chunkNum==null || sectionNum==null){
+            return;
+        }
+        QueryParam queryParam = QueryParam.newBuilder()
+                .withFilter("file_name=\"tcvdb.pdf\"  and chunk_num>0 and chunk_num <=" + (chunkNum+2) + " and section_num=" + sectionNum)
+                // limit 限制返回行数，1 到 16384 之间
+                .withLimit(20)
+                // 偏移
+                .withOffset(0)
+                // 是否返回 vector 数据
+                .withRetrieveVector(false)
+                .build();
+        // 输出相似性检索结果，检索结果为二维数组，每一位为一组返回结果，分别对应 search 时指定的多个向量
+        List<Document> docs = client.query(DBNAME, COLL_NAME, queryParam);
+        for (Document doc : docs) {
+            System.out.println("\tres: " + doc.toString());
+        }
+
+
+    }
+
 
     private static CreateCollectionParam initCreateCollectionParam(String collName) {
 
         return CreateCollectionParam.newBuilder()
                 .withName(collName)
                 .withShardNum(1)
-                .withReplicaNum(1)
+                .withReplicaNum(0)
                 .withDescription("test collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", 768, IndexType.HNSW,
@@ -211,6 +243,8 @@ public class VectorDBExampleWithCollectionUploadFile {
                 .addField(new FilterIndex("file_name", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("text", FieldType.String, IndexType.FILTER))
                 .addField(new FilterIndex("image_list", FieldType.Array, IndexType.FILTER))
+                .addField(new FilterIndex("chunk_num", FieldType.Uint64, IndexType.FILTER))
+                .addField(new FilterIndex("section_num", FieldType.Uint64, IndexType.FILTER))
                 .withEmbedding(Embedding.newBuilder().withModelName(EmbeddingModelEnum.BGE_BASE_ZH.getModelName()).withField("text").withVectorField("vector").build())
                 .build();
     }

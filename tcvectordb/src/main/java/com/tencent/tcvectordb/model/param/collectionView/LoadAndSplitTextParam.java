@@ -25,6 +25,8 @@ public class LoadAndSplitTextParam {
 
     private ParsingProcessParam parsingProcess;
 
+    private Integer byteLength;
+
     public LoadAndSplitTextParam(Builder builder) {
         this.localFilePath = builder.localFilePath;
         this.documentSetName = builder.documentSetName;
@@ -33,6 +35,7 @@ public class LoadAndSplitTextParam {
         this.fileType = builder.fileType;
         this.inputStreamSize = builder.InputStreamSize;
         this.parsingProcess = builder.parsingProcess;
+        this.byteLength = builder.byteLength;
     }
 
     public String getFileType() {
@@ -91,6 +94,14 @@ public class LoadAndSplitTextParam {
         this.parsingProcess = parsingProcess;
     }
 
+    public Integer getByteLength() {
+        return byteLength;
+    }
+
+    public void setByteLength(Integer byteLength) {
+        this.byteLength = byteLength;
+    }
+
     public static Builder newBuilder() {
         return new Builder();
     }
@@ -103,6 +114,8 @@ public class LoadAndSplitTextParam {
         private String fileType;
         private Long InputStreamSize;
         private ParsingProcessParam parsingProcess;
+
+        private Integer byteLength;
 
         public Builder withLocalFilePath(String localFilePath){
             this.localFilePath = localFilePath;
@@ -137,6 +150,11 @@ public class LoadAndSplitTextParam {
 
         public Builder withParsingProcess(ParsingProcessParam parsingProcess){
             this.parsingProcess = parsingProcess;
+            return this;
+        }
+
+        public Builder withByteLength(Integer byteLenth){
+            this.byteLength = byteLenth;
             return this;
         }
 

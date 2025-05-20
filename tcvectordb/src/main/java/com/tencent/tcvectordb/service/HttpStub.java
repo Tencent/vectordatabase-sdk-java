@@ -23,7 +23,6 @@ package com.tencent.tcvectordb.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.auth.BasicSessionCredentials;
@@ -547,6 +546,9 @@ public class HttpStub implements Stub {
         if (loadAndSplitTextParam.getParsingProcess()!=null){
             params.put("parsingProcess",loadAndSplitTextParam.getParsingProcess());
         }
+        if (loadAndSplitTextParam.getByteLength()!=null){
+             params.put("byteLength",loadAndSplitTextParam.getByteLength());
+        }
         String body = JsonUtils.toJsonString(params);
         JsonNode jsonNode = this.post(url, body, true);
         return JsonUtils.parseObject(jsonNode.toString(), UploadUrlRes.class);
@@ -572,6 +574,9 @@ public class HttpStub implements Stub {
         }
         if (loadAndSplitTextParam.getFieldMappings()!=null){
             params.put("fieldMappings",loadAndSplitTextParam.getFieldMappings());
+        }
+        if (loadAndSplitTextParam.getByteLength()!=null){
+            params.put("byteLength", loadAndSplitTextParam.getByteLength());
         }
         String body = JsonUtils.toJsonString(params);
         JsonNode jsonNode = this.post(url, body, true);

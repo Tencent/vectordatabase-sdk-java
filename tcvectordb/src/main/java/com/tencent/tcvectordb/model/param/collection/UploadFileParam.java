@@ -33,7 +33,7 @@ public class UploadFileParam {
 
     private String fileName;
 
-    private Integer byteLength;
+    private Long byteLength;
 
     public UploadFileParam(Builder builder) {
         this.localFilePath = builder.localFilePath;
@@ -111,11 +111,11 @@ public class UploadFileParam {
         this.fieldMappings = fieldMappings;
     }
 
-    public Integer getByteLength() {
+    public Long getByteLength() {
         return byteLength;
     }
 
-    public void setByteLength(Integer byteLength) {
+    public void setByteLength(Long byteLength) {
         this.byteLength = byteLength;
     }
 
@@ -134,7 +134,7 @@ public class UploadFileParam {
 
         private String fileName;
 
-        private Integer byteLength;
+        private Long byteLength;
 
         public Builder withFileName(String fileName){
             this.fileName = fileName;
@@ -176,7 +176,7 @@ public class UploadFileParam {
             return this;
         }
 
-        public Builder withByteLength(Integer byteLength){
+        public Builder withByteLength(Long byteLength){
             this.byteLength = byteLength;
             return this;
         }

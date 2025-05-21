@@ -49,7 +49,6 @@ public class VectorDBExampleWithCollectionUploadFile {
 
         // 创建 VectorDB Client
         VectorDBClient client = CommonService.initClient();
-
 //         清理环境
         CommonService.anySafe(() -> client.dropDatabase(DBNAME));
         createDatabaseAndCollection(client);
@@ -211,8 +210,12 @@ public class VectorDBExampleWithCollectionUploadFile {
         if (chunkNum==null || sectionNum==null){
             return;
         }
+        Long startChunkNum = chunkNum-2;
+        if (startChunkNum < 0){
+            startChunkNum = 0L;
+        }
         QueryParam queryParam = QueryParam.newBuilder()
-                .withFilter("file_name=\"tcvdb.pdf\"  and chunk_num>0 and chunk_num <=" + (chunkNum+2) + " and section_num=" + sectionNum)
+                .withFilter("file_name=\"tcvdb.pdf\"  and chunk_num >= " + startChunkNum + " and chunk_num <=" + (chunkNum+2) + " and section_num=" + sectionNum)
                 // limit 限制返回行数，1 到 16384 之间
                 .withLimit(20)
                 // 偏移

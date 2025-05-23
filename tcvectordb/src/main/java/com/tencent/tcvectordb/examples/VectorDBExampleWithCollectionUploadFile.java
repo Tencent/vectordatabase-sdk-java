@@ -186,7 +186,6 @@ public class VectorDBExampleWithCollectionUploadFile {
                 .addVector(generateRandomVector(768))
                 // 若使用 HNSW 索引，则需要指定参数ef，ef越大，召回率越高，但也会影响检索速度
                 .withParams(new HNSWSearchParams(100))
-//                .withRadius(0.5)
                 // 指定 Top K 的 K 值
                 .withLimit(10)
                 // 过滤获取到结果

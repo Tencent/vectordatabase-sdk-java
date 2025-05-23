@@ -42,8 +42,8 @@ public class CommonService {
      * @return {@link ConnectParam}
      */
     private static ConnectParam initConnectParam() {
-        String vdbURL = "http://gz-vdb-h2l72saw.sql.tencentcdb.com:8100";
-        String vdbKey = "MknRYGyj4g3SUYbXVYZ5c9z2KhvrLRsTAM0tNdZG";
+        String vdbURL = "";
+        String vdbKey = "";
         System.out.println("\tvdb_url: " + vdbURL);
         System.out.println("\tvdb_key: " + vdbKey);
         return ConnectParam.newBuilder()

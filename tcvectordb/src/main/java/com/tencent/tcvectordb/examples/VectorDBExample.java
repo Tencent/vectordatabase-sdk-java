@@ -60,6 +60,7 @@ public class VectorDBExample {
         deleteAndDrop(client);
         testFilter();
 
+
     }
 
     private static void addIndex(VectorDBClient client) throws InterruptedException{

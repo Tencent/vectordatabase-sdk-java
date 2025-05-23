@@ -20,6 +20,7 @@
 
 package com.tencent.tcvectordb.examples;
 
+import com.sun.org.apache.xpath.internal.operations.Or;
 import com.tencent.tcvectordb.client.VectorDBClient;
 import com.tencent.tcvectordb.model.*;
 import com.tencent.tcvectordb.model.Collection;
@@ -28,6 +29,7 @@ import com.tencent.tcvectordb.model.param.collectionView.*;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.GetImageUrlRes;
 import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
+import com.tencent.tcvectordb.model.param.enums.OrderEnum;
 import com.tencent.tcvectordb.model.param.enums.ParsingTypeEnum;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
@@ -60,7 +62,7 @@ public class VectorDBExampleWithCollectionUploadFile {
 //        UploadFileUseInputStream(client, new FileInputStream(file), file.length(), "tcvdb.pdf", metaDataMap);
 
 //        // 使用文件路径上传文档
-        UploadFile(client, "/Users/anyihao/Downloads/tcvdb.pdf", "tcvdb.pdf", metaDataMap);
+        UploadFile(client, System.getProperty("file_path"), "tcvdb.pdf", metaDataMap);
 //        // support markdown, pdf, pptx, docx document
 //        // UploadFile(client, System.getProperty("file_path"), "腾讯云向量数据库.pdf", metaDataMap);
 //        // UploadFile(client, System.getProperty("file_path"), "腾讯云向量数据库.pptx", metaDataMap);
@@ -109,7 +111,7 @@ public class VectorDBExampleWithCollectionUploadFile {
                 .withLocalFilePath(filePath)
                 .withSplitterProcess(SplitterPreprocessParams.newBuilder().withAppendKeywordsToChunkEnum(true).Build())
                 // parsingProcess is used for parsing pdf file by vision model
-                .withParsingProcess(ParsingProcessParam.newBuilder().withParsingType(ParsingTypeEnum.VisionModel).build())
+                .withParsingProcess(ParsingProcessParam.newBuilder().withParsingType(ParsingTypeEnum.AlgorithmParsing).build())
                 .withFileName(fileName)
                 .withFieldMappings(columnMap)
                 .withEmbeddingModel(EmbeddingModelEnum.BGE_BASE_ZH.getModelName())
@@ -215,13 +217,15 @@ public class VectorDBExampleWithCollectionUploadFile {
             startChunkNum = 0L;
         }
         QueryParam queryParam = QueryParam.newBuilder()
-                .withFilter("file_name=\"tcvdb.pdf\"  and chunk_num >= " + startChunkNum + " and chunk_num <=" + (chunkNum+2) + " and section_num=" + sectionNum)
+                .withFilter("file_name=\"tcvdb.pdf\"  and chunk_num >= " + startChunkNum + " and chunk_num <=" + (chunkNum+2)
+                        + " and section_num=" + sectionNum)
                 // limit 限制返回行数，1 到 16384 之间
                 .withLimit(20)
                 // 偏移
                 .withOffset(0)
                 // 是否返回 vector 数据
                 .withRetrieveVector(false)
+                .withSort(OrderRule.newBuilder().withFieldName("chunk_num").withDirection(OrderEnum.ASC).build())
                 .build();
         // 输出相似性检索结果，检索结果为二维数组，每一位为一组返回结果，分别对应 search 时指定的多个向量
         List<Document> docs = client.query(DBNAME, COLL_NAME, queryParam);

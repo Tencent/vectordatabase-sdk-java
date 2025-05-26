@@ -28,6 +28,7 @@ import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.collectionView.*;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.GetImageUrlRes;
+import com.tencent.tcvectordb.model.param.entity.SearchRes;
 import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
 import com.tencent.tcvectordb.model.param.enums.OrderEnum;
 import com.tencent.tcvectordb.model.param.enums.ParsingTypeEnum;
@@ -167,7 +168,7 @@ public class VectorDBExampleWithCollectionUploadFile {
             System.out.println("\tres: " + doc.toString());
         }
 
-        queryChunkBySectionNumAndChunkNum(client, qdos);
+        queryChunkBySectionNumAndChunkNum(client);
 
         System.out.println("---------------------- get image url ----------------------");
         GetImageUrlRes getImageUrlRes = client.GetImageUrl(DBNAME, COLL_NAME,
@@ -203,11 +204,33 @@ public class VectorDBExampleWithCollectionUploadFile {
         }
     }
 
-    private static void queryChunkBySectionNumAndChunkNum(VectorDBClient client, List<Document> qdos) {
+    private static void queryChunkBySectionNumAndChunkNum(VectorDBClient client) {
+
+        System.out.println("---------------------- search by text----------------------");
+        SearchByEmbeddingItemsParam searchByEmbeddingItemsParam = SearchByEmbeddingItemsParam.newBuilder()
+                .withEmbeddingItems(Arrays.asList("商标声明"))
+                // 若使用 HNSW 索引，则需要指定参数ef，ef越大，召回率越高，但也会影响检索速度
+                .withParams(new HNSWSearchParams(100))
+                // 指定 Top K 的 K 值
+                .withLimit(10)
+                // 过滤获取到结果
+                .withFilter("file_name=\"tcvdb.pdf\"")
+                .build();
+        // 输出相似性检索结果，检索结果为二维数组，每一位为一组返回结果，分别对应 search 时指定的多个向量
+        SearchRes searchRes = client.searchByEmbeddingItems(DBNAME, COLL_NAME, searchByEmbeddingItemsParam);
+        int i = 0;
+        for (List<Document> docsTemp : searchRes.getDocuments()) {
+            System.out.println("\tres: " + i);
+            i++;
+            for (Document doc : docsTemp) {
+                System.out.println("\tdocsTemp: " + doc.toString());
+            }
+        }
+
         // 根据chunk_num 和 section_num 获取chunk文本
         System.out.println("---------------------- get chunk text by chunk_num ----------------------");
-        Long chunkNum = (Long) qdos.get(1).getObject("chunk_num");
-        Long sectionNum = (Long) qdos.get(1).getObject("section_num");
+        Long chunkNum = (Long) searchRes.getDocuments().get(0).get(0).getObject("chunk_num");
+        Long sectionNum = (Long) searchRes.getDocuments().get(0).get(0).getObject("section_num");
         if (chunkNum==null || sectionNum==null){
             return;
         }
@@ -216,8 +239,7 @@ public class VectorDBExampleWithCollectionUploadFile {
             startChunkNum = 0L;
         }
         QueryParam queryParam = QueryParam.newBuilder()
-                .withFilter("file_name=\"tcvdb.pdf\"  and chunk_num >= " + startChunkNum + " and chunk_num <=" + (chunkNum+2)
-                        + " and section_num=" + sectionNum)
+                .withFilter("file_name=\"tcvdb.pdf\"  and chunk_num >= " + startChunkNum + " and chunk_num <=" + (chunkNum+2))
                 // limit 限制返回行数，1 到 16384 之间
                 .withLimit(20)
                 // 偏移
@@ -231,6 +253,24 @@ public class VectorDBExampleWithCollectionUploadFile {
         for (Document doc : docs) {
             System.out.println("\tres: " + doc.toString());
         }
+
+        queryParam = QueryParam.newBuilder()
+                .withFilter("file_name=\"tcvdb.pdf\"  and chunk_num >= " + startChunkNum + " and chunk_num <=" + (chunkNum+2)
+                        + " and section_num=" + sectionNum)
+                // limit 限制返回行数，1 到 16384 之间
+                .withLimit(20)
+                // 偏移
+                .withOffset(0)
+                // 是否返回 vector 数据
+                .withRetrieveVector(false)
+                .withSort(OrderRule.newBuilder().withFieldName("chunk_num").withDirection(OrderEnum.ASC).build())
+                .build();
+        // 输出相似性检索结果，检索结果为二维数组，每一位为一组返回结果，分别对应 search 时指定的多个向量
+        docs = client.query(DBNAME, COLL_NAME, queryParam);
+        for (Document doc : docs) {
+            System.out.println("\tres: " + doc.toString());
+        }
+
 
 
     }

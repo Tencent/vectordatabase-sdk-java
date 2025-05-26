@@ -226,6 +226,9 @@ public class VectorDBExampleWithCollectionUploadFile {
                 System.out.println("\tdocsTemp: " + doc.toString());
             }
         }
+        if (searchRes.getDocuments().size()==0 || searchRes.getDocuments().get(0).size() == 0){
+            return;
+        }
 
         // 根据chunk_num 和 section_num 获取chunk文本
         System.out.println("---------------------- get chunk text by chunk_num ----------------------");

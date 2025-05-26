@@ -25,6 +25,8 @@ public class LoadAndSplitTextParam {
 
     private ParsingProcessParam parsingProcess;
 
+    private Long byteLength;
+
     public LoadAndSplitTextParam(Builder builder) {
         this.localFilePath = builder.localFilePath;
         this.documentSetName = builder.documentSetName;
@@ -89,6 +91,14 @@ public class LoadAndSplitTextParam {
 
     public void setParsingProcess(ParsingProcessParam parsingProcess) {
         this.parsingProcess = parsingProcess;
+    }
+
+    public Long getByteLength() {
+        return byteLength;
+    }
+
+    public void setByteLength(Long byteLength) {
+        this.byteLength = byteLength;
     }
 
     public static Builder newBuilder() {

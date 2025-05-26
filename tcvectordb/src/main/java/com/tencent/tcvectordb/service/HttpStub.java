@@ -23,7 +23,6 @@ package com.tencent.tcvectordb.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.auth.BasicSessionCredentials;
@@ -547,6 +546,9 @@ public class HttpStub implements Stub {
         if (loadAndSplitTextParam.getParsingProcess()!=null){
             params.put("parsingProcess",loadAndSplitTextParam.getParsingProcess());
         }
+        if (loadAndSplitTextParam.getByteLength()!=null){
+             params.put("byteLength",loadAndSplitTextParam.getByteLength());
+        }
         String body = JsonUtils.toJsonString(params);
         JsonNode jsonNode = this.post(url, body, true);
         return JsonUtils.parseObject(jsonNode.toString(), UploadUrlRes.class);
@@ -573,6 +575,9 @@ public class HttpStub implements Stub {
         if (loadAndSplitTextParam.getFieldMappings()!=null){
             params.put("fieldMappings",loadAndSplitTextParam.getFieldMappings());
         }
+        if (loadAndSplitTextParam.getByteLength()!=null){
+            params.put("byteLength", loadAndSplitTextParam.getByteLength());
+        }
         String body = JsonUtils.toJsonString(params);
         JsonNode jsonNode = this.post(url, body, true);
         return JsonUtils.parseObject(jsonNode.toString(), CollectionUploadUrlRes.class);
@@ -591,10 +596,12 @@ public class HttpStub implements Stub {
             if (file.length() <= 0) {
                 throw new VectorDBException("file is empty");
             }
+            loadAndSplitTextParam.setByteLength(file.length());
         }else if(loadAndSplitTextParam.getFileInputStream()!=null){
             if (loadAndSplitTextParam.getFileName()==null ||loadAndSplitTextParam.getInputStreamSize()==null){
                 throw new VectorDBException("use input stream, fileName and inputStreamSize  can not be null");
             }
+             loadAndSplitTextParam.setByteLength(loadAndSplitTextParam.getInputStreamSize());
         }
 
         CollectionUploadUrlRes uploadUrlRes = getCollectionUploadUrl(databaseName, collectionName, loadAndSplitTextParam);
@@ -691,12 +698,14 @@ public class HttpStub implements Stub {
             }
             fileName = file.getName();
             fileType = FileUtils.getFileType(file);
+            loadAndSplitTextParam.setByteLength(file.length());
         }else if(loadAndSplitTextParam.getFileInputStream()!=null){
             if (loadAndSplitTextParam.getDocumentSetName()==null || loadAndSplitTextParam.getFileType() ==null
                     ||loadAndSplitTextParam.getInputStreamSize()==null){
                 throw new VectorDBException("use input stream, documentSetName、inputStreamSize and file type can not be null");
             }
             fileType = loadAndSplitTextParam.getFileType();
+            loadAndSplitTextParam.setByteLength(loadAndSplitTextParam.getInputStreamSize());
         }
 
         UploadUrlRes uploadUrlRes = getUploadUrl(databaseName, collectionViewName, loadAndSplitTextParam, fileName);

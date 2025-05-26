@@ -35,7 +35,6 @@ public class LoadAndSplitTextParam {
         this.fileType = builder.fileType;
         this.inputStreamSize = builder.InputStreamSize;
         this.parsingProcess = builder.parsingProcess;
-        this.byteLength = builder.byteLength;
     }
 
     public String getFileType() {
@@ -115,8 +114,6 @@ public class LoadAndSplitTextParam {
         private Long InputStreamSize;
         private ParsingProcessParam parsingProcess;
 
-        private Long byteLength;
-
         public Builder withLocalFilePath(String localFilePath){
             this.localFilePath = localFilePath;
             return this;
@@ -150,11 +147,6 @@ public class LoadAndSplitTextParam {
 
         public Builder withParsingProcess(ParsingProcessParam parsingProcess){
             this.parsingProcess = parsingProcess;
-            return this;
-        }
-
-        public Builder withByteLength(Long byteLenth){
-            this.byteLength = byteLenth;
             return this;
         }
 

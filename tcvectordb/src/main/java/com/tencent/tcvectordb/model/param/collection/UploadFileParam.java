@@ -44,7 +44,6 @@ public class UploadFileParam {
         this.fieldMappings = builder.fieldMappings;
         this.embeddingModel = builder.embeddingModel;
         this.fileName = builder.fileName;
-        this.byteLength = builder.byteLength;
     }
 
     public String getFileName() {
@@ -173,11 +172,6 @@ public class UploadFileParam {
 
         public Builder withParsingProcess(ParsingProcessParam parsingProcess){
             this.parsingProcess = parsingProcess;
-            return this;
-        }
-
-        public Builder withByteLength(Long byteLength){
-            this.byteLength = byteLength;
             return this;
         }
 

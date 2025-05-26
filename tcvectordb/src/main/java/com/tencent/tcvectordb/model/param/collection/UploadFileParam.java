@@ -33,6 +33,8 @@ public class UploadFileParam {
 
     private String fileName;
 
+    private Long byteLength;
+
     public UploadFileParam(Builder builder) {
         this.localFilePath = builder.localFilePath;
         this.splitterProcess = builder.splitterProcess;
@@ -108,6 +110,14 @@ public class UploadFileParam {
         this.fieldMappings = fieldMappings;
     }
 
+    public Long getByteLength() {
+        return byteLength;
+    }
+
+    public void setByteLength(Long byteLength) {
+        this.byteLength = byteLength;
+    }
+
     public static Builder newBuilder() {
         return new Builder();
     }
@@ -122,6 +132,8 @@ public class UploadFileParam {
         private String embeddingModel;
 
         private String fileName;
+
+        private Long byteLength;
 
         public Builder withFileName(String fileName){
             this.fileName = fileName;

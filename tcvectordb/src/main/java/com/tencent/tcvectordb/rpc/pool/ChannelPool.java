@@ -27,7 +27,7 @@ public class ChannelPool {
         this.pool = new GenericObjectPool<>(new ChannelFactory(getAddress(param.getUrl()), maxReceiveMessageSize, authorization), config);
         for (int i = 0; i < pool.getMaxIdle(); i++) {
             try {
-                pool.addObject(); // 添加一个初始对象到池中，直到达到minIdle设置的数量
+                pool.addObject(); // 添加一个初始对象到池中，直到达到maxIdle设置的数量
             } catch (Exception e) {
                 throw new VectorDBException("create channel pool error",  e);
             }

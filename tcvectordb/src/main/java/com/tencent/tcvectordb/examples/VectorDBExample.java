@@ -56,34 +56,12 @@ public class VectorDBExample {
         CommonService.anySafe(() -> client.dropDatabase(DBNAME));
         createDatabaseAndCollection(client);
         upsertData(client);
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
-        for (int i = 0; i < 15; i++) {
-            executorService.execute(() -> {
-                for (int j = 0; j < 10000; j++){
-                    queryData(client);
-                }
-
-            });
-        }
-        executorService.shutdown();
-
-        try {
-            // 等待所有任务完成，最多等待1小时
-            if (!executorService.awaitTermination(1, TimeUnit.HOURS)) {
-                // 如果超时，可以强制关闭
-                executorService.shutdownNow();
-            }
-        } catch (InterruptedException e) {
-            executorService.shutdownNow();
-            Thread.currentThread().interrupt();
-        }
-
-//        queryData(client);
-//        addIndex(client);
-//        dropIndex(client);
-//        modifyVectorIndex(client);
-//        updateAndDelete(client);
-//        deleteAndDrop(client);
+        queryData(client);
+        addIndex(client);
+        dropIndex(client);
+        modifyVectorIndex(client);
+        updateAndDelete(client);
+        deleteAndDrop(client);
         testFilter();
 
 

@@ -138,17 +138,6 @@ public class VectorDBExampleWithCollectionUploadFile {
         client.UploadFile(DBNAME,COLL_NAME, param, metaDataMap);
     }
 
-    private static List<Double> generateRandomVector(int dim){
-        Random random = new Random();
-        List<Double> vectors = new ArrayList<>();
-
-        for (int i = 0; i < dim; i++) {
-            double randomDouble = 0 + random.nextDouble() * (1.0 - 0.0);
-            vectors.add(randomDouble);
-        }
-        return vectors;
-    }
-
     private static void queryData(VectorDBClient client) {
         Database database = client.database(DBNAME);
         Collection collection = database.describeCollection(COLL_NAME);
@@ -184,7 +173,7 @@ public class VectorDBExampleWithCollectionUploadFile {
 
         System.out.println("---------------------- search ----------------------");
         SearchByVectorParam searchByVectorParam = SearchByVectorParam.newBuilder()
-                .addVector(generateRandomVector(768))
+                .addVector(CommonService.generateRandomVector(768))
                 // 若使用 HNSW 索引，则需要指定参数ef，ef越大，召回率越高，但也会影响检索速度
                 .withParams(new HNSWSearchParams(100))
                 // 指定 Top K 的 K 值

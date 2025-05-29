@@ -20,6 +20,8 @@
 
 package com.tencent.tcvectordb.model.param.collection;
 
+import com.tencent.tcvectordb.model.param.dml.Filter;
+
 /**
  * VectorIndex
  */
@@ -51,6 +53,13 @@ public class VectorIndex  extends IndexField {
     public VectorIndex(MetricType metricType, ParamsSerializer params) {
         setFieldName("vector");
         setFieldType(FieldType.Vector);
+        setMetricType(metricType);
+        setParams(params);
+    }
+
+    public VectorIndex(MetricType metricType, FieldType fieldType, ParamsSerializer params) {
+        setFieldName("vector");
+        setFieldType(fieldType);
         setMetricType(metricType);
         setParams(params);
     }

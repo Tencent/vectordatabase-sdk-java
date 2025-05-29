@@ -60,7 +60,8 @@ public class IndexField {
 
     @JsonIgnore
     public boolean isVectorField() {
-        return FieldType.Vector.equals(this.fieldType) || FieldType.BinaryVector.equals(this.fieldType);
+        return FieldType.Vector.equals(this.fieldType) || FieldType.BinaryVector.equals(this.fieldType) ||
+                 FieldType.Float16Vector.equals(this.fieldType) || FieldType.BFloat16Vector.equals(this.fieldType);
     }
 
     @JsonIgnore

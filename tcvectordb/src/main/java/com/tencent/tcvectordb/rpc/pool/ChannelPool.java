@@ -14,6 +14,7 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 public class ChannelPool {
@@ -23,8 +24,10 @@ public class ChannelPool {
         GenericObjectPoolConfig<ManagedChannel> config = new GenericObjectPoolConfig<>();
         config.setMaxTotal(param.getMaxIdleConnections()); // 最大连接数
         config.setMaxIdle(param.getMaxIdleConnections());   // 最大空闲连接
+        config.setMaxWait(Duration.ofSeconds(param.getConnectTimeout()));
 
         this.pool = new GenericObjectPool<>(new ChannelFactory(getAddress(param.getUrl()), maxReceiveMessageSize, authorization), config);
+
         for (int i = 0; i < pool.getMaxIdle(); i++) {
             try {
                 pool.addObject(); // 添加一个初始对象到池中，直到达到maxIdle设置的数量
@@ -32,6 +35,7 @@ public class ChannelPool {
                 throw new VectorDBException("create channel pool error",  e);
             }
         }
+
     }
 
     private String getAddress(String url){
@@ -49,6 +53,7 @@ public class ChannelPool {
 
     public ManagedChannel getChannel() {
         try {
+//            printPoolStats();
             return pool.borrowObject();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -93,6 +98,7 @@ public class ChannelPool {
                     intercept(new AuthorityInterceptor(this.authorization)).
                     flowControlWindow(maxReceiveMessageSize).
                     maxInboundMessageSize(maxReceiveMessageSize).
+                    enableRetry().
                     usePlaintext().build();
         }
 

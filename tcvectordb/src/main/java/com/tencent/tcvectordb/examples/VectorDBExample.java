@@ -35,6 +35,7 @@ import com.tencent.tcvectordb.utils.JsonUtils;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * VectorDB Java SDK usage example
@@ -55,12 +56,34 @@ public class VectorDBExample {
         CommonService.anySafe(() -> client.dropDatabase(DBNAME));
         createDatabaseAndCollection(client);
         upsertData(client);
-        queryData(client);
-        addIndex(client);
-        dropIndex(client);
-        modifyVectorIndex(client);
-        updateAndDelete(client);
-        deleteAndDrop(client);
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        for (int i = 0; i < 15; i++) {
+            executorService.execute(() -> {
+                for (int j = 0; j < 10000; j++){
+                    queryData(client);
+                }
+
+            });
+        }
+        executorService.shutdown();
+
+        try {
+            // 等待所有任务完成，最多等待1小时
+            if (!executorService.awaitTermination(1, TimeUnit.HOURS)) {
+                // 如果超时，可以强制关闭
+                executorService.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executorService.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+
+//        queryData(client);
+//        addIndex(client);
+//        dropIndex(client);
+//        modifyVectorIndex(client);
+//        updateAndDelete(client);
+//        deleteAndDrop(client);
         testFilter();
 
 
@@ -288,9 +311,9 @@ public class VectorDBExample {
                 .withSort(OrderRule.newBuilder().withFieldName("page").withDirection(OrderEnum.DESC).build())
                 .build();
         List<Document> qdos = collection.query(queryParam);
-        for (Document doc : qdos) {
-            System.out.println("\tres: " + doc.toString());
-        }
+//        for (Document doc : qdos) {
+//            System.out.println("\tres: " + doc.toString());
+//        }
 
 
         // searchById
@@ -310,13 +333,13 @@ public class VectorDBExample {
                 .withFilter(filterParam)
                 .build();
         List<List<Document>> siDocs = client.searchById(DBNAME, COLL_NAME, searchByIdParam);
-        int i = 0;
-        for (List<Document> docs : siDocs) {
-            System.out.println("\tres: " + i++);
-            for (Document doc : docs) {
-                System.out.println("\tres: " + doc.toString());
-            }
-        }
+//        int i = 0;
+//        for (List<Document> docs : siDocs) {
+//            System.out.println("\tres: " + i++);
+//            for (Document doc : docs) {
+//                System.out.println("\tres: " + doc.toString());
+//            }
+//        }
 
 
         // search
@@ -335,14 +358,14 @@ public class VectorDBExample {
                 .build();
         // 输出相似性检索结果，检索结果为二维数组，每一位为一组返回结果，分别对应 search 时指定的多个向量
         List<List<Document>> svDocs = client.search(DBNAME, COLL_NAME, searchByVectorParam);
-        i = 0;
-        for (List<Document> docs : svDocs) {
-            System.out.println("\tres: " + i);
-            i++;
-            for (Document doc : docs) {
-                System.out.println("\tres: " + doc.toString());
-            }
-        }
+//        i = 0;
+//        for (List<Document> docs : svDocs) {
+//            System.out.println("\tres: " + i);
+//            i++;
+//            for (Document doc : docs) {
+//                System.out.println("\tres: " + doc.toString());
+//            }
+//        }
     }
 
     private static void updateAndDelete(VectorDBClient client) throws InterruptedException {

@@ -40,6 +40,17 @@ public enum FieldType {
     Vector("vector"),
 
     /**
+     * float16_vector
+     */
+    Float16Vector("float16_vector"),
+
+    /**
+     * vector
+     */
+    BFloat16Vector("bfloat16_vector"),
+
+
+    /**
      * binary vector
      */
     BinaryVector("binary_vector"),

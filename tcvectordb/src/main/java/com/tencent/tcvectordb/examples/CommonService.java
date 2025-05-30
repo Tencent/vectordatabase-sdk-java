@@ -29,7 +29,9 @@ import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.client.RPCVectorDBClient;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class CommonService {
     private CommonService() {
@@ -76,6 +78,17 @@ public class CommonService {
             run.run();
         } catch (Exception ignore) {
         }
+    }
+
+    public static List<Double> generateRandomVector(int dim){
+        Random random = new Random();
+        List<Double> vectors = new ArrayList<>();
+
+        for (int i = 0; i < dim; i++) {
+            double randomDouble = 0 + random.nextDouble() * (1.0 - 0.0);
+            vectors.add(randomDouble);
+        }
+        return vectors;
     }
     
 }

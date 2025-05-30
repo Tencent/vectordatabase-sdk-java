@@ -35,6 +35,7 @@ import org.json.JSONObject;
 
 import java.util.*;
 
+import static com.tencent.tcvectordb.examples.CommonService.generateRandomVector;
 import static com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum.BGE_BASE_ZH;
 
 /**
@@ -253,17 +254,6 @@ public class VectorDBWithAutoIdAndJsonExample {
         System.out.println(JsonUtils.toJsonString(affectRes));
         Thread.sleep(1000 * 5);
 
-    }
-
-    private static List<Double> generateRandomVector(int dim){
-        Random random = new Random();
-        List<Double> vectors = new ArrayList<>();
-
-        for (int i = 0; i < dim; i++) {
-            double randomDouble = 0 + random.nextDouble() * (1.0 - 0.0);
-            vectors.add(randomDouble);
-        }
-        return vectors;
     }
 
     private static void queryData(VectorDBClient client) {

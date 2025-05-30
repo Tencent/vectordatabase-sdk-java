@@ -33,9 +33,6 @@ import com.tencent.tcvectordb.service.param.DropIndexParamInner;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 /**
  * VectorDB Java SDK usage example

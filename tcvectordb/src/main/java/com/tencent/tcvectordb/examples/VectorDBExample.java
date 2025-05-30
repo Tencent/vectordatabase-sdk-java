@@ -289,9 +289,9 @@ public class VectorDBExample {
                 .withSort(OrderRule.newBuilder().withFieldName("page").withDirection(OrderEnum.DESC).build())
                 .build();
         List<Document> qdos = collection.query(queryParam);
-//        for (Document doc : qdos) {
-//            System.out.println("\tres: " + doc.toString());
-//        }
+        for (Document doc : qdos) {
+            System.out.println("\tres: " + doc.toString());
+        }
 
 
         // searchById
@@ -311,13 +311,13 @@ public class VectorDBExample {
                 .withFilter(filterParam)
                 .build();
         List<List<Document>> siDocs = client.searchById(DBNAME, COLL_NAME, searchByIdParam);
-//        int i = 0;
-//        for (List<Document> docs : siDocs) {
-//            System.out.println("\tres: " + i++);
-//            for (Document doc : docs) {
-//                System.out.println("\tres: " + doc.toString());
-//            }
-//        }
+        int i = 0;
+        for (List<Document> docs : siDocs) {
+            System.out.println("\tres: " + i++);
+            for (Document doc : docs) {
+                System.out.println("\tres: " + doc.toString());
+            }
+        }
 
 
         // search
@@ -336,14 +336,14 @@ public class VectorDBExample {
                 .build();
         // 输出相似性检索结果，检索结果为二维数组，每一位为一组返回结果，分别对应 search 时指定的多个向量
         List<List<Document>> svDocs = client.search(DBNAME, COLL_NAME, searchByVectorParam);
-//        i = 0;
-//        for (List<Document> docs : svDocs) {
-//            System.out.println("\tres: " + i);
-//            i++;
-//            for (Document doc : docs) {
-//                System.out.println("\tres: " + doc.toString());
-//            }
-//        }
+        i = 0;
+        for (List<Document> docs : svDocs) {
+            System.out.println("\tres: " + i);
+            i++;
+            for (Document doc : docs) {
+                System.out.println("\tres: " + doc.toString());
+            }
+        }
     }
 
     private static void updateAndDelete(VectorDBClient client) throws InterruptedException {

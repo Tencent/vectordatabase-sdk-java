@@ -33,6 +33,7 @@ import com.tencent.tcvectordb.service.param.DropIndexParamInner;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.*;
+
 /**
  * VectorDB Java SDK usage example
  */

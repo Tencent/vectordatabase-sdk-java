@@ -28,6 +28,7 @@ import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.collectionView.*;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.GetImageUrlRes;
+import com.tencent.tcvectordb.model.param.entity.QueryFileDetailRes;
 import com.tencent.tcvectordb.model.param.entity.SearchRes;
 import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
 import com.tencent.tcvectordb.model.param.enums.OrderEnum;
@@ -63,7 +64,7 @@ public class VectorDBExampleWithCollectionUploadFile {
 //        UploadFileUseInputStream(client, new FileInputStream(file), file.length(), "tcvdb.pdf", metaDataMap);
 
 //        // 使用文件路径上传文档
-        UploadFile(client, System.getProperty("file_path"), "tcvdb.pdf", metaDataMap);
+        UploadFile(client, "/Users/anyihao/Downloads/tcvdb.pdf", "tcvdb.pdf", metaDataMap);
 //        // support markdown, pdf, pptx, docx document
 //        // UploadFile(client, System.getProperty("file_path"), "腾讯云向量数据库.pdf", metaDataMap);
 //        // UploadFile(client, System.getProperty("file_path"), "腾讯云向量数据库.pptx", metaDataMap);
@@ -71,9 +72,21 @@ public class VectorDBExampleWithCollectionUploadFile {
 //
 //        // 解析加载文件需要等待时间
         Thread.sleep(1000 * 30);
-
+        queryFileDetails(client, "tcvdb.pdf");
         queryData(client);
         client.dropDatabase(DBNAME);
+    }
+
+    private static void queryFileDetails(VectorDBClient client, String fileName) {
+        System.out.println("---------------------- queryFileDetails ----------------------");
+        QueryFileDetailParam param = QueryFileDetailParam.newBuilder()
+                .withFileNames(Arrays.asList(fileName))
+//                .withFilter("")
+//                .(COLL_NAME)
+                .build();
+        QueryFileDetailRes res = client.queryFileDetails(DBNAME, COLL_NAME, param);
+        System.out.println(JsonUtils.toJsonString(res));
+
     }
 
     private static void createDatabaseAndCollection(VectorDBClient client) throws InterruptedException {
@@ -273,7 +286,7 @@ public class VectorDBExampleWithCollectionUploadFile {
         return CreateCollectionParam.newBuilder()
                 .withName(collName)
                 .withShardNum(1)
-                .withReplicaNum(0)
+                .withReplicaNum(1)
                 .withDescription("test collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", 768, IndexType.HNSW,

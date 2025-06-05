@@ -373,6 +373,7 @@ public class HttpStub implements Stub {
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
 
+
     @Override
     public BaseRes modifyVectorIndex(ModifyIndexParamInner param, boolean ai) {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.MODIFY_VECTOR_INDEX);
@@ -919,6 +920,13 @@ public class HttpStub implements Stub {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DROP_INDEX);
         JsonNode jsonNode = this.post(url, JsonUtils.toJsonString(dropIndexParamInner), false);
         return JsonUtils.parseObject(jsonNode.toString(), BaseRes.class);
+    }
+
+    @Override
+    public QueryFileDetailRes queryFileDetails(QueryFileDetailsParamInner param) {
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_QUERY_FILE_DETAILS);
+        JsonNode jsonNode = this.post(url, JsonUtils.toJsonString(param), false);
+        return JsonUtils.parseObject(jsonNode.toString(), QueryFileDetailRes.class);
     }
 
 

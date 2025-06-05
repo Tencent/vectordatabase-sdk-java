@@ -767,4 +767,33 @@ public class VectorDBClient {
         return this.stub.GetImageUrl(paramInner);
     }
 
+
+    /**
+     * query file details
+     * @param database  database name
+     * @param collection  collection name
+     * @param param QueryFileDetailParam.class
+     *              fileNames (List<String>): query file names
+     *              filter (String): filter rows before return result
+     *              outputFields (List<String>): return columns by column name list
+     *              limit (int): Limit return row's count
+     *              offset (int): Skip offset rows of query result set
+     *
+     * @return QueryFileDetailRes.class
+     *              documents: List<FileDetail>:
+     *                  id (String): file name
+     *                  _indexed_status (string): indexed status, "Ready" or "Failure"
+     *                  _text_length(Long): text length
+     *
+     */
+    public QueryFileDetailRes queryFileDetails(String database, String collection, QueryFileDetailParam param) {
+        QueryFileDetailsParamInner paramInner = new QueryFileDetailsParamInner();
+        paramInner.setDatabase(database);
+        paramInner.setCollection(collection);
+        paramInner.setQuery(param);
+        paramInner.setReadConsistency(this.readConsistency);
+
+        return this.stub.queryFileDetails(paramInner);
+    }
+
 }

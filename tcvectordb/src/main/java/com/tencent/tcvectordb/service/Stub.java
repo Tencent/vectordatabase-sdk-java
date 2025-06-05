@@ -209,4 +209,6 @@ public interface Stub {
     GetImageUrlRes GetImageUrl(GetImageUrlParamInner param);
 
     BaseRes dropIndex(DropIndexParamInner dropIndexParamInner);
+
+    QueryFileDetailRes queryFileDetails(QueryFileDetailsParamInner param);
 }

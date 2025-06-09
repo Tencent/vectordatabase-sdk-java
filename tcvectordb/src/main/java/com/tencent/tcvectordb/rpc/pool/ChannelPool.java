@@ -25,6 +25,7 @@ public class ChannelPool {
         config.setMaxTotal(param.getMaxIdleConnections()); // 最大连接数
         config.setMaxIdle(param.getMaxIdleConnections());   // 最大空闲连接
         config.setMaxWait(Duration.ofSeconds(param.getConnectTimeout()));
+        config.setLifo(false);
 
         this.pool = new GenericObjectPool<>(new ChannelFactory(getAddress(param.getUrl()), maxReceiveMessageSize, authorization), config);
 

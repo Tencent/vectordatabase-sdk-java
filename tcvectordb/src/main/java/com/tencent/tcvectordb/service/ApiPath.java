@@ -37,6 +37,8 @@ public class ApiPath {
     public final static String DOC_UPSERT = "document/upsert";
     public final static String DOC_QUERY = "document/query";
     public final static String DOC_SEARCH = "document/search";
+
+    public final static String DOC_FULL_TEXT_SEARCH = "document/fullTextSearch";
     public final static String DOC_HYBRID_SEARCH = "document/hybridSearch";
     public final static String DOC_DELETE = "document/delete";
     public final static String DOC_UPDATE = "document/update";

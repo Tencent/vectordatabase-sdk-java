@@ -741,6 +741,77 @@ public class GrpcStub extends HttpStub{
     }
 
     @Override
+    public FullTextSearchRes fullTextSearch(FullTextSearchParamInner param, boolean ai) {
+        Olama.SearchRequest.Builder builder = Olama.SearchRequest.newBuilder().
+                setReadConsistency(param.getReadConsistency().getReadConsistency());
+        if (param.getDatabase()!=null){
+            builder.setDatabase(param.getDatabase());
+        }
+        if (param.getCollection()!=null){
+            builder.setCollection(param.getCollection());
+        }
+        FullTextSearchParam searchParam = param.getSearch();
+        Olama.SearchCond.Builder searchConBuilder = Olama.SearchCond.newBuilder()
+                .setRetrieveVector(searchParam.isRetrieveVector()).setLimit(searchParam.getLimit());
+        if (searchParam.getOutputFields()!=null){
+            searchConBuilder.addAllOutputfields(searchParam.getOutputFields());
+        }
+        if (searchParam.getFilter()!=null){
+            searchConBuilder.setFilter(searchParam.getFilter());
+        }
+
+        if (searchParam.getMatch()!=null){
+            MatchOption matchOption = searchParam.getMatch();
+            Olama.SparseData.Builder sparseBuilder = Olama.SparseData.newBuilder().setFieldName(matchOption.getFieldName());
+            matchOption.getData().forEach(sparseVectors->{
+                sparseBuilder.addData(Olama.SparseVectorArray.newBuilder().addAllSpVector(sparseVectors.stream()
+                        .map(vectors-> Olama.SparseVecItem.newBuilder().setTermId((Long) vectors.get(0)).
+                                setScore((Float.parseFloat(vectors.get(1).toString()))).
+                                build()).collect(Collectors.toList())).build());
+            });
+            if(matchOption.getLimit()!=null){
+                sparseBuilder.setLimit(matchOption.getLimit());
+            }
+
+            if (matchOption.getCutoffFrequency()!=null || matchOption.getTerminateAfter()!=null){
+                Olama.SparseSearchParams.Builder sparseSearchParamsBuilder = Olama.SparseSearchParams.newBuilder();
+                if (matchOption.getCutoffFrequency()!=null){
+                    sparseSearchParamsBuilder.setCutoffFrequency(matchOption.getCutoffFrequency());
+                }
+                if (matchOption.getTerminateAfter()!=null){
+                    sparseSearchParamsBuilder.setTerminateAfter(matchOption.getTerminateAfter());
+                }
+                sparseBuilder.setParams(sparseSearchParamsBuilder.build()).build();
+            }
+            searchConBuilder.addSparse(sparseBuilder.build());
+        }
+        logQuery(ApiPath.DOC_FULL_TEXT_SEARCH, builder);
+        ManagedChannel channel = channelPool.getChannel();
+        Olama.SearchResponse searchResponse;
+        try {
+            SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = SearchEngineGrpc.newBlockingStub(channel).withInterceptors(new BackendServiceInterceptor(ai));
+            searchResponse = searchEngineBlockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).fullTextSearch(builder.build());
+        }finally {
+            channelPool.returnChannel(channel);
+        }
+        logResponse(ApiPath.DOC_FULL_TEXT_SEARCH, searchResponse);
+        if(searchResponse==null){
+            throw new VectorDBException("VectorDBServer error: full text search not response");
+        }
+        if (searchResponse.getCode()!=0){
+            throw new VectorDBException(String.format(
+                    "VectorDBServer error: full text search not Success, body code=%s, message=%s",
+                    searchResponse.getCode(), searchResponse.getMsg()));
+        }
+        List<Document> documents = new ArrayList<>();
+        for (Olama.SearchResult searchResult : searchResponse.getResultsList()) {
+            documents.addAll(searchResult.getDocumentsList().stream().map(GrpcStub::convertDocument)
+                    .collect(Collectors.toList()));
+        }
+        return new FullTextSearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), documents);
+    }
+
+    @Override
     public HybridSearchRes hybridSearchDocument(HybridSearchParamInner param, boolean ai) {
         Olama.SearchRequest.Builder builder = Olama.SearchRequest.newBuilder().
                 setReadConsistency(param.getReadConsistency().getReadConsistency());
@@ -985,10 +1056,12 @@ public class GrpcStub extends HttpStub{
         if (param.getCollection()!=null){
             builder.setCollection(param.getCollection());
         }
+        if (param.getFieldName()!=null){
+            builder.setFieldName(param.getFieldName());
+        }
         Olama.RebuildIndexRequest rebuildIndexRequest = builder
                 .setThrottle(param.getThrottle())
-                .setDropBeforeRebuild(param.isDropBeforeRebuild())
-                .build();
+                .setDropBeforeRebuild(param.isDropBeforeRebuild()).build();
         logQuery(ApiPath.REBUILD_INDEX, rebuildIndexRequest);
         ManagedChannel channel = channelPool.getChannel();
         Olama.RebuildIndexResponse rebuildIndexResponse;

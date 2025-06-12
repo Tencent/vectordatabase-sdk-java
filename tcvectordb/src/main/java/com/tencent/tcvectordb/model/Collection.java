@@ -32,10 +32,7 @@ import com.tencent.tcvectordb.model.param.collection.FilterIndexConfig;
 import com.tencent.tcvectordb.model.param.collection.IndexField;
 import com.tencent.tcvectordb.model.param.collection.TTLConfig;
 import com.tencent.tcvectordb.model.param.dml.*;
-import com.tencent.tcvectordb.model.param.entity.AffectRes;
-import com.tencent.tcvectordb.model.param.entity.BaseRes;
-import com.tencent.tcvectordb.model.param.entity.HybridSearchRes;
-import com.tencent.tcvectordb.model.param.entity.SearchRes;
+import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.Stub;
@@ -532,6 +529,28 @@ public class Collection{
         }
         return this.stub.modifyVectorIndex(
                 new ModifyIndexParamInner(database, collection, modifyVectorIndexParam), false);
+    }
+
+
+    /**
+     * full text search
+     * @param database
+     * @param collection
+     * @param param FullTextSearchParam:
+     *      match(MatchOption): matchOption used for sparse vector search
+     *      retrieve_vector(bool): Whether to return vector and sparse vector values.
+     *      filter(Filter): filter rows before return result
+     *      output_fields(List): return columns by column name list
+     *      Limit(int): limit the number of rows returned
+     * @return FullTextSearchRes:
+     *      documents: List<Document>: the List of document
+     *
+     * @throws VectorDBException
+     */
+    public FullTextSearchRes fullTextSearch(FullTextSearchParam param) throws VectorDBException {
+        boolean ai = false;
+        return this.stub.fullTextSearch(new FullTextSearchParamInner(
+                database, collection, param, this.readConsistency), ai);
     }
 
     @Override

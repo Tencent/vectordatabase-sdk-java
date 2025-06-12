@@ -35,6 +35,7 @@ import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.Collection;
 import com.tencent.tcvectordb.model.*;
+import com.tencent.tcvectordb.model.param.collection.FieldType;
 import com.tencent.tcvectordb.model.param.collection.UploadFileParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.collectionView.*;
@@ -927,6 +928,41 @@ public class HttpStub implements Stub {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_QUERY_FILE_DETAILS);
         JsonNode jsonNode = this.post(url, JsonUtils.toJsonString(param), false);
         return JsonUtils.parseObject(jsonNode.toString(), QueryFileDetailRes.class);
+    }
+
+    @Override
+    public FullTextSearchRes fullTextSearch(FullTextSearchParamInner param, boolean ai) {
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DOC_FULL_TEXT_SEARCH);
+        JsonNode jsonNode = this.post(url, param.toString(), false);
+        JsonNode documentsNode = jsonNode.get("documents");
+        int code = 0;
+        if (jsonNode.get("code") != null) {
+            code = jsonNode.get("code").asInt();
+        }
+        String msg = "";
+        if (jsonNode.get("msg") != null) {
+            msg = jsonNode.get("msg").asText();
+        }
+        String warning = "";
+        if (jsonNode.get("warning") != null) {
+            warning = jsonNode.get("warning").asText();
+        }
+        if (documentsNode == null) {
+            return new FullTextSearchRes(code, msg, warning, Collections.emptyList());
+        }
+        try {
+            List<Document> documents = new ArrayList<>();
+            Iterator<JsonNode> docIter = documentsNode.elements();
+            while (docIter.hasNext()) {
+                JsonNode docNode = docIter.next();
+                Document doc = node2Doc(docNode);
+                documents.add(doc);
+            }
+            return new FullTextSearchRes(code, msg, warning, Collections.unmodifiableList(documents));
+        } catch (JsonProcessingException ex) {
+            throw new VectorDBException(String.format("VectorDBServer response " +
+                    "from full search search error: can't parse documents=%s", documentsNode));
+        }
     }
 
 

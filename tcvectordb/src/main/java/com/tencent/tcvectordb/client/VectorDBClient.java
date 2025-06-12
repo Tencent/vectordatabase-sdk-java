@@ -508,6 +508,28 @@ public class VectorDBClient {
                 database, collection, param, this.readConsistency), ai);
     }
 
+
+    /**
+     * full text search
+     * @param database
+     * @param collection
+     * @param param FullTextSearchParam:
+     *      match(MatchOption): matchOption used for sparse vector search
+     *      retrieve_vector(bool): Whether to return vector and sparse vector values.
+     *      filter(Filter): filter rows before return result
+     *      output_fields(List): return columns by column name list
+     *      Limit(int): limit the number of rows returned
+     * @return FullTextSearchRes:
+     *      documents: List<Document>: the List of document
+     *
+     * @throws VectorDBException
+     */
+    public FullTextSearchRes fullTextSearch(String database, String collection, FullTextSearchParam param) throws VectorDBException {
+        boolean ai = false;
+        return this.stub.fullTextSearch(new FullTextSearchParamInner(
+                database, collection, param, this.readConsistency), ai);
+    }
+
     /**
      * this method is deprecated, recommend use {@link VectorDBClient#addIndex(String, String, AddIndexParam)}
      * Used to add a scalar field index to an existing collection
@@ -527,6 +549,7 @@ public class VectorDBClient {
     /**
      * rebuild index
      * @param rebuildIndexParam: rebuild index param
+     *
      * @return BaseRes
      */
     public BaseRes rebuildIndex(String database, String collection, RebuildIndexParam rebuildIndexParam) {

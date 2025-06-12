@@ -534,8 +534,6 @@ public class Collection{
 
     /**
      * full text search
-     * @param database
-     * @param collection
      * @param param FullTextSearchParam:
      *      match(MatchOption): matchOption used for sparse vector search
      *      retrieve_vector(bool): Whether to return vector and sparse vector values.
@@ -549,6 +547,10 @@ public class Collection{
      */
     public FullTextSearchRes fullTextSearch(FullTextSearchParam param) throws VectorDBException {
         boolean ai = false;
+        String collection = this.collection;
+        if (this.connectCollectionName != null){
+            collection = this.connectCollectionName;
+        }
         return this.stub.fullTextSearch(new FullTextSearchParamInner(
                 database, collection, param, this.readConsistency), ai);
     }

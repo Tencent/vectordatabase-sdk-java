@@ -555,6 +555,36 @@ public class CollectionView {
         return this.stub.getChunks(database, collectionView, documentSetName, documentSetId, limit, offset);
     }
 
+    /**
+     * query file details
+     * @param param QueryFileDetailParam.class
+     *              fileNames (List<String>): query file names
+     *              filter (String): filter rows before return result
+     *              outputFields (List<String>): return columns by column name list
+     *              limit (int): Limit return row's count
+     *              offset (int): Skip offset rows of query result set
+     *
+     * @return QueryFileDetailRes.class
+     *              documents: List<FileDetail>:
+     *                  id (String): file name
+     *                  _indexed_status (string): indexed status, "Ready" or "Failure"
+     *                  _text_length(Long): text length
+     *
+     */
+    public QueryFileDetailRes queryFileDetails(QueryFileDetailParam param) {
+        String collectionView = this.collectionView;
+        if (this.connectCollectionName != null) {
+            collectionView = this.connectCollectionName;
+        }
+        QueryFileDetailsParamInner paramInner = new QueryFileDetailsParamInner();
+        paramInner.setDatabase(database);
+        paramInner.setCollection(collectionView);
+        paramInner.setQuery(param);
+        paramInner.setReadConsistency(this.readConsistency);
+
+        return this.stub.queryFileDetails(paramInner);
+    }
+
     @Override
     public String toString() {
         return JsonUtils.toJsonString(this);

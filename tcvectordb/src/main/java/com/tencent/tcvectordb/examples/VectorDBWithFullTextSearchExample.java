@@ -30,6 +30,7 @@ import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
+import com.tencent.tcvectordb.model.param.entity.BaseRes;
 import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
 import com.tencent.tcvectordb.utils.JsonUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -58,6 +59,7 @@ public class VectorDBWithFullTextSearchExample {
         createDatabaseAndCollection(client);
         upsertData(client);
         searchData(client);
+        rebuild(client);
         deleteAndDrop(client);
 
     }
@@ -134,20 +136,27 @@ public class VectorDBWithFullTextSearchExample {
         FullTextSearchParam fullTextSearchParam = FullTextSearchParam.newBuilder()
                 .withMatch(MatchOption.newBuilder().withFieldName("sparse_vector")
                         .withData(bm25Encoder.encodeQueries(Arrays.asList("什么是腾讯云向量数据库")))
-                        .withCutoffFrequency(0.1)
-                        .withTerminateAfter(4000)
+//                        .withCutoffFrequency(0.1)
+//                        .withTerminateAfter(4000)
                         .build())
-                .withLimit(3)
+//                .withLimit(3)
                 .withRetrieveVector(false)
                 .build();
         List<Document> siDocs = client.fullTextSearch(DBNAME, COLL_NAME, fullTextSearchParam).getDocuments();
         int i = 0;
         for (Object docs : siDocs) {
             System.out.println("\tres: " + (i++) + docs.toString());
-//            for (Document doc : (List<Document>)docs) {
-//                System.out.println("\tres: " + doc.toString());
-//            }
         }
+    }
+
+    private static void rebuild(VectorDBClient client) {
+        System.out.println("---------------------- rebuild collection ----------------------");
+        BaseRes res = client.rebuildIndex(DBNAME, COLL_NAME, RebuildIndexParam.newBuilder().
+                withFieldName("sparse_vector").
+                withDropBeforeRebuild(true).
+                withThrottle(1).
+                build());
+        System.out.println("rebuild response: " + JsonUtils.toJsonString(res));
     }
 
     private static void deleteAndDrop(VectorDBClient client) {

@@ -785,6 +785,7 @@ public class GrpcStub extends HttpStub{
             }
             searchConBuilder.addSparse(sparseBuilder.build());
         }
+        builder.setSearch(searchConBuilder.build());
         logQuery(ApiPath.DOC_FULL_TEXT_SEARCH, builder);
         ManagedChannel channel = channelPool.getChannel();
         Olama.SearchResponse searchResponse;

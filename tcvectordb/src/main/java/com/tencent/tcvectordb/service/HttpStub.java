@@ -951,14 +951,20 @@ public class HttpStub implements Stub {
             return new FullTextSearchRes(code, msg, warning, Collections.emptyList());
         }
         try {
-            List<Document> documents = new ArrayList<>();
-            Iterator<JsonNode> docIter = documentsNode.elements();
-            while (docIter.hasNext()) {
-                JsonNode docNode = docIter.next();
-                Document doc = node2Doc(docNode);
-                documents.add(doc);
+            List<Document> multiDosc = new ArrayList<>();
+            Iterator<JsonNode> multiIter = documentsNode.elements();
+            while (multiIter.hasNext()) {
+                JsonNode docNode = multiIter.next();
+                Iterator<JsonNode> iter = docNode.elements();
+                List<Document> docs = new ArrayList<>();
+                while (iter.hasNext()) {
+                    JsonNode node = iter.next();
+                    Document doc = node2Doc(node);
+                    docs.add(doc);
+                }
+                multiDosc.addAll(docs);
             }
-            return new FullTextSearchRes(code, msg, warning, Collections.unmodifiableList(documents));
+            return new FullTextSearchRes(code, msg, warning, Collections.unmodifiableList(multiDosc));
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format("VectorDBServer response " +
                     "from full search search error: can't parse documents=%s", documentsNode));

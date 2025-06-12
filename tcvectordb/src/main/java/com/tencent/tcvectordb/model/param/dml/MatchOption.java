@@ -85,7 +85,7 @@ public class MatchOption {
         private Integer limit;
 
         private Integer terminateAfter;
-        private double cutoffFrequency;
+        private Double cutoffFrequency;
 
         private Builder() {
         }

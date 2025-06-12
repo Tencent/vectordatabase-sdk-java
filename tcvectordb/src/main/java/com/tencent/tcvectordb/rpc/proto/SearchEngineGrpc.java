@@ -456,7 +456,7 @@ public final class SearchEngineGrpc {
       com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse> getFullTextSearchMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "full_text_search",
+      fullMethodName = ApiPath.DOC_FULL_TEXT_SEARCH,
       requestType = com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest.class,
       responseType = com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -469,13 +469,13 @@ public final class SearchEngineGrpc {
           SearchEngineGrpc.getFullTextSearchMethod = getFullTextSearchMethod =
               io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest, com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "full_text_search"))
+              .setFullMethodName(ApiPath.DOC_FULL_TEXT_SEARCH)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("full_text_search"))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.DOC_FULL_TEXT_SEARCH))
               .build();
         }
       }

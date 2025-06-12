@@ -44,8 +44,8 @@ public class CommonService {
      * @return {@link ConnectParam}
      */
     private static ConnectParam initConnectParam() {
-        String vdbURL = "http://gz-vdb-oegil4o8.sql.tencentcdb.com:8100";
-        String vdbKey = "adLZXosqtSiXOutKuASRTVJj6Un6QTedzo6aD98t";
+        String vdbURL = "";
+        String vdbKey = "";
         System.out.println("\tvdb_url: " + vdbURL);
         System.out.println("\tvdb_key: " + vdbKey);
         return ConnectParam.newBuilder()
@@ -63,9 +63,9 @@ public class CommonService {
      */
     public static VectorDBClient initClient() {
         // 创建http client
-//        return new VectorDBClient(initConnectParam(), ReadConsistencyEnum.STRONG_CONSISTENCY);
+        return new VectorDBClient(initConnectParam(), ReadConsistencyEnum.STRONG_CONSISTENCY);
         // 创建rpc client
-        return new RPCVectorDBClient(initConnectParam(), ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
+//        return new RPCVectorDBClient(initConnectParam(), ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
     }
 
     /**

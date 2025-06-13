@@ -31,6 +31,7 @@ import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.BaseRes;
+import com.tencent.tcvectordb.model.param.entity.FullTextSearchRes;
 import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
 import com.tencent.tcvectordb.utils.JsonUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -47,7 +48,7 @@ public class VectorDBWithFullTextSearchExample {
     private static final String DBNAME = "java_sdk_full_search_test_db";
     private static final String COLL_NAME = "java_sdk_full_search_coll";
 
-    private static SparseVectorBm25Encoder bm25Encoder = SparseVectorBm25Encoder.getDefaultBm25Encoder();;
+    private static final SparseVectorBm25Encoder bm25Encoder = SparseVectorBm25Encoder.getDefaultBm25Encoder();;
 
     public static void main(String[] args) throws InterruptedException {
 
@@ -58,6 +59,7 @@ public class VectorDBWithFullTextSearchExample {
         CommonService.anySafe(() -> client.dropDatabase(DBNAME));
         createDatabaseAndCollection(client);
         upsertData(client);
+        queryData(client);
         searchData(client);
         rebuild(client);
         deleteAndDrop(client);
@@ -136,16 +138,38 @@ public class VectorDBWithFullTextSearchExample {
         FullTextSearchParam fullTextSearchParam = FullTextSearchParam.newBuilder()
                 .withMatch(MatchOption.newBuilder().withFieldName("sparse_vector")
                         .withData(bm25Encoder.encodeQueries(Arrays.asList("什么是腾讯云向量数据库")))
-//                        .withCutoffFrequency(0.1)
-//                        .withTerminateAfter(4000)
+//                        .withCutoffFrequency(0.05)
+//                        .withTerminateAfter(1)
                         .build())
-//                .withLimit(3)
+                .withLimit(3)
+                .withRetrieveVector(false)
+//                .withOutputFields(Arrays.asList("id"))
+                .build();
+        FullTextSearchRes res= client.fullTextSearch(DBNAME, COLL_NAME, fullTextSearchParam);
+        System.out.println(JsonUtils.toJsonString(res));
+        int i = 0;
+        for (Object docs : res.getDocuments()) {
+            System.out.println("\tres: " + (i++) + docs.toString());
+        }
+
+    }
+
+    private static void queryData(VectorDBClient client){
+        System.out.println("---------------------- query ----------------------");
+        QueryParam queryParam = QueryParam.newBuilder()
+                .withDocumentIds(Arrays.asList("0001", "0002", "0003", "0004", "0005"))
+                // limit 限制返回行数，1 到 16384 之间
+                .withLimit(5)
+                // 偏移
+                .withOffset(0)
+                // 指定返回的 fields
+//                .addAllOutputFields("id", "bookName")
+                // 是否返回 vector 数据
                 .withRetrieveVector(false)
                 .build();
-        List<Document> siDocs = client.fullTextSearch(DBNAME, COLL_NAME, fullTextSearchParam).getDocuments();
-        int i = 0;
-        for (Object docs : siDocs) {
-            System.out.println("\tres: " + (i++) + docs.toString());
+        List<Document> qdos = client.query(DBNAME, COLL_NAME, queryParam);
+        for (Document doc : qdos) {
+            System.out.println("\tres: " + doc.toString());
         }
     }
 

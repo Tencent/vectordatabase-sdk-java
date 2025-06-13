@@ -515,7 +515,7 @@ public class VectorDBClient {
      * @param collection
      * @param param FullTextSearchParam:
      *      match(MatchOption): matchOption used for sparse vector search
-     *      retrieve_vector(bool): Whether to return vector and sparse vector values.
+     *      retrieve_vector(bool): Whether to sparse vector values.
      *      filter(Filter): filter rows before return result
      *      output_fields(List): return columns by column name list
      *      Limit(int): limit the number of rows returned

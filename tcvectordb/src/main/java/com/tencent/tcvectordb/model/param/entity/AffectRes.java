@@ -4,6 +4,8 @@ public class AffectRes extends BaseRes {
 
     protected long affectedCount;
 
+    private EmbeddingExtraInfo embeddingExtraInfo;
+
     public AffectRes() {
         super();
     }
@@ -12,11 +14,19 @@ public class AffectRes extends BaseRes {
         return affectedCount;
     }
 
+    public EmbeddingExtraInfo getEmbeddingExtraInfo() {
+        return embeddingExtraInfo;
+    }
+
+    public void setEmbeddingExtraInfo(EmbeddingExtraInfo embeddingExtraInfo) {
+        this.embeddingExtraInfo = embeddingExtraInfo;
+    }
 
     @Override
     public String toString() {
         return "AffectRes{" +
                 "affectedCount=" + affectedCount +
+                ", embeddingExtraInfo=" + embeddingExtraInfo +
                 ", code=" + code +
                 ", msg='" + msg + '\'' +
                 '}';

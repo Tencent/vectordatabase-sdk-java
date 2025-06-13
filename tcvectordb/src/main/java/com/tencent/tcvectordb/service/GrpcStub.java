@@ -598,7 +598,13 @@ public class GrpcStub extends HttpStub{
                     "VectorDBServer upsert data error: not Successful, code=%s, message=%s",
                     response.getCode(), response.getMsg()));
         }
-        return new AffectRes(response.getCode(), response.getMsg(), response.getWarning(), response.getAffectedCount());
+        AffectRes affectRes = new AffectRes(response.getCode(), response.getMsg(), response.getWarning(), response.getAffectedCount());
+        if (response.hasEmbeddingExtraInfo()){
+            EmbeddingExtraInfo embeddingExtraInfo = new EmbeddingExtraInfo();
+            embeddingExtraInfo.setTokenUsed(response.getEmbeddingExtraInfo().getTokenUsed());
+            affectRes.setEmbeddingExtraInfo(embeddingExtraInfo);
+        }
+        return affectRes;
     }
 
     @Override

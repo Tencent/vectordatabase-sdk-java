@@ -161,7 +161,8 @@ public class VectorDBExampleWithEmbedding {
                 .addAllDocument(documentList)
                 .withBuildIndex(true)
                 .build();
-        collection.upsert(insertParam);
+        AffectRes affectRes = collection.upsert(insertParam);
+        System.out.println("upsert affect res : "+ affectRes.toString());
 
         // notice：upsert操作可用会有延迟
         Thread.sleep(1000 * 5);

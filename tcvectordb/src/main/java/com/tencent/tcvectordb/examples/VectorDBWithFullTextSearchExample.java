@@ -136,7 +136,7 @@ public class VectorDBWithFullTextSearchExample {
     private static void searchData(VectorDBClient client) {
         System.out.println("---------------------- full text search ----------------------");
         FullTextSearchParam fullTextSearchParam = FullTextSearchParam.newBuilder()
-                .withMatch(MatchOption.newBuilder().withFieldName("sparse_vector")
+                .withMatch(MatchParam.newBuilder().withFieldName("sparse_vector")
                         .withData(bm25Encoder.encodeQueries(Arrays.asList("什么是腾讯云向量数据库")))
 //                        .withCutoffFrequency(0.05)
 //                        .withTerminateAfter(1)
@@ -178,7 +178,7 @@ public class VectorDBWithFullTextSearchExample {
         BaseRes res = client.rebuildIndex(DBNAME, COLL_NAME, RebuildIndexParam.newBuilder().
                 withFieldName("sparse_vector").
                 withDropBeforeRebuild(true).
-                withThrottle(1).
+//                withThrottle(0).
                 build());
         System.out.println("rebuild response: " + JsonUtils.toJsonString(res));
     }

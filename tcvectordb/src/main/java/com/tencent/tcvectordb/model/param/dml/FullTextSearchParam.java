@@ -17,7 +17,7 @@ import java.util.List;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FullTextSearchParam {
-    private MatchOption match;
+    private MatchParam match;
     private String filter;
     private List<String> outputFields;
     private boolean retrieveVector;
@@ -35,11 +35,11 @@ public class FullTextSearchParam {
         this.match = builder.match;
     }
 
-    public MatchOption getMatch() {
+    public MatchParam getMatch() {
         return match;
     }
 
-    public void setMatch(MatchOption match) {
+    public void setMatch(MatchParam match) {
         this.match = match;
     }
 
@@ -84,12 +84,12 @@ public class FullTextSearchParam {
         private List<String> outputFields;
         private boolean retrieveVector;
         private int limit = 10;
-        private MatchOption match;
+        private MatchParam match;
 
         protected Builder() {
         }
 
-        public Builder withMatch(MatchOption match) {
+        public Builder withMatch(MatchParam match) {
             this.match = match;
             return this;
         }

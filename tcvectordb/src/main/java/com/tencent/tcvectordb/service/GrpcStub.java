@@ -767,7 +767,7 @@ public class GrpcStub extends HttpStub{
         }
 
         if (searchParam.getMatch()!=null){
-            MatchOption matchOption = searchParam.getMatch();
+            MatchParam matchOption = searchParam.getMatch();
             Olama.SparseData.Builder sparseBuilder = Olama.SparseData.newBuilder().setFieldName(matchOption.getFieldName());
             matchOption.getData().forEach(sparseVectors->{
                 sparseBuilder.addData(Olama.SparseVectorArray.newBuilder().addAllSpVector(sparseVectors.stream()
@@ -775,9 +775,6 @@ public class GrpcStub extends HttpStub{
                                 setScore((Float.parseFloat(vectors.get(1).toString()))).
                                 build()).collect(Collectors.toList())).build());
             });
-            if(matchOption.getLimit()!=null){
-                sparseBuilder.setLimit(matchOption.getLimit());
-            }
 
             if (matchOption.getCutoffFrequency()!=null || matchOption.getTerminateAfter()!=null){
                 Olama.SparseSearchParams.Builder sparseSearchParamsBuilder = Olama.SparseSearchParams.newBuilder();

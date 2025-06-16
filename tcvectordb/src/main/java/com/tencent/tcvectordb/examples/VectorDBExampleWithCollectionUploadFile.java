@@ -64,7 +64,7 @@ public class VectorDBExampleWithCollectionUploadFile {
 //        UploadFileUseInputStream(client, new FileInputStream(file), file.length(), "tcvdb.pdf", metaDataMap);
 
 //        // 使用文件路径上传文档
-        UploadFile(client, "/Users/anyihao/Downloads/tcvdb.pdf", "tcvdb.pdf", metaDataMap);
+        UploadFile(client, "/data/home/yihaoan/tcvdb.pdf", "tcvdb.pdf", metaDataMap);
 //        // support markdown, pdf, pptx, docx document
 //        // UploadFile(client, System.getProperty("file_path"), "腾讯云向量数据库.pdf", metaDataMap);
 //        // UploadFile(client, System.getProperty("file_path"), "腾讯云向量数据库.pptx", metaDataMap);
@@ -82,7 +82,6 @@ public class VectorDBExampleWithCollectionUploadFile {
         QueryFileDetailParam param = QueryFileDetailParam.newBuilder()
                 .withFileNames(Arrays.asList(fileName))
 //                .withFilter("")
-//                .(COLL_NAME)
                 .build();
         QueryFileDetailRes res = client.queryFileDetails(DBNAME, COLL_NAME, param);
         System.out.println(JsonUtils.toJsonString(res));
@@ -234,11 +233,12 @@ public class VectorDBExampleWithCollectionUploadFile {
 
         // 根据chunk_num 和 section_num 获取chunk文本
         System.out.println("---------------------- get chunk text by chunk_num ----------------------");
-        Long chunkNum = (Long) searchRes.getDocuments().get(0).get(0).getObject("chunk_num");
-        Long sectionNum = (Long) searchRes.getDocuments().get(0).get(0).getObject("section_num");
-        if (chunkNum==null || sectionNum==null){
+        System.out.println(searchRes.getDocuments().get(0).get(0).getObject("chunk_num").getClass());
+        if (searchRes.getDocuments().get(0).get(0).getObject("chunk_num")==null){
             return;
         }
+        Long chunkNum = Long.valueOf(searchRes.getDocuments().get(0).get(0).getObject("chunk_num").toString());
+        Long sectionNum = Long.valueOf(searchRes.getDocuments().get(0).get(0).getObject("section_num").toString());
         Long startChunkNum = chunkNum-2;
         if (startChunkNum < 0){
             startChunkNum = 0L;

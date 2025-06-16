@@ -571,6 +571,15 @@ public class Collection{
     public static class IndexStatus {
         private String status;
         private Date startTime;
+        private String msg;
+
+        public String getMsg() {
+            return msg;
+        }
+
+        public void setMsg(String msg) {
+            this.msg = msg;
+        }
 
         public String getStatus() {
             return status;
@@ -612,6 +621,7 @@ public class Collection{
             return "IndexStatus{" +
                     "status='" + status + '\'' +
                     ", startTime=" + startTime +
+                    ", msg='" + msg + '\'' +
                     '}';
         }
     }

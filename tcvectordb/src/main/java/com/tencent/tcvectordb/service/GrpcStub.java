@@ -743,7 +743,12 @@ public class GrpcStub extends HttpStub{
             documentsList.add(searchResult.getDocumentsList().stream().map(GrpcStub::convertDocument)
                     .collect(Collectors.toList()));
         }
-        return new SearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), documentsList);
+
+        SearchRes searchRes = new SearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), documentsList);
+        if (searchResponse.getEmbeddingExtraInfo()!=null){
+            searchRes.setEmbeddingExtraInfo(new EmbeddingExtraInfo(searchResponse.getEmbeddingExtraInfo().getTokenUsed()));
+        }
+        return searchRes;
     }
 
     @Override

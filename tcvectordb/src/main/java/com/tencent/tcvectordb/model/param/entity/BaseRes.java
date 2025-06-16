@@ -50,7 +50,19 @@ public class BaseRes {
         return count;
     }
 
-    public void setCount(int count) {
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public void setWarning(String warning) {
+        this.warning = warning;
+    }
+
+    public void setCount(long count) {
         this.count = count;
     }
 

@@ -1,11 +1,11 @@
 syntax = "proto3";
 
 package com.tencent.tcvectordb.rpc.proto;
-option cc_generic_services = true;
+option cc_generic_services =true;
 
 message Document {
     string id                              = 1;
-    repeated float vector                  = 2;
+    repeated float vector                 = 2;
     float score                            = 3;
     map<string, Field> fields              = 4;
     uint64 index_id                        = 5;

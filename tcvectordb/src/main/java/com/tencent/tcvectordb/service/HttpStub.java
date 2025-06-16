@@ -42,6 +42,7 @@ import com.tencent.tcvectordb.model.param.collectionView.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
+import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
 import com.tencent.tcvectordb.model.param.user.*;
 import com.tencent.tcvectordb.service.param.*;
 import com.tencent.tcvectordb.utils.FileUtils;
@@ -287,8 +288,15 @@ public class HttpStub implements Stub {
         if (jsonNode.get("warning") != null) {
             warning = jsonNode.get("warning").asText();
         }
+        SearchRes searchRes = new SearchRes(code, msg, warning, Collections.emptyList());
+        if (jsonNode.get("embeddingExtraInfo") != null){
+            EmbeddingExtraInfo embeddingExtraInfo = new EmbeddingExtraInfo();
+            embeddingExtraInfo.setTokenUsed(jsonNode.get("embeddingExtraInfo").get("tokenUsed").asLong());
+            searchRes.setEmbeddingExtraInfo(embeddingExtraInfo);
+        }
+
         if (multiDocsNode == null) {
-            return new SearchRes(code, msg, warning, Collections.emptyList());
+            return searchRes;
         }
         try {
             List<List<Document>> multiDosc = new ArrayList<>();
@@ -304,7 +312,8 @@ public class HttpStub implements Stub {
                 }
                 multiDosc.add(docs);
             }
-            return new SearchRes(code, msg, warning, Collections.unmodifiableList(multiDosc));
+            searchRes.setDocuments(Collections.unmodifiableList(multiDosc));
+            return searchRes;
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format("VectorDBServer response " +
                     "from search error: can't parse documents=%s", multiDocsNode));

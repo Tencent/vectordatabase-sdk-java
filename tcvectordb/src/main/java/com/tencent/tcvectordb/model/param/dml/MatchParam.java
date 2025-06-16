@@ -15,7 +15,7 @@ import java.util.List;
  *     terminateAfter: Integer, search terminate after this number of documents.
  *     cutoffFrequency: Double, cutoff frequency.
  * eg:
- *     MatchOption option = new MatchOption.Builder().withFieldName("sparse_vector").withData(sparseVector).build();
+ *     MatchParam param = new MatchParam.Builder().withFieldName("sparse_vector").withData(sparseVector).build();
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MatchParam {

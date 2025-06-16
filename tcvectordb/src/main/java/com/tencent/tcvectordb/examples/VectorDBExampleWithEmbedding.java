@@ -277,6 +277,7 @@ public class VectorDBExampleWithEmbedding {
                 .build();
         SearchRes searchRes = collection.searchByEmbeddingItems(searchByEmbeddingItemsParam);
         i = 0;
+        System.out.println("embedding info: " + searchRes.getEmbeddingExtraInfo());
         for (List<Document> docs : searchRes.getDocuments()) {
             System.out.println("\tres: " + i++);
             for (Document doc : docs) {

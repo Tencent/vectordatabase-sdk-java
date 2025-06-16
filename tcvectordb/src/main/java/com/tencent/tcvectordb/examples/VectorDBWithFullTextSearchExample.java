@@ -146,7 +146,6 @@ public class VectorDBWithFullTextSearchExample {
 //                .withOutputFields(Arrays.asList("id"))
                 .build();
         FullTextSearchRes res= client.fullTextSearch(DBNAME, COLL_NAME, fullTextSearchParam);
-        System.out.println(JsonUtils.toJsonString(res));
         int i = 0;
         for (Object docs : res.getDocuments()) {
             System.out.println("\tres: " + (i++) + docs.toString());

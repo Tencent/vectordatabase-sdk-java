@@ -71,6 +71,14 @@ public class VectorIndex  extends IndexField {
         setParams(params);
     }
 
+    public VectorIndex(String fieldName, MetricType metricType, FieldType fieldType, IndexType indexType, ParamsSerializer params) {
+        setFieldName(fieldName);
+        setFieldType(fieldType);
+        setMetricType(metricType);
+        setIndexType(indexType);
+        setParams(params);
+    }
+
     public VectorIndex(String fieldName, Integer dimension, FieldType fieldType,
                        IndexType indexType, MetricType metricType) {
         setFieldName(fieldName);

@@ -4,20 +4,12 @@ import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.rpc.Interceptor.AuthorityInterceptor;
 import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
 import io.grpc.okhttp.OkHttpChannelBuilder;
-import org.apache.commons.pool2.BasePooledObjectFactory;
-import org.apache.commons.pool2.PooledObject;
-import org.apache.commons.pool2.impl.DefaultPooledObject;
-import org.apache.commons.pool2.impl.GenericObjectPool;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ChannelPool {
@@ -58,8 +50,12 @@ public class ChannelPool {
 
     public ManagedChannel getChannel() {
         try {
-             activeCount.incrementAndGet();
-             Long index = activeCount.get() % pool.size();
+             long count = activeCount.incrementAndGet();
+             if (count < 0) {
+                 count = 0;
+                 activeCount.set(0);
+             }
+             Long index = count % pool.size();
             return pool.get(index.intValue());
         } catch (Exception e) {
             throw new RuntimeException(e);

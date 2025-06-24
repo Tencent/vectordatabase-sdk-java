@@ -44,8 +44,8 @@ public class CommonService {
      * @return {@link ConnectParam}
      */
     private static ConnectParam initConnectParam() {
-        String vdbURL = "";
-        String vdbKey = "";
+        String vdbURL = "http://9.134.166.4:10810";
+        String vdbKey = "wIivJYWtnKsro1p2ZwOEXqVrWsLejUq3pugZZvKp";
         System.out.println("\tvdb_url: " + vdbURL);
         System.out.println("\tvdb_key: " + vdbKey);
         return ConnectParam.newBuilder()
@@ -53,6 +53,7 @@ public class CommonService {
                 .withUsername("root")
                 .withKey(vdbKey)
                 .withTimeout(30)
+                .withMaxIdleConnections(100)
                 .build();
     }
 

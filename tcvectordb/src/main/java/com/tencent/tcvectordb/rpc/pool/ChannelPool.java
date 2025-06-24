@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class ChannelPool {
     private List<ManagedChannel> pool;
-    private AtomicLong activeCount = new AtomicLong(0);
+    private AtomicLong channelSelectorCounter = new AtomicLong(0);
 
     public ChannelPool(ConnectParam param, int maxReceiveMessageSize, String authorization)   {
 
@@ -50,10 +50,10 @@ public class ChannelPool {
 
     public ManagedChannel getChannel() {
         try {
-             long count = activeCount.incrementAndGet();
+             long count = channelSelectorCounter.incrementAndGet();
              if (count < 0) {
                  count = 0;
-                 activeCount.set(0);
+                 channelSelectorCounter.set(0);
              }
              Long index = count % pool.size();
             return pool.get(index.intValue());

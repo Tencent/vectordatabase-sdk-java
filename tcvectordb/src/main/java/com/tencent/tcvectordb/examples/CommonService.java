@@ -53,7 +53,7 @@ public class CommonService {
                 .withUsername("root")
                 .withKey(vdbKey)
                 .withTimeout(30)
-                .withMaxIdleConnections(100)
+                .withMaxIdleConnections(10)
                 .build();
     }
 

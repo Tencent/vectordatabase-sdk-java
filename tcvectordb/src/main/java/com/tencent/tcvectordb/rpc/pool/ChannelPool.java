@@ -4,34 +4,30 @@ import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.rpc.Interceptor.AuthorityInterceptor;
 import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
 import io.grpc.okhttp.OkHttpChannelBuilder;
-import org.apache.commons.pool2.BasePooledObjectFactory;
-import org.apache.commons.pool2.PooledObject;
-import org.apache.commons.pool2.impl.DefaultPooledObject;
-import org.apache.commons.pool2.impl.GenericObjectPool;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.Duration;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class ChannelPool {
-    private final GenericObjectPool<ManagedChannel> pool;
+    private List<ManagedChannel> pool;
+    private AtomicLong channelSelectorCounter = new AtomicLong(0);
 
     public ChannelPool(ConnectParam param, int maxReceiveMessageSize, String authorization)   {
-        GenericObjectPoolConfig<ManagedChannel> config = new GenericObjectPoolConfig<>();
-        config.setMaxTotal(param.getMaxIdleConnections()); // 最大连接数
-        config.setMaxIdle(param.getMaxIdleConnections());   // 最大空闲连接
-        config.setMaxWait(Duration.ofSeconds(param.getConnectTimeout()));
-        config.setLifo(false);
 
-        this.pool = new GenericObjectPool<>(new ChannelFactory(getAddress(param.getUrl()), maxReceiveMessageSize, authorization), config);
+        this.pool = new ArrayList<>();
 
-        for (int i = 0; i < pool.getMaxIdle(); i++) {
+        for (int i = 0; i < (param.getConnectionPoolSize()); i++) {
             try {
-                pool.addObject(); // 添加一个初始对象到池中，直到达到maxIdle设置的数量
+                pool.add(OkHttpChannelBuilder.forTarget(getAddress(param.getUrl())).
+                        intercept(new AuthorityInterceptor(authorization)).
+                        flowControlWindow(maxReceiveMessageSize).
+                        maxInboundMessageSize(maxReceiveMessageSize).
+                        enableRetry().
+                        usePlaintext().build());
             } catch (Exception e) {
                 throw new VectorDBException("create channel pool error",  e);
             }
@@ -54,15 +50,16 @@ public class ChannelPool {
 
     public ManagedChannel getChannel() {
         try {
-//            printPoolStats();
-            return pool.borrowObject();
+             long count = channelSelectorCounter.incrementAndGet();
+             if (count < 0) {
+                 count = 0;
+                 channelSelectorCounter.set(0);
+             }
+             Long index = count % pool.size();
+            return pool.get(index.intValue());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public void returnChannel(ManagedChannel channel) {
-        pool.returnObject(channel);
     }
 
     /**
@@ -70,47 +67,9 @@ public class ChannelPool {
      */
     public void close() {
         if (pool != null) {
-            pool.close();
-        }
-    }
-
-    public void printPoolStats() {
-        System.out.println("Active: " + pool.getNumActive());
-        System.out.println("Idle: " + pool.getNumIdle());
-        System.out.println("Total created: " + pool.getCreatedCount());
-        System.out.println("Total borrowed: " + pool.getBorrowedCount());
-        System.out.println("Total returned: " + pool.getReturnedCount());
-    }
-
-    private static class ChannelFactory extends BasePooledObjectFactory<ManagedChannel> {
-        private final String url;
-        private final int maxReceiveMessageSize;
-        private final String authorization;
-
-        public ChannelFactory(String url, int maxReceiveMessageSize,  String authorization)  {
-            this.url = url;
-            this.maxReceiveMessageSize = maxReceiveMessageSize;
-            this.authorization = authorization;
-        }
-
-        @Override
-        public ManagedChannel create() {
-            return OkHttpChannelBuilder.forTarget(url).
-                    intercept(new AuthorityInterceptor(this.authorization)).
-                    flowControlWindow(maxReceiveMessageSize).
-                    maxInboundMessageSize(maxReceiveMessageSize).
-                    enableRetry().
-                    usePlaintext().build();
-        }
-
-        @Override
-        public PooledObject<ManagedChannel> wrap(ManagedChannel channel) {
-            return new DefaultPooledObject<>(channel);
-        }
-
-        @Override
-        public void destroyObject(PooledObject<ManagedChannel> p) {
-            p.getObject().shutdown();
+            for (ManagedChannel channel : pool) {
+                channel.shutdown();
+            }
         }
     }
 }

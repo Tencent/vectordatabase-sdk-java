@@ -745,13 +745,9 @@ public class GrpcStub extends HttpStub{
         builder.setSearch(searchConBuilder.build());
         logQuery(ApiPath.DOC_FULL_TEXT_SEARCH, builder);
         ManagedChannel channel = channelPool.getChannel();
-        Olama.SearchResponse searchResponse;
-        try {
-            SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = SearchEngineGrpc.newBlockingStub(channel).withInterceptors(new BackendServiceInterceptor(ai));
-            searchResponse = searchEngineBlockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).fullTextSearch(builder.build());
-        }finally {
-            channelPool.returnChannel(channel);
-        }
+        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = SearchEngineGrpc.newBlockingStub(channel).withInterceptors(new BackendServiceInterceptor(ai));
+        Olama.SearchResponse searchResponse = searchEngineBlockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).fullTextSearch(builder.build());
+
         logResponse(ApiPath.DOC_FULL_TEXT_SEARCH, searchResponse);
         if(searchResponse==null){
             throw new VectorDBException("VectorDBServer error: full text search not response");

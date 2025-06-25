@@ -29,6 +29,7 @@ import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.SearchRes;
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,6 +59,7 @@ public class VectorDBExampleWithEmbedding {
         queryData(client);
         updateAndDelete(client);
         deleteAndDrop(client);
+        client.close();
     }
 
     private static void createDatabaseAndCollection(VectorDBClient client) {
@@ -75,34 +77,34 @@ public class VectorDBExampleWithEmbedding {
         // 3. 创建 collection
         System.out.println("---------------------- createCollection ----------------------");
         CreateCollectionParam collectionParam = initCreateEmbeddingCollectionParam(COLL_NAME);
-        db.createCollection(collectionParam);
+        client.createCollection(DBNAME, collectionParam);
 
         // 4. 列出所有 collection
         System.out.println("---------------------- listCollections ----------------------");
-        List<Collection> cols = db.listCollections();
+        List<Collection> cols = client.listCollections(DBNAME);
         for (Collection col : cols) {
             System.out.println("\tres: " + col.toString());
         }
 
         // 5. 设置 collection 别名
         System.out.println("---------------------- setAlias ----------------------");
-        AffectRes affectRes = db.setAlias(COLL_NAME, COLL_NAME_ALIAS);
+        AffectRes affectRes = client.setAlias(DBNAME, COLL_NAME, COLL_NAME_ALIAS);
         System.out.println("\tres: " + affectRes.toString());
 
 
         // 6. describe collection
         System.out.println("---------------------- describeCollection ----------------------");
-        Collection descCollRes = db.describeCollection(COLL_NAME);
+        Collection descCollRes = client.describeCollection(DBNAME, COLL_NAME);
         System.out.println("\tres: " + descCollRes.toString());
 
         // 7. delete alias
         System.out.println("---------------------- deleteAlias ----------------------");
-        AffectRes affectRes1 = db.deleteAlias(COLL_NAME_ALIAS);
+        AffectRes affectRes1 = client.deleteAlias(DBNAME, COLL_NAME_ALIAS);
         System.out.println("\tres: " + affectRes1);
 
         // 8. describe collection
         System.out.println("---------------------- describeCollection ----------------------");
-        Collection descCollRes1 = db.describeCollection(COLL_NAME);
+        Collection descCollRes1 = client.describeCollection(DBNAME, COLL_NAME);
         System.out.println("\tres: " + descCollRes1.toString());
 
     }
@@ -110,7 +112,7 @@ public class VectorDBExampleWithEmbedding {
 
     private static void upsertData(VectorDBClient client) throws InterruptedException {
         Database database = client.database(DBNAME);
-        Collection collection = database.describeCollection(COLL_NAME);
+        Collection collection = client.describeCollection(DBNAME, COLL_NAME);
         List<Document> documentList = new ArrayList<>(Arrays.asList(
                 Document.newBuilder()
                         .withId("0001")
@@ -161,7 +163,7 @@ public class VectorDBExampleWithEmbedding {
                 .addAllDocument(documentList)
                 .withBuildIndex(true)
                 .build();
-        AffectRes affectRes = collection.upsert(insertParam);
+        AffectRes affectRes = client.upsert(DBNAME, COLL_NAME, insertParam);
         System.out.println("upsert affect res : "+ affectRes.toString());
 
         // notice：upsert操作可用会有延迟
@@ -170,7 +172,7 @@ public class VectorDBExampleWithEmbedding {
 
     private static void queryData(VectorDBClient client) {
         Database database = client.database(DBNAME);
-        Collection collection = database.describeCollection(COLL_NAME);
+        Collection collection = client.describeCollection(DBNAME, COLL_NAME);
 
         // query  查询
         // 1. query 用于查询数据
@@ -195,7 +197,7 @@ public class VectorDBExampleWithEmbedding {
                 // 是否返回 vector 数据
                 .withRetrieveVector(false)
                 .build();
-        List<Document> qdos = collection.query(queryParam);
+        List<Document> qdos = client.query(DBNAME, COLL_NAME, queryParam);
         for (Document doc : qdos) {
             System.out.println("\tres: " + doc.toString());
         }
@@ -216,7 +218,7 @@ public class VectorDBExampleWithEmbedding {
                 // 过滤获取到结果
                 .withFilter(filterParam)
                 .build();
-        List<List<Document>> siDocs = collection.searchById(searchByIdParam);
+        List<List<Document>> siDocs = client.searchById(DBNAME, COLL_NAME, searchByIdParam);
         int i = 0;
         for (List<Document> docs : siDocs) {
             System.out.println("\tres: " + i++);
@@ -240,7 +242,7 @@ public class VectorDBExampleWithEmbedding {
                 // 是否返回 vector 数据
                 .withRetrieveVector(true)
                 .build();
-        List<Document> allRes = collection.query(queryParam);
+        List<Document> allRes = client.query(DBNAME, COLL_NAME, queryParam);
         List<List<Double>> vectors = new ArrayList<>();
         for (Document document : allRes) {
             List<Double> vector = (List<Double>) document.getVector();
@@ -257,7 +259,7 @@ public class VectorDBExampleWithEmbedding {
                 .withFilter(filterParam)
                 .build();
         // 输出相似性检索结果，检索结果为二维数组，每一位为一组返回结果，分别对应 search 时指定的多个向量
-        List<List<Document>> svDocs = collection.search(searchByVectorParam);
+        List<List<Document>> svDocs = client.search(DBNAME, COLL_NAME, searchByVectorParam);
         i = 0;
         for (List<Document> docs : svDocs) {
             System.out.println("\tres: " + i++);
@@ -275,7 +277,7 @@ public class VectorDBExampleWithEmbedding {
                 .withParams(new HNSWSearchParams(100))
                 .withLimit(5)
                 .build();
-        SearchRes searchRes = collection.searchByEmbeddingItems(searchByEmbeddingItemsParam);
+        SearchRes searchRes = client.searchByEmbeddingItems(DBNAME, COLL_NAME, searchByEmbeddingItemsParam);
         i = 0;
         System.out.println("embedding info: " + searchRes.getEmbeddingExtraInfo());
         for (List<Document> docs : searchRes.getDocuments()) {
@@ -309,7 +311,7 @@ public class VectorDBExampleWithEmbedding {
                 // 支持添加新的内容
                 .addDocField(new DocField("extend", "extendContent"))
                 .build();
-        collection.update(updateParam, updateDoc);
+        client.update(DBNAME, COLL_NAME, updateParam, updateDoc);
 
         // delete
         // 1. delete 提供基于[ 主键查询]和[Filter 过滤]的数据删除能力
@@ -323,7 +325,7 @@ public class VectorDBExampleWithEmbedding {
                 .addAllDocumentId(documentIds)
                 .withFilter(filterParam)
                 .build();
-        collection.delete(build);
+        client.delete(DBNAME, COLL_NAME, build);
 
         // notice：delete操作可用会有延迟
         Thread.sleep(1000 * 5);
@@ -335,13 +337,13 @@ public class VectorDBExampleWithEmbedding {
                 .withDropBeforeRebuild(false)
                 .withThrottle(1)
                 .build();
-        collection.rebuildIndex(rebuildIndexParam);
+        client.rebuildIndex(DBNAME, COLL_NAME, rebuildIndexParam);
         Thread.sleep(5 * 1000);
 
 
         // truncate 会清除整个 Collection 的数据，包括索引
         System.out.println("---------------------- truncate collection ----------------------");
-        AffectRes affectRes = database.truncateCollections(COLL_NAME);
+        AffectRes affectRes = client.truncateCollections(DBNAME, COLL_NAME);
         System.out.println("\tres: " + affectRes.toString());
 
         Thread.sleep(5 * 1000);
@@ -352,7 +354,7 @@ public class VectorDBExampleWithEmbedding {
 
         // 删除 collection
         System.out.println("---------------------- dropCollection ----------------------");
-        database.dropCollection(COLL_NAME);
+        client.dropCollection(DBNAME, COLL_NAME);
 
         // 删除 database
         System.out.println("---------------------- dropDatabase ----------------------");

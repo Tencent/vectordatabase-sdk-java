@@ -223,6 +223,28 @@ public class VectorDBClient {
         return collectionInfo!=null;
     }
 
+    /***
+     * create collection
+     * @param param createCollectionParam: the parameters of the collection to be created
+     *              databaseName: the name of the database to be created
+     *              collection: the name of the collection to be created
+     *              replicaNum: the number of replicas
+     *              shardNum: the number of shards
+     *              description: the description of the collection
+     *              indexes: list of the index fields
+     *              embedding: Embedding class
+     *              ttlConfig: TTLConfig class
+     *
+     * @return collection object
+     */
+    public Collection createCollection(String databaseName, CreateCollectionParam param) throws VectorDBException {
+        param.setDatabase(databaseName);
+        param.setReadConsistency(readConsistency);
+        stub.createCollection(param);
+        param.setStub(this.stub);
+        return param;
+    }
+
     /**
      * create collection if not existed
      * @param databaseName

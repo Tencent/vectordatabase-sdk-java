@@ -59,7 +59,7 @@ public class VectorDBWithAutoIdAndJsonExample {
         queryData(client);
         updateAndDelete(client);
         deleteAndDrop(client);
-
+        client.close();
     }
 
 
@@ -161,7 +161,7 @@ public class VectorDBWithAutoIdAndJsonExample {
         // 3. 创建 collection
         System.out.println("---------------------- createCollection ----------------------");
         CreateCollectionParam collectionParam = initCreateCollectionParam(COLL_NAME);
-        db.createCollection(collectionParam);
+        client.createCollection(DBNAME, collectionParam);
         System.out.println(COLL_NAME + " exists: "+ db.IsExistsCollection(COLL_NAME));
 
         List<Collection> collectionInfos = client.listCollections(DBNAME);
@@ -273,7 +273,7 @@ public class VectorDBWithAutoIdAndJsonExample {
                 // 是否返回 vector 数据
 //                .withRetrieveVector(true)
                 .build();
-        List<Document> qdos = collection.query(queryParam);
+        List<Document> qdos = client.query(DBNAME, COLL_NAME, queryParam);
         for (Document doc : qdos) {
             System.out.println("\tres: " + doc.toString());
         }
@@ -331,7 +331,7 @@ public class VectorDBWithAutoIdAndJsonExample {
 
         // 删除 collection
         System.out.println("---------------------- truncate collection ----------------------");
-        database.dropCollection(COLL_NAME);
+        client.dropCollection(DBNAME, COLL_NAME);
 
         // 删除 database
         System.out.println("---------------------- drop database ----------------------");

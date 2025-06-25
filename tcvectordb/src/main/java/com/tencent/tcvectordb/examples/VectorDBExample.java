@@ -60,6 +60,7 @@ public class VectorDBExample {
         updateAndDelete(client);
         deleteAndDrop(client);
         testFilter();
+        client.close();
 
 
     }
@@ -155,23 +156,23 @@ public class VectorDBExample {
 
         // 5. 设置 collection 别名
         System.out.println("---------------------- setAlias ----------------------");
-        AffectRes affectRes = db.setAlias(COLL_NAME, COLL_NAME_ALIAS);
+        AffectRes affectRes = client.setAlias(DBNAME, COLL_NAME, COLL_NAME_ALIAS);
         System.out.println("\tres: " + affectRes.toString());
 
 
         // 6. describe collection
         System.out.println("---------------------- describeCollection ----------------------");
-        Collection descCollRes = db.describeCollection(COLL_NAME);
+        Collection descCollRes = client.describeCollection(DBNAME, COLL_NAME);
         System.out.println("\tres: " + descCollRes.toString());
 
         // 7. delete alias
         System.out.println("---------------------- deleteAlias ----------------------");
-        AffectRes affectRes1 = db.deleteAlias(COLL_NAME_ALIAS);
+        AffectRes affectRes1 = client.deleteAlias(DBNAME, COLL_NAME_ALIAS);
         System.out.println("\tres: " + affectRes1);
 
         // 8. describe collection
         System.out.println("---------------------- describeCollection ----------------------");
-        Collection descCollRes1 = db.describeCollection(COLL_NAME);
+        Collection descCollRes1 = client.describeCollection(DBNAME, COLL_NAME);
         System.out.println("\tres: " + descCollRes1.toString());
 
     }
@@ -179,7 +180,7 @@ public class VectorDBExample {
 
     private static void upsertData(VectorDBClient client) throws InterruptedException {
         Database database = client.database(DBNAME);
-        Collection collection = database.describeCollection(COLL_NAME);
+        Collection collection = client.describeCollection(DBNAME, COLL_NAME);
 //        List<JSONObject> documentList = Arrays.asList(
 //                new JSONObject("{\"id\":\"0013\",\"vector\":[0.2123, 0.21, 0.213],\"bookName\":\"三国演义\",\"author\":\"吴承恩\",\"page\":21,\"segment\":\"富贵功名，前缘分定，为人切莫欺心。\"}"),
 //                new JSONObject("{\"id\":\"0014\",\"vector\":[0.2123, 0.21, 0.213],\"bookName\":\"三国演义\",\"author\":\"吴承恩\",\"page\":21,\"segment\":\"富贵功名，前缘分定，为人切莫欺心。\"}")
@@ -249,7 +250,7 @@ public class VectorDBExample {
 //        documentList 是JSONObject列表或者document列表
 //        InsertParam insertParam = InsertParam.newBuilder().withDocumentsData(documentData).build();
 
-        collection.upsert(insertParam);
+        client.upsert(DBNAME, COLL_NAME, insertParam);
 //        可以直接使用client进行操作
         AffectRes affectRes = client.upsert(DBNAME,COLL_NAME, insertParam);
         System.out.println(JsonUtils.toJsonString(affectRes));
@@ -264,7 +265,7 @@ public class VectorDBExample {
 
     private static void queryData(VectorDBClient client) {
         Database database = client.database(DBNAME);
-        Collection collection = database.describeCollection(COLL_NAME);
+        Collection collection = client.describeCollection(DBNAME, COLL_NAME);
 
         System.out.println("---------------------- query ----------------------");
         List<String> documentIds = Arrays.asList("0001", "0002", "0003", "0004", "0005");
@@ -285,7 +286,7 @@ public class VectorDBExample {
                 .withRetrieveVector(false)
                 .withSort(OrderRule.newBuilder().withFieldName("page").withDirection(OrderEnum.DESC).build())
                 .build();
-        List<Document> qdos = collection.query(queryParam);
+        List<Document> qdos = client.query(DBNAME, COLL_NAME, queryParam);
         for (Document doc : qdos) {
             System.out.println("\tres: " + doc.toString());
         }
@@ -345,7 +346,7 @@ public class VectorDBExample {
 
     private static void updateAndDelete(VectorDBClient client) throws InterruptedException {
         Database database = client.database(DBNAME);
-        Collection collection = database.describeCollection(COLL_NAME);
+        Collection collection = client.describeCollection(DBNAME, COLL_NAME);
 
         System.out.println("---------------------- update ----------------------");
         // update
@@ -395,7 +396,7 @@ public class VectorDBExample {
                 .withDropBeforeRebuild(false)
                 .withThrottle(1)
                 .build();
-        collection.rebuildIndex(rebuildIndexParam);
+        client.rebuildIndex(DBNAME, COLL_NAME, rebuildIndexParam);
 
         Thread.sleep(1000 * 5);
 
@@ -410,7 +411,7 @@ public class VectorDBExample {
                 // 是否返回 vector 数据
                 .withRetrieveVector(false)
                 .build();
-        List<Document> qdos = collection.query(queryParam);
+        List<Document> qdos = client.query(DBNAME, COLL_NAME, queryParam);
         for (Document doc : qdos) {
             System.out.println("\tres: " + doc.toString());
         }
@@ -418,7 +419,7 @@ public class VectorDBExample {
 
         // truncate 会清除整个 Collection 的数据，包括索引
         System.out.println("---------------------- truncate collection ----------------------");
-        AffectRes affectRes1 = database.truncateCollections(COLL_NAME);
+        AffectRes affectRes1 = client.truncateCollections(DBNAME, COLL_NAME);
         System.out.println("\tres: " + JsonUtils.toJsonString(affectRes1));
 
         // notice：delete操作可用会有延迟
@@ -430,7 +431,7 @@ public class VectorDBExample {
 
         // 删除 collection
         System.out.println("---------------------- truncate collection ----------------------");
-        database.dropCollection(COLL_NAME);
+        client.dropCollection(DBNAME, COLL_NAME);
 
         // 删除 database
         System.out.println("---------------------- truncate collection ----------------------");

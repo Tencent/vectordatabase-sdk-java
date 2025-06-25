@@ -56,7 +56,7 @@ public class VectorDBWithBinaryVectorExample {
         upsertData(client);
         queryData(client);
         deleteAndDrop(client);
-
+        client.close();
     }
 
 
@@ -206,7 +206,7 @@ public class VectorDBWithBinaryVectorExample {
 
         // 删除 collection
         System.out.println("---------------------- truncate collection ----------------------");
-        database.dropCollection(COLL_NAME);
+        client.dropCollection(DBNAME, COLL_NAME);
 
         // 删除 database
         System.out.println("---------------------- drop database ----------------------");

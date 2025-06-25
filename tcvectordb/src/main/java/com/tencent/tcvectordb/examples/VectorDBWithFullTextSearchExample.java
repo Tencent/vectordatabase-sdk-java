@@ -63,7 +63,7 @@ public class VectorDBWithFullTextSearchExample {
         searchData(client);
         rebuild(client);
         deleteAndDrop(client);
-
+        client.close();
     }
 
 
@@ -187,7 +187,7 @@ public class VectorDBWithFullTextSearchExample {
 
         // 删除 collection
         System.out.println("---------------------- truncate collection ----------------------");
-        database.dropCollection(COLL_NAME);
+        client.dropCollection(DBNAME, COLL_NAME);
 
         // 删除 database
         System.out.println("---------------------- delete database ----------------------");

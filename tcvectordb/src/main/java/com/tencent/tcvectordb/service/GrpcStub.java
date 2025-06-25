@@ -877,17 +877,26 @@ public class GrpcStub extends HttpStub{
                     "VectorDBServer error: search not Success, body code=%s, message=%s",
                     searchResponse.getCode(), searchResponse.getMsg()));
         }
+        HybridSearchRes hybridSearchRes = new HybridSearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning());
+        if (searchResponse.getEmbeddingExtraInfo()!=null){
+            EmbeddingExtraInfo embeddingExtraInfo = new EmbeddingExtraInfo();
+            embeddingExtraInfo.setTokenUsed(searchResponse.getEmbeddingExtraInfo().getTokenUsed());
+            hybridSearchRes.setEmbeddingExtraInfo(embeddingExtraInfo);
+        }
+
         List<List<Document>> documentsList = new ArrayList<>();
         for (Olama.SearchResult searchResult : searchResponse.getResultsList()) {
             List<Document> documents = searchResult.getDocumentsList().stream().map(GrpcStub::convertDocument)
                     .collect(Collectors.toList());
             if (!searchParam.getIsArrayParam()){
-                return new HybridSearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), Collections.unmodifiableList(documents));
+                hybridSearchRes.setDocuments(Collections.unmodifiableList(documents));
+                return  hybridSearchRes;
             }else {
                 documentsList.add(documents);
             }
         }
-        return new HybridSearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), Collections.unmodifiableList(documentsList));
+
+        return  hybridSearchRes;
     }
 
     private static void logQuery(String url, MessageOrBuilder messageOrBuilder) {

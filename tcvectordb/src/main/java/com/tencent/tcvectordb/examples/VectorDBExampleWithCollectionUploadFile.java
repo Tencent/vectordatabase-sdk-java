@@ -75,6 +75,7 @@ public class VectorDBExampleWithCollectionUploadFile {
         queryFileDetails(client, "tcvdb.pdf");
         queryData(client);
         client.dropDatabase(DBNAME);
+        client.close();
     }
 
     private static void queryFileDetails(VectorDBClient client, String fileName) {
@@ -164,7 +165,7 @@ public class VectorDBExampleWithCollectionUploadFile {
                 // 是否返回 vector 数据
                 .withRetrieveVector(false)
                 .build();
-        List<Document> qdos = collection.query(queryParam);
+        List<Document> qdos = client.query(DBNAME, COLL_NAME, queryParam);
         for (Document doc : qdos) {
             System.out.println("\tres: " + doc.toString());
         }

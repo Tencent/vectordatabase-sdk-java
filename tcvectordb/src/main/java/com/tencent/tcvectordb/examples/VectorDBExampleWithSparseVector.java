@@ -57,6 +57,7 @@ public class VectorDBExampleWithSparseVector {
         queryData(client);
         updateAndDelete(client);
         deleteAndDrop(client);
+        client.close();
     }
 
 
@@ -76,7 +77,7 @@ public class VectorDBExampleWithSparseVector {
         // 3. 创建 collection
         System.out.println("---------------------- createCollection ----------------------");
         CreateCollectionParam collectionParam = initCreateCollectionParam(COLL_NAME);
-        db.createCollection(collectionParam);
+        client.createCollection(DBNAME, collectionParam);
 
         // 4. 列出所有 collection
 //        Database db = client.database(DBNAME);
@@ -88,23 +89,23 @@ public class VectorDBExampleWithSparseVector {
 
         // 5. 设置 collection 别名
         System.out.println("---------------------- setAlias ----------------------");
-        AffectRes affectRes = db.setAlias(COLL_NAME, COLL_NAME_ALIAS);
+        AffectRes affectRes = client.setAlias(DBNAME, COLL_NAME, COLL_NAME_ALIAS);
         System.out.println("\tres: " + affectRes.toString());
 
 
         // 6. describe collection
         System.out.println("---------------------- describeCollection ----------------------");
-        Collection descCollRes = db.describeCollection(COLL_NAME);
+        Collection descCollRes = client.describeCollection(DBNAME, COLL_NAME);
         System.out.println("\tres: " + descCollRes.toString());
 
         // 7. delete alias
         System.out.println("---------------------- deleteAlias ----------------------");
-        AffectRes affectRes1 = db.deleteAlias(COLL_NAME_ALIAS);
+        AffectRes affectRes1 = client.deleteAlias(DBNAME, COLL_NAME_ALIAS);
         System.out.println("\tres: " + affectRes1);
 
         // 8. describe collection
         System.out.println("---------------------- describeCollection ----------------------");
-        Collection descCollRes1 = db.describeCollection(COLL_NAME);
+        Collection descCollRes1 = client.describeCollection(DBNAME, COLL_NAME);
         System.out.println("\tres: " + descCollRes1.toString());
 
     }
@@ -122,7 +123,7 @@ public class VectorDBExampleWithSparseVector {
 
     private static void upsertData(VectorDBClient client) throws InterruptedException {
         Database database = client.database(DBNAME);
-        Collection collection = database.describeCollection(COLL_NAME);
+        Collection collection = client.describeCollection(DBNAME, COLL_NAME);
         SparseVectorBm25Encoder encoder = SparseVectorBm25Encoder.getBm25Encoder("zh");
         List<String> texts = Arrays.asList(
                 "富贵功名，前缘分定，为人切莫欺心。",
@@ -193,7 +194,7 @@ public class VectorDBExampleWithSparseVector {
                 .addAllDocument(documentList)
                 .withBuildIndex(true)
                 .build();
-        collection.upsert(insertParam);
+        client.upsert(DBNAME, COLL_NAME, insertParam);
 
         // notice：upsert操作可用会有延迟
         Thread.sleep(1000 * 3);
@@ -201,7 +202,7 @@ public class VectorDBExampleWithSparseVector {
 
     private static void queryData(VectorDBClient client) {
         Database database = client.database(DBNAME);
-        Collection collection = database.describeCollection(COLL_NAME);
+        Collection collection = client.describeCollection(DBNAME, COLL_NAME);
 
         // query  查询
         // 1. query 用于查询数据
@@ -226,7 +227,7 @@ public class VectorDBExampleWithSparseVector {
                 // 是否返回 vector 数据
                 .withRetrieveVector(false)
                 .build();
-        List<Document> qdos = collection.query(queryParam);
+        List<Document> qdos = client.query(DBNAME, COLL_NAME, queryParam);
         for (Document doc : qdos) {
             System.out.println("\tres: " + doc.toString());
         }
@@ -262,7 +263,7 @@ public class VectorDBExampleWithSparseVector {
 
     private static void updateAndDelete(VectorDBClient client) throws InterruptedException {
         Database database = client.database(DBNAME);
-        Collection collection = database.describeCollection(COLL_NAME);
+        Collection collection = client.describeCollection(DBNAME, COLL_NAME);
 
 
         // update
@@ -285,7 +286,7 @@ public class VectorDBExampleWithSparseVector {
                 .addDocField(new DocField("extend", "extendContent"))
                 .withSparseVector(encoder.encodeQueries(Arrays.asList("正大光明，忠良善果弥深")).get(0))
                 .build();
-        collection.update(updateParam, updateDoc);
+        client.update(DBNAME, COLL_NAME, updateParam, updateDoc);
 
         // delete
         // 1. delete 提供基于[ 主键查询]和[Filter 过滤]的数据删除能力
@@ -299,7 +300,7 @@ public class VectorDBExampleWithSparseVector {
                 .addAllDocumentId(documentIds)
                 .withFilter(filterParam)
                 .build();
-        collection.delete(build);
+        client.delete(DBNAME, COLL_NAME, build);
 
         // notice：delete操作可用会有延迟
         Thread.sleep(1000 * 5);
@@ -311,13 +312,13 @@ public class VectorDBExampleWithSparseVector {
                 .withDropBeforeRebuild(false)
                 .withThrottle(1)
                 .build();
-        collection.rebuildIndex(rebuildIndexParam);
+        client.rebuildIndex(DBNAME, COLL_NAME, rebuildIndexParam);
         Thread.sleep(5 * 1000);
 
 
         // truncate 会清除整个 Collection 的数据，包括索引
         System.out.println("---------------------- truncate collection ----------------------");
-        AffectRes affectRes = database.truncateCollections(COLL_NAME);
+        AffectRes affectRes = client.truncateCollections(DBNAME, COLL_NAME);
         System.out.println("\tres: " + affectRes.toString());
 
         Thread.sleep(5 * 1000);
@@ -328,7 +329,7 @@ public class VectorDBExampleWithSparseVector {
 
         // 删除 collection
         System.out.println("---------------------- dropCollection ----------------------");
-        database.dropCollection(COLL_NAME);
+        client.dropCollection(DBNAME, COLL_NAME);
 
         // 删除 database
         System.out.println("---------------------- dropDatabase ----------------------");

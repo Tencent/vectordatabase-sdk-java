@@ -354,10 +354,18 @@ public class HttpStub implements Stub {
                 }
                 multiDosc.add(docs);
             }
-            if (!param.getSearch().getIsArrayParam()){
-                return new HybridSearchRes(code, msg, warning, Collections.unmodifiableList(multiDosc.get(0)));
+            HybridSearchRes searchRes = new HybridSearchRes(code, msg, warning);
+            if (jsonNode.get("embeddingExtraInfo") != null){
+                EmbeddingExtraInfo embeddingExtraInfo = new EmbeddingExtraInfo();
+                embeddingExtraInfo.setTokenUsed(jsonNode.get("embeddingExtraInfo").get("tokenUsed").asLong());
+                searchRes.setEmbeddingExtraInfo(embeddingExtraInfo);
             }
-            return new HybridSearchRes(code, msg, warning, Collections.unmodifiableList(multiDosc));
+            if (!param.getSearch().getIsArrayParam()){
+                searchRes.setDocuments(Collections.unmodifiableList(multiDosc.get(0)));
+                return searchRes;
+            }
+            searchRes.setDocuments(Collections.unmodifiableList(multiDosc));
+            return searchRes;
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format("VectorDBServer response " +
                     "from hybrid search error: can't parse documents=%s", multiDocsNode));

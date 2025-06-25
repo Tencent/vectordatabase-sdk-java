@@ -42,6 +42,7 @@ public class ConnectParam {
      * max idle connection count, unit is second
      */
     private final int maxIdleConnections;
+    private final int connectionPoolSize;
     /**
      * keep alive duration, unit is second
      */
@@ -55,6 +56,7 @@ public class ConnectParam {
         this.connectTimeout = builder.connectTimeout;
         this.maxIdleConnections = builder.maxIdleConnections;
         this.keepAliveDuration = builder.keepAliveDuration;
+        this.connectionPoolSize = builder.connectionPoolSize;
     }
 
     public String getUrl() {
@@ -71,6 +73,10 @@ public class ConnectParam {
 
     public int getTimeout() {
         return timeout;
+    }
+
+    public int getConnectionPoolSize() {
+        return connectionPoolSize;
     }
 
     public long getConnectTimeout() {
@@ -106,6 +112,8 @@ public class ConnectParam {
          * max idle connection count, unit is second
          */
         private int maxIdleConnections = 10;
+
+        private int connectionPoolSize = 1;
         /**
          * keep alive duration, unit is second
          */
@@ -158,6 +166,7 @@ public class ConnectParam {
         public Builder withMaxIdleConnections(int maxIdleConnections) {
             if (maxIdleConnections > 0) {
                 this.maxIdleConnections = maxIdleConnections;
+                this.connectionPoolSize = maxIdleConnections;
             }
             return this;
         }

@@ -35,12 +35,14 @@ import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.Collection;
 import com.tencent.tcvectordb.model.*;
+import com.tencent.tcvectordb.model.param.collection.FieldType;
 import com.tencent.tcvectordb.model.param.collection.UploadFileParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.collectionView.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
+import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
 import com.tencent.tcvectordb.model.param.user.*;
 import com.tencent.tcvectordb.service.param.*;
 import com.tencent.tcvectordb.utils.FileUtils;
@@ -286,8 +288,15 @@ public class HttpStub implements Stub {
         if (jsonNode.get("warning") != null) {
             warning = jsonNode.get("warning").asText();
         }
+        SearchRes searchRes = new SearchRes(code, msg, warning, Collections.emptyList());
+        if (jsonNode.get("embeddingExtraInfo") != null){
+            EmbeddingExtraInfo embeddingExtraInfo = new EmbeddingExtraInfo();
+            embeddingExtraInfo.setTokenUsed(jsonNode.get("embeddingExtraInfo").get("tokenUsed").asLong());
+            searchRes.setEmbeddingExtraInfo(embeddingExtraInfo);
+        }
+
         if (multiDocsNode == null) {
-            return new SearchRes(code, msg, warning, Collections.emptyList());
+            return searchRes;
         }
         try {
             List<List<Document>> multiDosc = new ArrayList<>();
@@ -303,7 +312,8 @@ public class HttpStub implements Stub {
                 }
                 multiDosc.add(docs);
             }
-            return new SearchRes(code, msg, warning, Collections.unmodifiableList(multiDosc));
+            searchRes.setDocuments(Collections.unmodifiableList(multiDosc));
+            return searchRes;
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format("VectorDBServer response " +
                     "from search error: can't parse documents=%s", multiDocsNode));
@@ -344,10 +354,18 @@ public class HttpStub implements Stub {
                 }
                 multiDosc.add(docs);
             }
-            if (!param.getSearch().getIsArrayParam()){
-                return new HybridSearchRes(code, msg, warning, Collections.unmodifiableList(multiDosc.get(0)));
+            HybridSearchRes searchRes = new HybridSearchRes(code, msg, warning);
+            if (jsonNode.get("embeddingExtraInfo") != null){
+                EmbeddingExtraInfo embeddingExtraInfo = new EmbeddingExtraInfo();
+                embeddingExtraInfo.setTokenUsed(jsonNode.get("embeddingExtraInfo").get("tokenUsed").asLong());
+                searchRes.setEmbeddingExtraInfo(embeddingExtraInfo);
             }
-            return new HybridSearchRes(code, msg, warning, Collections.unmodifiableList(multiDosc));
+            if (!param.getSearch().getIsArrayParam()){
+                searchRes.setDocuments(Collections.unmodifiableList(multiDosc.get(0)));
+                return searchRes;
+            }
+            searchRes.setDocuments(Collections.unmodifiableList(multiDosc));
+            return searchRes;
         } catch (JsonProcessingException ex) {
             throw new VectorDBException(String.format("VectorDBServer response " +
                     "from hybrid search error: can't parse documents=%s", multiDocsNode));
@@ -372,6 +390,7 @@ public class HttpStub implements Stub {
         JsonNode jsonNode = this.post(url, param.toString(), ai);
         return JsonUtils.parseObject(jsonNode.toString(), AffectRes.class);
     }
+
 
     @Override
     public BaseRes modifyVectorIndex(ModifyIndexParamInner param, boolean ai) {
@@ -919,6 +938,54 @@ public class HttpStub implements Stub {
         String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DROP_INDEX);
         JsonNode jsonNode = this.post(url, JsonUtils.toJsonString(dropIndexParamInner), false);
         return JsonUtils.parseObject(jsonNode.toString(), BaseRes.class);
+    }
+
+    @Override
+    public QueryFileDetailRes queryFileDetails(QueryFileDetailsParamInner param) {
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_DOCUMENT_QUERY_FILE_DETAILS);
+        JsonNode jsonNode = this.post(url, JsonUtils.toJsonString(param), false);
+        return JsonUtils.parseObject(jsonNode.toString(), QueryFileDetailRes.class);
+    }
+
+    @Override
+    public FullTextSearchRes fullTextSearch(FullTextSearchParamInner param, boolean ai) {
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.DOC_FULL_TEXT_SEARCH);
+        JsonNode jsonNode = this.post(url, param.toString(), false);
+        JsonNode documentsNode = jsonNode.get("documents");
+        int code = 0;
+        if (jsonNode.get("code") != null) {
+            code = jsonNode.get("code").asInt();
+        }
+        String msg = "";
+        if (jsonNode.get("msg") != null) {
+            msg = jsonNode.get("msg").asText();
+        }
+        String warning = "";
+        if (jsonNode.get("warning") != null) {
+            warning = jsonNode.get("warning").asText();
+        }
+        if (documentsNode == null) {
+            return new FullTextSearchRes(code, msg, warning, Collections.emptyList());
+        }
+        try {
+            List<Document> multiDosc = new ArrayList<>();
+            Iterator<JsonNode> multiIter = documentsNode.elements();
+            while (multiIter.hasNext()) {
+                JsonNode docNode = multiIter.next();
+                Iterator<JsonNode> iter = docNode.elements();
+                List<Document> docs = new ArrayList<>();
+                while (iter.hasNext()) {
+                    JsonNode node = iter.next();
+                    Document doc = node2Doc(node);
+                    docs.add(doc);
+                }
+                multiDosc.addAll(docs);
+            }
+            return new FullTextSearchRes(code, msg, warning, Collections.unmodifiableList(multiDosc));
+        } catch (JsonProcessingException ex) {
+            throw new VectorDBException(String.format("VectorDBServer response " +
+                    "from full search search error: can't parse documents=%s", documentsNode));
+        }
     }
 
 

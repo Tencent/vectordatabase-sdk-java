@@ -56,7 +56,7 @@ public class VectorDBWithHNSWQuantizationExample {
         queryData(client, COLL_NAME_BFLOAT16);
         modifyVectorIndex(client);
         deleteAndDrop(client);
-
+        client.close();
     }
 
 

@@ -65,7 +65,7 @@ public class VectorDBUserManageExample {
         System.out.println("--------------drop user: " + user_test);
         res = client.dropUser(user_test);
         System.out.println("drop user res: code:" + res.getCode() + ", msg: " + res.getMsg());
-
+        client.close();
     }
 
 }

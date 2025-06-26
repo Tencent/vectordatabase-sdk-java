@@ -20,6 +20,7 @@
 package com.tencent.tcvectordb.service;
 
 import com.tencent.tcvectordb.model.*;
+import com.tencent.tcvectordb.model.param.collection.FieldType;
 import com.tencent.tcvectordb.model.param.collection.UploadFileParam;
 import com.tencent.tcvectordb.model.param.collectionView.CreateCollectionViewParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
@@ -209,4 +210,8 @@ public interface Stub {
     GetImageUrlRes GetImageUrl(GetImageUrlParamInner param);
 
     BaseRes dropIndex(DropIndexParamInner dropIndexParamInner);
+
+    QueryFileDetailRes queryFileDetails(QueryFileDetailsParamInner param);
+
+    FullTextSearchRes fullTextSearch(FullTextSearchParamInner param, boolean ai);
 }

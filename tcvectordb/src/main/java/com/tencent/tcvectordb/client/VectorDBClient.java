@@ -223,6 +223,28 @@ public class VectorDBClient {
         return collectionInfo!=null;
     }
 
+    /***
+     * create collection
+     * @param param createCollectionParam: the parameters of the collection to be created
+     *              databaseName: the name of the database to be created
+     *              collection: the name of the collection to be created
+     *              replicaNum: the number of replicas
+     *              shardNum: the number of shards
+     *              description: the description of the collection
+     *              indexes: list of the index fields
+     *              embedding: Embedding class
+     *              ttlConfig: TTLConfig class
+     *
+     * @return collection object
+     */
+    public Collection createCollection(String databaseName, CreateCollectionParam param) throws VectorDBException {
+        param.setDatabase(databaseName);
+        param.setReadConsistency(readConsistency);
+        stub.createCollection(param);
+        param.setStub(this.stub);
+        return param;
+    }
+
     /**
      * create collection if not existed
      * @param databaseName
@@ -508,6 +530,28 @@ public class VectorDBClient {
                 database, collection, param, this.readConsistency), ai);
     }
 
+
+    /**
+     * full text search
+     * @param database
+     * @param collection
+     * @param param FullTextSearchParam:
+     *      match(MatchOption): matchOption used for sparse vector search
+     *      retrieve_vector(bool): Whether to sparse vector values.
+     *      filter(Filter): filter rows before return result
+     *      output_fields(List): return columns by column name list
+     *      Limit(int): limit the number of rows returned
+     * @return FullTextSearchRes:
+     *      documents: List<Document>: the List of document
+     *
+     * @throws VectorDBException
+     */
+    public FullTextSearchRes fullTextSearch(String database, String collection, FullTextSearchParam param) throws VectorDBException {
+        boolean ai = false;
+        return this.stub.fullTextSearch(new FullTextSearchParamInner(
+                database, collection, param, this.readConsistency), ai);
+    }
+
     /**
      * this method is deprecated, recommend use {@link VectorDBClient#addIndex(String, String, AddIndexParam)}
      * Used to add a scalar field index to an existing collection
@@ -527,6 +571,7 @@ public class VectorDBClient {
     /**
      * rebuild index
      * @param rebuildIndexParam: rebuild index param
+     *
      * @return BaseRes
      */
     public BaseRes rebuildIndex(String database, String collection, RebuildIndexParam rebuildIndexParam) {
@@ -765,6 +810,35 @@ public class VectorDBClient {
         paramInner.setDocumentIds(param.getDocumentIds());
 
         return this.stub.GetImageUrl(paramInner);
+    }
+
+
+    /**
+     * query file details
+     * @param database  database name
+     * @param collection  collection name
+     * @param param QueryFileDetailParam.class
+     *              fileNames (List<String>): query file names
+     *              filter (String): filter rows before return result
+     *              outputFields (List<String>): return columns by column name list
+     *              limit (int): Limit return row's count
+     *              offset (int): Skip offset rows of query result set
+     *
+     * @return QueryFileDetailRes.class
+     *              documents: List<FileDetail>:
+     *                  id (String): file name
+     *                  _indexed_status (string): indexed status, "Ready" or "Failure"
+     *                  _text_length(Long): text length
+     *
+     */
+    public QueryFileDetailRes queryFileDetails(String database, String collection, QueryFileDetailParam param) {
+        QueryFileDetailsParamInner paramInner = new QueryFileDetailsParamInner();
+        paramInner.setDatabase(database);
+        paramInner.setCollection(collection);
+        paramInner.setQuery(param);
+        paramInner.setReadConsistency(this.readConsistency);
+
+        return this.stub.queryFileDetails(paramInner);
     }
 
 }

@@ -12,17 +12,15 @@ import java.util.List;
  * Params:
  *     fieldName: String, field name of the sparse vector field, value must be "sparse_vector".
  *     data: List<List<List<Object>>>, sparse vector data, can user MatchOption.newBuilder().withData(List<List<Pair<Long, Float>>>) to use sparse vector data.
- *     Limit: Integer, search limit
  *     terminateAfter: Integer, search terminate after this number of documents.
  *     cutoffFrequency: Double, cutoff frequency.
  * eg:
- *     MatchOption option = new MatchOption.Builder().withFieldName("sparse_vector").withData(sparseVector).build();
+ *     MatchParam param = new MatchParam.Builder().withFieldName("sparse_vector").withData(sparseVector).build();
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MatchOption {
+public class MatchParam {
     private String fieldName;
     private List<List<List<Object>>> data;
-    private Integer limit;
 
     private Integer terminateAfter;
     private Double cutoffFrequency;
@@ -43,14 +41,6 @@ public class MatchOption {
         this.data = data;
     }
 
-    public Integer getLimit() {
-        return limit;
-    }
-
-    public void setLimit(Integer limit) {
-        this.limit = limit;
-    }
-
     public Integer getTerminateAfter() {
         return terminateAfter;
     }
@@ -67,10 +57,9 @@ public class MatchOption {
         this.cutoffFrequency = cutoffFrequency;
     }
 
-    public MatchOption(Builder builder) {
+    public MatchParam(Builder builder) {
         this.fieldName = builder.fieldName;
         this.data = builder.data;
-        this.limit = builder.limit;
         this.terminateAfter = builder.terminateAfter;
         this.cutoffFrequency = builder.cutoffFrequency;
     }
@@ -82,7 +71,6 @@ public class MatchOption {
     public static final class Builder {
         private String fieldName;
         private List<List<List<Object>>> data;
-        private Integer limit;
 
         private Integer terminateAfter;
         private Double cutoffFrequency;
@@ -111,11 +99,6 @@ public class MatchOption {
             return this;
         }
 
-        public Builder withLimit(Integer limit){
-            this.limit = limit;
-            return this;
-        }
-
         public Builder withTerminateAfter(Integer terminateAfter){
             this.terminateAfter = terminateAfter;
             return this;
@@ -126,11 +109,11 @@ public class MatchOption {
             return this;
         }
 
-        public MatchOption build() {
-            if (fieldName == null || data.isEmpty()){
+        public MatchParam build() {
+            if (fieldName == null || data == null || data.isEmpty()){
                 throw new ParamException("RetrieveOption error: fieldName or data is null");
             }
-            return new MatchOption(this);
+            return new MatchParam(this);
         }
     }
 

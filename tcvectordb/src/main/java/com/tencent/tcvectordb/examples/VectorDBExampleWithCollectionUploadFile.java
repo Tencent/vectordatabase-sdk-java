@@ -28,6 +28,7 @@ import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.collectionView.*;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.GetImageUrlRes;
+import com.tencent.tcvectordb.model.param.entity.QueryFileDetailRes;
 import com.tencent.tcvectordb.model.param.entity.SearchRes;
 import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
 import com.tencent.tcvectordb.model.param.enums.OrderEnum;
@@ -71,9 +72,21 @@ public class VectorDBExampleWithCollectionUploadFile {
 //
 //        // 解析加载文件需要等待时间
         Thread.sleep(1000 * 30);
-
+        queryFileDetails(client, "tcvdb.pdf");
         queryData(client);
         client.dropDatabase(DBNAME);
+        client.close();
+    }
+
+    private static void queryFileDetails(VectorDBClient client, String fileName) {
+        System.out.println("---------------------- queryFileDetails ----------------------");
+        QueryFileDetailParam param = QueryFileDetailParam.newBuilder()
+                .withFileNames(Arrays.asList(fileName))
+//                .withFilter("")
+                .build();
+        QueryFileDetailRes res = client.queryFileDetails(DBNAME, COLL_NAME, param);
+        System.out.println(JsonUtils.toJsonString(res));
+
     }
 
     private static void createDatabaseAndCollection(VectorDBClient client) throws InterruptedException {
@@ -152,7 +165,7 @@ public class VectorDBExampleWithCollectionUploadFile {
                 // 是否返回 vector 数据
                 .withRetrieveVector(false)
                 .build();
-        List<Document> qdos = collection.query(queryParam);
+        List<Document> qdos = client.query(DBNAME, COLL_NAME, queryParam);
         for (Document doc : qdos) {
             System.out.println("\tres: " + doc.toString());
         }
@@ -221,11 +234,11 @@ public class VectorDBExampleWithCollectionUploadFile {
 
         // 根据chunk_num 和 section_num 获取chunk文本
         System.out.println("---------------------- get chunk text by chunk_num ----------------------");
-        Long chunkNum = (Long) searchRes.getDocuments().get(0).get(0).getObject("chunk_num");
-        Long sectionNum = (Long) searchRes.getDocuments().get(0).get(0).getObject("section_num");
-        if (chunkNum==null || sectionNum==null){
+        if (searchRes.getDocuments().get(0).get(0).getObject("chunk_num")==null){
             return;
         }
+        Long chunkNum = Long.valueOf(searchRes.getDocuments().get(0).get(0).getObject("chunk_num").toString());
+        Long sectionNum = Long.valueOf(searchRes.getDocuments().get(0).get(0).getObject("section_num").toString());
         Long startChunkNum = chunkNum-2;
         if (startChunkNum < 0){
             startChunkNum = 0L;
@@ -273,7 +286,7 @@ public class VectorDBExampleWithCollectionUploadFile {
         return CreateCollectionParam.newBuilder()
                 .withName(collName)
                 .withShardNum(1)
-                .withReplicaNum(0)
+                .withReplicaNum(1)
                 .withDescription("test collection0")
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", 768, IndexType.HNSW,

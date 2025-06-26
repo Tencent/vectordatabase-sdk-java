@@ -20,6 +20,7 @@
 
 package com.tencent.tcvectordb.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.MessageOrBuilder;
@@ -42,6 +43,7 @@ import com.tencent.tcvectordb.rpc.pool.ChannelPool;
 import com.tencent.tcvectordb.rpc.proto.Olama;
 import com.tencent.tcvectordb.rpc.proto.SearchEngineGrpc;
 import com.tencent.tcvectordb.service.param.*;
+import com.tencent.tcvectordb.utils.JsonUtils;
 import io.grpc.*;
 import io.grpc.okhttp.OkHttpChannelBuilder;
 import org.apache.commons.lang3.tuple.Pair;
@@ -553,7 +555,13 @@ public class GrpcStub extends HttpStub{
                     "VectorDBServer upsert data error: not Successful, code=%s, message=%s",
                     response.getCode(), response.getMsg()));
         }
-        return new AffectRes(response.getCode(), response.getMsg(), response.getWarning(), response.getAffectedCount());
+        AffectRes affectRes = new AffectRes(response.getCode(), response.getMsg(), response.getWarning(), response.getAffectedCount());
+        if (response.hasEmbeddingExtraInfo()){
+            EmbeddingExtraInfo embeddingExtraInfo = new EmbeddingExtraInfo();
+            embeddingExtraInfo.setTokenUsed(response.getEmbeddingExtraInfo().getTokenUsed());
+            affectRes.setEmbeddingExtraInfo(embeddingExtraInfo);
+        }
+        return affectRes;
     }
 
     @Override
@@ -684,7 +692,77 @@ public class GrpcStub extends HttpStub{
             documentsList.add(searchResult.getDocumentsList().stream().map(GrpcStub::convertDocument)
                     .collect(Collectors.toList()));
         }
-        return new SearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), documentsList);
+
+        SearchRes searchRes = new SearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), documentsList);
+        if (searchResponse.getEmbeddingExtraInfo()!=null){
+            searchRes.setEmbeddingExtraInfo(new EmbeddingExtraInfo(searchResponse.getEmbeddingExtraInfo().getTokenUsed()));
+        }
+        return searchRes;
+    }
+
+    @Override
+    public FullTextSearchRes fullTextSearch(FullTextSearchParamInner param, boolean ai) {
+        Olama.SearchRequest.Builder builder = Olama.SearchRequest.newBuilder().
+                setReadConsistency(param.getReadConsistency().getReadConsistency());
+        if (param.getDatabase()!=null){
+            builder.setDatabase(param.getDatabase());
+        }
+        if (param.getCollection()!=null){
+            builder.setCollection(param.getCollection());
+        }
+        FullTextSearchParam searchParam = param.getSearch();
+        Olama.SearchCond.Builder searchConBuilder = Olama.SearchCond.newBuilder()
+                .setRetrieveVector(searchParam.isRetrieveVector()).setLimit(searchParam.getLimit());
+        if (searchParam.getOutputFields()!=null){
+            searchConBuilder.addAllOutputfields(searchParam.getOutputFields());
+        }
+        if (searchParam.getFilter()!=null){
+            searchConBuilder.setFilter(searchParam.getFilter());
+        }
+
+        if (searchParam.getMatch()!=null){
+            MatchParam matchOption = searchParam.getMatch();
+            Olama.SparseData.Builder sparseBuilder = Olama.SparseData.newBuilder().setFieldName(matchOption.getFieldName());
+            matchOption.getData().forEach(sparseVectors->{
+                sparseBuilder.addData(Olama.SparseVectorArray.newBuilder().addAllSpVector(sparseVectors.stream()
+                        .map(vectors-> Olama.SparseVecItem.newBuilder().setTermId((Long) vectors.get(0)).
+                                setScore((Float.parseFloat(vectors.get(1).toString()))).
+                                build()).collect(Collectors.toList())).build());
+            });
+
+            if (matchOption.getCutoffFrequency()!=null || matchOption.getTerminateAfter()!=null){
+                Olama.SparseSearchParams.Builder sparseSearchParamsBuilder = Olama.SparseSearchParams.newBuilder();
+                if (matchOption.getCutoffFrequency()!=null){
+                    sparseSearchParamsBuilder.setCutoffFrequency(matchOption.getCutoffFrequency());
+                }
+                if (matchOption.getTerminateAfter()!=null){
+                    sparseSearchParamsBuilder.setTerminateAfter(matchOption.getTerminateAfter());
+                }
+                sparseBuilder.setParams(sparseSearchParamsBuilder.build()).build();
+            }
+            searchConBuilder.addSparse(sparseBuilder.build());
+        }
+        builder.setSearch(searchConBuilder.build());
+        logQuery(ApiPath.DOC_FULL_TEXT_SEARCH, builder);
+        ManagedChannel channel = channelPool.getChannel();
+        SearchEngineGrpc.SearchEngineBlockingStub searchEngineBlockingStub = SearchEngineGrpc.newBlockingStub(channel).withInterceptors(new BackendServiceInterceptor(ai));
+        Olama.SearchResponse searchResponse = searchEngineBlockingStub.withDeadlineAfter(this.timeout, TimeUnit.SECONDS).fullTextSearch(builder.build());
+
+        logResponse(ApiPath.DOC_FULL_TEXT_SEARCH, searchResponse);
+        if(searchResponse==null){
+            throw new VectorDBException("VectorDBServer error: full text search not response");
+        }
+        if (searchResponse.getCode()!=0){
+            throw new VectorDBException(String.format(
+                    "VectorDBServer error: full text search not Success, body code=%s, message=%s",
+                    searchResponse.getCode(), searchResponse.getMsg()));
+        }
+        List<Document> documents = new ArrayList<>();
+        for (Olama.SearchResult searchResult : searchResponse.getResultsList()) {
+            documents.addAll(searchResult.getDocumentsList().stream().map(GrpcStub::convertDocument)
+                    .collect(Collectors.toList()));
+        }
+        return new FullTextSearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), documents);
     }
 
     @Override
@@ -799,17 +877,26 @@ public class GrpcStub extends HttpStub{
                     "VectorDBServer error: search not Success, body code=%s, message=%s",
                     searchResponse.getCode(), searchResponse.getMsg()));
         }
+        HybridSearchRes hybridSearchRes = new HybridSearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning());
+        if (searchResponse.getEmbeddingExtraInfo()!=null){
+            EmbeddingExtraInfo embeddingExtraInfo = new EmbeddingExtraInfo();
+            embeddingExtraInfo.setTokenUsed(searchResponse.getEmbeddingExtraInfo().getTokenUsed());
+            hybridSearchRes.setEmbeddingExtraInfo(embeddingExtraInfo);
+        }
+
         List<List<Document>> documentsList = new ArrayList<>();
         for (Olama.SearchResult searchResult : searchResponse.getResultsList()) {
             List<Document> documents = searchResult.getDocumentsList().stream().map(GrpcStub::convertDocument)
                     .collect(Collectors.toList());
             if (!searchParam.getIsArrayParam()){
-                return new HybridSearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), Collections.unmodifiableList(documents));
+                hybridSearchRes.setDocuments(Collections.unmodifiableList(documents));
+                return  hybridSearchRes;
             }else {
                 documentsList.add(documents);
             }
         }
-        return new HybridSearchRes(searchResponse.getCode(),searchResponse.getMsg(), searchResponse.getWarning(), Collections.unmodifiableList(documentsList));
+
+        return  hybridSearchRes;
     }
 
     private static void logQuery(String url, MessageOrBuilder messageOrBuilder) {
@@ -920,10 +1007,12 @@ public class GrpcStub extends HttpStub{
         if (param.getCollection()!=null){
             builder.setCollection(param.getCollection());
         }
+        if (param.getFieldName()!=null){
+            builder.setFieldName(param.getFieldName());
+        }
         Olama.RebuildIndexRequest rebuildIndexRequest = builder
                 .setThrottle(param.getThrottle())
-                .setDropBeforeRebuild(param.isDropBeforeRebuild())
-                .build();
+                .setDropBeforeRebuild(param.isDropBeforeRebuild()).build();
         logQuery(ApiPath.REBUILD_INDEX, rebuildIndexRequest);
         ManagedChannel channel = channelPool.getChannel();
         Olama.RebuildIndexResponse rebuildIndexResponse = SearchEngineGrpc.newBlockingStub(channel).withDeadlineAfter(this.timeout, TimeUnit.SECONDS).rebuildIndex(rebuildIndexRequest);
@@ -1028,6 +1117,12 @@ public class GrpcStub extends HttpStub{
     public BaseRes rebuildAIIndex(RebuildIndexParamInner param) {
         super.initHttpStub(this.connectParam);
         return super.rebuildAIIndex(param);
+    }
+
+    @Override
+    public QueryFileDetailRes queryFileDetails(QueryFileDetailsParamInner param) {
+        super.initHttpStub(this.connectParam);
+        return super.queryFileDetails(param);
     }
 
     public BaseRes countDocument(QueryCountParamInner param, boolean ai) {

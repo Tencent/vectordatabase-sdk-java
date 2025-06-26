@@ -453,34 +453,34 @@ public final class SearchEngineGrpc {
   }
 
   private static volatile io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest,
-      com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest> getKeywordSearchMethod;
+      com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse> getFullTextSearchMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "keyword_search",
+      fullMethodName = ApiPath.DOC_FULL_TEXT_SEARCH,
       requestType = com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest.class,
-      responseType = com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest.class,
+      responseType = com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest,
-      com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest> getKeywordSearchMethod() {
-    io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest, com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest> getKeywordSearchMethod;
-    if ((getKeywordSearchMethod = SearchEngineGrpc.getKeywordSearchMethod) == null) {
+      com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse> getFullTextSearchMethod() {
+    io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest, com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse> getFullTextSearchMethod;
+    if ((getFullTextSearchMethod = SearchEngineGrpc.getFullTextSearchMethod) == null) {
       synchronized (SearchEngineGrpc.class) {
-        if ((getKeywordSearchMethod = SearchEngineGrpc.getKeywordSearchMethod) == null) {
-          SearchEngineGrpc.getKeywordSearchMethod = getKeywordSearchMethod =
-              io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest, com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest>newBuilder()
+        if ((getFullTextSearchMethod = SearchEngineGrpc.getFullTextSearchMethod) == null) {
+          SearchEngineGrpc.getFullTextSearchMethod = getFullTextSearchMethod =
+              io.grpc.MethodDescriptor.<com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest, com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "keyword_search"))
+              .setFullMethodName(ApiPath.DOC_FULL_TEXT_SEARCH)
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest.getDefaultInstance()))
-              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier("keyword_search"))
+                  com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new SearchEngineMethodDescriptorSupplier(ApiPath.DOC_FULL_TEXT_SEARCH))
               .build();
         }
       }
     }
-    return getKeywordSearchMethod;
+    return getFullTextSearchMethod;
   }
 
   private static volatile io.grpc.MethodDescriptor<com.tencent.tcvectordb.rpc.proto.Olama.ExplainRequest,
@@ -1293,12 +1293,12 @@ public final class SearchEngineGrpc {
 
     /**
      * <pre>
-     * 关键词检索
+     * 全文搜索
      * </pre>
      */
-    default void keywordSearch(com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest request,
-        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest> responseObserver) {
-      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getKeywordSearchMethod(), responseObserver);
+    default void fullTextSearch(com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getFullTextSearchMethod(), responseObserver);
     }
 
     /**
@@ -1683,13 +1683,13 @@ public final class SearchEngineGrpc {
 
     /**
      * <pre>
-     * 关键词检索
+     * 全文搜索
      * </pre>
      */
-    public void keywordSearch(com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest request,
-        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest> responseObserver) {
+    public void fullTextSearch(com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest request,
+        io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse> responseObserver) {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
-          getChannel().newCall(getKeywordSearchMethod(), getCallOptions()), request, responseObserver);
+          getChannel().newCall(getFullTextSearchMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
@@ -2069,12 +2069,12 @@ public final class SearchEngineGrpc {
 
     /**
      * <pre>
-     * 关键词检索
+     * 全文搜索
      * </pre>
      */
-    public com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest keywordSearch(com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest request) {
+    public com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse fullTextSearch(com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
-          getChannel(), getKeywordSearchMethod(), getCallOptions(), request);
+          getChannel(), getFullTextSearchMethod(), getCallOptions(), request);
     }
 
     /**
@@ -2448,13 +2448,13 @@ public final class SearchEngineGrpc {
 
     /**
      * <pre>
-     * 关键词检索
+     * 全文搜索
      * </pre>
      */
-    public com.google.common.util.concurrent.ListenableFuture<com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest> keywordSearch(
+    public com.google.common.util.concurrent.ListenableFuture<com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse> fullTextSearch(
         com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest request) {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
-          getChannel().newCall(getKeywordSearchMethod(), getCallOptions()), request);
+          getChannel().newCall(getFullTextSearchMethod(), getCallOptions()), request);
     }
 
     /**
@@ -2690,7 +2690,7 @@ public final class SearchEngineGrpc {
   private static final int METHODID_QUERY = 11;
   private static final int METHODID_SEARCH = 12;
   private static final int METHODID_HYBRID_SEARCH = 13;
-  private static final int METHODID_KEYWORD_SEARCH = 14;
+  private static final int METHODID_FULL_TEXT_SEARCH = 14;
   private static final int METHODID_EXPLAIN = 15;
   private static final int METHODID_DELE = 16;
   private static final int METHODID_RANGE_SEARCH = 17;
@@ -2785,9 +2785,9 @@ public final class SearchEngineGrpc {
           serviceImpl.hybridSearch((com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest) request,
               (io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse>) responseObserver);
           break;
-        case METHODID_KEYWORD_SEARCH:
-          serviceImpl.keywordSearch((com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest) request,
-              (io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest>) responseObserver);
+        case METHODID_FULL_TEXT_SEARCH:
+          serviceImpl.fullTextSearch((com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest) request,
+              (io.grpc.stub.StreamObserver<com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse>) responseObserver);
           break;
         case METHODID_EXPLAIN:
           serviceImpl.explain((com.tencent.tcvectordb.rpc.proto.Olama.ExplainRequest) request,
@@ -2986,12 +2986,12 @@ public final class SearchEngineGrpc {
               com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse>(
                 service, METHODID_HYBRID_SEARCH)))
         .addMethod(
-          getKeywordSearchMethod(),
+          getFullTextSearchMethod(),
           io.grpc.stub.ServerCalls.asyncUnaryCall(
             new MethodHandlers<
               com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest,
-              com.tencent.tcvectordb.rpc.proto.Olama.SearchRequest>(
-                service, METHODID_KEYWORD_SEARCH)))
+              com.tencent.tcvectordb.rpc.proto.Olama.SearchResponse>(
+                service, METHODID_FULL_TEXT_SEARCH)))
         .addMethod(
           getExplainMethod(),
           io.grpc.stub.ServerCalls.asyncUnaryCall(
@@ -3194,7 +3194,7 @@ public final class SearchEngineGrpc {
               .addMethod(getQueryMethod())
               .addMethod(getSearchMethod())
               .addMethod(getHybridSearchMethod())
-              .addMethod(getKeywordSearchMethod())
+              .addMethod(getFullTextSearchMethod())
               .addMethod(getExplainMethod())
               .addMethod(getDeleMethod())
               .addMethod(getRangeSearchMethod())

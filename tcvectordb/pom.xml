@@ -9,6 +9,32 @@
 
     <name>vectordatabase-sdk-java</name>
 
+    <description>
+        tencent vectordatabase java sdk.
+    </description>
+    <url>https://cloud.tencent.com/product/vdb</url>
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>tcvectordb</id>
+            <name>yihaoan</name>
+            <email>yihaoan@tencent.com</email>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:https://github.com/Tencent/vectordatabase-sdk-java.git
+        </connection>
+        <developerConnection>
+            scm:git:https://github.com/Tencent/vectordatabase-sdk-java.git
+        </developerConnection>
+        <url>https://github.com/Tencent/vectordatabase-sdk-java</url>
+    </scm>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <okhttp.version>4.9.2</okhttp.version>
@@ -117,14 +143,14 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.13</version>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.8.0</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                    <publishingServerId>ossrh</publishingServerId>
+                    <autoPublish>true</autoPublish>
+                    <waitUntil>published</waitUntil>
                 </configuration>
             </plugin>
             <plugin>
@@ -137,6 +163,28 @@
                         <goals>
                             <goal>jar-no-fork</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadoc</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <!--生成javadoc的jar -->
+                            <goal>jar</goal>
+                            <!--生成javadoc的html -->
+                            <goal>javadoc</goal>
+                        </goals>
+                        <configuration>
+                            <!--不显示javadoc警告-->
+                            <additionalOptions>-Xdoclint:none</additionalOptions>
+                            <additionalJOption>-Xdoclint:none</additionalJOption>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

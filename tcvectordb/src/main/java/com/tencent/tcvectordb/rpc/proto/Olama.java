@@ -40490,6 +40490,18 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
      * @return The forceRebuild.
      */
     boolean getForceRebuild();
+
+    /**
+     * <code>string fieldName = 7;</code>
+     * @return The fieldName.
+     */
+    java.lang.String getFieldName();
+    /**
+     * <code>string fieldName = 7;</code>
+     * @return The bytes for fieldName.
+     */
+    com.google.protobuf.ByteString
+        getFieldNameBytes();
   }
   /**
    * Protobuf type {@code com.tencent.tcvectordb.rpc.proto.RebuildIndexRequest}
@@ -40506,6 +40518,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
     private RebuildIndexRequest() {
       database_ = "";
       collection_ = "";
+      fieldName_ = "";
     }
 
     @java.lang.Override
@@ -40650,6 +40663,45 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
       return forceRebuild_;
     }
 
+    public static final int FIELDNAME_FIELD_NUMBER = 7;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object fieldName_ = "";
+    /**
+     * <code>string fieldName = 7;</code>
+     * @return The fieldName.
+     */
+    @java.lang.Override
+    public java.lang.String getFieldName() {
+      java.lang.Object ref = fieldName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        fieldName_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string fieldName = 7;</code>
+     * @return The bytes for fieldName.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getFieldNameBytes() {
+      java.lang.Object ref = fieldName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        fieldName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -40682,6 +40734,9 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
       if (forceRebuild_ != false) {
         output.writeBool(6, forceRebuild_);
       }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(fieldName_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, fieldName_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -40713,6 +40768,9 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(6, forceRebuild_);
       }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(fieldName_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, fieldName_);
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
@@ -40740,6 +40798,8 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
           != other.getDisableTrain()) return false;
       if (getForceRebuild()
           != other.getForceRebuild()) return false;
+      if (!getFieldName()
+          .equals(other.getFieldName())) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -40766,6 +40826,8 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
       hash = (37 * hash) + FORCE_REBUILD_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getForceRebuild());
+      hash = (37 * hash) + FIELDNAME_FIELD_NUMBER;
+      hash = (53 * hash) + getFieldName().hashCode();
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -40903,6 +40965,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
         throttle_ = 0;
         disableTrain_ = false;
         forceRebuild_ = false;
+        fieldName_ = "";
         return this;
       }
 
@@ -40953,6 +41016,9 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
         }
         if (((from_bitField0_ & 0x00000020) != 0)) {
           result.forceRebuild_ = forceRebuild_;
+        }
+        if (((from_bitField0_ & 0x00000040) != 0)) {
+          result.fieldName_ = fieldName_;
         }
       }
 
@@ -41022,6 +41088,11 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
         if (other.getForceRebuild() != false) {
           setForceRebuild(other.getForceRebuild());
         }
+        if (!other.getFieldName().isEmpty()) {
+          fieldName_ = other.fieldName_;
+          bitField0_ |= 0x00000040;
+          onChanged();
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
@@ -41078,6 +41149,11 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
                 bitField0_ |= 0x00000020;
                 break;
               } // case 48
+              case 58: {
+                fieldName_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000040;
+                break;
+              } // case 58
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -41363,6 +41439,78 @@ com.tencent.tcvectordb.rpc.proto.Olama.IndexColumn defaultValue) {
       public Builder clearForceRebuild() {
         bitField0_ = (bitField0_ & ~0x00000020);
         forceRebuild_ = false;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object fieldName_ = "";
+      /**
+       * <code>string fieldName = 7;</code>
+       * @return The fieldName.
+       */
+      public java.lang.String getFieldName() {
+        java.lang.Object ref = fieldName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          fieldName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string fieldName = 7;</code>
+       * @return The bytes for fieldName.
+       */
+      public com.google.protobuf.ByteString
+          getFieldNameBytes() {
+        java.lang.Object ref = fieldName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          fieldName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string fieldName = 7;</code>
+       * @param value The fieldName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setFieldName(
+          java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        fieldName_ = value;
+        bitField0_ |= 0x00000040;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string fieldName = 7;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearFieldName() {
+        fieldName_ = getDefaultInstance().getFieldName();
+        bitField0_ = (bitField0_ & ~0x00000040);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string fieldName = 7;</code>
+       * @param value The bytes for fieldName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setFieldNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
+        fieldName_ = value;
+        bitField0_ |= 0x00000040;
         onChanged();
         return this;
       }
@@ -105837,333 +105985,334 @@ com.tencent.tcvectordb.rpc.proto.Olama.Role defaultValue) {
       "\n\ncollection\030\002 \001(\t\022\037\n\027only_truncate_ann_" +
       "index\030\003 \001(\010\"`\n\032TruncateCollectionRespons" +
       "e\022\014\n\004code\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010redirect" +
-      "\030\003 \001(\t\022\025\n\raffectedCount\030\004 \001(\004\"\226\001\n\023Rebuil" +
+      "\030\003 \001(\t\022\025\n\raffectedCount\030\004 \001(\004\"\251\001\n\023Rebuil" +
       "dIndexRequest\022\020\n\010database\030\001 \001(\t\022\022\n\ncolle" +
       "ction\030\002 \001(\t\022\031\n\021dropBeforeRebuild\030\003 \001(\010\022\020" +
       "\n\010throttle\030\004 \001(\005\022\025\n\rdisable_train\030\005 \001(\010\022" +
-      "\025\n\rforce_rebuild\030\006 \001(\010\"U\n\024RebuildIndexRe" +
+      "\025\n\rforce_rebuild\030\006 \001(\010\022\021\n\tfieldName\030\007 \001(" +
+      "\t\"U\n\024RebuildIndexResponse\022\014\n\004code\030\001 \001(\005\022" +
+      "\013\n\003msg\030\002 \001(\t\022\020\n\010redirect\030\003 \001(\t\022\020\n\010task_i" +
+      "ds\030\004 \003(\t\"\240\001\n\rUpsertRequest\022\020\n\010database\030\001" +
+      " \001(\t\022\022\n\ncollection\030\002 \001(\t\022\022\n\nbuildIndex\030\003" +
+      " \001(\010\022=\n\tdocuments\030\004 \003(\0132*.com.tencent.tc" +
+      "vectordb.rpc.proto.Document\022\026\n\016buildInde" +
+      "xMode\030\005 \001(\t\"(\n\022EmbeddingExtraInfo\022\022\n\ntok" +
+      "en_used\030\001 \001(\004\"\271\001\n\016UpsertResponse\022\014\n\004code" +
+      "\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010redirect\030\003 \001(\t\022\025\n" +
+      "\raffectedCount\030\004 \001(\004\022\017\n\007warning\030\005 \001(\t\022R\n" +
+      "\024embedding_extra_info\030\006 \001(\01324.com.tencen" +
+      "t.tcvectordb.rpc.proto.EmbeddingExtraInf" +
+      "o\"\255\001\n\rUpdateRequest\022\020\n\010database\030\001 \001(\t\022\022\n" +
+      "\ncollection\030\002 \001(\t\022:\n\005query\030\003 \001(\0132+.com.t" +
+      "encent.tcvectordb.rpc.proto.QueryCond\022:\n" +
+      "\006update\030\004 \001(\0132*.com.tencent.tcvectordb.r" +
+      "pc.proto.Document\"\271\001\n\016UpdateResponse\022\014\n\004" +
+      "code\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010redirect\030\003 \001(" +
+      "\t\022\025\n\raffectedCount\030\004 \001(\004\022\017\n\007warning\030\005 \001(" +
+      "\t\022R\n\024embedding_extra_info\030\006 \001(\01324.com.te" +
+      "ncent.tcvectordb.rpc.proto.EmbeddingExtr" +
+      "aInfo\"q\n\rDeleteRequest\022\020\n\010database\030\001 \001(\t" +
+      "\022\022\n\ncollection\030\002 \001(\t\022:\n\005query\030\003 \001(\0132+.co" +
+      "m.tencent.tcvectordb.rpc.proto.QueryCond" +
+      "\"T\n\016DeleteResponse\022\014\n\004code\030\001 \001(\005\022\013\n\003msg\030" +
+      "\002 \001(\t\022\020\n\010redirect\030\003 \001(\t\022\025\n\raffectedCount" +
+      "\030\004 \001(\004\",\n\tOrderRule\022\021\n\tfieldName\030\001 \001(\t\022\014" +
+      "\n\004desc\030\002 \001(\010\"\350\001\n\tQueryCond\022\023\n\013documentId" +
+      "s\030\001 \003(\t\022\020\n\010indexIds\030\002 \003(\004\022\026\n\016retrieveVec" +
+      "tor\030\003 \001(\010\022\016\n\006filter\030\004 \001(\t\022\r\n\005limit\030\005 \001(\003" +
+      "\022\016\n\006offset\030\006 \001(\003\022\024\n\014outputFields\030\007 \003(\t\022\034" +
+      "\n\024retrieveSparseVector\030\010 \001(\010\0229\n\004sort\030\t \003" +
+      "(\0132+.com.tencent.tcvectordb.rpc.proto.Or" +
+      "derRule\"\211\001\n\014QueryRequest\022\020\n\010database\030\001 \001" +
+      "(\t\022\022\n\ncollection\030\002 \001(\t\022:\n\005query\030\003 \001(\0132+." +
+      "com.tencent.tcvectordb.rpc.proto.QueryCo" +
+      "nd\022\027\n\017readConsistency\030\004 \001(\t\"\212\001\n\rQueryRes" +
+      "ponse\022\014\n\004code\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010redi" +
+      "rect\030\003 \001(\t\022=\n\tdocuments\030\004 \003(\0132*.com.tenc" +
+      "ent.tcvectordb.rpc.proto.Document\022\r\n\005cou" +
+      "nt\030\005 \001(\004\"M\n\014SearchResult\022=\n\tdocuments\030\001 " +
+      "\003(\0132*.com.tencent.tcvectordb.rpc.proto.D" +
+      "ocument\":\n\014SearchParams\022\016\n\006nprobe\030\001 \001(\r\022" +
+      "\n\n\002ef\030\002 \001(\r\022\016\n\006radius\030\003 \001(\002\"\035\n\013VectorArr" +
+      "ay\022\016\n\006vector\030\001 \003(\002\"\350\001\n\007AnnData\022\021\n\tfieldN" +
+      "ame\030\001 \001(\t\022;\n\004data\030\002 \003(\0132-.com.tencent.tc" +
+      "vectordb.rpc.proto.VectorArray\022\023\n\013docume" +
+      "ntIds\030\003 \003(\t\022>\n\006params\030\004 \001(\0132..com.tencen" +
+      "t.tcvectordb.rpc.proto.SearchParams\022\r\n\005l" +
+      "imit\030\005 \001(\r\022\021\n\tdata_expr\030\006 \003(\t\022\026\n\016embeddi" +
+      "ngItems\030\007 \003(\t\"W\n\021SparseVectorArray\022B\n\tsp" +
+      "_vector\030\001 \003(\0132/.com.tencent.tcvectordb.r" +
+      "pc.proto.SparseVecItem\"\267\001\n\nSparseData\022\021\n" +
+      "\tfieldName\030\001 \001(\t\022A\n\004data\030\002 \003(\01323.com.ten" +
+      "cent.tcvectordb.rpc.proto.SparseVectorAr" +
+      "ray\022\r\n\005limit\030\003 \001(\r\022D\n\006params\030\004 \001(\01324.com" +
+      ".tencent.tcvectordb.rpc.proto.SparseSear" +
+      "chParams\"\253\001\n\014RerankParams\022\016\n\006method\030\001 \001(" +
+      "\t\022L\n\007weights\030\002 \003(\0132;.com.tencent.tcvecto" +
+      "rdb.rpc.proto.RerankParams.WeightsEntry\022" +
+      "\r\n\005rrf_k\030\003 \001(\005\032.\n\014WeightsEntry\022\013\n\003key\030\001 " +
+      "\001(\t\022\r\n\005value\030\002 \001(\002:\0028\001\"\360\003\n\nSearchCond\022>\n" +
+      "\007vectors\030\001 \003(\0132-.com.tencent.tcvectordb." +
+      "rpc.proto.VectorArray\022\023\n\013documentIds\030\002 \003" +
+      "(\t\022>\n\006params\030\003 \001(\0132..com.tencent.tcvecto" +
+      "rdb.rpc.proto.SearchParams\022\016\n\006filter\030\004 \001" +
+      "(\t\022\026\n\016retrieveVector\030\005 \001(\010\022\r\n\005limit\030\006 \001(" +
+      "\r\022\024\n\014outputfields\030\007 \003(\t\022\026\n\016embeddingItem" +
+      "s\030\010 \003(\t\022\r\n\005range\030\t \001(\010\0226\n\003ann\030\n \003(\0132).co" +
+      "m.tencent.tcvectordb.rpc.proto.AnnData\022<" +
+      "\n\006sparse\030\013 \003(\0132,.com.tencent.tcvectordb." +
+      "rpc.proto.SparseData\022E\n\rrerank_params\030\014 " +
+      "\001(\0132..com.tencent.tcvectordb.rpc.proto.R" +
+      "erankParams\022\034\n\024retrieveSparseVector\030\r \001(" +
+      "\010\"\214\001\n\rSearchRequest\022\020\n\010database\030\001 \001(\t\022\022\n" +
+      "\ncollection\030\002 \001(\t\022<\n\006search\030\003 \001(\0132,.com." +
+      "tencent.tcvectordb.rpc.proto.SearchCond\022" +
+      "\027\n\017readConsistency\030\004 \001(\t\"4\n\rExposeDataUn" +
+      "i\022\023\n\013expose_name\030\001 \001(\t\022\016\n\006buffer\030\002 \001(\014\"V" +
+      "\n\nExposeData\022H\n\017expose_data_uni\030\001 \003(\0132/." +
+      "com.tencent.tcvectordb.rpc.proto.ExposeD" +
+      "ataUni\"w\n\006Filter\022\014\n\004expr\030\001 \001(\t\022\016\n\006radius" +
+      "\030\002 \001(\002\022\014\n\004size\030\003 \001(\r\022A\n\013expose_data\030\004 \001(" +
+      "\0132,.com.tencent.tcvectordb.rpc.proto.Exp" +
+      "oseData\"+\n\rRoaringBinary\022\014\n\004size\030\001 \001(\003\022\014" +
+      "\n\004data\030\002 \001(\014\"\343\001\n\016SearchResponse\022\014\n\004code\030" +
+      "\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010redirect\030\003 \001(\t\022?\n\007" +
+      "results\030\004 \003(\0132..com.tencent.tcvectordb.r" +
+      "pc.proto.SearchResult\022\017\n\007warning\030\005 \001(\t\022R" +
+      "\n\024embedding_extra_info\030\006 \001(\01324.com.tence" +
+      "nt.tcvectordb.rpc.proto.EmbeddingExtraIn" +
+      "fo\":\n\010SortCond\022\020\n\010sort_vec\030\001 \003(\002\022\017\n\007sort" +
+      "_id\030\002 \001(\t\022\013\n\003ids\030\003 \003(\t\"\322\001\n\013SortRequest\022\020" +
+      "\n\010database\030\001 \001(\t\022\022\n\ncollection\030\002 \001(\t\022\021\n\t" +
+      "shard_idx\030\003 \001(\005\0228\n\004cond\030\004 \001(\0132*.com.tenc" +
+      "ent.tcvectordb.rpc.proto.SortCond\022\r\n\005lim" +
+      "it\030\005 \001(\r\022A\n\006metric\030\006 \001(\01621.com.tencent.t" +
+      "cvectordb.rpc.proto.IndexMetricType\"\221\001\n\014" +
+      "SortResponse\022\014\n\004code\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022" +
+      "\020\n\010redirect\030\003 \001(\t\022=\n\tdocuments\030\004 \003(\0132*.c" +
+      "om.tencent.tcvectordb.rpc.proto.Document" +
+      "\022\025\n\rinvalid_conds\030\005 \003(\t\"_\n\017DatabaseReque" +
+      "st\022\020\n\010database\030\001 \001(\t\022:\n\006dbType\030\002 \001(\0162*.c" +
+      "om.tencent.tcvectordb.rpc.proto.DataType" +
+      "\"\222\002\n\020DatabaseResponse\022\014\n\004code\030\001 \001(\005\022\013\n\003m" +
+      "sg\030\002 \001(\t\022\020\n\010redirect\030\003 \001(\t\022\021\n\tdatabases\030" +
+      "\004 \003(\t\022\025\n\raffectedCount\030\005 \001(\004\022J\n\004info\030\006 \003" +
+      "(\0132<.com.tencent.tcvectordb.rpc.proto.Da" +
+      "tabaseResponse.InfoEntry\032[\n\tInfoEntry\022\013\n" +
+      "\003key\030\001 \001(\t\022=\n\005value\030\002 \001(\0132..com.tencent." +
+      "tcvectordb.rpc.proto.DatabaseItem:\0028\001\"+\n" +
+      "\027DescribeDatabaseRequest\022\020\n\010database\030\001 \001" +
+      "(\t\"\211\001\n\030DescribeDatabaseResponse\022\014\n\004code\030" +
+      "\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010redirect\030\003 \001(\t\022@\n\010" +
+      "database\030\004 \001(\0132..com.tencent.tcvectordb." +
+      "rpc.proto.DatabaseItem\"\023\n\021GetVersionRequ" +
+      "est\"?\n\022GetVersionResponse\022\021\n\ttimestamp\030\001" +
+      " \001(\003\022\026\n\016kernal_version\030\002 \001(\003\"\201\002\n\017AddInde" +
+      "xRequest\022\020\n\010database\030\001 \001(\t\022\022\n\ncollection" +
+      "\030\002 \001(\t\022O\n\007indexes\030\003 \003(\0132>.com.tencent.tc" +
+      "vectordb.rpc.proto.AddIndexRequest.Index" +
+      "esEntry\022\030\n\020buildExistedData\030\004 \001(\010\032]\n\014Ind" +
+      "exesEntry\022\013\n\003key\030\001 \001(\t\022<\n\005value\030\002 \001(\0132-." +
+      "com.tencent.tcvectordb.rpc.proto.IndexCo" +
+      "lumn:\0028\001\"?\n\020AddIndexResponse\022\014\n\004code\030\001 \001" +
+      "(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010redirect\030\003 \001(\t\"\213\001\n\016Ex" +
+      "plainRequest\022\020\n\010database\030\001 \001(\t\022\022\n\ncollec" +
+      "tion\030\002 \001(\t\022:\n\005query\030\003 \001(\0132+.com.tencent." +
+      "tcvectordb.rpc.proto.QueryCond\022\027\n\017readCo" +
+      "nsistency\030\004 \001(\t\"l\n\017ExplainResponse\022\014\n\004co" +
+      "de\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010redirect\030\003 \001(\t\022" +
+      "\025\n\raffectedTable\030\004 \003(\004\022\025\n\raffectedCount\030" +
+      "\005 \001(\004\"E\n\022SparseSearchParams\022\026\n\016terminate" +
+      "After\030\001 \001(\r\022\027\n\017cutoffFrequency\030\002 \001(\001\"\351\002\n" +
+      "\030ModifyVectorIndexRequest\022\020\n\010database\030\001 " +
+      "\001(\t\022\022\n\ncollection\030\002 \001(\t\022d\n\rvectorIndexes" +
+      "\030\003 \003(\0132M.com.tencent.tcvectordb.rpc.prot" +
+      "o.ModifyVectorIndexRequest.VectorIndexes" +
+      "Entry\022\017\n\007rebuild\030\004 \001(\010\022K\n\014rebuildRules\030\005" +
+      " \001(\01325.com.tencent.tcvectordb.rpc.proto." +
+      "RebuildIndexRequest\032c\n\022VectorIndexesEntr" +
+      "y\022\013\n\003key\030\001 \001(\t\022<\n\005value\030\002 \001(\0132-.com.tenc" +
+      "ent.tcvectordb.rpc.proto.IndexColumn:\0028\001" +
+      "\"H\n\031ModifyVectorIndexResponse\022\014\n\004code\030\001 " +
+      "\001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010redirect\030\003 \001(\t\"\211\001\n\014C" +
+      "ountRequest\022\020\n\010database\030\001 \001(\t\022\022\n\ncollect" +
+      "ion\030\002 \001(\t\022:\n\005query\030\003 \001(\0132+.com.tencent.t" +
+      "cvectordb.rpc.proto.QueryCond\022\027\n\017readCon" +
+      "sistency\030\004 \001(\t\"K\n\rCountResponse\022\014\n\004code\030" +
+      "\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010redirect\030\003 \001(\t\022\r\n\005" +
+      "count\030\004 \001(\004\"\234\001\n\004User\022\014\n\004name\030\001 \001(\t\022\023\n\013cr" +
+      "eate_time\030\002 \001(\t\022\020\n\010password\030\003 \001(\t\022\r\n\005rol" +
+      "es\030\004 \003(\t\022?\n\nprivileges\030\005 \003(\0132+.com.tence" +
+      "nt.tcvectordb.rpc.proto.Privilege\022\017\n\007ver" +
+      "sion\030\006 \001(\003\"f\n\004Role\022\014\n\004name\030\001 \001(\t\022?\n\npriv" +
+      "ileges\030\002 \003(\0132+.com.tencent.tcvectordb.rp" +
+      "c.proto.Privilege\022\017\n\007version\030\003 \001(\003\".\n\tPr" +
+      "ivilege\022\020\n\010resource\030\001 \001(\t\022\017\n\007actions\030\002 \003" +
+      "(\t\"\307\001\n\010UserInfo\022I\n\010user_map\030\001 \003(\01327.com." +
+      "tencent.tcvectordb.rpc.proto.UserInfo.Us" +
+      "erMapEntry\022\030\n\020max_user_version\030\002 \001(\003\032V\n\014" +
+      "UserMapEntry\022\013\n\003key\030\001 \001(\t\0225\n\005value\030\002 \001(\013" +
+      "2&.com.tencent.tcvectordb.rpc.proto.User" +
+      ":\0028\001\"\307\001\n\010RoleInfo\022I\n\010role_map\030\001 \003(\01327.co" +
+      "m.tencent.tcvectordb.rpc.proto.RoleInfo." +
+      "RoleMapEntry\022\030\n\020max_role_version\030\002 \001(\003\032V" +
+      "\n\014RoleMapEntry\022\013\n\003key\030\001 \001(\t\0225\n\005value\030\002 \001" +
+      "(\0132&.com.tencent.tcvectordb.rpc.proto.Ro" +
+      "le:\0028\001\"\215\001\n\rAuthorization\022=\n\tuser_info\030\001 " +
+      "\001(\0132*.com.tencent.tcvectordb.rpc.proto.U" +
+      "serInfo\022=\n\trole_info\030\002 \001(\0132*.com.tencent" +
+      ".tcvectordb.rpc.proto.RoleInfo\"`\n\027GetAut" +
+      "horizationRequest\022\031\n\021user_info_version\030\001" +
+      " \001(\003\022\031\n\021role_info_version\030\002 \001(\003\022\017\n\007versi" +
+      "on\030\003 \001(\003\"\226\002\n\030GetAuthorizationResponse\022\014\n" +
+      "\004code\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010redirect\030\003 \001" +
+      "(\t\022\036\n\026user_info_need_updated\030\004 \001(\010\022=\n\tus" +
+      "er_info\030\005 \001(\0132*.com.tencent.tcvectordb.r" +
+      "pc.proto.UserInfo\022\036\n\026role_info_need_upda" +
+      "ted\030\006 \001(\010\022=\n\trole_info\030\007 \001(\0132*.com.tence" +
+      "nt.tcvectordb.rpc.proto.RoleInfo\022\017\n\007vers" +
+      "ion\030\010 \001(\003\"4\n\022UserAccountRequest\022\014\n\004user\030" +
+      "\001 \001(\t\022\020\n\010password\030\002 \001(\t\"B\n\023UserAccountRe" +
       "sponse\022\014\n\004code\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010red" +
-      "irect\030\003 \001(\t\022\020\n\010task_ids\030\004 \003(\t\"\240\001\n\rUpsert" +
-      "Request\022\020\n\010database\030\001 \001(\t\022\022\n\ncollection\030" +
-      "\002 \001(\t\022\022\n\nbuildIndex\030\003 \001(\010\022=\n\tdocuments\030\004" +
-      " \003(\0132*.com.tencent.tcvectordb.rpc.proto." +
-      "Document\022\026\n\016buildIndexMode\030\005 \001(\t\"(\n\022Embe" +
-      "ddingExtraInfo\022\022\n\ntoken_used\030\001 \001(\004\"\271\001\n\016U" +
-      "psertResponse\022\014\n\004code\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t" +
-      "\022\020\n\010redirect\030\003 \001(\t\022\025\n\raffectedCount\030\004 \001(" +
-      "\004\022\017\n\007warning\030\005 \001(\t\022R\n\024embedding_extra_in" +
-      "fo\030\006 \001(\01324.com.tencent.tcvectordb.rpc.pr" +
-      "oto.EmbeddingExtraInfo\"\255\001\n\rUpdateRequest" +
-      "\022\020\n\010database\030\001 \001(\t\022\022\n\ncollection\030\002 \001(\t\022:" +
-      "\n\005query\030\003 \001(\0132+.com.tencent.tcvectordb.r" +
-      "pc.proto.QueryCond\022:\n\006update\030\004 \001(\0132*.com" +
-      ".tencent.tcvectordb.rpc.proto.Document\"\271" +
-      "\001\n\016UpdateResponse\022\014\n\004code\030\001 \001(\005\022\013\n\003msg\030\002" +
-      " \001(\t\022\020\n\010redirect\030\003 \001(\t\022\025\n\raffectedCount\030" +
-      "\004 \001(\004\022\017\n\007warning\030\005 \001(\t\022R\n\024embedding_extr" +
-      "a_info\030\006 \001(\01324.com.tencent.tcvectordb.rp" +
-      "c.proto.EmbeddingExtraInfo\"q\n\rDeleteRequ" +
-      "est\022\020\n\010database\030\001 \001(\t\022\022\n\ncollection\030\002 \001(" +
-      "\t\022:\n\005query\030\003 \001(\0132+.com.tencent.tcvectord" +
-      "b.rpc.proto.QueryCond\"T\n\016DeleteResponse\022" +
-      "\014\n\004code\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010redirect\030\003" +
-      " \001(\t\022\025\n\raffectedCount\030\004 \001(\004\",\n\tOrderRule" +
-      "\022\021\n\tfieldName\030\001 \001(\t\022\014\n\004desc\030\002 \001(\010\"\350\001\n\tQu" +
-      "eryCond\022\023\n\013documentIds\030\001 \003(\t\022\020\n\010indexIds" +
-      "\030\002 \003(\004\022\026\n\016retrieveVector\030\003 \001(\010\022\016\n\006filter" +
-      "\030\004 \001(\t\022\r\n\005limit\030\005 \001(\003\022\016\n\006offset\030\006 \001(\003\022\024\n" +
-      "\014outputFields\030\007 \003(\t\022\034\n\024retrieveSparseVec" +
-      "tor\030\010 \001(\010\0229\n\004sort\030\t \003(\0132+.com.tencent.tc" +
-      "vectordb.rpc.proto.OrderRule\"\211\001\n\014QueryRe" +
-      "quest\022\020\n\010database\030\001 \001(\t\022\022\n\ncollection\030\002 " +
-      "\001(\t\022:\n\005query\030\003 \001(\0132+.com.tencent.tcvecto" +
-      "rdb.rpc.proto.QueryCond\022\027\n\017readConsisten" +
-      "cy\030\004 \001(\t\"\212\001\n\rQueryResponse\022\014\n\004code\030\001 \001(\005" +
-      "\022\013\n\003msg\030\002 \001(\t\022\020\n\010redirect\030\003 \001(\t\022=\n\tdocum" +
-      "ents\030\004 \003(\0132*.com.tencent.tcvectordb.rpc." +
-      "proto.Document\022\r\n\005count\030\005 \001(\004\"M\n\014SearchR" +
-      "esult\022=\n\tdocuments\030\001 \003(\0132*.com.tencent.t" +
-      "cvectordb.rpc.proto.Document\":\n\014SearchPa" +
-      "rams\022\016\n\006nprobe\030\001 \001(\r\022\n\n\002ef\030\002 \001(\r\022\016\n\006radi" +
-      "us\030\003 \001(\002\"\035\n\013VectorArray\022\016\n\006vector\030\001 \003(\002\"" +
-      "\350\001\n\007AnnData\022\021\n\tfieldName\030\001 \001(\t\022;\n\004data\030\002" +
-      " \003(\0132-.com.tencent.tcvectordb.rpc.proto." +
-      "VectorArray\022\023\n\013documentIds\030\003 \003(\t\022>\n\006para" +
-      "ms\030\004 \001(\0132..com.tencent.tcvectordb.rpc.pr" +
-      "oto.SearchParams\022\r\n\005limit\030\005 \001(\r\022\021\n\tdata_" +
-      "expr\030\006 \003(\t\022\026\n\016embeddingItems\030\007 \003(\t\"W\n\021Sp" +
-      "arseVectorArray\022B\n\tsp_vector\030\001 \003(\0132/.com" +
-      ".tencent.tcvectordb.rpc.proto.SparseVecI" +
-      "tem\"\267\001\n\nSparseData\022\021\n\tfieldName\030\001 \001(\t\022A\n" +
-      "\004data\030\002 \003(\01323.com.tencent.tcvectordb.rpc" +
-      ".proto.SparseVectorArray\022\r\n\005limit\030\003 \001(\r\022" +
-      "D\n\006params\030\004 \001(\01324.com.tencent.tcvectordb" +
-      ".rpc.proto.SparseSearchParams\"\253\001\n\014Rerank" +
-      "Params\022\016\n\006method\030\001 \001(\t\022L\n\007weights\030\002 \003(\0132" +
-      ";.com.tencent.tcvectordb.rpc.proto.Reran" +
-      "kParams.WeightsEntry\022\r\n\005rrf_k\030\003 \001(\005\032.\n\014W" +
-      "eightsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\002:" +
-      "\0028\001\"\360\003\n\nSearchCond\022>\n\007vectors\030\001 \003(\0132-.co" +
-      "m.tencent.tcvectordb.rpc.proto.VectorArr" +
-      "ay\022\023\n\013documentIds\030\002 \003(\t\022>\n\006params\030\003 \001(\0132" +
-      "..com.tencent.tcvectordb.rpc.proto.Searc" +
-      "hParams\022\016\n\006filter\030\004 \001(\t\022\026\n\016retrieveVecto" +
-      "r\030\005 \001(\010\022\r\n\005limit\030\006 \001(\r\022\024\n\014outputfields\030\007" +
-      " \003(\t\022\026\n\016embeddingItems\030\010 \003(\t\022\r\n\005range\030\t " +
-      "\001(\010\0226\n\003ann\030\n \003(\0132).com.tencent.tcvectord" +
-      "b.rpc.proto.AnnData\022<\n\006sparse\030\013 \003(\0132,.co" +
-      "m.tencent.tcvectordb.rpc.proto.SparseDat" +
-      "a\022E\n\rrerank_params\030\014 \001(\0132..com.tencent.t" +
-      "cvectordb.rpc.proto.RerankParams\022\034\n\024retr" +
-      "ieveSparseVector\030\r \001(\010\"\214\001\n\rSearchRequest" +
-      "\022\020\n\010database\030\001 \001(\t\022\022\n\ncollection\030\002 \001(\t\022<" +
-      "\n\006search\030\003 \001(\0132,.com.tencent.tcvectordb." +
-      "rpc.proto.SearchCond\022\027\n\017readConsistency\030" +
-      "\004 \001(\t\"4\n\rExposeDataUni\022\023\n\013expose_name\030\001 " +
-      "\001(\t\022\016\n\006buffer\030\002 \001(\014\"V\n\nExposeData\022H\n\017exp" +
-      "ose_data_uni\030\001 \003(\0132/.com.tencent.tcvecto" +
-      "rdb.rpc.proto.ExposeDataUni\"w\n\006Filter\022\014\n" +
-      "\004expr\030\001 \001(\t\022\016\n\006radius\030\002 \001(\002\022\014\n\004size\030\003 \001(" +
-      "\r\022A\n\013expose_data\030\004 \001(\0132,.com.tencent.tcv" +
-      "ectordb.rpc.proto.ExposeData\"+\n\rRoaringB" +
-      "inary\022\014\n\004size\030\001 \001(\003\022\014\n\004data\030\002 \001(\014\"\343\001\n\016Se" +
-      "archResponse\022\014\n\004code\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022" +
-      "\020\n\010redirect\030\003 \001(\t\022?\n\007results\030\004 \003(\0132..com" +
-      ".tencent.tcvectordb.rpc.proto.SearchResu" +
-      "lt\022\017\n\007warning\030\005 \001(\t\022R\n\024embedding_extra_i" +
-      "nfo\030\006 \001(\01324.com.tencent.tcvectordb.rpc.p" +
-      "roto.EmbeddingExtraInfo\":\n\010SortCond\022\020\n\010s" +
-      "ort_vec\030\001 \003(\002\022\017\n\007sort_id\030\002 \001(\t\022\013\n\003ids\030\003 " +
-      "\003(\t\"\322\001\n\013SortRequest\022\020\n\010database\030\001 \001(\t\022\022\n" +
-      "\ncollection\030\002 \001(\t\022\021\n\tshard_idx\030\003 \001(\005\0228\n\004" +
-      "cond\030\004 \001(\0132*.com.tencent.tcvectordb.rpc." +
-      "proto.SortCond\022\r\n\005limit\030\005 \001(\r\022A\n\006metric\030" +
-      "\006 \001(\01621.com.tencent.tcvectordb.rpc.proto" +
-      ".IndexMetricType\"\221\001\n\014SortResponse\022\014\n\004cod" +
-      "e\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010redirect\030\003 \001(\t\022=" +
-      "\n\tdocuments\030\004 \003(\0132*.com.tencent.tcvector" +
-      "db.rpc.proto.Document\022\025\n\rinvalid_conds\030\005" +
-      " \003(\t\"_\n\017DatabaseRequest\022\020\n\010database\030\001 \001(" +
-      "\t\022:\n\006dbType\030\002 \001(\0162*.com.tencent.tcvector" +
-      "db.rpc.proto.DataType\"\222\002\n\020DatabaseRespon" +
-      "se\022\014\n\004code\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010redirec" +
-      "t\030\003 \001(\t\022\021\n\tdatabases\030\004 \003(\t\022\025\n\raffectedCo" +
-      "unt\030\005 \001(\004\022J\n\004info\030\006 \003(\0132<.com.tencent.tc" +
-      "vectordb.rpc.proto.DatabaseResponse.Info" +
-      "Entry\032[\n\tInfoEntry\022\013\n\003key\030\001 \001(\t\022=\n\005value" +
-      "\030\002 \001(\0132..com.tencent.tcvectordb.rpc.prot" +
-      "o.DatabaseItem:\0028\001\"+\n\027DescribeDatabaseRe" +
-      "quest\022\020\n\010database\030\001 \001(\t\"\211\001\n\030DescribeData" +
-      "baseResponse\022\014\n\004code\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022" +
-      "\020\n\010redirect\030\003 \001(\t\022@\n\010database\030\004 \001(\0132..co" +
-      "m.tencent.tcvectordb.rpc.proto.DatabaseI" +
-      "tem\"\023\n\021GetVersionRequest\"?\n\022GetVersionRe" +
-      "sponse\022\021\n\ttimestamp\030\001 \001(\003\022\026\n\016kernal_vers" +
-      "ion\030\002 \001(\003\"\201\002\n\017AddIndexRequest\022\020\n\010databas" +
-      "e\030\001 \001(\t\022\022\n\ncollection\030\002 \001(\t\022O\n\007indexes\030\003" +
-      " \003(\0132>.com.tencent.tcvectordb.rpc.proto." +
-      "AddIndexRequest.IndexesEntry\022\030\n\020buildExi" +
-      "stedData\030\004 \001(\010\032]\n\014IndexesEntry\022\013\n\003key\030\001 " +
-      "\001(\t\022<\n\005value\030\002 \001(\0132-.com.tencent.tcvecto" +
-      "rdb.rpc.proto.IndexColumn:\0028\001\"?\n\020AddInde" +
-      "xResponse\022\014\n\004code\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010" +
-      "redirect\030\003 \001(\t\"\213\001\n\016ExplainRequest\022\020\n\010dat" +
-      "abase\030\001 \001(\t\022\022\n\ncollection\030\002 \001(\t\022:\n\005query" +
-      "\030\003 \001(\0132+.com.tencent.tcvectordb.rpc.prot" +
-      "o.QueryCond\022\027\n\017readConsistency\030\004 \001(\t\"l\n\017" +
-      "ExplainResponse\022\014\n\004code\030\001 \001(\005\022\013\n\003msg\030\002 \001" +
-      "(\t\022\020\n\010redirect\030\003 \001(\t\022\025\n\raffectedTable\030\004 " +
-      "\003(\004\022\025\n\raffectedCount\030\005 \001(\004\"E\n\022SparseSear" +
-      "chParams\022\026\n\016terminateAfter\030\001 \001(\r\022\027\n\017cuto" +
-      "ffFrequency\030\002 \001(\001\"\351\002\n\030ModifyVectorIndexR" +
-      "equest\022\020\n\010database\030\001 \001(\t\022\022\n\ncollection\030\002" +
-      " \001(\t\022d\n\rvectorIndexes\030\003 \003(\0132M.com.tencen" +
-      "t.tcvectordb.rpc.proto.ModifyVectorIndex" +
-      "Request.VectorIndexesEntry\022\017\n\007rebuild\030\004 " +
-      "\001(\010\022K\n\014rebuildRules\030\005 \001(\01325.com.tencent." +
-      "tcvectordb.rpc.proto.RebuildIndexRequest" +
-      "\032c\n\022VectorIndexesEntry\022\013\n\003key\030\001 \001(\t\022<\n\005v" +
-      "alue\030\002 \001(\0132-.com.tencent.tcvectordb.rpc." +
-      "proto.IndexColumn:\0028\001\"H\n\031ModifyVectorInd" +
-      "exResponse\022\014\n\004code\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n" +
-      "\010redirect\030\003 \001(\t\"\211\001\n\014CountRequest\022\020\n\010data" +
-      "base\030\001 \001(\t\022\022\n\ncollection\030\002 \001(\t\022:\n\005query\030" +
-      "\003 \001(\0132+.com.tencent.tcvectordb.rpc.proto" +
-      ".QueryCond\022\027\n\017readConsistency\030\004 \001(\t\"K\n\rC" +
-      "ountResponse\022\014\n\004code\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022" +
-      "\020\n\010redirect\030\003 \001(\t\022\r\n\005count\030\004 \001(\004\"\234\001\n\004Use" +
-      "r\022\014\n\004name\030\001 \001(\t\022\023\n\013create_time\030\002 \001(\t\022\020\n\010" +
-      "password\030\003 \001(\t\022\r\n\005roles\030\004 \003(\t\022?\n\nprivile" +
-      "ges\030\005 \003(\0132+.com.tencent.tcvectordb.rpc.p" +
-      "roto.Privilege\022\017\n\007version\030\006 \001(\003\"f\n\004Role\022" +
-      "\014\n\004name\030\001 \001(\t\022?\n\nprivileges\030\002 \003(\0132+.com." +
-      "tencent.tcvectordb.rpc.proto.Privilege\022\017" +
-      "\n\007version\030\003 \001(\003\".\n\tPrivilege\022\020\n\010resource" +
-      "\030\001 \001(\t\022\017\n\007actions\030\002 \003(\t\"\307\001\n\010UserInfo\022I\n\010" +
-      "user_map\030\001 \003(\01327.com.tencent.tcvectordb." +
-      "rpc.proto.UserInfo.UserMapEntry\022\030\n\020max_u" +
-      "ser_version\030\002 \001(\003\032V\n\014UserMapEntry\022\013\n\003key" +
-      "\030\001 \001(\t\0225\n\005value\030\002 \001(\0132&.com.tencent.tcve" +
-      "ctordb.rpc.proto.User:\0028\001\"\307\001\n\010RoleInfo\022I" +
-      "\n\010role_map\030\001 \003(\01327.com.tencent.tcvectord" +
-      "b.rpc.proto.RoleInfo.RoleMapEntry\022\030\n\020max" +
-      "_role_version\030\002 \001(\003\032V\n\014RoleMapEntry\022\013\n\003k" +
-      "ey\030\001 \001(\t\0225\n\005value\030\002 \001(\0132&.com.tencent.tc" +
-      "vectordb.rpc.proto.Role:\0028\001\"\215\001\n\rAuthoriz" +
-      "ation\022=\n\tuser_info\030\001 \001(\0132*.com.tencent.t" +
-      "cvectordb.rpc.proto.UserInfo\022=\n\trole_inf" +
-      "o\030\002 \001(\0132*.com.tencent.tcvectordb.rpc.pro" +
-      "to.RoleInfo\"`\n\027GetAuthorizationRequest\022\031" +
-      "\n\021user_info_version\030\001 \001(\003\022\031\n\021role_info_v" +
-      "ersion\030\002 \001(\003\022\017\n\007version\030\003 \001(\003\"\226\002\n\030GetAut" +
-      "horizationResponse\022\014\n\004code\030\001 \001(\005\022\013\n\003msg\030" +
-      "\002 \001(\t\022\020\n\010redirect\030\003 \001(\t\022\036\n\026user_info_nee" +
-      "d_updated\030\004 \001(\010\022=\n\tuser_info\030\005 \001(\0132*.com" +
-      ".tencent.tcvectordb.rpc.proto.UserInfo\022\036" +
-      "\n\026role_info_need_updated\030\006 \001(\010\022=\n\trole_i" +
-      "nfo\030\007 \001(\0132*.com.tencent.tcvectordb.rpc.p" +
-      "roto.RoleInfo\022\017\n\007version\030\010 \001(\003\"4\n\022UserAc" +
-      "countRequest\022\014\n\004user\030\001 \001(\t\022\020\n\010password\030\002" +
-      " \001(\t\"B\n\023UserAccountResponse\022\014\n\004code\030\001 \001(" +
-      "\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010redirect\030\003 \001(\t\"f\n\025User" +
-      "PrivilegesRequest\022\014\n\004user\030\001 \001(\t\022?\n\nprivi" +
-      "leges\030\002 \003(\0132+.com.tencent.tcvectordb.rpc" +
-      ".proto.Privilege\"E\n\026UserPrivilegesRespon" +
-      "se\022\014\n\004code\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010redirec" +
-      "t\030\003 \001(\t\"\021\n\017UserListRequest\"v\n\020UserListRe" +
-      "sponse\022\014\n\004code\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010red" +
-      "irect\030\003 \001(\t\0225\n\005users\030\004 \003(\0132&.com.tencent" +
-      ".tcvectordb.rpc.proto.User\"#\n\023UserDescri" +
-      "beRequest\022\014\n\004user\030\001 \001(\t\"y\n\024UserDescribeR" +
-      "esponse\022\014\n\004code\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010re" +
-      "direct\030\003 \001(\t\0224\n\004user\030\004 \001(\0132&.com.tencent" +
-      ".tcvectordb.rpc.proto.User\"M\n\020DropIndexR" +
-      "equest\022\020\n\010database\030\001 \001(\t\022\022\n\ncollection\030\002" +
-      " \001(\t\022\023\n\013field_names\030\003 \003(\t\"@\n\021DropIndexRe" +
-      "sponse\022\014\n\004code\030\001 \001(\005\022\013\n\003msg\030\002 \001(\t\022\020\n\010red" +
-      "irect\030\003 \001(\t\"\r\n\013HttpRequest\"\016\n\014HttpRespon" +
-      "se*s\n\016ShardDataState\022\025\n\021SHARD_INDEX_READ" +
-      "Y\020\000\022\030\n\024SHARD_INDEX_TRAINING\020\001\022\030\n\024SHARD_I" +
-      "NDEX_BUILDING\020\002\022\026\n\022SHARD_INDEX_FAILED\020\003*" +
-      "B\n\013HealthState\022\020\n\014HEALTH_GREEN\020\000\022\021\n\rHEAL" +
-      "TH_YELLOW\020\001\022\016\n\nHEALTH_RED\020\002* \n\010DataType\022" +
-      "\010\n\004BASE\020\000\022\n\n\006AI_DOC\020\001*y\n\017IndexMetricType" +
-      "\022\036\n\032INDEX_METRIC_INNER_PRODUCT\020\000\022\023\n\017INDE" +
-      "X_METRIC_L2\020\001\022\027\n\023INDEX_METRIC_COSINE\020\002\022\030" +
-      "\n\024INDEX_METRIC_HAMMING\020\003*W\n\017IndexEngineT" +
-      "ype\022\027\n\023ENGINE_FAISS_VECTOR\020\000\022\027\n\023ENGINE_F" +
-      "AISS_BINARY\020\001\022\022\n\016ENGINE_HNSWLIB\020\003*L\n\tFie" +
-      "ldType\022\017\n\013TYPE_STRING\020\000\022\016\n\nTYPE_ARRAY\020\001\022" +
-      "\017\n\013TYPE_UINT64\020\002\022\r\n\tTYPE_JSON\020\003*+\n\020Field" +
-      "ElementType\022\027\n\023ELEMENT_TYPE_STRING\020\0002\303!\n" +
-      "\014SearchEngine\022t\n\010setAlias\0221.com.tencent." +
-      "tcvectordb.rpc.proto.AddAliasRequest\0325.c" +
-      "om.tencent.tcvectordb.rpc.proto.UpdateAl" +
-      "iasResponse\022q\n\010getAlias\0221.com.tencent.tc" +
-      "vectordb.rpc.proto.GetAliasRequest\0322.com" +
-      ".tencent.tcvectordb.rpc.proto.GetAliasRe" +
-      "sponse\022z\n\013deleteAlias\0224.com.tencent.tcve" +
-      "ctordb.rpc.proto.RemoveAliasRequest\0325.co" +
-      "m.tencent.tcvectordb.rpc.proto.UpdateAli" +
-      "asResponse\022\211\001\n\020createCollection\0229.com.te" +
-      "ncent.tcvectordb.rpc.proto.CreateCollect" +
-      "ionRequest\032:.com.tencent.tcvectordb.rpc." +
-      "proto.CreateCollectionResponse\022\203\001\n\016dropC" +
-      "ollection\0227.com.tencent.tcvectordb.rpc.p" +
-      "roto.DropCollectionRequest\0328.com.tencent" +
-      ".tcvectordb.rpc.proto.DropCollectionResp" +
-      "onse\022\217\001\n\022truncateCollection\022;.com.tencen" +
+      "irect\030\003 \001(\t\"f\n\025UserPrivilegesRequest\022\014\n\004" +
+      "user\030\001 \001(\t\022?\n\nprivileges\030\002 \003(\0132+.com.ten" +
+      "cent.tcvectordb.rpc.proto.Privilege\"E\n\026U" +
+      "serPrivilegesResponse\022\014\n\004code\030\001 \001(\005\022\013\n\003m" +
+      "sg\030\002 \001(\t\022\020\n\010redirect\030\003 \001(\t\"\021\n\017UserListRe" +
+      "quest\"v\n\020UserListResponse\022\014\n\004code\030\001 \001(\005\022" +
+      "\013\n\003msg\030\002 \001(\t\022\020\n\010redirect\030\003 \001(\t\0225\n\005users\030" +
+      "\004 \003(\0132&.com.tencent.tcvectordb.rpc.proto" +
+      ".User\"#\n\023UserDescribeRequest\022\014\n\004user\030\001 \001" +
+      "(\t\"y\n\024UserDescribeResponse\022\014\n\004code\030\001 \001(\005" +
+      "\022\013\n\003msg\030\002 \001(\t\022\020\n\010redirect\030\003 \001(\t\0224\n\004user\030" +
+      "\004 \001(\0132&.com.tencent.tcvectordb.rpc.proto" +
+      ".User\"M\n\020DropIndexRequest\022\020\n\010database\030\001 " +
+      "\001(\t\022\022\n\ncollection\030\002 \001(\t\022\023\n\013field_names\030\003" +
+      " \003(\t\"@\n\021DropIndexResponse\022\014\n\004code\030\001 \001(\005\022" +
+      "\013\n\003msg\030\002 \001(\t\022\020\n\010redirect\030\003 \001(\t\"\r\n\013HttpRe" +
+      "quest\"\016\n\014HttpResponse*s\n\016ShardDataState\022" +
+      "\025\n\021SHARD_INDEX_READY\020\000\022\030\n\024SHARD_INDEX_TR" +
+      "AINING\020\001\022\030\n\024SHARD_INDEX_BUILDING\020\002\022\026\n\022SH" +
+      "ARD_INDEX_FAILED\020\003*B\n\013HealthState\022\020\n\014HEA" +
+      "LTH_GREEN\020\000\022\021\n\rHEALTH_YELLOW\020\001\022\016\n\nHEALTH" +
+      "_RED\020\002* \n\010DataType\022\010\n\004BASE\020\000\022\n\n\006AI_DOC\020\001" +
+      "*y\n\017IndexMetricType\022\036\n\032INDEX_METRIC_INNE" +
+      "R_PRODUCT\020\000\022\023\n\017INDEX_METRIC_L2\020\001\022\027\n\023INDE" +
+      "X_METRIC_COSINE\020\002\022\030\n\024INDEX_METRIC_HAMMIN" +
+      "G\020\003*W\n\017IndexEngineType\022\027\n\023ENGINE_FAISS_V" +
+      "ECTOR\020\000\022\027\n\023ENGINE_FAISS_BINARY\020\001\022\022\n\016ENGI" +
+      "NE_HNSWLIB\020\003*L\n\tFieldType\022\017\n\013TYPE_STRING" +
+      "\020\000\022\016\n\nTYPE_ARRAY\020\001\022\017\n\013TYPE_UINT64\020\002\022\r\n\tT" +
+      "YPE_JSON\020\003*+\n\020FieldElementType\022\027\n\023ELEMEN" +
+      "T_TYPE_STRING\020\0002\306!\n\014SearchEngine\022t\n\010setA" +
+      "lias\0221.com.tencent.tcvectordb.rpc.proto." +
+      "AddAliasRequest\0325.com.tencent.tcvectordb" +
+      ".rpc.proto.UpdateAliasResponse\022q\n\010getAli" +
+      "as\0221.com.tencent.tcvectordb.rpc.proto.Ge" +
+      "tAliasRequest\0322.com.tencent.tcvectordb.r" +
+      "pc.proto.GetAliasResponse\022z\n\013deleteAlias" +
+      "\0224.com.tencent.tcvectordb.rpc.proto.Remo" +
+      "veAliasRequest\0325.com.tencent.tcvectordb." +
+      "rpc.proto.UpdateAliasResponse\022\211\001\n\020create" +
+      "Collection\0229.com.tencent.tcvectordb.rpc." +
+      "proto.CreateCollectionRequest\032:.com.tenc" +
+      "ent.tcvectordb.rpc.proto.CreateCollectio" +
+      "nResponse\022\203\001\n\016dropCollection\0227.com.tence" +
+      "nt.tcvectordb.rpc.proto.DropCollectionRe" +
+      "quest\0328.com.tencent.tcvectordb.rpc.proto" +
+      ".DropCollectionResponse\022\217\001\n\022truncateColl" +
+      "ection\022;.com.tencent.tcvectordb.rpc.prot" +
+      "o.TruncateCollectionRequest\032<.com.tencen" +
       "t.tcvectordb.rpc.proto.TruncateCollectio" +
-      "nRequest\032<.com.tencent.tcvectordb.rpc.pr" +
-      "oto.TruncateCollectionResponse\022\217\001\n\022descr" +
-      "ibeCollection\022;.com.tencent.tcvectordb.r" +
-      "pc.proto.DescribeCollectionRequest\032<.com" +
-      ".tencent.tcvectordb.rpc.proto.DescribeCo",
-      "llectionResponse\022\206\001\n\017listCollections\0228.c" +
-      "om.tencent.tcvectordb.rpc.proto.ListColl" +
-      "ectionsRequest\0329.com.tencent.tcvectordb." +
-      "rpc.proto.ListCollectionsResponse\022}\n\014reb" +
-      "uildIndex\0225.com.tencent.tcvectordb.rpc.p" +
-      "roto.RebuildIndexRequest\0326.com.tencent.t" +
-      "cvectordb.rpc.proto.RebuildIndexResponse" +
-      "\022k\n\006upsert\022/.com.tencent.tcvectordb.rpc." +
-      "proto.UpsertRequest\0320.com.tencent.tcvect" +
-      "ordb.rpc.proto.UpsertResponse\022k\n\006update\022" +
-      "/.com.tencent.tcvectordb.rpc.proto.Updat" +
-      "eRequest\0320.com.tencent.tcvectordb.rpc.pr" +
-      "oto.UpdateResponse\022h\n\005query\022..com.tencen" +
-      "t.tcvectordb.rpc.proto.QueryRequest\032/.co" +
-      "m.tencent.tcvectordb.rpc.proto.QueryResp" +
-      "onse\022k\n\006search\022/.com.tencent.tcvectordb." +
-      "rpc.proto.SearchRequest\0320.com.tencent.tc" +
-      "vectordb.rpc.proto.SearchResponse\022r\n\rhyb" +
-      "rid_search\022/.com.tencent.tcvectordb.rpc." +
-      "proto.SearchRequest\0320.com.tencent.tcvect" +
-      "ordb.rpc.proto.SearchResponse\022r\n\016keyword" +
-      "_search\022/.com.tencent.tcvectordb.rpc.pro" +
-      "to.SearchRequest\032/.com.tencent.tcvectord" +
-      "b.rpc.proto.SearchRequest\022n\n\007explain\0220.c" +
-      "om.tencent.tcvectordb.rpc.proto.ExplainR" +
-      "equest\0321.com.tencent.tcvectordb.rpc.prot" +
-      "o.ExplainResponse\022i\n\004dele\022/.com.tencent." +
-      "tcvectordb.rpc.proto.DeleteRequest\0320.com" +
-      ".tencent.tcvectordb.rpc.proto.DeleteResp" +
-      "onse\022q\n\014range_search\022/.com.tencent.tcvec" +
-      "tordb.rpc.proto.SearchRequest\0320.com.tenc" +
-      "ent.tcvectordb.rpc.proto.SearchResponse\022" +
-      "e\n\004sort\022-.com.tencent.tcvectordb.rpc.pro" +
-      "to.SortRequest\032..com.tencent.tcvectordb." +
-      "rpc.proto.SortResponse\022w\n\016createDatabase" +
-      "\0221.com.tencent.tcvectordb.rpc.proto.Data" +
-      "baseRequest\0322.com.tencent.tcvectordb.rpc" +
-      ".proto.DatabaseResponse\022u\n\014dropDatabase\022" +
-      "1.com.tencent.tcvectordb.rpc.proto.Datab" +
-      "aseRequest\0322.com.tencent.tcvectordb.rpc." +
-      "proto.DatabaseResponse\022v\n\rlistDatabases\022" +
-      "1.com.tencent.tcvectordb.rpc.proto.Datab" +
-      "aseRequest\0322.com.tencent.tcvectordb.rpc." +
-      "proto.DatabaseResponse\022\211\001\n\020describeDatab" +
-      "ase\0229.com.tencent.tcvectordb.rpc.proto.D" +
-      "escribeDatabaseRequest\032:.com.tencent.tcv" +
-      "ectordb.rpc.proto.DescribeDatabaseRespon" +
-      "se\022x\n\013get_version\0223.com.tencent.tcvector" +
-      "db.rpc.proto.GetVersionRequest\0324.com.ten" +
-      "cent.tcvectordb.rpc.proto.GetVersionResp" +
-      "onse\022q\n\010addIndex\0221.com.tencent.tcvectord" +
-      "b.rpc.proto.AddIndexRequest\0322.com.tencen" +
-      "t.tcvectordb.rpc.proto.AddIndexResponse\022" +
-      "\214\001\n\021modifyVectorIndex\022:.com.tencent.tcve" +
-      "ctordb.rpc.proto.ModifyVectorIndexReques" +
-      "t\032;.com.tencent.tcvectordb.rpc.proto.Mod" +
-      "ifyVectorIndexResponse\022h\n\005count\022..com.te" +
-      "ncent.tcvectordb.rpc.proto.CountRequest\032" +
-      "/.com.tencent.tcvectordb.rpc.proto.Count" +
-      "Response\022z\n\013user_create\0224.com.tencent.tc" +
-      "vectordb.rpc.proto.UserAccountRequest\0325." +
-      "com.tencent.tcvectordb.rpc.proto.UserAcc" +
-      "ountResponse\022x\n\tuser_drop\0224.com.tencent." +
-      "tcvectordb.rpc.proto.UserAccountRequest\032" +
-      "5.com.tencent.tcvectordb.rpc.proto.UserA" +
-      "ccountResponse\022\203\001\n\024user_change_password\022" +
-      "4.com.tencent.tcvectordb.rpc.proto.UserA" +
-      "ccountRequest\0325.com.tencent.tcvectordb.r" +
-      "pc.proto.UserAccountResponse\022\177\n\nuser_gra" +
-      "nt\0227.com.tencent.tcvectordb.rpc.proto.Us" +
-      "erPrivilegesRequest\0328.com.tencent.tcvect" +
-      "ordb.rpc.proto.UserPrivilegesResponse\022\200\001" +
-      "\n\013user_revoke\0227.com.tencent.tcvectordb.r" +
-      "pc.proto.UserPrivilegesRequest\0328.com.ten" +
-      "cent.tcvectordb.rpc.proto.UserPrivileges" +
-      "Response\022r\n\tuser_list\0221.com.tencent.tcve" +
-      "ctordb.rpc.proto.UserListRequest\0322.com.t" +
-      "encent.tcvectordb.rpc.proto.UserListResp" +
-      "onse\022~\n\ruser_describe\0225.com.tencent.tcve" +
-      "ctordb.rpc.proto.UserDescribeRequest\0326.c" +
-      "om.tencent.tcvectordb.rpc.proto.UserDesc" +
-      "ribeResponse\022t\n\tdropIndex\0222.com.tencent." +
-      "tcvectordb.rpc.proto.DropIndexRequest\0323." +
-      "com.tencent.tcvectordb.rpc.proto.DropInd" +
-      "exResponseB\003\200\001\001b\006proto3"
+      "nResponse\022\217\001\n\022describeCollection\022;.com.t" +
+      "encent.tcvectordb.rpc.proto.DescribeColl" +
+      "ectionRequest\032<.com.tencent.tcvectordb.r",
+      "pc.proto.DescribeCollectionResponse\022\206\001\n\017" +
+      "listCollections\0228.com.tencent.tcvectordb" +
+      ".rpc.proto.ListCollectionsRequest\0329.com." +
+      "tencent.tcvectordb.rpc.proto.ListCollect" +
+      "ionsResponse\022}\n\014rebuildIndex\0225.com.tence" +
+      "nt.tcvectordb.rpc.proto.RebuildIndexRequ" +
+      "est\0326.com.tencent.tcvectordb.rpc.proto.R" +
+      "ebuildIndexResponse\022k\n\006upsert\022/.com.tenc" +
+      "ent.tcvectordb.rpc.proto.UpsertRequest\0320" +
+      ".com.tencent.tcvectordb.rpc.proto.Upsert" +
+      "Response\022k\n\006update\022/.com.tencent.tcvecto" +
+      "rdb.rpc.proto.UpdateRequest\0320.com.tencen" +
+      "t.tcvectordb.rpc.proto.UpdateResponse\022h\n" +
+      "\005query\022..com.tencent.tcvectordb.rpc.prot" +
+      "o.QueryRequest\032/.com.tencent.tcvectordb." +
+      "rpc.proto.QueryResponse\022k\n\006search\022/.com." +
+      "tencent.tcvectordb.rpc.proto.SearchReque" +
+      "st\0320.com.tencent.tcvectordb.rpc.proto.Se" +
+      "archResponse\022r\n\rhybrid_search\022/.com.tenc" +
+      "ent.tcvectordb.rpc.proto.SearchRequest\0320" +
+      ".com.tencent.tcvectordb.rpc.proto.Search" +
+      "Response\022u\n\020full_text_search\022/.com.tence" +
+      "nt.tcvectordb.rpc.proto.SearchRequest\0320." +
+      "com.tencent.tcvectordb.rpc.proto.SearchR" +
+      "esponse\022n\n\007explain\0220.com.tencent.tcvecto" +
+      "rdb.rpc.proto.ExplainRequest\0321.com.tence" +
+      "nt.tcvectordb.rpc.proto.ExplainResponse\022" +
+      "i\n\004dele\022/.com.tencent.tcvectordb.rpc.pro" +
+      "to.DeleteRequest\0320.com.tencent.tcvectord" +
+      "b.rpc.proto.DeleteResponse\022q\n\014range_sear" +
+      "ch\022/.com.tencent.tcvectordb.rpc.proto.Se" +
+      "archRequest\0320.com.tencent.tcvectordb.rpc" +
+      ".proto.SearchResponse\022e\n\004sort\022-.com.tenc" +
+      "ent.tcvectordb.rpc.proto.SortRequest\032..c" +
+      "om.tencent.tcvectordb.rpc.proto.SortResp" +
+      "onse\022w\n\016createDatabase\0221.com.tencent.tcv" +
+      "ectordb.rpc.proto.DatabaseRequest\0322.com." +
+      "tencent.tcvectordb.rpc.proto.DatabaseRes" +
+      "ponse\022u\n\014dropDatabase\0221.com.tencent.tcve" +
+      "ctordb.rpc.proto.DatabaseRequest\0322.com.t" +
+      "encent.tcvectordb.rpc.proto.DatabaseResp" +
+      "onse\022v\n\rlistDatabases\0221.com.tencent.tcve" +
+      "ctordb.rpc.proto.DatabaseRequest\0322.com.t" +
+      "encent.tcvectordb.rpc.proto.DatabaseResp" +
+      "onse\022\211\001\n\020describeDatabase\0229.com.tencent." +
+      "tcvectordb.rpc.proto.DescribeDatabaseReq" +
+      "uest\032:.com.tencent.tcvectordb.rpc.proto." +
+      "DescribeDatabaseResponse\022x\n\013get_version\022" +
+      "3.com.tencent.tcvectordb.rpc.proto.GetVe" +
+      "rsionRequest\0324.com.tencent.tcvectordb.rp" +
+      "c.proto.GetVersionResponse\022q\n\010addIndex\0221" +
+      ".com.tencent.tcvectordb.rpc.proto.AddInd" +
+      "exRequest\0322.com.tencent.tcvectordb.rpc.p" +
+      "roto.AddIndexResponse\022\214\001\n\021modifyVectorIn" +
+      "dex\022:.com.tencent.tcvectordb.rpc.proto.M" +
+      "odifyVectorIndexRequest\032;.com.tencent.tc" +
+      "vectordb.rpc.proto.ModifyVectorIndexResp" +
+      "onse\022h\n\005count\022..com.tencent.tcvectordb.r" +
+      "pc.proto.CountRequest\032/.com.tencent.tcve" +
+      "ctordb.rpc.proto.CountResponse\022z\n\013user_c" +
+      "reate\0224.com.tencent.tcvectordb.rpc.proto" +
+      ".UserAccountRequest\0325.com.tencent.tcvect" +
+      "ordb.rpc.proto.UserAccountResponse\022x\n\tus" +
+      "er_drop\0224.com.tencent.tcvectordb.rpc.pro" +
+      "to.UserAccountRequest\0325.com.tencent.tcve" +
+      "ctordb.rpc.proto.UserAccountResponse\022\203\001\n" +
+      "\024user_change_password\0224.com.tencent.tcve" +
+      "ctordb.rpc.proto.UserAccountRequest\0325.co" +
+      "m.tencent.tcvectordb.rpc.proto.UserAccou" +
+      "ntResponse\022\177\n\nuser_grant\0227.com.tencent.t" +
+      "cvectordb.rpc.proto.UserPrivilegesReques" +
+      "t\0328.com.tencent.tcvectordb.rpc.proto.Use" +
+      "rPrivilegesResponse\022\200\001\n\013user_revoke\0227.co" +
+      "m.tencent.tcvectordb.rpc.proto.UserPrivi" +
+      "legesRequest\0328.com.tencent.tcvectordb.rp" +
+      "c.proto.UserPrivilegesResponse\022r\n\tuser_l" +
+      "ist\0221.com.tencent.tcvectordb.rpc.proto.U" +
+      "serListRequest\0322.com.tencent.tcvectordb." +
+      "rpc.proto.UserListResponse\022~\n\ruser_descr" +
+      "ibe\0225.com.tencent.tcvectordb.rpc.proto.U" +
+      "serDescribeRequest\0326.com.tencent.tcvecto" +
+      "rdb.rpc.proto.UserDescribeResponse\022t\n\tdr" +
+      "opIndex\0222.com.tencent.tcvectordb.rpc.pro" +
+      "to.DropIndexRequest\0323.com.tencent.tcvect" +
+      "ordb.rpc.proto.DropIndexResponseB\003\200\001\001b\006p" +
+      "roto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -106426,7 +106575,7 @@ com.tencent.tcvectordb.rpc.proto.Olama.Role defaultValue) {
     internal_static_com_tencent_tcvectordb_rpc_proto_RebuildIndexRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_tencent_tcvectordb_rpc_proto_RebuildIndexRequest_descriptor,
-        new java.lang.String[] { "Database", "Collection", "DropBeforeRebuild", "Throttle", "DisableTrain", "ForceRebuild", });
+        new java.lang.String[] { "Database", "Collection", "DropBeforeRebuild", "Throttle", "DisableTrain", "ForceRebuild", "FieldName", });
     internal_static_com_tencent_tcvectordb_rpc_proto_RebuildIndexResponse_descriptor =
       getDescriptor().getMessageTypes().get(37);
     internal_static_com_tencent_tcvectordb_rpc_proto_RebuildIndexResponse_fieldAccessorTable = new

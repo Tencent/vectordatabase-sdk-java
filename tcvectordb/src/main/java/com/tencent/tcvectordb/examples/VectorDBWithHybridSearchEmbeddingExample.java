@@ -29,6 +29,7 @@ import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
+import com.tencent.tcvectordb.model.param.entity.HybridSearchRes;
 import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
 import com.tencent.tcvectordb.utils.BinaryUtils;
 import com.tencent.tcvectordb.utils.JsonUtils;
@@ -57,7 +58,7 @@ public class VectorDBWithHybridSearchEmbeddingExample {
         upsertData(client);
         searchData(client);
         deleteAndDrop(client);
-
+        client.close();
     }
 
 
@@ -76,7 +77,7 @@ public class VectorDBWithHybridSearchEmbeddingExample {
         // 3. 创建 collection
         System.out.println("---------------------- createCollection ----------------------");
         CreateCollectionParam collectionParam = initCreateCollectionParam(COLL_NAME);
-        db.createCollection(collectionParam);
+        client.createCollection(DBNAME, collectionParam);
         System.out.println(COLL_NAME + " exists: "+ db.IsExistsCollection(COLL_NAME));
 
     }
@@ -151,7 +152,9 @@ public class VectorDBWithHybridSearchEmbeddingExample {
                 .withLimit(3)
                 .withRetrieveVector(false)
                 .build();
-        List<Document> siDocs = client.hybridSearch(DBNAME, COLL_NAME, hybridSearchParam).getDocuments();
+        HybridSearchRes hybridSearchRes = client.hybridSearch(DBNAME, COLL_NAME, hybridSearchParam);
+        System.out.println(hybridSearchRes.toString());
+        List<Document> siDocs = hybridSearchRes.getDocuments();
         int i = 0;
         for (Object docs : siDocs) {
             System.out.println("\tres: " + (i++) + docs.toString());

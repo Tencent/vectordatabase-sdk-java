@@ -1,11 +1,11 @@
 syntax = "proto3";
 
 package com.tencent.tcvectordb.rpc.proto;
-option cc_generic_services = true;
+option cc_generic_services =true;
 
 message Document {
     string id                              = 1;
-    repeated float vector                  = 2;
+    repeated float vector                 = 2;
     float score                            = 3;
     map<string, Field> fields              = 4;
     uint64 index_id                        = 5;
@@ -344,6 +344,7 @@ message RebuildIndexRequest {
     int32 throttle         = 4;
     bool disable_train     = 5;
     bool force_rebuild     = 6;
+    string fieldName       = 7;
 };
 
 message RebuildIndexResponse {
@@ -789,8 +790,8 @@ service SearchEngine {
     rpc search(SearchRequest) returns (SearchResponse);
     // 混合搜索
     rpc hybrid_search(SearchRequest) returns (SearchResponse);
-    // 关键词检索
-    rpc keyword_search(SearchRequest) returns (SearchRequest);
+    // 全文搜索
+    rpc full_text_search(SearchRequest) returns (SearchResponse);
     // explain
     rpc explain(ExplainRequest) returns (ExplainResponse);
     // 删除向量

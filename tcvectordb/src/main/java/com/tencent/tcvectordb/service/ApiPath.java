@@ -37,6 +37,8 @@ public class ApiPath {
     public final static String DOC_UPSERT = "document/upsert";
     public final static String DOC_QUERY = "document/query";
     public final static String DOC_SEARCH = "document/search";
+
+    public final static String DOC_FULL_TEXT_SEARCH = "document/fullTextSearch";
     public final static String DOC_HYBRID_SEARCH = "document/hybridSearch";
     public final static String DOC_DELETE = "document/delete";
     public final static String DOC_UPDATE = "document/update";
@@ -61,6 +63,7 @@ public class ApiPath {
     public final static String AI_ALIAS_SET = "ai/alias/set";
     public final static String AI_ALIAS_DELETE = "ai/alias/delete";
     public final static String AI_REBUILD_INDEX = "ai/index/rebuild";
+    public final static String AI_DOCUMENT_QUERY_FILE_DETAILS = "ai/document/queryFileDetails";
     public final static String ADD_INDEX = "index/add";
     public final static String DROP_INDEX = "index/drop";
     public final static String MODIFY_VECTOR_INDEX = "index/modifyVectorIndex";

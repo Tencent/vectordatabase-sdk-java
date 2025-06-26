@@ -32,10 +32,7 @@ import com.tencent.tcvectordb.model.param.collection.FilterIndexConfig;
 import com.tencent.tcvectordb.model.param.collection.IndexField;
 import com.tencent.tcvectordb.model.param.collection.TTLConfig;
 import com.tencent.tcvectordb.model.param.dml.*;
-import com.tencent.tcvectordb.model.param.entity.AffectRes;
-import com.tencent.tcvectordb.model.param.entity.BaseRes;
-import com.tencent.tcvectordb.model.param.entity.HybridSearchRes;
-import com.tencent.tcvectordb.model.param.entity.SearchRes;
+import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.service.Stub;
@@ -534,6 +531,30 @@ public class Collection{
                 new ModifyIndexParamInner(database, collection, modifyVectorIndexParam), false);
     }
 
+
+    /**
+     * full text search
+     * @param param FullTextSearchParam:
+     *      match(MatchOption): matchOption used for sparse vector search
+     *      retrieve_vector(bool): Whether to return vector and sparse vector values.
+     *      filter(Filter): filter rows before return result
+     *      output_fields(List): return columns by column name list
+     *      Limit(int): limit the number of rows returned
+     * @return FullTextSearchRes:
+     *      documents: List<Document>: the List of document
+     *
+     * @throws VectorDBException
+     */
+    public FullTextSearchRes fullTextSearch(FullTextSearchParam param) throws VectorDBException {
+        boolean ai = false;
+        String collection = this.collection;
+        if (this.connectCollectionName != null){
+            collection = this.connectCollectionName;
+        }
+        return this.stub.fullTextSearch(new FullTextSearchParamInner(
+                database, collection, param, this.readConsistency), ai);
+    }
+
     @Override
     public String toString() {
         ObjectMapper mapper = new ObjectMapper();
@@ -550,6 +571,15 @@ public class Collection{
     public static class IndexStatus {
         private String status;
         private Date startTime;
+        private String msg;
+
+        public String getMsg() {
+            return msg;
+        }
+
+        public void setMsg(String msg) {
+            this.msg = msg;
+        }
 
         public String getStatus() {
             return status;
@@ -591,6 +621,7 @@ public class Collection{
             return "IndexStatus{" +
                     "status='" + status + '\'' +
                     ", startTime=" + startTime +
+                    ", msg='" + msg + '\'' +
                     '}';
         }
     }

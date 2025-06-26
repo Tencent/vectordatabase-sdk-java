@@ -11,12 +11,15 @@ public class RebuildIndexParamInner {
     private boolean dropBeforeRebuild;
     private int throttle;
 
+    private String fieldName;
+
 
     public RebuildIndexParamInner(String database, String collection, RebuildIndexParam rebuildIndexParam) {
         this.database = database;
         this.collection = collection;
         this.dropBeforeRebuild = rebuildIndexParam.getDropBeforeRebuild();
         this.throttle = rebuildIndexParam.getThrottle();
+        this.fieldName = rebuildIndexParam.getFieldName();
     }
 
     public String getDatabase() {
@@ -33,6 +36,10 @@ public class RebuildIndexParamInner {
 
     public int getThrottle() {
         return throttle;
+    }
+
+    public String getFieldName() {
+        return fieldName;
     }
 
     @Override

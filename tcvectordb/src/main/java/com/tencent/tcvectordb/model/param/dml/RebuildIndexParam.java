@@ -7,6 +7,8 @@ public class RebuildIndexParam {
     private Boolean dropBeforeRebuild;
     private Integer throttle;
 
+    private String fieldName;
+
 
     public RebuildIndexParam() {
     }
@@ -14,6 +16,12 @@ public class RebuildIndexParam {
     public RebuildIndexParam(Builder builder) {
         this.dropBeforeRebuild = builder.dropBeforeRebuild;
         this.throttle = builder.throttle;
+        this.fieldName = builder.fieldName;
+    }
+
+
+    public String getFieldName() {
+        return fieldName;
     }
 
     public Boolean getDropBeforeRebuild() {
@@ -32,6 +40,8 @@ public class RebuildIndexParam {
         private boolean dropBeforeRebuild = false;
         private Integer throttle = 1;
 
+        private String fieldName;
+
         private Builder() {
         }
 
@@ -45,6 +55,10 @@ public class RebuildIndexParam {
             return this;
         }
 
+        public Builder withFieldName(String fieldName) {
+            this.fieldName = fieldName;
+            return this;
+        }
         public RebuildIndexParam build() {
             return new RebuildIndexParam(this);
         }

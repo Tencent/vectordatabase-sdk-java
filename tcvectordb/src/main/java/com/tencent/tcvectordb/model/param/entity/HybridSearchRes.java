@@ -9,6 +9,19 @@ import java.util.stream.Collectors;
 
 public class HybridSearchRes extends BaseRes {
     private List<Object> documents;
+    private EmbeddingExtraInfo embeddingExtraInfo;
+
+    public HybridSearchRes(int code, String msg, String warning) {
+        super(code, msg, warning);
+    }
+
+    public EmbeddingExtraInfo getEmbeddingExtraInfo() {
+        return embeddingExtraInfo;
+    }
+
+    public void setEmbeddingExtraInfo(EmbeddingExtraInfo embeddingExtraInfo) {
+        this.embeddingExtraInfo = embeddingExtraInfo;
+    }
 
     public List<Document> getDocuments() throws VectorDBException{
         if (documents.size()==0){
@@ -35,14 +48,19 @@ public class HybridSearchRes extends BaseRes {
         this.documents = documents;
     }
 
+    public void setDocuments(List<Object> documents) {
+        this.documents = documents;
+    }
 
     @Override
     public String toString() {
         return "HybridSearchRes{" +
-                "documents=" + documents +
+                "embeddingExtraInfo=" + embeddingExtraInfo +
                 ", code=" + code +
                 ", msg='" + msg + '\'' +
                 ", warning='" + warning + '\'' +
+                ", count=" + count +
+                ", requestId='" + requestId + '\'' +
                 '}';
     }
 }

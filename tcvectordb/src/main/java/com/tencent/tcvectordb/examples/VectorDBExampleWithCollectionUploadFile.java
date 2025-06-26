@@ -64,7 +64,7 @@ public class VectorDBExampleWithCollectionUploadFile {
 //        UploadFileUseInputStream(client, new FileInputStream(file), file.length(), "tcvdb.pdf", metaDataMap);
 
 //        // 使用文件路径上传文档
-        UploadFile(client, "/data/home/yihaoan/tcvdb.pdf", "tcvdb.pdf", metaDataMap);
+        UploadFile(client, System.getProperty("file_path"), "tcvdb.pdf", metaDataMap);
 //        // support markdown, pdf, pptx, docx document
 //        // UploadFile(client, System.getProperty("file_path"), "腾讯云向量数据库.pdf", metaDataMap);
 //        // UploadFile(client, System.getProperty("file_path"), "腾讯云向量数据库.pptx", metaDataMap);
@@ -234,7 +234,6 @@ public class VectorDBExampleWithCollectionUploadFile {
 
         // 根据chunk_num 和 section_num 获取chunk文本
         System.out.println("---------------------- get chunk text by chunk_num ----------------------");
-        System.out.println(searchRes.getDocuments().get(0).get(0).getObject("chunk_num").getClass());
         if (searchRes.getDocuments().get(0).get(0).getObject("chunk_num")==null){
             return;
         }

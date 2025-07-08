@@ -32,6 +32,7 @@ import com.tencent.tcvdbtext.encoder.SparseVectorBm25Encoder;
 import com.tencent.tcvdbtext.tokenizer.JiebaTokenizer;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
@@ -114,7 +115,8 @@ public class example {
         String projectAbsolutePath = projectDirectory.getAbsolutePath();
         String path = projectAbsolutePath.replace("target/classes", "") +
                 "src/main/resources/data/user_stopwords.txt";
-        encoder.setStopWords(path);
+        // 支持其他编码格式，默认UTF-8
+        // encoder.setStopWords(path, StandardCharsets.UTF_8);
         encoder.setEnableStopWords(true);
         System.out.println(encoder.getTokenizer().tokenize("什么是腾讯云向量数据库。"));
 

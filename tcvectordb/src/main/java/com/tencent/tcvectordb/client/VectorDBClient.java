@@ -841,4 +841,8 @@ public class VectorDBClient {
         return this.stub.queryFileDetails(paramInner);
     }
 
+    public AtomicEmbeddingRes atomicEmbedding(AtomicEmbeddingParam param) {
+        return this.stub.atomicEmbedding(param);
+    }
+
 }

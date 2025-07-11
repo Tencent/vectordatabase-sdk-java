@@ -40,6 +40,7 @@ import com.tencent.tcvectordb.model.param.collection.UploadFileParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.collectionView.*;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
+import com.tencent.tcvectordb.model.param.dml.AtomicEmbeddingParam;
 import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
@@ -986,6 +987,13 @@ public class HttpStub implements Stub {
             throw new VectorDBException(String.format("VectorDBServer response " +
                     "from full search search error: can't parse documents=%s", documentsNode));
         }
+    }
+
+    @Override
+    public AtomicEmbeddingRes atomicEmbedding(AtomicEmbeddingParam param) {
+        String url = String.format("%s/%s", this.connectParam.getUrl(), ApiPath.AI_ATOMIC_EMBEDDING_URL);
+        JsonNode jsonNode = this.post(url, JsonUtils.toJsonString(param), false);
+        return JsonUtils.parseObject(jsonNode.toString(), AtomicEmbeddingRes.class);
     }
 
 

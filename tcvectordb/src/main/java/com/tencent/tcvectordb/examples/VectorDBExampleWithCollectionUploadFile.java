@@ -20,7 +20,6 @@
 
 package com.tencent.tcvectordb.examples;
 
-import com.sun.org.apache.xpath.internal.operations.Or;
 import com.tencent.tcvectordb.client.VectorDBClient;
 import com.tencent.tcvectordb.model.*;
 import com.tencent.tcvectordb.model.Collection;

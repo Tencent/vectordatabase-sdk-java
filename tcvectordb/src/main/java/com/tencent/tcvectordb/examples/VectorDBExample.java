@@ -302,7 +302,8 @@ public class VectorDBExample {
         SearchByIdParam searchByIdParam = SearchByIdParam.newBuilder()
                 .withDocumentIds(documentIds)
                 // 若使用 HNSW 索引，则需要指定参数 ef，ef 越大，召回率越高，但也会影响检索速度
-                .withParams(new HNSWSearchParams(100))
+//              .withParams(new HNSWSearchParams(100))
+                //.withParams(GeneralParams.newBuilder().withNProbe(100).build())
                 // 指定 Top K 的 K 值
                 .withLimit(2)
                 // 过滤获取到结果

@@ -9,13 +9,13 @@ public class AtomicEmbeddingParam {
     private String model;
     private String dataType;
 
-    private ModelParam modelParam;
+    private ModelParam modelParams;
     private List<String> data;
 
     public AtomicEmbeddingParam(Builder builder) {
         this.model = builder.model;
         this.dataType = builder.dataType;
-        this.modelParam = builder.modelParam;
+        this.modelParams = builder.modelParam;
         this.data = builder.data;
     }
 
@@ -39,12 +39,12 @@ public class AtomicEmbeddingParam {
         this.dataType = dataType;
     }
 
-    public ModelParam getModelParam() {
-        return modelParam;
+    public ModelParam getModelParams() {
+        return modelParams;
     }
 
-    public void setModelParam(ModelParam modelParam) {
-        this.modelParam = modelParam;
+    public void setModelParams(ModelParam modelParams) {
+        this.modelParams = modelParams;
     }
 
     public List<String> getData() {

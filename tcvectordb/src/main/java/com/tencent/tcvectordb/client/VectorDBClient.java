@@ -852,8 +852,6 @@ public class VectorDBClient {
      *                  retrieveSparseVector : retrieve sparse vector
      *
      * @return AtomicEmbeddingRes.class
-     *              code (int): response code
-     *              msg (String): response message
      *              tokenUsed (int): token used
      *              denseVector (List<List<Double>>): dense vector list
      *              sparseVector (List<Map<String, Double>>): sparse vector list

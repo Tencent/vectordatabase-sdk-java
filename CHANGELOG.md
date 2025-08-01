@@ -1,7 +1,7 @@
 # Changelog
 
 
-## v2.5.1.1
+## v2.5.2
 * feat: support embedding service interface `/ai/service/embedding`
 
 ## v2.5.0

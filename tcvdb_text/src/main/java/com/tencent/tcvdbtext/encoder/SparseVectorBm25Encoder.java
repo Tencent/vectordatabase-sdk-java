@@ -36,6 +36,7 @@ import com.tencent.tcvdbtext.util.JsonUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -360,6 +361,15 @@ public class SparseVectorBm25Encoder implements BaseSparseEncoder{
      * @param stopWordsFile
      */
     public void setStopWords(String stopWordsFile)  {
+        this.tokenizer.setStopWords(stopWordsFile);
+    }
+
+    /**
+     *  set stop words file
+     * @param stopWordsFile
+     * @param charset  stop words file charset, example: StandardCharsets.UTF_8
+     */
+    public void setStopWords(String stopWordsFile, Charset charset)  {
         this.tokenizer.setStopWords(stopWordsFile);
     }
 

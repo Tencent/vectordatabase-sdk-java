@@ -1535,6 +1535,13 @@ public class GrpcStub extends HttpStub{
         return docBuilder.build();
     }
 
+
+    @Override
+    public AtomicEmbeddingRes atomicEmbedding(AtomicEmbeddingParam param) {
+        super.initHttpStub(this.connectParam);
+        return super.atomicEmbedding(param);
+    }
+
     private Olama.Document convertDocumentJSON2OlamaDoc(JSONObject document) {
         Olama.Document.Builder docBuilder = Olama.Document.newBuilder();
         document.keySet().forEach(key->{

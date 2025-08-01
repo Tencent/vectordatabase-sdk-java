@@ -1,0 +1,12 @@
+# Changelog
+
+
+## v2.5.1.1
+* feat: support embedding service interface `/ai/service/embedding`
+
+## v2.5.0
+* feat: support full-text search interface `/document/fullTextSearch`
+* feat: support rebuilding sparse vector indexes via `/rebuild/index` interface
+* feat: support vector index type modification via `/index/modifyVectorIndex` interface (BIN_FLAT not supported)
+* feat: support rebuilding vector/sparse vector indexes with user defined CPU resource usage
+

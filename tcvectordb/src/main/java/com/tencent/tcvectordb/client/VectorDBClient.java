@@ -841,4 +841,24 @@ public class VectorDBClient {
         return this.stub.queryFileDetails(paramInner);
     }
 
+    /**
+     * atomic embedding
+     * @param param: AtomicEmbeddingParam.class
+     *             model (String): model name
+     *             dataType (String): data type, text
+     *             data (List<String>): data list
+     *             modelParams (ModelParam.class):
+     *                  retrieveDenseVector  : retrieve dense vector
+     *                  retrieveSparseVector : retrieve sparse vector
+     *
+     * @return AtomicEmbeddingRes.class
+     *              tokenUsed (int): token used
+     *              denseVector (List<List<Double>>): dense vector list
+     *              sparseVector (List<Map<String, Double>>): sparse vector list
+     *
+    **/
+    public AtomicEmbeddingRes atomicEmbedding(AtomicEmbeddingParam param) {
+        return this.stub.atomicEmbedding(param);
+    }
+
 }

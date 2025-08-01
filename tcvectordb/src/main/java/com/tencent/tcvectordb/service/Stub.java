@@ -25,6 +25,7 @@ import com.tencent.tcvectordb.model.param.collection.UploadFileParam;
 import com.tencent.tcvectordb.model.param.collectionView.CreateCollectionViewParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.collectionView.LoadAndSplitTextParam;
+import com.tencent.tcvectordb.model.param.dml.AtomicEmbeddingParam;
 import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.user.*;
@@ -214,4 +215,6 @@ public interface Stub {
     QueryFileDetailRes queryFileDetails(QueryFileDetailsParamInner param);
 
     FullTextSearchRes fullTextSearch(FullTextSearchParamInner param, boolean ai);
+
+    AtomicEmbeddingRes atomicEmbedding(AtomicEmbeddingParam param);
 }

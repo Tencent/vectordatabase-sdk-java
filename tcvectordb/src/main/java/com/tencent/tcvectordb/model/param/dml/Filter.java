@@ -18,7 +18,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.tencent.tcvectordb.model.param.dml;;
+package com.tencent.tcvectordb.model.param.dml;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencent.tcvectordb.exception.ParamException;

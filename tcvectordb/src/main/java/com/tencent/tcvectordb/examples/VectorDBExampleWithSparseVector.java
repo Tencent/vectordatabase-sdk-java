@@ -40,9 +40,9 @@ import static com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum.BGE_BA
  */
 public class VectorDBExampleWithSparseVector {
 
-    private static final String DBNAME = "book_5";
-    private static final String COLL_NAME = "book_segments_sparse_4";
-    private static final String COLL_NAME_ALIAS = "collection_alias_sparse_4";
+    private static final String DBNAME = "db-test-sparse-vec";
+    private static final String COLL_NAME = "coll-sparse-vec";
+    private static final String COLL_NAME_ALIAS = "collection_alias_sparse";
 
     public static void main(String[] args) throws InterruptedException {
         // 创建VectorDB Client
@@ -55,7 +55,6 @@ public class VectorDBExampleWithSparseVector {
         createDatabaseAndCollection(client);
         upsertData(client);
         queryData(client);
-        updateAndDelete(client);
         deleteAndDrop(client);
         client.close();
     }
@@ -79,34 +78,9 @@ public class VectorDBExampleWithSparseVector {
         CreateCollectionParam collectionParam = initCreateCollectionParam(COLL_NAME);
         client.createCollection(DBNAME, collectionParam);
 
-        // 4. 列出所有 collection
-//        Database db = client.database(DBNAME);
-        System.out.println("---------------------- listCollections ----------------------");
-        List<Collection> cols = db.listCollections();
-        for (Collection col : cols) {
-            System.out.println("\tres: " + col.toString());
-        }
-
-        // 5. 设置 collection 别名
-        System.out.println("---------------------- setAlias ----------------------");
-        AffectRes affectRes = client.setAlias(DBNAME, COLL_NAME, COLL_NAME_ALIAS);
-        System.out.println("\tres: " + affectRes.toString());
-
-
-        // 6. describe collection
         System.out.println("---------------------- describeCollection ----------------------");
         Collection descCollRes = client.describeCollection(DBNAME, COLL_NAME);
         System.out.println("\tres: " + descCollRes.toString());
-
-        // 7. delete alias
-        System.out.println("---------------------- deleteAlias ----------------------");
-        AffectRes affectRes1 = client.deleteAlias(DBNAME, COLL_NAME_ALIAS);
-        System.out.println("\tres: " + affectRes1);
-
-        // 8. describe collection
-        System.out.println("---------------------- describeCollection ----------------------");
-        Collection descCollRes1 = client.describeCollection(DBNAME, COLL_NAME);
-        System.out.println("\tres: " + descCollRes1.toString());
 
     }
 
@@ -126,11 +100,8 @@ public class VectorDBExampleWithSparseVector {
         Collection collection = client.describeCollection(DBNAME, COLL_NAME);
         SparseVectorBm25Encoder encoder = SparseVectorBm25Encoder.getBm25Encoder("zh");
         List<String> texts = Arrays.asList(
-                "富贵功名，前缘分定，为人切莫欺心。",
-                "正大光明，忠良善果弥深。些些狂妄天加谴，眼前不遇待时临。",
-                "细作探知这个消息，飞报吕布。",
-                "布大惊，与陈宫商议。宫曰：“闻刘玄德新领徐州，可往投之。”布从其言，竟投徐州来。有人报知玄德。",
-                "玄德曰：“布乃当今英勇之士，可出迎之。”糜竺曰：“吕布乃虎狼之徒，不可收留；收则伤人矣。"
+                "腾讯云向量数据库（Tencent Cloud VectorDB）是一款全托管的自研企业级分布式数据库服务",
+                "腾讯云向量数据库可以和大语言模型 LLM 配合使用"
         );
 
         List<List<Pair<Long, Float>>> sparseVectors = encoder.encodeTexts(texts);
@@ -139,55 +110,11 @@ public class VectorDBExampleWithSparseVector {
                         .withId("0001")
                         .withVector(generateRandomVector(768))
                         .withSparseVector(sparseVectors.get(0))
-                        .addDocField(new DocField("bookName", "三国演义"))
-                        .addDocField(new DocField("author", "罗贯中"))
-                        .addDocField(new DocField("page", 21))
-                        .addDocField(new DocField("segment", "富贵功名，前缘分定，为人切莫欺心。"))
-                        .addDocField(new DocField("text", "富贵功名，前缘分定，为人切莫欺心。"))
                         .build(),
                 Document.newBuilder()
                         .withId("0002")
                         .withVector(generateRandomVector(768))
                         .withSparseVector(sparseVectors.get(1))
-                        .addDocField(new DocField("bookName", "三国演义"))
-                        .addDocField(new DocField("author", "罗贯中"))
-                        .addDocField(new DocField("page", 22))
-                        .addDocField(new DocField("segment",
-                                "正大光明，忠良善果弥深。些些狂妄天加谴，眼前不遇待时临。"))
-                        .addDocField(new DocField("text",
-                                "正大光明，忠良善果弥深。些些狂妄天加谴，眼前不遇待时临。"))
-                        .build(),
-                Document.newBuilder()
-                        .withId("0003")
-                        .withVector(generateRandomVector(768))
-                        .withSparseVector(sparseVectors.get(2))
-                        .addDocField(new DocField("bookName", "三国演义"))
-                        .addDocField(new DocField("author", "罗贯中"))
-                        .addDocField(new DocField("page", 23))
-                        .addDocField(new DocField("segment", "细作探知这个消息，飞报吕布。"))
-                        .addDocField(new DocField("text", "细作探知这个消息，飞报吕布。"))
-                        .build(),
-                Document.newBuilder()
-                        .withId("0004")
-                        .withVector(generateRandomVector(768))
-                        .withSparseVector(sparseVectors.get(3))
-                        .addDocField(new DocField("bookName", "三国演义"))
-                        .addDocField(new DocField("author", "罗贯中"))
-                        .addDocField(new DocField("page", 24))
-                        .addDocField(new DocField("segment", "富贵功名，前缘分定，为人切莫欺心。"))
-                        .addDocField(new DocField("text", "富贵功名，前缘分定，为人切莫欺心。"))
-                        .build(),
-                Document.newBuilder()
-                        .withId("0005")
-                        .withVector(generateRandomVector(768))
-                        .withSparseVector(sparseVectors.get(4))
-                        .addDocField(new DocField("bookName", "三国演义"))
-                        .addDocField(new DocField("author", "罗贯中"))
-                        .addDocField(new DocField("page", 25))
-                        .addDocField(new DocField("segment",
-                                "布大惊，与陈宫商议。宫曰：“闻刘玄德新领徐州，可往投之。"))
-                        .addDocField(new DocField("text",
-                                "布大惊，与陈宫商议。宫曰：“闻刘玄德新领徐州，可往投之。"))
                         .build()));
         System.out.println("---------------------- upsert ----------------------");
         InsertParam insertParam = InsertParam.newBuilder()
@@ -241,7 +168,7 @@ public class VectorDBExampleWithSparseVector {
                         .withData(generateRandomVector(768))
                         .build())
                 .withMatch(MatchOption.newBuilder().withFieldName("sparse_vector")
-                        .withData(encoder.encodeQueries(Arrays.asList("正大光明，忠良善果弥深")))
+                        .withData(encoder.encodeQueries(Arrays.asList("向量数据库")))
                         .build())
                 // 指定 Top K 的 K 值
                 .withRerank(new WeightRerankParam(Arrays.asList("vector","sparse_vector"), Arrays.asList(1, 1)))
@@ -249,7 +176,6 @@ public class VectorDBExampleWithSparseVector {
                 // 过滤获取到结果
                 .withFilter(filterParam)
                 .withRetrieveVector(true)
-                .withOutputFields(Arrays.asList("segment"))
                 .build();
         List<Document> siDocs = client.hybridSearch(DBNAME, COLL_NAME, hybridSearchParam).getDocuments();
         int i = 0;
@@ -261,71 +187,7 @@ public class VectorDBExampleWithSparseVector {
         }
     }
 
-    private static void updateAndDelete(VectorDBClient client) throws InterruptedException {
-        Database database = client.database(DBNAME);
-        Collection collection = client.describeCollection(DBNAME, COLL_NAME);
-
-
-        // update
-        // 1. update 提供基于 [主键查询] 和 [Filter 过滤] 的部分字段更新或者非索引字段新增
-
-        // filter 限制仅会更新 id = "0003"
-        System.out.println("---------------------- update ----------------------");
-        Filter filterParam = new Filter("bookName=\"三国演义\"");
-        List<String> documentIds = Arrays.asList("0001", "0003");
-        SparseVectorBm25Encoder encoder = SparseVectorBm25Encoder.getBm25Encoder("zh");
-        UpdateParam updateParam = UpdateParam
-                .newBuilder()
-                .addAllDocumentId(documentIds)
-                .withFilter(filterParam)
-                .build();
-        Document updateDoc = Document
-                .newBuilder()
-                .addDocField(new DocField("page", 100))
-                // 支持添加新的内容
-                .addDocField(new DocField("extend", "extendContent"))
-                .withSparseVector(encoder.encodeQueries(Arrays.asList("正大光明，忠良善果弥深")).get(0))
-                .build();
-        client.update(DBNAME, COLL_NAME, updateParam, updateDoc);
-
-        // delete
-        // 1. delete 提供基于[ 主键查询]和[Filter 过滤]的数据删除能力
-        // 2. 删除功能会受限于 collection 的索引类型，部分索引类型不支持删除操作
-
-        // filter 限制只会删除 id = "00001" 成功
-        System.out.println("---------------------- delete ----------------------");
-        filterParam = new Filter("bookName=\"西游记\"");
-        DeleteParam build = DeleteParam
-                .newBuilder()
-                .addAllDocumentId(documentIds)
-                .withFilter(filterParam)
-                .build();
-        client.delete(DBNAME, COLL_NAME, build);
-
-        // notice：delete操作可用会有延迟
-        Thread.sleep(1000 * 5);
-
-        // rebuild index
-        System.out.println("---------------------- rebuild index ----------------------");
-        RebuildIndexParam rebuildIndexParam = RebuildIndexParam
-                .newBuilder()
-                .withDropBeforeRebuild(false)
-                .withThrottle(1)
-                .build();
-        client.rebuildIndex(DBNAME, COLL_NAME, rebuildIndexParam);
-        Thread.sleep(5 * 1000);
-
-
-        // truncate 会清除整个 Collection 的数据，包括索引
-        System.out.println("---------------------- truncate collection ----------------------");
-        AffectRes affectRes = client.truncateCollections(DBNAME, COLL_NAME);
-        System.out.println("\tres: " + affectRes.toString());
-
-        Thread.sleep(5 * 1000);
-    }
-
     private static void deleteAndDrop(VectorDBClient client) {
-        Database database = client.database(DBNAME);
 
         // 删除 collection
         System.out.println("---------------------- dropCollection ----------------------");
@@ -365,8 +227,6 @@ public class VectorDBExampleWithSparseVector {
                 .addField(new VectorIndex("vector", BGE_BASE_ZH.getDimension(), IndexType.HNSW,
                         MetricType.IP, new HNSWParams(16, 200)))
                 .addField(new SparseVectorIndex("sparse_vector", IndexType.INVERTED, MetricType.IP))
-                .addField(new FilterIndex("bookName", FieldType.String, IndexType.FILTER))
-                .addField(new FilterIndex("author", FieldType.String, IndexType.FILTER))
                 .build();
     }
 

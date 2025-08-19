@@ -84,17 +84,6 @@ public class VectorDBExampleWithSparseVector {
 
     }
 
-    private static List<Double> generateRandomVector(int dim){
-        Random random = new Random();
-        List<Double> vectors = new ArrayList<>();
-
-        for (int i = 0; i < dim; i++) {
-            double randomDouble = 0 + random.nextDouble() * (1.0 - 0.0);
-            vectors.add(randomDouble);
-        }
-        return vectors;
-    }
-
     private static void upsertData(VectorDBClient client) throws InterruptedException {
         Database database = client.database(DBNAME);
         Collection collection = client.describeCollection(DBNAME, COLL_NAME);
@@ -108,12 +97,12 @@ public class VectorDBExampleWithSparseVector {
         List<Document> documentList = new ArrayList<>(Arrays.asList(
                 Document.newBuilder()
                         .withId("0001")
-                        .withVector(generateRandomVector(768))
+                        .withVector(CommonService.generateRandomVector(768))
                         .withSparseVector(sparseVectors.get(0))
                         .build(),
                 Document.newBuilder()
                         .withId("0002")
-                        .withVector(generateRandomVector(768))
+                        .withVector(CommonService.generateRandomVector(768))
                         .withSparseVector(sparseVectors.get(1))
                         .build()));
         System.out.println("---------------------- upsert ----------------------");
@@ -134,7 +123,7 @@ public class VectorDBExampleWithSparseVector {
         SparseVectorBm25Encoder encoder = SparseVectorBm25Encoder.getBm25Encoder("zh");
         HybridSearchParam hybridSearchParam = HybridSearchParam.newBuilder()
                 .withAnn(AnnOption.newBuilder().withFieldName("vector")
-                        .withData(generateRandomVector(768))
+                        .withData(CommonService.generateRandomVector(768))
                         .build())
                 .withMatch(MatchOption.newBuilder().withFieldName("sparse_vector")
                         .withData(encoder.encodeQueries(Arrays.asList("向量数据库")))

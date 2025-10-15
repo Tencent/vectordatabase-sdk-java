@@ -1,5 +1,8 @@
 # Changelog
 
+## v2.5.5
+* feat: Support new IndexType `IVF_RABITQ`.
+* feat: Support new FieldType Double and Int64.
 
 ## v2.5.2
 * feat: support embedding service interface `/ai/service/embedding`

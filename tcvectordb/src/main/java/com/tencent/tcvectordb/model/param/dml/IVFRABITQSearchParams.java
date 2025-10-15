@@ -18,26 +18,27 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.tencent.tcvectordb.model.param.collection;
+package com.tencent.tcvectordb.model.param.dml;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.tencent.tcvectordb.exception.ParamException;
 
 /**
- * SparseVectorIndex
+ * VectorDB IVFRABITQSearchParams
  */
-public class SparseVectorIndex extends IndexField {
+public class IVFRABITQSearchParams implements Params {
+    @JsonProperty(value = "nprobe")
+    private int NProbe;
 
-
-    public SparseVectorIndex(String fieldName,  IndexType indexType, MetricType metricType) {
-        setFieldName(fieldName);
-        setFieldType(FieldType.SparseVector);
-        setIndexType(indexType);
-        setMetricType(metricType);
+    public IVFRABITQSearchParams(int NProbe) {
+        if (NProbe == 0){
+            throw new ParamException("The value of NProbe cannot be 0");
+        }
+        this.NProbe = NProbe;
     }
 
-    public SparseVectorIndex(String fieldName, IndexType indexType, MetricType metricType, Boolean diskSwapEnabled) {
-        setFieldName(fieldName);
-        setFieldType(FieldType.SparseVector);
-        setIndexType(indexType);
-        setMetricType(metricType);
-        setDiskSwapEnabled(diskSwapEnabled);
+    public int getNProbe() {
+        return NProbe;
     }
 }

@@ -35,6 +35,14 @@ public enum FieldType {
      */
     String("string"),
     /**
+     * int64
+     */
+    Int64("int64"),
+    /**
+     * double
+     */
+    Double("double"),
+    /**
      * vector
      */
     Vector("vector"),

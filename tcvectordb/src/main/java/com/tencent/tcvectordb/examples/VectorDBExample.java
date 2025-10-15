@@ -196,6 +196,8 @@ public class VectorDBExample {
                         .addDocField(new DocField("array_test", Arrays.asList("1","2","3")))
                         .addDocField(new DocField("owner", 2))
                         .addDocField(new DocField("double_test", 3.3))
+                        .addDocField(new DocField("price", 9.99))
+                        .addDocField(new DocField("weight", 0.1))
                         .build(),
                 Document.newBuilder()
                         .withId("0002")
@@ -278,6 +280,7 @@ public class VectorDBExample {
 //                .withFilter("bookName=\"三国演义\"")
                 // limit 限制返回行数，1 到 16384 之间
                  .withLimit(5)
+//                .withFilter("price < 10.00")
                 // 偏移
                  .withOffset(0)
                 // 指定返回的 fields
@@ -481,6 +484,8 @@ public class VectorDBExample {
                 .addField(new FilterIndex("array_test", FieldType.Array, IndexType.FILTER))
                 .addField(new FilterIndex("expired_at", FieldType.Uint64, IndexType.FILTER))
                 .addField(new FilterIndex("page", FieldType.Uint64, IndexType.FILTER))
+                .addField(new FilterIndex("price", FieldType.Double, IndexType.FILTER))
+                .addField(new FilterIndex("weight", FieldType.Int64, IndexType.FILTER))
                 // 创建ttl配置 非必填
                 .withTtlConfig(TTLConfig.newBuilder().WithEnable(true).WithTimeField("expired_at").build())
                 .build();

@@ -28,6 +28,7 @@ message Field {
         double val_double       = 3;
         StringArray val_str_arr = 4;
         bytes  val_json         = 5;
+        int64  val_int64        = 6;
     }
 }
 
@@ -147,6 +148,8 @@ enum FieldType {
     TYPE_ARRAY        = 1;
     TYPE_UINT64       = 2;
     TYPE_JSON         = 3;
+    TYPE_INT64        = 4;
+    TYPE_DOUBLE       = 5;
 }
 
 enum FieldElementType {
@@ -261,6 +264,7 @@ message IndexParams {
     uint32 efConstruction = 2;
     uint32 nprobe         = 3;
     uint32 nlist          = 4;
+    optional uint32 bits  = 5;
 }
 
 message IndexColumn {
@@ -272,6 +276,7 @@ message IndexColumn {
     IndexParams params      = 8;
     string fieldElementType = 9; // 当fieldType为array时, 数组元素类型
     string autoId           = 10; // 是否自动生成id
+    bool diskSwapEnable     = 11;
 };
 
 message indexStatus {
@@ -742,10 +747,20 @@ message UserDescribeResponse {
     User  user          = 4;
 }
 
+message GetClusterStateRequest {
+};
+
+message GetClusterStateResponse {
+  int32 code                       = 1;
+  string msg                       = 2;
+  string redirect                  = 3;
+  map<string, string> server_infos = 6;
+};
+
 message DropIndexRequest {
     string database                     = 1;
     string collection                   = 2;
-    repeated string field_names         = 3  ;
+    repeated string field_names         = 3;
 };
 
 message DropIndexResponse {
@@ -838,4 +853,6 @@ service SearchEngine {
     rpc user_describe(UserDescribeRequest) returns (UserDescribeResponse);
     // drop 索引
     rpc dropIndex(DropIndexRequest) returns (DropIndexResponse);
+    // 获取集群状态
+    rpc get_cluster_state(GetClusterStateRequest) returns (GetClusterStateResponse);
 };

@@ -29,6 +29,8 @@ import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvdbtext.encoder.SparseVectorBm25Encoder;
+import com.tencent.tcvectordb.model.param.entity.BaseRes;
+import com.tencent.tcvectordb.utils.JsonUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
@@ -55,6 +57,7 @@ public class VectorDBExampleWithSparseVector {
         createDatabaseAndCollection(client);
         upsertData(client);
         queryData(client);
+        modifyVectorIndex(client);
         deleteAndDrop(client);
         client.close();
     }
@@ -145,6 +148,23 @@ public class VectorDBExampleWithSparseVector {
         }
     }
 
+    private static void modifyVectorIndex(VectorDBClient client) throws InterruptedException{
+        System.out.println("--------modify vector index-------");
+        Database db = client.database(DBNAME);
+        Collection collection = db.describeCollection(COLL_NAME);
+        System.out.println("before");
+        System.out.println(JsonUtils.toJsonString(collection));
+        BaseRes baseRes = client.modifyVectorIndex(DBNAME, COLL_NAME, ModifyVectorIndexParam.newBuilder()
+                .withVectorIndex(new VectorIndex("sparse_vector", IndexType.INVERTED, false))
+                .withRebuildRules(RebuildIndexParam.newBuilder().withDropBeforeRebuild(true).withThrottle(1).build())
+                .build());
+        System.out.println("modify res: "+ JsonUtils.toJsonString(baseRes));
+        Collection collectionAfter = db.describeCollection(COLL_NAME);
+        System.out.println("after");
+        System.out.println(JsonUtils.toJsonString(collectionAfter));
+
+    }
+
     private static void deleteAndDrop(VectorDBClient client) {
 
         // 删除 collection
@@ -178,7 +198,7 @@ public class VectorDBExampleWithSparseVector {
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", BGE_BASE_ZH.getDimension(), IndexType.HNSW,
                         MetricType.IP, new HNSWParams(16, 200)))
-                .addField(new SparseVectorIndex("sparse_vector", IndexType.INVERTED, MetricType.IP))
+                .addField(new SparseVectorIndex("sparse_vector", IndexType.INVERTED, MetricType.IP, false))
                 .build();
     }
 

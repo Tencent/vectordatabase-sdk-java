@@ -57,7 +57,7 @@ public class VectorDBExampleWithSparseVector {
         createDatabaseAndCollection(client);
         upsertData(client);
         queryData(client);
-        modifyVectorIndex(client);
+        modifySparseVectorIndexToDisk(client);
         deleteAndDrop(client);
         client.close();
     }
@@ -148,21 +148,21 @@ public class VectorDBExampleWithSparseVector {
         }
     }
 
-    private static void modifyVectorIndex(VectorDBClient client) throws InterruptedException{
-        System.out.println("--------modify vector index-------");
+    private static void modifySparseVectorIndexToDisk(VectorDBClient client) throws InterruptedException{
+        System.out.println("--------modify sparse vector index to disk-------");
         Database db = client.database(DBNAME);
         Collection collection = db.describeCollection(COLL_NAME);
         System.out.println("before");
-        System.out.println(JsonUtils.toJsonString(collection));
+        System.out.println("\tres: " +JsonUtils.toJsonString(collection));
         BaseRes baseRes = client.modifyVectorIndex(DBNAME, COLL_NAME, ModifyVectorIndexParam.newBuilder()
-                .withVectorIndex(new VectorIndex("sparse_vector", IndexType.INVERTED, false))
+                .withVectorIndex(new VectorIndex("sparse_vector", IndexType.INVERTED, true))
                 .withRebuildRules(RebuildIndexParam.newBuilder().withDropBeforeRebuild(true).withThrottle(1).build())
                 .build());
         System.out.println("modify res: "+ JsonUtils.toJsonString(baseRes));
         Collection collectionAfter = db.describeCollection(COLL_NAME);
         System.out.println("after");
-        System.out.println(JsonUtils.toJsonString(collectionAfter));
-
+        System.out.println("\tres: " +JsonUtils.toJsonString(collectionAfter));
+        Thread.sleep(1000 * 5);
     }
 
     private static void deleteAndDrop(VectorDBClient client) {
@@ -198,7 +198,8 @@ public class VectorDBExampleWithSparseVector {
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", BGE_BASE_ZH.getDimension(), IndexType.HNSW,
                         MetricType.IP, new HNSWParams(16, 200)))
-                .addField(new SparseVectorIndex("sparse_vector", IndexType.INVERTED, MetricType.IP, false))
+                // 默认稀疏向量的存储方式为内存，可以通过修改参数修改为磁盘存储 diskSwapEnabled默认为false
+                .addField(new SparseVectorIndex("sparse_vector", IndexType.INVERTED, MetricType.IP))
                 .build();
     }
 

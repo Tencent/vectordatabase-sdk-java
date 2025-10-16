@@ -54,7 +54,7 @@ public class VectorDBWithIVFRABITQExample {
 
         createDatabaseAndCollection(client);
         upsertData(client);
-        queryData(client);
+        // queryData(client);
         modifyVectorIndex(client);
         deleteAndDrop(client);
         client.close();
@@ -101,7 +101,7 @@ public class VectorDBWithIVFRABITQExample {
         System.out.println("\r res :" + JsonUtils.toJsonString(collection));
         BaseRes baseRes = client.modifyVectorIndex(DBNAME, COLL_NAME, ModifyVectorIndexParam.newBuilder()
                 .withVectorIndex(new VectorIndex("vector",MetricType.IP, FieldType.Vector,
-                        IndexType.IVF_RABITQ, new IVFRABITQParams(100, 5)))
+                        IndexType.HNSW, new HNSWParams(32, 200)))
                 .withRebuildRules(RebuildIndexParam.newBuilder().withDropBeforeRebuild(true).withThrottle(1).build())
                 .build());
         System.out.println("modify res: "+ JsonUtils.toJsonString(baseRes));
@@ -111,8 +111,6 @@ public class VectorDBWithIVFRABITQExample {
     }
 
     private static void upsertData(VectorDBClient client) throws InterruptedException {
-        Database database = client.database(DBNAME);
-        Thread.sleep(1000 * 10);
         SparseVectorBm25Encoder encoder = SparseVectorBm25Encoder.getBm25Encoder("zh");
         List<String> texts = Arrays.asList(
                 "吴承恩",
@@ -156,41 +154,13 @@ public class VectorDBWithIVFRABITQExample {
                         .withSparseVector(sparseVectors.get(4))
                         .build()));
         System.out.println("---------------------- upsert ----------------------");
-        InsertParam insertParam = InsertParam.newBuilder().withDocuments(documentList).build();
+        InsertParam insertParam = InsertParam.newBuilder().withDocuments(documentList).withBuildIndex(false).build();
 
-//        collection.upsert(insertParam);
         AffectRes affectRes = client.upsert(DBNAME, COLL_NAME, insertParam);
         System.out.println("\r res :" + JsonUtils.toJsonString(affectRes));
     }
 
     private static void queryData(VectorDBClient client) {
-        Database database = client.database(DBNAME);
-
-        System.out.println("---------------------- query embedding----------------------");
-
-        SearchByEmbeddingItemsParam searchByEmbeddingItemsParam = SearchByEmbeddingItemsParam.newBuilder()
-                .withEmbeddingItems(Arrays.asList("0001", "0002", "0003", "0004", "0005"))
-                .withLimit(3)
-                .withParams(new IVFRABITQSearchParams(200))
-                .withRetrieveVector(false)
-                .build();
-        SearchRes searchRes = client.searchByEmbeddingItems(DBNAME, COLL_NAME, searchByEmbeddingItemsParam);
-        int i = 0;
-        System.out.println("embedding info: " + searchRes.getEmbeddingExtraInfo());
-        for (List<Document> docs : searchRes.getDocuments()) {
-            System.out.println("\tres: " + i++);
-            for (Document doc : docs) {
-                System.out.println("\tres: " + doc.toString());
-            }
-        }
-
-
-        // searchById
-        // 1. searchById 提供按 id 搜索的能力
-        // 2. 支持通过 filter 过滤数据
-        // 3. 如果仅需要部分 field 的数据，可以指定 output_fields 用于指定返回数据包含哪些 field，不指定默认全部返回
-        // 4. limit 用于限制每个单元搜索条件的条数，如 vector 传入三组向量，limit 为 3，则 limit 限制的是每组向量返回 top 3 的相似度向量
-
         System.out.println("---------------------- searchById ----------------------");
 
         HybridSearchParam searchByIdParam = HybridSearchParam.newBuilder()
@@ -214,6 +184,7 @@ public class VectorDBWithIVFRABITQExample {
         HybridSearchRes hybridSearchRes = client.hybridSearch(DBNAME, COLL_NAME, searchByIdParam);
         System.out.println(hybridSearchRes.toString());
         List<Document> siDocs = hybridSearchRes.getDocuments();
+        int i = 0;
         for (Object docs : siDocs) {
             System.out.println("\tres: " + (i++) + docs.toString());
         }

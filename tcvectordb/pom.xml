@@ -4,7 +4,7 @@
 
     <groupId>com.tencent.tcvectordb</groupId>
     <artifactId>vectordatabase-sdk-java</artifactId>
-    <version>2.5.4</version>
+    <version>2.5.5</version>
     <packaging>jar</packaging>
 
     <name>vectordatabase-sdk-java</name>
@@ -22,8 +22,8 @@
     <developers>
         <developer>
             <id>tcvectordb</id>
-            <name>yihaoan</name>
-            <email>yihaoan@tencent.com</email>
+            <name>aleronwang</name>
+            <email>aleronwang@tencent.com</email>
         </developer>
     </developers>
     <scm>

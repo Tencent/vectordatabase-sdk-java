@@ -32,12 +32,4 @@ public class SparseVectorIndex extends IndexField {
         setIndexType(indexType);
         setMetricType(metricType);
     }
-
-    public SparseVectorIndex(String fieldName, IndexType indexType, MetricType metricType, Boolean diskSwapEnabled) {
-        setFieldName(fieldName);
-        setFieldType(FieldType.SparseVector);
-        setIndexType(indexType);
-        setMetricType(metricType);
-        setDiskSwapEnabled(diskSwapEnabled);
-    }
 }

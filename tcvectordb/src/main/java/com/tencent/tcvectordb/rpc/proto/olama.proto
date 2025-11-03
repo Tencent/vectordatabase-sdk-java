@@ -276,7 +276,6 @@ message IndexColumn {
     IndexParams params      = 8;
     string fieldElementType = 9; // 当fieldType为array时, 数组元素类型
     string autoId           = 10; // 是否自动生成id
-    bool diskSwapEnable     = 11;
 };
 
 message indexStatus {

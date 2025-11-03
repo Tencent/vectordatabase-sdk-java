@@ -87,10 +87,4 @@ public class VectorIndex  extends IndexField {
         setDimension(dimension);
         setMetricType(metricType);
     }
-
-    public VectorIndex(String fieldName, IndexType indexType, Boolean diskSwapEnabled) {
-        setFieldName(fieldName);
-        setIndexType(indexType);
-        setDiskSwapEnabled(diskSwapEnabled);
-    }
 }

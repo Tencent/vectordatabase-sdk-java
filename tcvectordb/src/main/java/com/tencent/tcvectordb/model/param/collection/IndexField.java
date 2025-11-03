@@ -35,7 +35,6 @@ public class IndexField {
     private ParamsSerializer params;
     private FieldElementType fieldElementType;
 
-    private Boolean diskSwapEnabled;
     private Integer dimension;
     private Integer indexedCount;
 
@@ -141,13 +140,5 @@ public class IndexField {
 
     public void setAutoId(String autoId) {
         this.autoId = autoId;
-    }
-
-    public Boolean getDiskSwapEnabled() {
-        return diskSwapEnabled;
-    }
-
-    public void setDiskSwapEnabled(Boolean diskSwapEnabled) {
-        this.diskSwapEnabled = diskSwapEnabled;
     }
 }

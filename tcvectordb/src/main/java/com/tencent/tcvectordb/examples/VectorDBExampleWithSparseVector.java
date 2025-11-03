@@ -57,7 +57,6 @@ public class VectorDBExampleWithSparseVector {
         createDatabaseAndCollection(client);
         upsertData(client);
         queryData(client);
-        modifySparseVectorIndexToDisk(client);
         deleteAndDrop(client);
         client.close();
     }
@@ -146,23 +145,6 @@ public class VectorDBExampleWithSparseVector {
 //                System.out.println("\tres: " + doc.toString());
 //            }
         }
-    }
-
-    private static void modifySparseVectorIndexToDisk(VectorDBClient client) throws InterruptedException{
-        System.out.println("--------modify sparse vector index to disk-------");
-        Database db = client.database(DBNAME);
-        Collection collection = db.describeCollection(COLL_NAME);
-        System.out.println("before");
-        System.out.println("\tres: " +JsonUtils.toJsonString(collection));
-        BaseRes baseRes = client.modifyVectorIndex(DBNAME, COLL_NAME, ModifyVectorIndexParam.newBuilder()
-                .withVectorIndex(new VectorIndex("sparse_vector", IndexType.INVERTED, true))
-                .withRebuildRules(RebuildIndexParam.newBuilder().withDropBeforeRebuild(true).withThrottle(1).build())
-                .build());
-        System.out.println("modify res: "+ JsonUtils.toJsonString(baseRes));
-        Collection collectionAfter = db.describeCollection(COLL_NAME);
-        System.out.println("after");
-        System.out.println("\tres: " +JsonUtils.toJsonString(collectionAfter));
-        Thread.sleep(1000 * 5);
     }
 
     private static void deleteAndDrop(VectorDBClient client) {

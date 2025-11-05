@@ -323,7 +323,7 @@ public class GrpcStub extends HttpStub{
                             .setNlist(ivfsq8Params.getNList()).build());
                 } else if (index.getParams() instanceof  IVFRABITQParams) {
                     IVFRABITQParams ivfrabitqParams = (IVFRABITQParams) index.getParams();
-                    indexBuilder.setParams(Olama.IndexParams.newBuilder() // todo
+                    indexBuilder.setParams(Olama.IndexParams.newBuilder()
                             .setNlist(ivfrabitqParams.getNList()).setBits(ivfrabitqParams.getBits()).build());
                 }
             }
@@ -1481,7 +1481,7 @@ public class GrpcStub extends HttpStub{
                             indexField.setParams(new IVFSQ8Params(entry.getValue().getParams().getNlist()));
                             break;
                         case IVF_RABITQ:
-                            indexField.setParams(new IVFRABITQParams(entry.getValue().getParams().getNlist(), entry.getValue().getParams().getBits())); // todo
+                            indexField.setParams(new IVFRABITQParams(entry.getValue().getParams().getNlist(), entry.getValue().getParams().getBits()));
                             break;
                     }
 

@@ -1585,7 +1585,7 @@ public class GrpcStub extends HttpStub{
                     fieldBuilder.setValJson(ByteString.copyFromUtf8(document.get(key).toString()));
                 }
                 else {
-                    throw new VectorDBException("Unsupported field type, field:+"+ key +" type:"+ document.get(key).getClass()
+                    throw new VectorDBException("Unsupported field type, field: "+ key +" type:"+ document.get(key).getClass()
                             + "\nsupported field type is:  Integer,Long,Double,Float,String,JSONArray<String>,JSONObject");
                 }
                 docBuilder.putFields(key, fieldBuilder.build());

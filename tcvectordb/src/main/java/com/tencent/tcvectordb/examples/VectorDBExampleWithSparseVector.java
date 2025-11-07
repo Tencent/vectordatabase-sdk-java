@@ -29,6 +29,8 @@ import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvdbtext.encoder.SparseVectorBm25Encoder;
+import com.tencent.tcvectordb.model.param.entity.BaseRes;
+import com.tencent.tcvectordb.utils.JsonUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
@@ -178,6 +180,7 @@ public class VectorDBExampleWithSparseVector {
                 .addField(new FilterIndex("id", FieldType.String, IndexType.PRIMARY_KEY))
                 .addField(new VectorIndex("vector", BGE_BASE_ZH.getDimension(), IndexType.HNSW,
                         MetricType.IP, new HNSWParams(16, 200)))
+                // 默认稀疏向量的存储方式为内存，可以通过修改参数修改为磁盘存储 diskSwapEnabled默认为false
                 .addField(new SparseVectorIndex("sparse_vector", IndexType.INVERTED, MetricType.IP))
                 .build();
     }

@@ -30,6 +30,7 @@ import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.BaseRes;
 import com.tencent.tcvectordb.model.param.enums.OrderEnum;
 import com.tencent.tcvectordb.service.param.DropIndexParamInner;
+import com.tencent.tcvectordb.utils.FileUtils;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.*;
@@ -66,9 +67,12 @@ public class VectorDBExample {
     }
 
     private static void addIndex(VectorDBClient client) throws InterruptedException{
+        FilterIndex ownerIndex = new FilterIndex("owner", FieldType.Uint64, IndexType.FILTER);
+        FilterIndex doubleIndex = new FilterIndex("double_index", FieldType.Double, IndexType.FILTER);
+        FilterIndex int64Index = new FilterIndex("int64_index", FieldType.Int64, IndexType.FILTER);
         BaseRes baseRes = client.addIndex(DBNAME, COLL_NAME, AddIndexParam.newBuilder()
                         .withBuildExistedData(true)
-                        .withIndexes(Arrays.asList(new FilterIndex("owner", FieldType.Uint64, IndexType.FILTER))).build());
+                        .withIndexes(Arrays.asList(ownerIndex, doubleIndex, int64Index)).build());
         System.out.println("--------add index-------");
         System.out.println("\t res: "+ JsonUtils.toJsonString(baseRes));
         Thread.sleep(1000);
@@ -86,6 +90,8 @@ public class VectorDBExample {
                         .addDocField(new DocField("segment", "富贵功名，前缘分定，为人切莫欺心。"))
                         .addDocField(new DocField("array_test", Arrays.asList("1","2","3")))
                         .addDocField(new DocField("owner", 2))
+                        .addDocField(new DocField("double_index", 2.99))
+                        .addDocField(new DocField("int64_index", 99))
                         .build(),
                 Document.newBuilder()
                         .withId("0007")
@@ -111,7 +117,7 @@ public class VectorDBExample {
         System.out.println("--------describe collection, before drop index-------");
         Collection collection = client.describeCollection(DBNAME, COLL_NAME);
         System.out.println("\t collection describe: "+ JsonUtils.toJsonString(collection));
-        BaseRes baseRes = client.dropIndex(DBNAME, COLL_NAME, Arrays.asList("owner"));
+        BaseRes baseRes = client.dropIndex(DBNAME, COLL_NAME, Arrays.asList("owner", "double_index", "int64_index"));
         System.out.println("--------drop index-------");
         System.out.println("\t res: "+ JsonUtils.toJsonString(baseRes));
         Thread.sleep(1000);
@@ -196,6 +202,8 @@ public class VectorDBExample {
                         .addDocField(new DocField("array_test", Arrays.asList("1","2","3")))
                         .addDocField(new DocField("owner", 2))
                         .addDocField(new DocField("double_test", 3.3))
+                        .addDocField(new DocField("price", 9.99))
+                        .addDocField(new DocField("weight", 77))
                         .build(),
                 Document.newBuilder()
                         .withId("0002")
@@ -253,7 +261,7 @@ public class VectorDBExample {
         client.upsert(DBNAME, COLL_NAME, insertParam);
 //        可以直接使用client进行操作
         AffectRes affectRes = client.upsert(DBNAME,COLL_NAME, insertParam);
-        System.out.println(JsonUtils.toJsonString(affectRes));
+        System.out.println("\tres: " + JsonUtils.toJsonString(affectRes));
         // notice：upsert 操作可用会有延迟
         Thread.sleep(1000 * 5);
 
@@ -278,6 +286,7 @@ public class VectorDBExample {
 //                .withFilter("bookName=\"三国演义\"")
                 // limit 限制返回行数，1 到 16384 之间
                  .withLimit(5)
+//                .withFilter("price < 10.00")
                 // 偏移
                  .withOffset(0)
                 // 指定返回的 fields
@@ -481,6 +490,8 @@ public class VectorDBExample {
                 .addField(new FilterIndex("array_test", FieldType.Array, IndexType.FILTER))
                 .addField(new FilterIndex("expired_at", FieldType.Uint64, IndexType.FILTER))
                 .addField(new FilterIndex("page", FieldType.Uint64, IndexType.FILTER))
+                .addField(new FilterIndex("price", FieldType.Double, IndexType.FILTER))
+                .addField(new FilterIndex("weight", FieldType.Int64, IndexType.FILTER))
                 // 创建ttl配置 非必填
                 .withTtlConfig(TTLConfig.newBuilder().WithEnable(true).WithTimeField("expired_at").build())
                 .build();

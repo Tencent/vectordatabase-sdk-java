@@ -61,6 +61,8 @@ public enum IndexType {
 
     DISK_FLAT("DISK_FLAT"),
 
+    IVF_RABITQ("IVF_RABITQ"),
+
     /**
      * scalar index type: primaryKey
      */

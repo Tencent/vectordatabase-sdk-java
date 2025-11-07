@@ -34,6 +34,7 @@ import com.huaban.analysis.jieba.WordDictionary;
 import com.tencent.tcvdbtext.hash.BaseHash;
 import com.tencent.tcvdbtext.hash.Mm3BaseHash;
 
+import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
@@ -85,6 +86,13 @@ public class JiebaTokenizer extends BaseTokenizer{
     public void setStopWords(String stopWordsFile) {
         if (!stopWordsFile.isEmpty()) {
             this.stopWords = StopWords.getStopWordsFromFilePath(stopWordsFile);
+        }
+    }
+
+    @Override
+    public void setStopWords(String stopWordsFile, Charset charset) {
+        if (!stopWordsFile.isEmpty()) {
+            this.stopWords = StopWords.getStopWordsFromFilePath(stopWordsFile, charset);
         }
     }
 

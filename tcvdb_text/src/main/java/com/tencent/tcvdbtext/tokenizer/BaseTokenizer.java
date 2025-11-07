@@ -29,6 +29,7 @@ package com.tencent.tcvdbtext.tokenizer;
 
 import com.tencent.tcvdbtext.hash.BaseHash;
 
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -128,4 +129,6 @@ public abstract class BaseTokenizer {
     public abstract  void setLowerCase(Boolean lowerCase);
 
     public abstract void setStopWords(String stopWordsFile);
+
+    public abstract void setStopWords(String stopWordsFile, Charset charset);
 }

@@ -321,6 +321,10 @@ public class GrpcStub extends HttpStub{
                     IVFSQ8Params ivfsq8Params = (IVFSQ8Params) index.getParams();
                     indexBuilder.setParams(Olama.IndexParams.newBuilder()
                             .setNlist(ivfsq8Params.getNList()).build());
+                } else if (index.getParams() instanceof  IVFRABITQParams) {
+                    IVFRABITQParams ivfrabitqParams = (IVFRABITQParams) index.getParams();
+                    indexBuilder.setParams(Olama.IndexParams.newBuilder()
+                            .setNlist(ivfrabitqParams.getNList()).setBits(ivfrabitqParams.getBits()).build());
                 }
             }
         }
@@ -1476,6 +1480,9 @@ public class GrpcStub extends HttpStub{
                         case IVF_SQ8:
                             indexField.setParams(new IVFSQ8Params(entry.getValue().getParams().getNlist()));
                             break;
+                        case IVF_RABITQ:
+                            indexField.setParams(new IVFRABITQParams(entry.getValue().getParams().getNlist(), entry.getValue().getParams().getBits()));
+                            break;
                     }
 
                 }
@@ -1516,7 +1523,12 @@ public class GrpcStub extends HttpStub{
         document.getDocFields().forEach(docField -> {
             Olama.Field.Builder fieldBuilder = Olama.Field.newBuilder();
             if (docField.getValue() instanceof Integer || docField.getValue() instanceof Long) {
-                fieldBuilder.setValU64(Long.parseLong(docField.getValue().toString()));
+                Long value = Long.parseLong(docField.getValue().toString());
+                if (value < 0) {
+                    fieldBuilder.setValInt64(value);
+                } else {
+                    fieldBuilder.setValU64(value);
+                }
             } else if (docField.getValue() instanceof Double || docField.getValue() instanceof Float) {
                 fieldBuilder.setValDouble(Double.parseDouble(docField.getValue().toString()));
             }else if(docField.getValue() instanceof String){
@@ -1557,7 +1569,12 @@ public class GrpcStub extends HttpStub{
             } else {
                 Olama.Field.Builder fieldBuilder = Olama.Field.newBuilder();
                 if (document.get(key) instanceof Integer || document.get(key) instanceof Long) {
-                    fieldBuilder.setValU64(Long.parseLong(document.get(key).toString()));
+                    Long value = Long.parseLong(document.get(key).toString());
+                    if (value < 0) {
+                        fieldBuilder.setValInt64(value);
+                    } else {
+                        fieldBuilder.setValU64(value);
+                    }
                 } else if (document.get(key) instanceof Double || document.get(key) instanceof Float) {
                     fieldBuilder.setValDouble(Double.parseDouble(document.get(key).toString()));
                 } else if (document.get(key) instanceof String) {
@@ -1568,7 +1585,7 @@ public class GrpcStub extends HttpStub{
                     fieldBuilder.setValJson(ByteString.copyFromUtf8(document.get(key).toString()));
                 }
                 else {
-                    throw new VectorDBException("Unsupported field type, field:+"+ key +" type:"+ document.get(key).getClass()
+                    throw new VectorDBException("Unsupported field type, field: "+ key +" type:"+ document.get(key).getClass()
                             + "\nsupported field type is:  Integer,Long,Double,Float,String,JSONArray<String>,JSONObject");
                 }
                 docBuilder.putFields(key, fieldBuilder.build());
@@ -1591,6 +1608,9 @@ public class GrpcStub extends HttpStub{
             for (Map.Entry<String, Olama.Field> stringFieldEntry : document.getFieldsMap().entrySet()) {
                 if (stringFieldEntry.getValue().hasValDouble()){
                     builder.addDocField(new DocField(stringFieldEntry.getKey(), stringFieldEntry.getValue().getValDouble()));
+                }
+                if (stringFieldEntry.getValue().hasValInt64()){
+                    builder.addDocField(new DocField(stringFieldEntry.getKey(), stringFieldEntry.getValue().getValInt64()));
                 }
                 if (stringFieldEntry.getValue().hasValU64()){
                     builder.addDocField(new DocField(stringFieldEntry.getKey(), stringFieldEntry.getValue().getValU64()));

@@ -3,7 +3,7 @@ package com.tencent.tcvectordb.service.param;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tencent.tcvectordb.model.param.collection.IndexField;
 import com.tencent.tcvectordb.model.param.dml.AddIndexParam;
-import com.tencent.tcvectordb.model.param.dml.RebuildIndexParam;
+
 import com.tencent.tcvectordb.utils.JsonUtils;
 
 import java.util.List;

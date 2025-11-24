@@ -23,7 +23,7 @@ package com.tencent.tcvectordb.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.tencent.tcvectordb.client.VectorDBClient;
+
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;

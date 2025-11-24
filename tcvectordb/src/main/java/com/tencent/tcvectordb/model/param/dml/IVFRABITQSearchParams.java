@@ -20,7 +20,6 @@
 
 package com.tencent.tcvectordb.model.param.dml;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tencent.tcvectordb.exception.ParamException;
 
@@ -32,7 +31,7 @@ public class IVFRABITQSearchParams implements Params {
     private int NProbe;
 
     public IVFRABITQSearchParams(int NProbe) {
-        if (NProbe == 0){
+        if (NProbe == 0) {
             throw new ParamException("The value of NProbe cannot be 0");
         }
         this.NProbe = NProbe;

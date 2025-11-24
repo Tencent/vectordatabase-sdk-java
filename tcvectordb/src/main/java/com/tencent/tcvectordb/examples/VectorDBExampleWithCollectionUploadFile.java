@@ -34,8 +34,7 @@ import com.tencent.tcvectordb.model.param.enums.OrderEnum;
 import com.tencent.tcvectordb.model.param.enums.ParsingTypeEnum;
 import com.tencent.tcvectordb.utils.JsonUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
+
 import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;

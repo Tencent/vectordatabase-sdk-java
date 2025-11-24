@@ -20,7 +20,7 @@
 
 package com.tencent.tcvectordb.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
+
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.MessageOrBuilder;
@@ -37,23 +37,22 @@ import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
 import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
 import com.tencent.tcvectordb.model.param.user.*;
-import com.tencent.tcvectordb.rpc.Interceptor.AuthorityInterceptor;
+
 import com.tencent.tcvectordb.rpc.Interceptor.BackendServiceInterceptor;
 import com.tencent.tcvectordb.rpc.pool.ChannelPool;
 import com.tencent.tcvectordb.rpc.proto.Olama;
 import com.tencent.tcvectordb.rpc.proto.SearchEngineGrpc;
 import com.tencent.tcvectordb.service.param.*;
-import com.tencent.tcvectordb.utils.JsonUtils;
+
 import io.grpc.*;
-import io.grpc.okhttp.OkHttpChannelBuilder;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -337,6 +336,8 @@ public class GrpcStub extends HttpStub{
         if(index.getAutoId()!=null){
             indexBuilder.setAutoId(index.getAutoId());
         }
+        // 设置 diskSwapEnabled 参数
+        indexBuilder.setDiskSwapEnabled(index.isDiskSwapEnabled());
         return indexBuilder;
     }
 
@@ -899,7 +900,7 @@ public class GrpcStub extends HttpStub{
                 documentsList.add(documents);
             }
         }
-
+        hybridSearchRes.setDocuments(Collections.unmodifiableList(documentsList));
         return  hybridSearchRes;
     }
 
@@ -1496,6 +1497,8 @@ public class GrpcStub extends HttpStub{
             if(entry.getValue().getAutoId()!=null && !entry.getValue().getAutoId().equals("")){
                 indexField.setAutoId(entry.getValue().getAutoId());
             }
+            // 设置 diskSwapEnabled 参数
+            indexField.setDiskSwapEnabled(entry.getValue().getDiskSwapEnabled());
             return indexField;
         }).collect(Collectors.toList()));
         return collectionInner;

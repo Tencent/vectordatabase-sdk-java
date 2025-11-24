@@ -21,13 +21,10 @@
 package com.tencent.tcvectordb.model.param.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.tencent.tcvectordb.model.DocField;
+
 import com.tencent.tcvectordb.utils.JsonUtils;
 
-import java.util.*;
+
 
 /**
  * VectorDB Document
@@ -84,7 +81,7 @@ public class SearchContentInfo {
         public Builder() {
         }
 
-        public Builder withSearchContentInfo(ContentInfo data){
+        public Builder withSearchContentInfo(ContentInfo data) {
             this.data = data;
             return this;
         }

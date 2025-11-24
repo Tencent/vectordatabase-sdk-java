@@ -22,6 +22,8 @@ package com.tencent.tcvectordb.model.param.collection;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.JsonGetter;
 
 /**
  * IndexField
@@ -38,7 +40,9 @@ public class IndexField {
     private Integer dimension;
     private Integer indexedCount;
 
-    //autoId is used to generate a id for each document
+    private Boolean diskSwapEnabled;
+
+    // autoId is used to generate a id for each document
     private String autoId;
 
     public IndexField() {
@@ -140,5 +144,27 @@ public class IndexField {
 
     public void setAutoId(String autoId) {
         this.autoId = autoId;
+    }
+
+    @JsonGetter("diskSwapEnabled")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public Boolean getDiskSwapEnabledForSerialization() {
+        // 只有稀疏向量字段才序列化 diskSwapEnabled 参数
+        return isSparseVectorField() ? diskSwapEnabled : null;
+    }
+
+    @JsonSetter("diskSwapEnabled")
+    public void setDiskSwapEnabledFromJson(Boolean diskSwapEnabled) {
+        this.diskSwapEnabled = diskSwapEnabled != null ? diskSwapEnabled : false;
+    }
+
+    @JsonIgnore
+    public boolean isDiskSwapEnabled() {
+        return diskSwapEnabled != null ? diskSwapEnabled : false;
+    }
+
+    @JsonIgnore
+    public void setDiskSwapEnabled(boolean diskSwapEnabled) {
+        this.diskSwapEnabled = diskSwapEnabled;
     }
 }

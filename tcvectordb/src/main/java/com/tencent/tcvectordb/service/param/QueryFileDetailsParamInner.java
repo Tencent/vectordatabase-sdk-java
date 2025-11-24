@@ -1,7 +1,7 @@
 package com.tencent.tcvectordb.service.param;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.tencent.tcvectordb.model.param.dml.CountQueryParam;
+
 import com.tencent.tcvectordb.model.param.dml.QueryFileDetailParam;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.utils.JsonUtils;

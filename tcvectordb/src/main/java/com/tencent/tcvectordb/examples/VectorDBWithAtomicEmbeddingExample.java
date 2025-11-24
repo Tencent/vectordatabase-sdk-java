@@ -6,7 +6,7 @@ import com.tencent.tcvectordb.model.param.dml.ModelParam;
 import com.tencent.tcvectordb.model.param.entity.AtomicEmbeddingRes;
 
 import java.util.Arrays;
-import java.util.Map;
+
 
 public class VectorDBWithAtomicEmbeddingExample {
     public static void main(String[] args) {

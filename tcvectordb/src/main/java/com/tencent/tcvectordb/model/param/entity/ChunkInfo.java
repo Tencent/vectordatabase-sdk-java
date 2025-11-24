@@ -2,8 +2,6 @@ package com.tencent.tcvectordb.model.param.entity;
 
 import com.tencent.tcvectordb.utils.JsonUtils;
 
-import java.util.List;
-
 public class ChunkInfo {
     private String text;
     private int endPos;

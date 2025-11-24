@@ -35,7 +35,7 @@ import com.tencent.tcvectordb.exception.ParamException;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.Collection;
 import com.tencent.tcvectordb.model.*;
-import com.tencent.tcvectordb.model.param.collection.FieldType;
+
 import com.tencent.tcvectordb.model.param.collection.UploadFileParam;
 import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.collectionView.*;
@@ -43,7 +43,7 @@ import com.tencent.tcvectordb.model.param.database.ConnectParam;
 import com.tencent.tcvectordb.model.param.dml.AtomicEmbeddingParam;
 import com.tencent.tcvectordb.model.param.entity.*;
 import com.tencent.tcvectordb.model.param.enums.DataBaseTypeEnum;
-import com.tencent.tcvectordb.model.param.enums.EmbeddingModelEnum;
+
 import com.tencent.tcvectordb.model.param.user.*;
 import com.tencent.tcvectordb.service.param.*;
 import com.tencent.tcvectordb.utils.FileUtils;
@@ -90,6 +90,7 @@ public class HttpStub implements Stub {
                     this.client = new OkHttpClient.Builder()
                             .connectTimeout(this.connectParam.getConnectTimeout(), TimeUnit.SECONDS)
                             .readTimeout(connectParam.getTimeout(), TimeUnit.SECONDS)
+                            .writeTimeout(connectParam.getTimeout(), TimeUnit.SECONDS)
                             .connectionPool(new ConnectionPool(
                                     this.connectParam.getMaxIdleConnections(), this.connectParam.getKeepAliveDuration(), TimeUnit.SECONDS))
                             .build();

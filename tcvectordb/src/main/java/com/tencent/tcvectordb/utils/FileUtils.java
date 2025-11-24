@@ -19,7 +19,7 @@
  */
 package com.tencent.tcvectordb.utils;
 
-import com.tencent.tcvectordb.model.param.enums.FileTypeEnum;
+
 
 import java.io.File;
 

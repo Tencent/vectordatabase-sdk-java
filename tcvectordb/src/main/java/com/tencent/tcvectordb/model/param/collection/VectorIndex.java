@@ -20,7 +20,7 @@
 
 package com.tencent.tcvectordb.model.param.collection;
 
-import com.tencent.tcvectordb.model.param.dml.Filter;
+
 
 /**
  * VectorIndex
@@ -86,5 +86,14 @@ public class VectorIndex  extends IndexField {
         setIndexType(indexType);
         setDimension(dimension);
         setMetricType(metricType);
+    }
+
+    // 专门用于稀疏向量的构造函数
+    public VectorIndex(String fieldName, IndexType indexType, MetricType metricType, boolean diskSwapEnabled) {
+        setFieldType(FieldType.SparseVector);
+        setFieldName(fieldName);
+        setIndexType(indexType);
+        setMetricType(metricType);
+        setDiskSwapEnabled(diskSwapEnabled);
     }
 }

@@ -1,6 +1,6 @@
 package com.tencent.tcvectordb.model.param.user;
 
-import com.tencent.tcvectordb.model.param.entity.BaseRes;
+
 
 import java.util.List;
 

@@ -22,10 +22,7 @@ package com.tencent.tcvectordb.model.param.dml;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+
 
 /**
  *  query count of match conditions, if filter is null, return all rows count

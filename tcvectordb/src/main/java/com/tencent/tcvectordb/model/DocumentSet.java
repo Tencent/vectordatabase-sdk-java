@@ -22,8 +22,8 @@ package com.tencent.tcvectordb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
+
+
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.tencent.tcvectordb.exception.VectorDBException;
@@ -41,7 +41,7 @@ import com.tencent.tcvectordb.service.param.CollectionViewDeleteParamInner;
 import com.tencent.tcvectordb.service.param.SearchDocParamInner;
 import com.tencent.tcvectordb.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONObject;
+
 
 import java.util.*;
 

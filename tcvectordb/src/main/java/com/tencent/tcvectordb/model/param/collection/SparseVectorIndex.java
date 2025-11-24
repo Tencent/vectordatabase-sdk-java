@@ -25,11 +25,19 @@ package com.tencent.tcvectordb.model.param.collection;
  */
 public class SparseVectorIndex extends IndexField {
 
-
-    public SparseVectorIndex(String fieldName,  IndexType indexType, MetricType metricType) {
+    public SparseVectorIndex(String fieldName, IndexType indexType, MetricType metricType) {
         setFieldName(fieldName);
         setFieldType(FieldType.SparseVector);
         setIndexType(indexType);
         setMetricType(metricType);
+        setDiskSwapEnabled(false);
+    }
+
+    public SparseVectorIndex(String fieldName, IndexType indexType, MetricType metricType, boolean diskSwapEnabled) {
+        setFieldName(fieldName);
+        setFieldType(FieldType.SparseVector);
+        setIndexType(indexType);
+        setMetricType(metricType);
+        setDiskSwapEnabled(diskSwapEnabled);
     }
 }

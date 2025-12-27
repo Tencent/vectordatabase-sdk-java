@@ -5,7 +5,6 @@ import com.tencent.tcvectordb.exception.ParamException;
 
 import java.util.List;
 
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SearchOption {
     private String resultType;
@@ -59,13 +58,13 @@ public class SearchOption {
             return this;
         }
 
-        public Builder withRerank(RerankOption rerank){
+        public Builder withRerank(RerankOption rerank) {
             this.rerank = rerank;
             return this;
         }
 
         public SearchOption build() {
-            if (chunkExpand!=null && chunkExpand.size()!=2){
+            if (chunkExpand != null && chunkExpand.size() != 2) {
                 throw new ParamException("SearchContenOption error: chunkExpand must have tow integers");
             }
             return new SearchOption(this);
@@ -73,5 +72,3 @@ public class SearchOption {
     }
 
 }
-
-

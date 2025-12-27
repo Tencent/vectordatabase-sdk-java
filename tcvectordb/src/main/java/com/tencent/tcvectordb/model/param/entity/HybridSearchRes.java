@@ -3,12 +3,14 @@ package com.tencent.tcvectordb.model.param.entity;
 import com.tencent.tcvectordb.exception.VectorDBException;
 import com.tencent.tcvectordb.model.Document;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class HybridSearchRes extends BaseRes {
-    private List<Object> documents;
+    private List<Object> documents = new ArrayList<>();
+
     private EmbeddingExtraInfo embeddingExtraInfo;
 
     public HybridSearchRes(int code, String msg, String warning) {
@@ -23,18 +25,20 @@ public class HybridSearchRes extends BaseRes {
         this.embeddingExtraInfo = embeddingExtraInfo;
     }
 
-    public List<Document> getDocuments() throws VectorDBException{
-        if (documents.size()==0){
+    public List<Document> getDocuments() throws VectorDBException {
+        if (documents.size() == 0) {
             return Collections.emptyList();
         }
         if (documents.get(0) instanceof Document) {
             return documents.stream().map(o -> (Document) o).collect(Collectors.toList());
         }
-        throw new VectorDBException("hybrid search response data type is List<List<Document>>, please use method: getDocumentsList");
+        throw new VectorDBException(
+                "hybrid search response data type is List<List<Document>>, please use method: getDocumentsList");
     }
 
+    @SuppressWarnings("unchecked")
     public List<List<Document>> getDocumentsList() throws VectorDBException {
-        if (documents.size()==0){
+        if (documents.size() == 0) {
             return Collections.emptyList();
         }
         if (documents.get(0) instanceof List){

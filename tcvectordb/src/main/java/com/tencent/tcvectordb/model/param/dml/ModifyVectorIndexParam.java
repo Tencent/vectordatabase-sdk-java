@@ -1,7 +1,6 @@
 package com.tencent.tcvectordb.model.param.dml;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.tencent.tcvectordb.model.param.collection.IndexField;
 import com.tencent.tcvectordb.model.param.collection.VectorIndex;
 
 import java.util.ArrayList;
@@ -10,10 +9,14 @@ import java.util.List;
 /**
  * ModifyVectorIndexParam
  * Currently, this method is only for dense vectors, i.e. vector
- * Supports re-specifying vector index parameters, HNSW supports re-specifying M and efConstruction, IVF supports re-specifying nlist (IVF_PQ supports re-specifying M and nlist)
+ * Supports re-specifying vector index parameters, HNSW supports re-specifying M
+ * and efConstruction, IVF supports re-specifying nlist (IVF_PQ supports
+ * re-specifying M and nlist)
  * Supports re-specifying similarity calculation method
- * The new configuration after the vector index is modified is defined by the field vectorIndexes
- * After adjusting the parameters, this interface will trigger a rebuild, and the rebuild rules are specified by the field rebuildRules
+ * The new configuration after the vector index is modified is defined by the
+ * field vectorIndexes
+ * After adjusting the parameters, this interface will trigger a rebuild, and
+ * the rebuild rules are specified by the field rebuildRules
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ModifyVectorIndexParam {

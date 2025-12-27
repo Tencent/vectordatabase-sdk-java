@@ -31,10 +31,10 @@ import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.entity.BaseRes;
 import com.tencent.tcvectordb.model.param.entity.HybridSearchRes;
-import com.tencent.tcvectordb.model.param.entity.SearchRes;
+
 import com.tencent.tcvectordb.utils.JsonUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.checkerframework.checker.units.qual.C;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;

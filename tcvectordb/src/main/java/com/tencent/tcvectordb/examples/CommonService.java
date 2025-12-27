@@ -21,11 +21,7 @@
 package com.tencent.tcvectordb.examples;
 
 import com.tencent.tcvectordb.client.VectorDBClient;
-import com.tencent.tcvectordb.model.Collection;
-import com.tencent.tcvectordb.model.Database;
-import com.tencent.tcvectordb.model.param.collection.CreateCollectionParam;
 import com.tencent.tcvectordb.model.param.database.ConnectParam;
-import com.tencent.tcvectordb.model.param.entity.AffectRes;
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.client.RPCVectorDBClient;
 
@@ -36,7 +32,6 @@ import java.util.Random;
 public class CommonService {
     private CommonService() {
     }
-
 
     /**
      * init connect parameter
@@ -64,7 +59,7 @@ public class CommonService {
      */
     public static VectorDBClient initClient() {
         // 创建http client
-//        return new VectorDBClient(initConnectParam(), ReadConsistencyEnum.STRONG_CONSISTENCY);
+        // return new VectorDBClient(initConnectParam(), ReadConsistencyEnum.STRONG_CONSISTENCY);
         // 创建rpc client
         return new RPCVectorDBClient(initConnectParam(), ReadConsistencyEnum.EVENTUAL_CONSISTENCY);
     }
@@ -81,7 +76,7 @@ public class CommonService {
         }
     }
 
-    public static List<Double> generateRandomVector(int dim){
+    public static List<Double> generateRandomVector(int dim) {
         Random random = new Random();
         List<Double> vectors = new ArrayList<>();
 
@@ -91,5 +86,5 @@ public class CommonService {
         }
         return vectors;
     }
-    
+
 }

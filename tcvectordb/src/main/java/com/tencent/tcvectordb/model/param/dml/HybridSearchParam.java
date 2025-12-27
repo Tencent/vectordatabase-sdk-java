@@ -2,20 +2,20 @@ package com.tencent.tcvectordb.model.param.dml;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 /**
  * HybridSearchParam hybrid search param
- *  Params:
- *      ann(List<AnnOption>): ann options, annOption used for vector search,
- *      match(List<MatchOption>): match options, matchOption used for sparse vector search
- *      retrieve_vector(bool): Whether to return vector and sparse vector values.
- *      filter(Filter): filter rows before return result
- *      output_fields(List): return columns by column name list
- *      Limit(int): limit the number of rows returned
- *      rerank(RerankParam): rerank param, RRFRerankParam or WeightRerankParam
+ * Params:
+ * ann(List<AnnOption>): ann options, annOption used for vector search,
+ * match(List<MatchOption>): match options, matchOption used for sparse vector
+ * search
+ * retrieve_vector(bool): Whether to return vector and sparse vector values.
+ * filter(Filter): filter rows before return result
+ * output_fields(List): return columns by column name list
+ * Limit(int): limit the number of rows returned
+ * rerank(RerankParam): rerank param, RRFRerankParam or WeightRerankParam
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -104,11 +104,12 @@ public class HybridSearchParam {
     public Boolean getIsArrayParam() {
         return isArrayParam;
     }
+
     public static Builder newBuilder() {
         return new Builder();
     }
 
-    public static final class Builder{
+    public static final class Builder {
         private List<AnnOption> ann;
         private String filter;
         private List<String> outputFields;
@@ -161,10 +162,12 @@ public class HybridSearchParam {
             this.outputFields = outputFields;
             return this;
         }
+
         public Builder withRetrieveVector(boolean retrieveVector) {
             this.retrieveVector = retrieveVector;
             return this;
         }
+
         public Builder withRerank(RerankParam rerank) {
             this.rerank = rerank;
             return this;

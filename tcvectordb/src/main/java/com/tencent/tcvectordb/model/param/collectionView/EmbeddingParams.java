@@ -1,7 +1,7 @@
 package com.tencent.tcvectordb.model.param.collectionView;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.tencent.tcvectordb.model.DocumentSet;
+
 
 
 /**

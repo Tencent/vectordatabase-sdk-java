@@ -1,11 +1,11 @@
 package com.tencent.tcvectordb.service.param;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tencent.tcvectordb.exception.ParamException;
+
+
+
 import com.tencent.tcvectordb.model.param.dml.FullTextSearchParam;
-import com.tencent.tcvectordb.model.param.dml.HybridSearchParam;
+
 import com.tencent.tcvectordb.model.param.enums.ReadConsistencyEnum;
 import com.tencent.tcvectordb.utils.JsonUtils;
 

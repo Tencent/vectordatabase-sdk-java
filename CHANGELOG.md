@@ -1,4 +1,8 @@
 # Changelog
+## v2.6.0
+* feat: Sparse vectors support disk indexing. Add a field called `diskSwapEnabled` to control whether it is enabled or not.
+* fix: modify hybrid search result question.
+* fix: modify http stub write timeout question.
 
 ## v2.5.5
 * feat: Support new IndexType `IVF_RABITQ`.

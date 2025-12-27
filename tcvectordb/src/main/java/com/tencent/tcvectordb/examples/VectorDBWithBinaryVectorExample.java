@@ -28,7 +28,7 @@ import com.tencent.tcvectordb.model.Document;
 import com.tencent.tcvectordb.model.param.collection.*;
 import com.tencent.tcvectordb.model.param.dml.*;
 import com.tencent.tcvectordb.model.param.entity.AffectRes;
-import com.tencent.tcvectordb.model.param.entity.BaseRes;
+
 import com.tencent.tcvectordb.utils.BinaryUtils;
 import com.tencent.tcvectordb.utils.JsonUtils;
 

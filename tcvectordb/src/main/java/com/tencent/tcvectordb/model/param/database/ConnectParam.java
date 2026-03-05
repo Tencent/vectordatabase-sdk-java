@@ -25,6 +25,33 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * Parameters for client connection.
+ * <p>
+ * This class provides configuration options for connecting to VectorDB server,
+ * including connection settings, timeout settings, and TLS/SSL configuration.
+ * </p>
+ *
+ * <h3>Basic Usage:</h3>
+ * <pre>{@code
+ * ConnectParam connectParam = ConnectParam.newBuilder()
+ *     .withUrl("http://localhost:8080")
+ *     .withUsername("root")
+ *     .withKey("your-api-key")
+ *     .build();
+ * }</pre>
+ *
+ * <h3>HTTPS with TLS Configuration:</h3>
+ * <pre>{@code
+ * TLSConfig tlsConfig = TLSConfig.newBuilder()
+ *     .withCACert("/path/to/ca-cert.pem")
+ *     .build();
+ *
+ * ConnectParam connectParam = ConnectParam.newBuilder()
+ *     .withUrl("https://your-vectordb-server.com")
+ *     .withUsername("root")
+ *     .withKey("your-api-key")
+ *     .withTLSConfig(tlsConfig)
+ *     .build();
+ * }</pre>
  */
 public class ConnectParam {
     private final String url;
@@ -48,6 +75,11 @@ public class ConnectParam {
      */
     private final int keepAliveDuration;
 
+    /**
+     * TLS/SSL configuration for secure connections.
+     */
+    private final TLSConfig tlsConfig;
+
     private ConnectParam(Builder builder) {
         this.url = builder.url;
         this.username = builder.username;
@@ -57,6 +89,7 @@ public class ConnectParam {
         this.maxIdleConnections = builder.maxIdleConnections;
         this.keepAliveDuration = builder.keepAliveDuration;
         this.connectionPoolSize = builder.connectionPoolSize;
+        this.tlsConfig = builder.tlsConfig;
     }
 
     public String getUrl() {
@@ -91,6 +124,15 @@ public class ConnectParam {
         return keepAliveDuration;
     }
 
+    /**
+     * Gets the TLS configuration.
+     *
+     * @return TLS configuration, or null if not set
+     */
+    public TLSConfig getTLSConfig() {
+        return tlsConfig;
+    }
+
     public static Builder newBuilder() {
         return new Builder();
     }
@@ -118,6 +160,11 @@ public class ConnectParam {
          * keep alive duration, unit is second
          */
         private int keepAliveDuration = 5 * 60;
+
+        /**
+         * TLS configuration
+         */
+        private TLSConfig tlsConfig;
 
         private Builder() {
         }
@@ -181,6 +228,22 @@ public class ConnectParam {
             if (keepAliveDuration > 0) {
                 this.keepAliveDuration = keepAliveDuration;
             }
+            return this;
+        }
+
+        /**
+         * Sets the TLS configuration for secure connections.
+         * <p>
+         * Use this to configure CA certificates, skip certificate verification,
+         * or set custom SNI server names for HTTPS connections.
+         * </p>
+         *
+         * @param tlsConfig TLS configuration
+         * @return this builder
+         * @see TLSConfig
+         */
+        public Builder withTLSConfig(TLSConfig tlsConfig) {
+            this.tlsConfig = tlsConfig;
             return this;
         }
 

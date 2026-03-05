@@ -1,4 +1,8 @@
 # Changelog
+## v2.6.1
+* refactor: Refactoring stub code, extract business logic from HttpStub and GrpcStub to separate service classes for better maintainability.
+* feat: Add TLS/SSL support for both HTTP and RPC clients. Support custom CA certificates and insecure skip verify mode for HTTPS connections.
+
 ## v2.6.0
 * feat: Sparse vectors support disk indexing. Add a field called `diskSwapEnabled` to control whether it is enabled or not.
 * fix: modify hybrid search result question.
